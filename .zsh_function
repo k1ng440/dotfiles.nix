@@ -1,0 +1,85 @@
+function addToPath() {
+    if [[ "$PATH" != *"$1"* ]]; then
+        export PATH=$PATH:$1
+    fi
+}
+
+function addToPathFront() {
+    if [[ "$PATH" != *"$1"* ]]; then
+        export PATH=$1:$PATH
+    fi
+}
+
+function die () {
+    echo >&2 "$@"
+    exit 1
+}
+
+function editnvimconfig() {
+    (cd ~/.config/nvim && nvim init.lua)
+}
+
+function i3edit() {
+    (cd ~/.config/i3 && nvim ~/.config/i3/config)
+}
+
+function kitty-reload() {
+    kill -SIGUSR1 $(pidof kitty)
+}
+
+function window-class() {
+    xprop | grep 'CLASS'
+}
+
+function wallpaper() {
+    feh --bg-scale $(find $HOME/Pictures/wl/ -type f \( -name "*.png" -o -name '*.jpeg' -o -name '*.jpg' \) | fzf)
+}
+
+function i3cheatsheet() {
+    grep -E "^bindsym" ~/.config/i3/config | awk '{$1=""; print $0}' | sed 's/^ *//g' | \
+        grep -vE "^XF86" | column | pr -2 -w 160 -t | less
+}
+
+function sail() {
+    "`pwd`/vendor/bin/sail" "$@"
+}
+
+function remove_file_from_git_history() {
+    local file=""
+    local range=""
+
+    for i in "$@"
+    do
+        # Use '--' to separate file list and rev-list arguments
+        [[ "$i" == '--' ]] && shift && break
+        file=$file" "$i
+        shift
+    done
+
+    test -n "$*" && range="$*"
+
+    test -z "$file" && echo "file required." 1>&2 && return 1
+
+    if [ -z "$range" ]
+    then
+        git filter-branch -f --index-filter \
+            "git rm -r --cached $file --ignore-unmatch" \
+            --prune-empty --tag-name-filter cat -- --all
+    else
+        # Don't quote $range so that we can forward multiple rev-list arguments
+        git filter-branch -f --index-filter \ 
+            "git rm -r --cached $file --ignore-unmatch" \
+            --prune-empty --tag-name-filter cat -- $range
+    fi
+}
+
+function man() {
+        LESS_TERMCAP_mb=$'\e[01;31m' \
+        LESS_TERMCAP_md=$'\e[01;31m' \
+        LESS_TERMCAP_me=$'\e[0m' \
+        LESS_TERMCAP_se=$'\e[0m' \
+        LESS_TERMCAP_so=$'\e[45;93m' \
+        LESS_TERMCAP_ue=$'\e[0m' \
+        LESS_TERMCAP_us=$'\e[4;93m' \
+        /usr/bin/man "$@"
+}

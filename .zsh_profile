@@ -1,0 +1,16 @@
+VIM="nvim"
+
+validateYaml() {
+    python -c 'import yaml,sys;yaml.safe_load(sys.stdin)' < $1
+}
+
+cat1Line() {
+    cat $1 | tr -d "\n"
+}
+
+[ -f ~/.kubectl_aliases ] && source ~/.kubectl_aliases
+
+export GIT_EDITOR=$VIM
+export DOTFILES=$HOME/.dotfiles
+export XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
+

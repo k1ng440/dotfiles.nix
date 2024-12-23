@@ -1,0 +1,10 @@
+--- FAIL: TestProjectServiceTestSuite (0.00s)
+    --- FAIL: TestProjectServiceTestSuite/TestCreateProject (0.00s)
+        project_service_test.go:45:
+            	Error Trace:	/home/k1ng/Projects/Traduality/Traduality/dochub/pkg/services/project_service_test.go:45
+            	Error:      	Received unexpected error:
+            	            	Test error
+            	Test:       	TestProjectServiceTestSuite/TestCreateProject
+FAIL
+FAIL	github.com/traduality/Traduality/dochub/pkg/services	0.097s
+FAIL

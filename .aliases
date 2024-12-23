@@ -1,0 +1,21 @@
+alias v='nvim'
+alias vim='nvim'
+alias tb="nc termbin.com 9999"
+alias leetcode="nvim /d/code/leetcode/"
+alias nvimconfig="nvim $HOME/.config/nvim/"
+alias ohmyzsh="nvim ~/.oh-my-zsh/"
+alias zshconfig="nvim ~/.zshrc"
+alias tb="nc termbin.com 9999"
+alias vimbegood="docker run -it --rm brandoncc/vim-be-good:latest"
+alias mkdir='mkdir --parents'
+alias df='df --all --si --print-type'
+alias fzfp="fzf --preview 'batcat --style=numbers --color=always --line-range :500 {}'"
+alias ch="chezmoi"
+alias lnvim="NVIM_APPNAME=LazyVim nvim"
+alias lvim="NVIM_APPNAME=LazyVim nvim"
+
+# git
+alias g='git'
+
+# vim: filetype=zsh
+
