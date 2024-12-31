@@ -3,11 +3,10 @@ local M = {}
 function M.get_root_dir(pattern, ...)
   local cwd = vim.fn.getcwd()
   local root_files = { ... }
-  local root = require('lspconfig.util').root_pattern(unpack(root_files))(pattern)
-  local descendant = require('lspconfig').path.is_descendant(cwd, root) and cwd or root
-  return descendant or cwd
+  return require('lspconfig.util').root_pattern(unpack(root_files))(pattern) or cwd
 end
 
+---@type lspconfig.options
 M.servers = {
   ansiblels = {},
   clangd = {
@@ -30,16 +29,10 @@ M.servers = {
   },
   rust_analyzer = {},
   terraformls = {},
-  denols = {
-    autostart = false,
-    root_dir = function(fname)
-      local root_files = { 'deno.json', 'deno.jsonc' }
-      return M.get_root_dir(fname, unpack(root_files))
-    end,
-  },
   dockerls = {},
   helm_ls = {},
   html = {},
+  ts_ls = {},
   intelephense = {
     root_dir = function(fname)
       local root_files = {

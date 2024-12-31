@@ -3,6 +3,7 @@ vim.filetype.add({
     rasi = 'rasi',
     rofi = 'rasi',
     wofi = 'rasi',
+    ejs = 'javascript',
   },
   filename = {
     ['.env'] = 'sh',

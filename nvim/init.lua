@@ -7,8 +7,8 @@ local g = vim.g
 
 g.mapleader = ' '
 g.maplocalleader = ' '
-g.licenses_copyright_holders_name = 'Asaduzzaman, Pavel <contact@iampavel.dev>'
-g.licenses_default_commands = { 'gpl', 'mit' }
+g.header_field_author = "Asaduzzaman 'Asad' Pavel"
+g.header_field_author_email = 'contact@iampavel.dev'
 g.have_nerd_fonts = true
 
 opt.autowrite = false

@@ -5,17 +5,36 @@ vim.schedule(function()
   end
 
   local fzf = require('fzf-lua')
+  local actions = require('fzf-lua.actions')
   fzf.setup({
     'fzf-native',
     fzf_colors = true,
+    actions = {
+      files = {
+        ['default'] = actions.file_edit,
+        ['ctrl-s'] = actions.file_split,
+        ['ctrl-v'] = actions.file_vsplit,
+        ['ctrl-t'] = actions.file_tabedit,
+        ['alt-q'] = actions.file_sel_to_qf,
+      },
+      buffers = {
+        ['default'] = actions.buf_switch_or_edit,
+        ['ctrl-d'] = actions.buf_del,
+        ['ctrl-s'] = actions.buf_split,
+        ['ctrl-v'] = actions.buf_vsplit,
+        ['ctrl-t'] = actions.buf_tabedit,
+      },
+    },
     grep = {
-      previewer = 'builtin',
       rg_glob = true,
       glob_flag = '--iglob',
       glob_separator = '%s%-%-',
+      cwd_prompt_shorten_len = 16,
+      cwd_prompt_shorten_val = 2,
     },
-    buffers = {
-      previewer = 'builtin',
+    files = {
+      cwd_prompt_shorten_len = 16,
+      cwd_prompt_shorten_val = 2,
     },
     oldfiles = {
       include_current_session = true,
@@ -28,15 +47,10 @@ vim.schedule(function()
       height = 0.4,
       width = 1,
       preview = {
+        default = 'bat_native',
         title = false,
         scrollbar = false,
         delay = 50,
-      },
-    },
-    previewers = {
-      builtin = {
-        syntax = true,
-        syntax_limit_b = 1024 * 100,
       },
     },
   })

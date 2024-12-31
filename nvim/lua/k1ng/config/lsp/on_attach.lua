@@ -57,7 +57,9 @@ vim.api.nvim_create_autocmd('LspAttach', {
     nmap('gdt', '<cmd>tab split | lua vim.lsp.buf.definition()<CR>', '[G]oto [D]definition in new tab')
     nmap('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
 
-    nmap('grr', vim.lsp.buf.references, '[G]oto [R]eferences')
+    nmap('grr', function()
+      require('fzf-lua').lsp_references({ includeDeclaration = false })
+    end, '[G]oto [R]eferences')
     nmap('gra', vim.lsp.buf.code_action, 'Code Action')
     nmap('grn', vim.lsp.buf.rename, 'Rename')
     nmap('gq', vim.diagnostic.setqflist, 'Diagnostic Quickfix list')

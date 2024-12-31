@@ -42,36 +42,45 @@ require('gen').setup({
 
 -- blink.cmp setup. https://cmp.saghen.dev
 -- blink.cmp is a completion plugin with support for LSPs and external sources that updates on every keystroke with minimal overhead (0.5-4ms async).
+---@diagnostic disable-next-line: missing-fields
 require('blink.cmp').setup({
-  snippets = {
-    expand = function(snippet)
-      require('luasnip').lsp_expand(snippet)
-    end,
-    active = function(filter)
-      if filter and filter.direction then
-        return require('luasnip').jumpable(filter.direction)
-      end
-      return require('luasnip').in_snippet()
-    end,
-    jump = function(direction)
-      require('luasnip').jump(direction)
-    end,
+  keymap = { preset = 'default' },
+  -- snippets = {
+  --   expand = function(snippet)
+  --     require('luasnip').lsp_expand(snippet)
+  --   end,
+  --   active = function(filter)
+  --     if filter and filter.direction then
+  --       return require('luasnip').jumpable(filter.direction)
+  --     end
+  --     return require('luasnip').in_snippet()
+  --   end,
+  --   jump = function(direction)
+  --     require('luasnip').jump(direction)
+  --   end,
+  -- },
+  ---@diagnostic disable-next-line: missing-fields
+  appearance = {
+    use_nvim_cmp_as_default = true,
+    nerd_font_variant = 'mono',
+    kind_icons = require('k1ng.config.icons').kinds,
   },
   sources = {
     completion = {
       enabled_providers = { 'lsp', 'path', 'snippets', 'buffer', 'lazydev', 'markdown' },
     },
     providers = {
+      ---@diagnostic disable-next-line: missing-fields
       lsp = { fallback_for = { 'lazydev' } },
+      ---@diagnostic disable-next-line: missing-fields
       lazydev = { name = 'LazyDev', module = 'lazydev.integrations.blink' },
+      ---@diagnostic disable-next-line: missing-fields
       markdown = { name = 'RenderMarkdown', module = 'render-markdown.integ.blink' },
     },
   },
+  ---@diagnostic disable-next-line: missing-fields
   signature = {
     enabled = true,
-  },
-  keymap = {
-    preset = 'default',
   },
 })
 
@@ -318,10 +327,6 @@ end)
 -- treesitter.
 ---@diagnostic disable-next-line: missing-fields
 require('nvim-treesitter.configs').setup({
-  auto_install = false,
-  ensure_installed = 'none',
-  ignore_install = {},
-  sync_install = false,
   highlight = {
     disable = function(_, buf)
       local max_filesize = 100 * 1024 -- 100 KB

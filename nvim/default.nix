@@ -56,8 +56,11 @@ in
       nvim-notify
       SchemaStore-nvim
       tokyonight-nvim
-      (fromGitHub { inherit pkgs; rev ="6cb6ada92e53a9788db834a1f09c2f9f2d9245ce"; ref="refs/tags/v1.2.0"; user="hinell"; repo="lsp-timeout.nvim"; })
+      vim-speeddating
+      vim-abolish
+      # (fromGitHub { inherit pkgs; rev ="6325906730330105a9adc41d0ceb8499b3072e2b"; ref="main"; user="hinell"; repo="lsp-timeout.nvim"; })
       (fromGitHub { inherit pkgs; rev ="b9721662daedd880ca0a0358cf6ffbff60617ab3"; ref="main"; user="David-Kunz"; repo="gen.nvim"; })
+      (fromGitHub { inherit pkgs; rev ="d3f72beec9967eebbdcc1ad687c8826382b28b40"; ref="master"; user="alpertuna"; repo="vim-header"; })
     ];
 
     extraPackages = [
@@ -89,7 +92,7 @@ in
       pkgs.stylua
       pkgs.dockerfile-language-server-nodejs
       pkgs.nil
-      pkgs.yamlfmt 
+      pkgs.yamlfmt
       pkgs.chafa
       pkgs.fswatch
       pkgs.tree-sitter

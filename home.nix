@@ -1,11 +1,31 @@
-{ config, pkgs, ... }: {
+{ config, pkgs, system, lib, inputs, ... }: {
+
   home.username = "k1ng";
   home.homeDirectory = "/home/k1ng";
   home.stateVersion = "24.11"; # Please read the comment before changing.
-  programs.home-manager.enable = true;
   targets.genericLinux.enable = true;
 
-  home.packages = [
+  nixGL = {
+    packages = inputs.nixgl.packages;
+    defaultWrapper = "nvidia"; # I'm using nvidia, change for your system
+  };
+
+  programs = {
+    home-manager = {
+      enable = true;
+    };
+
+    direnv = {
+      enable = true;
+      nix-direnv.enable = true;
+    };
+
+    ghostty = {
+      enable = true;
+    };
+  };
+
+  home.packages = with pkgs; [
     pkgs.bat
     pkgs.cowsay
     pkgs.devenv
@@ -16,6 +36,7 @@
     pkgs.ripgrep
     pkgs.thefuck
     pkgs.htop
+    (config.lib.nixGL.wrap inputs.ghostty.packages.${system}.default)
   ];
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage

@@ -33,6 +33,12 @@ map('n', 'Y', 'y$', { desc = 'Copy to end of line' })
 -- nohlsearch
 map('n', '<esc><esc>', ':nohlsearch<CR>', { desc = 'Clear highlights' })
 
+-- Buffer navigation
+map('n', ']b', '<cmd>bnext<CR>', { desc = 'Buffer Next' })
+map('n', '[b', '<cmd>bprev<CR>', { desc = 'Buffer Previous' })
+map('n', 'gn', '<cmd>bnext<CR>', { desc = 'Buffer Next' })
+map('n', 'gp', '<cmd>bprev<CR>', { desc = 'Buffer Previous' })
+
 -- Split
 map('n', '<leader>w-', '<C-W>s', { desc = 'Split window below' })
 map('n', '<leader>w|', '<C-W>v', { desc = 'Split window right' })
