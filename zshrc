@@ -1,3 +1,16 @@
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) must go above this block; everything else may go below.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+    source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
+bindkey -e
+bindkey -s '^o' 'nvim $(fzf)^M'
+
+bindkey '^[[1;5C' emacs-forward-word
+bindkey '^[[1;5D' emacs-backward-word
+
 function source_files_in_dir() {
     SHDROPINDIRS="$1"
     while read -rd: dir; do
@@ -15,53 +28,78 @@ function addToPath() {
     fi
 }
 
-function man() {
-  LESS_TERMCAP_mb=$'\e[01;31m' \
-    LESS_TERMCAP_md=$'\e[01;31m' \
-    LESS_TERMCAP_me=$'\e[0m' \
-    LESS_TERMCAP_se=$'\e[0m' \
-    LESS_TERMCAP_so=$'\e[45;93m' \
-    LESS_TERMCAP_ue=$'\e[0m' \
-    LESS_TERMCAP_us=$'\e[4;93m' \
-    /usr/bin/man "$@"
+# ZINIT plugin manager
+ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
+if [ ! -d "$ZINIT_HOME" ]; then
+    mkdir -p "$(dirname $ZINIT_HOME)"
+    git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
+fi
+source "${ZINIT_HOME}/zinit.zsh"
+
+# Add in Powerlevel10k
+zinit ice depth=1; zinit light romkatv/powerlevel10k
+
+# Add in snippets
+zinit snippet OMZL::git.zsh
+zinit snippet OMZP::git
+zinit snippet OMZP::sudo
+zinit snippet OMZP::aws
+zinit snippet OMZP::golang
+zinit snippet OMZP::kubectl
+zinit snippet OMZP::kubectx
+zinit snippet OMZP::command-not-found
+zinit snippet OMZP::ssh-agent
+
+# Load completions
+autoload -Uz compinit
+[[ -z "$ZSH_COMPLETION_INITIALIZED" ]] && {
+    ZSH_COMPLETION_INITIALIZED=1
+    compinit
 }
 
-export ZSH="$HOME/.oh-my-zsh"
+# Add in zsh plugins
+zinit light zsh-users/zsh-syntax-highlighting
+zinit light zsh-users/zsh-completions
+zinit light zsh-users/zsh-autosuggestions
+zinit light Aloxaf/fzf-tab
+
+zinit cdreplay -q
+
+# Aliases
+alias ls='ls --color'
+alias vim='nvim'
+alias c='clear'
+alias v='nvim'
+alias nv='nvim .'
+alias ll='eza -la'
+alias ls='eza -a'
+alias tree='eza --tree'
+
+# Shell integrations
+eval "$(fzf --zsh)"
+eval "$(zoxide init --cmd cd zsh)"
+
 export editor='nvim'
-
-ZSH_THEME="jnrowe"
-DISABLE_UPDATE_PROMPT="true"
-
-# zstyle -t ':omz:plugin:tmux:auto' start 'yes'
-
-source $ZSH/oh-my-zsh.sh
-
 [ "$TERM" = "xterm-kitty" ] && alias ssh="kitty +kitten ssh"
-
 if [[ -n $SSH_CONNECTION ]]; then
-  export EDITOR='vim'
+    export EDITOR='vim'
 else
-  export EDITOR='nvim'
+    export EDITOR='nvim'
 fi
-
-export USE_GKE_GCLOUD_AUTH_PLUGIN=True
 
 export GOROOT=/usr/local/go
 export GOPATH=$HOME/go
 
 export NVM_DIR="$HOME/.nvm"
-function init_nvm() {
-  [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-  [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+nvm() {
+    echo "🚨 NVM not loaded! Loading now..."
+    unset -f nvm
+    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+    [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
 }
 
-setopt histignorealldups
-setopt HIST_EXPIRE_DUPS_FIRST
-setopt HIST_IGNORE_DUPS
-setopt HIST_IGNORE_ALL_DUPS
-setopt HIST_IGNORE_SPACE
-setopt HIST_FIND_NO_DUPS
-setopt HIST_SAVE_NO_DUPS
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 # Paths
 addToPath $HOME/.yarn/bin
@@ -75,3 +113,20 @@ addToPath $GOPATH/bin
 addToPath $HOME/.pulumi/bin
 addToPath $HOME/.config/composer/vendor/bin
 addToPath $HOME/.local/bin
+
+zstyle ':completion:*' use-cache on
+zstyle ':completion:*' cache-path ~/.zsh/cache
+zstyle ':completion:*' rehash true
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
+zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
+zstyle ':completion:*:git-checkout:*' sort false
+zstyle ':completion:*:descriptions' format '[%d]'
+zstyle ':completion:*' menu no
+zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -1 --color=always $realpath'
+zstyle ':fzf-tab:*' fzf-flags --color=fg:1,fg+:2 --bind=tab:accept
+zstyle ':fzf-tab:*' use-fzf-default-opts yes
+zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
+zstyle ':fzf-tab:*' continuous-trigger 'ctrl-e'
+
+export NIXPKGS_ALLOW_UNFREE=1
+export TERM=xterm-256color

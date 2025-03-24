@@ -4,6 +4,7 @@ return {
     dependencies = { 'L3MON4D3/LuaSnip', version = 'v2.*' },
     version = 'v0.*',
     build = 'cargo build --release',
+    opts_extend = { "sources.default" },
     opts = {
       snippets = {
         expand = function(snippet)
@@ -20,8 +21,9 @@ return {
         end,
       },
       sources = {
+        default = { 'lsp', 'path', 'snippets', 'buffer', 'lazydev', 'markdown' },
         completion = {
-          enabled_providers = { 'lsp', 'path', 'snippets', 'buffer', 'lazydev', 'markdown' },
+          menu = { auto_show = function(ctx) return ctx.mode ~= 'cmdline' end },
         },
         providers = {
           lsp = { fallback_for = { 'lazydev' } },

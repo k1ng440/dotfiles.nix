@@ -11,36 +11,42 @@
       url = "github:LongerHV/kubectl-overlay";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    ghosttyhm.url = "github:clo4/ghostty-hm-module";
     ghostty = {
       url = "github:ghostty-org/ghostty";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    color-schemes = {
+      url = "github:mbadolato/iTerm2-Color-Schemes";
+      flake = false;
+    };
+
     nixgl = {
       url = "github:nix-community/nixGL";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
-  outputs = inputs@{ nixpkgs, home-manager, ghosttyhm, ghostty, nixgl, ... }:
+
+  outputs = inputs@{ nixpkgs, home-manager, ghostty, color-schemes, nixgl, ... }:
     let
       system = "x86_64-linux";
-      pkgs = nixpkgs.legacyPackages.${system};
-      allowed-unfree-packages = [ "nvidia" ];
     in {
       nixpkgs.config.allowUnfree = true;
       homeConfigurations."k1ng" = home-manager.lib.homeManagerConfiguration {
-        inherit pkgs;
+        pkgs = import nixpkgs {
+          system = system;
+          config.allowUnfree = true;
+        };    
         extraSpecialArgs = { 
           inherit inputs; 
           inherit system;
-          inherit allowed-unfree-packages;
+          inherit color-schemes;
         };
         modules = [
           ./home.nix
           ./nix_modules
           ./nvim
-          ghosttyhm.homeModules.default
         ];
       };
     };

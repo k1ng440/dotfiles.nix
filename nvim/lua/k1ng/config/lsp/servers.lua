@@ -33,6 +33,10 @@ M.servers = {
   helm_ls = {},
   html = {},
   ts_ls = {},
+  volar = {
+    root_dir = require('lspconfig').util.root_pattern('vue.config.js', 'vue.config.ts', 'nuxt.config.js', 'nuxt.config.ts'),
+    filetypes = { 'vue', 'javascript', 'typescript', 'javascriptreact', 'typescriptreact', 'json' },
+  },
   intelephense = {
     root_dir = function(fname)
       local root_files = {
@@ -170,6 +174,7 @@ M.servers = {
     },
   },
   jdtls = {},
+  pyright = {},
 }
 
 function M.setCapabilities(server_name, capabilities)

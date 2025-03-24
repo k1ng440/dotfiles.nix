@@ -65,13 +65,18 @@ require('blink.cmp').setup({
     nerd_font_variant = 'mono',
     kind_icons = require('k1ng.config.icons').kinds,
   },
-  sources = {
-    completion = {
-      enabled_providers = { 'lsp', 'path', 'snippets', 'buffer', 'lazydev', 'markdown' },
+  completion = {
+    menu = {
+      auto_show = function(ctx)
+        return ctx.mode ~= 'cmdline' or not vim.tbl_contains({ '/', '?' }, vim.fn.getcmdtype())
+      end,
     },
+  },
+  sources = {
+    default = { 'lsp', 'path', 'snippets', 'buffer', 'lazydev', 'markdown' },
     providers = {
       ---@diagnostic disable-next-line: missing-fields
-      lsp = { fallback_for = { 'lazydev' } },
+      lsp = { fallbacks = { 'lazydev' } },
       ---@diagnostic disable-next-line: missing-fields
       lazydev = { name = 'LazyDev', module = 'lazydev.integrations.blink' },
       ---@diagnostic disable-next-line: missing-fields
@@ -84,7 +89,7 @@ require('blink.cmp').setup({
   },
 })
 
--- stevearc/conform.nvim setup. https://github.comstevearc/conform.nvim
+-- stevearc/conform.nvim setup. https://github.com/stevearc/conform.nvim
 -- formatter
 vim.schedule(function()
   require('conform').setup({
@@ -98,7 +103,6 @@ vim.schedule(function()
       markdown = { 'prettierd', 'prettier', stop_after_first = true },
       vue = { 'prettierd', 'prettier', stop_after_first = true },
       go = { 'goimports', 'gofumpt' },
-      yaml = { 'yamlfmt' },
       json = { 'jq' },
       templ = { 'templ' },
       ['_'] = { 'trim_whitespace', 'trim_newlines', 'squeeze_blanks' },

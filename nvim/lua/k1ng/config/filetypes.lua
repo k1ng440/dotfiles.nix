@@ -10,6 +10,7 @@ vim.filetype.add({
     ['.env.example'] = 'sh',
     ['vifmrc'] = 'vim',
     ['.eslintrc.json'] = 'jsonc',
+    ['wrangler.json'] = 'jsonc',
   },
   pattern = {
     ['tsconfig*.json'] = 'jsonc',
@@ -26,6 +27,7 @@ vim.filetype.add({
     ['.*/playbooks/.*%.ya?ml'] = 'yaml.ansible',
     ['.*/roles/.*/tasks/.*%.ya?ml'] = 'yaml.ansible',
     ['.*/roles/.*/handlers/.*%.ya?ml'] = 'yaml.ansible',
+    ['.*%.playbook%.ya?ml'] = 'yaml.ansible',
     -- systemd
     ['.*%.service'] = 'systemd',
     ['.*%.service%.j2'] = 'systemd',

@@ -9,6 +9,7 @@ vim.schedule(function()
   fzf.setup({
     'fzf-native',
     fzf_colors = true,
+    file_ignore_patterns = { 'node_modules/.*', '.git/.*' },
     actions = {
       files = {
         ['default'] = actions.file_edit,

@@ -37,8 +37,8 @@ return {
       },
     },
     config = function(_, opts)
+      ---@diagnostic disable-next-line: missing-fields
       require('nvim-treesitter.configs').setup({
-
         highlight = {
           disable = function(_, buf)
             local max_filesize = 100 * 1024 -- 100 KB
@@ -48,7 +48,7 @@ return {
             end
           end,
         },
-        indent = { enable = true, disable = {} },
+        indent = { enable = true, disable = { 'yaml' } },
         incremental_selection = {
           enable = true,
           keymaps = {

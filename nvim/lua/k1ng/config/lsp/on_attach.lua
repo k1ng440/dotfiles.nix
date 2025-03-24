@@ -1,3 +1,4 @@
+local methods = vim.lsp.protocol.Methods
 local Util = require('k1ng.util')
 local keymap = Util.keymap
 
@@ -74,10 +75,6 @@ vim.api.nvim_create_autocmd('LspAttach', {
     nmap('K', vim.lsp.buf.hover, 'Hover Documentation')
     imap('<C-k>', vim.lsp.buf.signature_help, 'Signature Documentation')
 
-    vim.keymap.set('n', '<leader>th', function()
-      vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
-    end, { desc = '[T]oggle Inlay [H]ints' })
-
     -- Lesser used LSP functionality
     nmap('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
     nmap('<leader>wa', vim.lsp.buf.add_workspace_folder, '[W]orkspace [A]dd Folder')
@@ -86,33 +83,67 @@ vim.api.nvim_create_autocmd('LspAttach', {
       print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
     end, '[W]orkspace [L]ist Folders')
 
-    -- The following two autocommands are used to highlight references of the
-    -- word under your cursor when your cursor rests there for a little while.
-    --    See `:help CursorHold` for information about when this is executed
-    --
-    -- When you move your cursor, the highlights will be cleared (the second autocommand).
-    if client and client.server_capabilities.documentHighlightProvider then
-      local highlight_augroup = vim.api.nvim_create_augroup('k1ng-lsp-highlight', { clear = false })
-      vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
-        buffer = event.buf,
-        group = highlight_augroup,
+    if client:supports_method(methods.textDocument_signatureHelp) then
+      local blink_window = require('blink.cmp.completion.windows.menu')
+      local blink = require('blink.cmp')
+
+      imap('<C-k>', function()
+        -- Close the completion menu first (if open).
+        if blink_window.win:is_open() then
+          blink.hide()
+        end
+
+        vim.lsp.buf.signature_help()
+      end, 'Signature help')
+    end
+
+    if client:supports_method(methods.textDocument_documentHighlight) then
+      local under_cursor_highlights_group = vim.api.nvim_create_augroup('lsp_cursor_highlights', { clear = false })
+      vim.api.nvim_create_autocmd({ 'CursorHold', 'InsertLeave' }, {
+        group = under_cursor_highlights_group,
+        desc = 'Highlight references under the cursor',
+        buffer = buffer,
         callback = vim.lsp.buf.document_highlight,
       })
-
-      vim.api.nvim_create_autocmd({ 'CursorMoved', 'CursorMovedI' }, {
-        buffer = event.buf,
-        group = highlight_augroup,
+      vim.api.nvim_create_autocmd({ 'CursorMoved', 'InsertEnter', 'BufLeave' }, {
+        group = under_cursor_highlights_group,
+        desc = 'Clear highlight references',
+        buffer = buffer,
         callback = vim.lsp.buf.clear_references,
       })
-
-      vim.api.nvim_create_autocmd('LspDetach', {
-        group = vim.api.nvim_create_augroup('k1ng-lsp-detach', { clear = true }),
-        callback = function(event2)
-          vim.lsp.buf.clear_references()
-          vim.api.nvim_clear_autocmds({ group = 'k1ng-lsp-highlight', buffer = event2.buf })
-        end,
-      })
     end
+
+    if client:supports_method(methods.textDocument_inlayHint) then
+      nmap('<leader>ci', function()
+        -- Toggle the hints:
+        local enabled = vim.lsp.inlay_hint.is_enabled({ bufnr = buffer })
+        vim.lsp.inlay_hint.enable(not enabled, { bufnr = buffer })
+
+        -- If toggling them on, turn them back off when entering insert mode.
+        if not enabled then
+          vim.api.nvim_create_autocmd('InsertEnter', {
+            buffer = buffer,
+            once = true,
+            callback = function()
+              vim.lsp.inlay_hint.enable(false, { bufnr = buffer })
+            end,
+          })
+        end
+      end, 'Toggle inlay hints')
+    end
+
+    local show_handler = vim.diagnostic.handlers.virtual_text.show
+    assert(show_handler)
+    local hide_handler = vim.diagnostic.handlers.virtual_text.hide
+    vim.diagnostic.handlers.virtual_text = {
+      show = function(ns, bufnr, diagnostics, opts)
+        table.sort(diagnostics, function(diag1, diag2)
+          return diag1.severity > diag2.severity
+        end)
+        return show_handler(ns, bufnr, diagnostics, opts)
+      end,
+      hide = hide_handler,
+    }
 
     -- Go
     -- workaround for gopls not supporting semanticTokensProvider

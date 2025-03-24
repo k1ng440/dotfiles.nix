@@ -1,11 +1,8 @@
 {pkgs, ...}:
 
-let
-    fromGitHub = import ../functions/fromGitHub.nix;
-in
-
-{
-
+let 
+  fromGitHub = import ../functions/fromGitHub.nix;
+in {
   xdg.configFile = {
     "nvim/lua".source = ./lua;
     "nvim/after".source = ./after;
@@ -96,6 +93,7 @@ in
       pkgs.chafa
       pkgs.fswatch
       pkgs.tree-sitter
+      pkgs.pyright
     ];
   };
 }
