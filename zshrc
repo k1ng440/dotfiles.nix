@@ -130,3 +130,6 @@ zstyle ':fzf-tab:*' continuous-trigger 'ctrl-e'
 
 export NIXPKGS_ALLOW_UNFREE=1
 export TERM=xterm-256color
+export LANG=en_US.UTF-8
+export LC_ALL=en_US.UTF-8
+export LC_CTYPE=en_US.UTF-8
