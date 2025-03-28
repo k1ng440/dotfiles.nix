@@ -29,6 +29,8 @@ keymap('n', ']d', function()
 end, { desc = 'LSP: Go to next diagnostic message' })
 
 keymap('n', '<leader>e', vim.diagnostic.open_float, { desc = 'LSP: Open floating diagnostic message' })
+keymap('n', 'gl', vim.diagnostic.open_float, { desc = 'LSP: Open floating diagnostic message' })
+
 keymap('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'LSP: Open diagnostics list' })
 keymap('n', '<leader>lrs', '<cmd>LspRestart<cr>', { desc = 'LSP: Restart' })
 

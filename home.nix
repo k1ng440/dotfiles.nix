@@ -1,4 +1,4 @@
-{ config, pkgs, system, lib, inputs, color-schemes, ... }: {
+{ config, pkgs, system, inputs, color-schemes, ... }: {
 
   home.username = "k1ng";
   home.homeDirectory = "/home/k1ng";
@@ -102,7 +102,7 @@
     };
   };
 
-  home.packages = with pkgs; [
+  home.packages = [
     pkgs.bat
     pkgs.cowsay
     pkgs.devenv

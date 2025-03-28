@@ -44,21 +44,16 @@ require('gen').setup({
 -- blink.cmp is a completion plugin with support for LSPs and external sources that updates on every keystroke with minimal overhead (0.5-4ms async).
 ---@diagnostic disable-next-line: missing-fields
 require('blink.cmp').setup({
-  keymap = { preset = 'default' },
-  -- snippets = {
-  --   expand = function(snippet)
-  --     require('luasnip').lsp_expand(snippet)
-  --   end,
-  --   active = function(filter)
-  --     if filter and filter.direction then
-  --       return require('luasnip').jumpable(filter.direction)
-  --     end
-  --     return require('luasnip').in_snippet()
-  --   end,
-  --   jump = function(direction)
-  --     require('luasnip').jump(direction)
-  --   end,
-  -- },
+  -- stylua: ignore
+  keymap = {
+    ['<return>'] = { 'accept', 'fallback' },
+    ['<C-d>'] = { 'show', 'show_documentation', 'hide_documentation' },
+    ['<C-p>'] = { 'select_prev', 'fallback' },
+    ['<C-n>'] = { 'select_next', 'fallback' },
+    ['<Tab>'] = { 'snippet_forward', 'fallback' },
+    ['<S-Tab>'] = { 'snippet_backward', 'fallback' },
+  },
+
   ---@diagnostic disable-next-line: missing-fields
   appearance = {
     use_nvim_cmp_as_default = true,
@@ -66,11 +61,14 @@ require('blink.cmp').setup({
     kind_icons = require('k1ng.config.icons').kinds,
   },
   completion = {
-    menu = {
-      auto_show = function(ctx)
-        return ctx.mode ~= 'cmdline' or not vim.tbl_contains({ '/', '?' }, vim.fn.getcmdtype())
-      end,
-    },
+    accept = { auto_brackets = { enabled = false } },
+    documentation = { auto_show = true, auto_show_delay_ms = 500 },
+    ghost_text = { enabled = true },
+    -- menu = {
+    --   auto_show = function(ctx)
+    --     return ctx.mode ~= 'cmdline' or not vim.tbl_contains({ '/', '?' }, vim.fn.getcmdtype())
+    --   end,
+    -- },
   },
   sources = {
     default = { 'lsp', 'path', 'snippets', 'buffer', 'lazydev', 'markdown' },
@@ -81,12 +79,26 @@ require('blink.cmp').setup({
       lazydev = { name = 'LazyDev', module = 'lazydev.integrations.blink' },
       ---@diagnostic disable-next-line: missing-fields
       markdown = { name = 'RenderMarkdown', module = 'render-markdown.integ.blink' },
+      cmdline = {
+        enabled = function()
+          return vim.fn.getcmdtype() ~= ':' or not vim.fn.getcmdline():match("^[%%0-9,'<>%-]*!")
+        end,
+      },
     },
   },
   ---@diagnostic disable-next-line: missing-fields
   signature = {
     enabled = true,
   },
+  fuzzy = {
+    sorts = {
+      'exact',
+      -- defaults
+      'score',
+      'sort_text',
+    },
+  },
+  snippets = { preset = 'luasnip' },
 })
 
 -- stevearc/conform.nvim setup. https://github.com/stevearc/conform.nvim

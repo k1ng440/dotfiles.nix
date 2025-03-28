@@ -2,6 +2,17 @@ if vim.loader then
   vim.loader.enable()
 end
 
+local disabled_providers = {
+  'node',
+  'perl',
+  'python3',
+  'ruby',
+}
+
+for _, provider in pairs(disabled_providers) do
+  vim.g['loaded_' .. provider .. '_provider'] = 0
+end
+
 local opt = vim.opt
 local g = vim.g
 
