@@ -43,63 +43,147 @@ require('gen').setup({
 -- blink.cmp setup. https://cmp.saghen.dev
 -- blink.cmp is a completion plugin with support for LSPs and external sources that updates on every keystroke with minimal overhead (0.5-4ms async).
 ---@diagnostic disable-next-line: missing-fields
-require('blink.cmp').setup({
-  -- stylua: ignore
-  keymap = {
-    ['<return>'] = { 'accept', 'fallback' },
-    ['<C-d>'] = { 'show', 'show_documentation', 'hide_documentation' },
-    ['<C-p>'] = { 'select_prev', 'fallback' },
-    ['<C-n>'] = { 'select_next', 'fallback' },
-    ['<Tab>'] = { 'snippet_forward', 'fallback' },
-    ['<S-Tab>'] = { 'snippet_backward', 'fallback' },
-  },
+vim.schedule(function()
+  require('luasnip.loaders.from_vscode').lazy_load()
+  require('luasnip.loaders.from_vscode').lazy_load({ paths = { vim.fn.stdpath('config') .. '/snippets' } })
 
-  ---@diagnostic disable-next-line: missing-fields
-  appearance = {
-    use_nvim_cmp_as_default = true,
-    nerd_font_variant = 'mono',
-    kind_icons = require('k1ng.config.icons').kinds,
-  },
-  completion = {
-    accept = { auto_brackets = { enabled = false } },
-    documentation = { auto_show = true, auto_show_delay_ms = 500 },
-    ghost_text = { enabled = true },
-    -- menu = {
-    --   auto_show = function(ctx)
-    --     return ctx.mode ~= 'cmdline' or not vim.tbl_contains({ '/', '?' }, vim.fn.getcmdtype())
-    --   end,
-    -- },
-  },
-  sources = {
-    default = { 'lsp', 'path', 'snippets', 'buffer', 'lazydev', 'markdown' },
-    providers = {
-      ---@diagnostic disable-next-line: missing-fields
-      lsp = { fallbacks = { 'lazydev' } },
-      ---@diagnostic disable-next-line: missing-fields
-      lazydev = { name = 'LazyDev', module = 'lazydev.integrations.blink' },
-      ---@diagnostic disable-next-line: missing-fields
-      markdown = { name = 'RenderMarkdown', module = 'render-markdown.integ.blink' },
-      cmdline = {
-        enabled = function()
-          return vim.fn.getcmdtype() ~= ':' or not vim.fn.getcmdline():match("^[%%0-9,'<>%-]*!")
-        end,
+  local extends = {
+    typescript = { 'tsdoc' },
+    javascript = { 'jsdoc' },
+    lua = { 'luadoc' },
+    python = { 'pydoc' },
+    rust = { 'rustdoc' },
+    cs = { 'csharpdoc' },
+    java = { 'javadoc' },
+    c = { 'cdoc' },
+    cpp = { 'cppdoc' },
+    php = { 'phpdoc' },
+    kotlin = { 'kdoc' },
+    ruby = { 'rdoc' },
+    sh = { 'shelldoc' },
+  }
+
+  for ft, snips in pairs(extends) do
+    require('luasnip').filetype_extend(ft, snips)
+  end
+
+  require('blink.cmp').setup({
+    keymap = {
+      ['<return>'] = { 'accept', 'fallback' },
+      ['<C-d>'] = { 'show', 'show_documentation', 'hide_documentation' },
+      ['<C-p>'] = { 'select_prev', 'fallback' },
+      ['<C-n>'] = { 'select_next', 'fallback' },
+      ['<Tab>'] = { 'snippet_forward', 'fallback' },
+      ['<S-Tab>'] = { 'snippet_backward', 'fallback' },
+    },
+    ---@diagnostic disable-next-line: missing-fields
+    appearance = {
+      use_nvim_cmp_as_default = true,
+      nerd_font_variant = 'mono',
+      kind_icons = require('k1ng.config.icons').kinds,
+    },
+    completion = {
+      accept = { auto_brackets = { enabled = false } },
+      documentation = { auto_show = false, auto_show_delay_ms = 500, window = { border = 'rounded' } },
+      ghost_text = { enabled = true, show_with_menu = false },
+      menu = {
+        border = 'rounded',
+        draw = {
+          treesitter = { 'lsp' },
+        },
+        --   auto_show = function(ctx)
+        --     return ctx.mode ~= 'cmdline' or not vim.tbl_contains({ '/', '?' }, vim.fn.getcmdtype())
+        --   end,
+      },
+      list = {
+        selection = {
+          preselect = function(ctx)
+            return ctx.mode ~= 'cmdline'
+          end,
+        },
       },
     },
-  },
-  ---@diagnostic disable-next-line: missing-fields
-  signature = {
-    enabled = true,
-  },
-  fuzzy = {
-    sorts = {
-      'exact',
-      -- defaults
-      'score',
-      'sort_text',
+    sources = {
+      default = { 'lsp', 'path', 'snippets', 'buffer', 'lazydev', 'markdown', 'ripgrep' },
+      providers = {
+        ---@diagnostic disable-next-line: missing-fields
+        lsp = {
+          name = 'LSP',
+          module = 'blink.cmp.sources.lsp',
+          fallbacks = { 'lazydev' },
+          score_offset = 200, -- the higher the number, the higher the priority
+          -- Filter text items from the LSP provider, since we have the buffer provider for that
+          transform_items = function(_, items)
+            for _, item in ipairs(items) do
+              if item.kind == require('blink.cmp.types').CompletionItemKind.Snippet then
+                item.score_offset = item.score_offset - 3
+              end
+            end
+            return vim.tbl_filter(function(item)
+              return item.kind ~= require('blink.cmp.types').CompletionItemKind.Text
+            end, items)
+          end,
+        },
+        path = {
+          name = 'Path',
+          module = 'blink.cmp.sources.path',
+          score_offset = 25,
+          opts = {
+            trailing_slash = false,
+            label_trailing_slash = true,
+          },
+        },
+        buffer = {
+          name = 'Buffer',
+          module = 'blink.cmp.sources.buffer',
+          min_keyword_length = 3,
+          score_offset = 15, -- the higher the number, the higher the priority
+        },
+        snippets = {
+          name = 'Snippets',
+          module = 'blink.cmp.sources.snippets',
+          min_keyword_length = 2,
+          score_offset = 60, -- the higher the number, the higher the priority
+        },
+        ---@diagnostic disable-next-line: missing-fields
+        lazydev = { name = 'LazyDev', module = 'lazydev.integrations.blink' },
+        ---@diagnostic disable-next-line: missing-fields
+        markdown = { name = 'RenderMarkdown', module = 'render-markdown.integ.blink' },
+        cmdline = {
+          enabled = function()
+            return vim.fn.getcmdtype() ~= ':' or not vim.fn.getcmdline():match("^[%%0-9,'<>%-]*!")
+          end,
+        },
+        ripgrep = {
+          module = 'blink-ripgrep',
+          name = 'Ripgrep',
+          ---@module "blink-ripgrep"
+          ---@type blink-ripgrep.Options
+          opts = {
+            prefix_min_len = 4,
+            score_offset = 10, -- should be lower priority
+            max_filesize = '300K',
+            search_casing = '--smart-case',
+          },
+        },
+      },
     },
-  },
-  snippets = { preset = 'luasnip' },
-})
+    ---@diagnostic disable-next-line: missing-fields
+    signature = {
+      enabled = true,
+    },
+    fuzzy = {
+      implementation = 'prefer_rust_with_warning',
+      sorts = {
+        'exact',
+        -- defaults
+        'score',
+        'sort_text',
+      },
+    },
+    snippets = { preset = 'luasnip' },
+  })
+end)
 
 -- stevearc/conform.nvim setup. https://github.com/stevearc/conform.nvim
 -- formatter
