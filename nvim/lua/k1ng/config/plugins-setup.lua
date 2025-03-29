@@ -9,6 +9,8 @@ require('bufferline').setup({})
 -- Plugin to improve viewing Markdown files in Neovim
 require('render-markdown').setup({})
 
+require('git-conflict').setup()
+
 -- gen.nvim setup. https://github.com/David-Kunz/gen.nvim
 -- Generate text using LLMs with customizable prompts
 require('gen').setup({
@@ -40,12 +42,11 @@ require('gen').setup({
   debug = false, -- Prints errors and the command which is run.
 })
 
--- blink.cmp setup. https://cmp.saghen.dev
--- blink.cmp is a completion plugin with support for LSPs and external sources that updates on every keystroke with minimal overhead (0.5-4ms async).
----@diagnostic disable-next-line: missing-fields
+-- luasnip setup
 vim.schedule(function()
-  require('luasnip.loaders.from_vscode').lazy_load()
   require('luasnip.loaders.from_vscode').lazy_load({ paths = { vim.fn.stdpath('config') .. '/snippets' } })
+  local luasnip = require('luasnip')
+  local types = require('luasnip.util.types')
 
   local extends = {
     typescript = { 'tsdoc' },
@@ -64,9 +65,33 @@ vim.schedule(function()
   }
 
   for ft, snips in pairs(extends) do
-    require('luasnip').filetype_extend(ft, snips)
+    luasnip.filetype_extend(ft, snips)
   end
 
+  luasnip.config.set_config({
+    region_check_events = 'InsertEnter',
+    delete_check_events = 'InsertLeave',
+  })
+  luasnip.config.setup({
+    ext_opts = {
+      [types.choiceNode] = {
+        active = {
+          virt_text = { { '●', 'GruvboxOrange' } },
+        },
+      },
+      [types.insertNode] = {
+        active = {
+          virt_text = { { '●', 'GruvboxBlue' } },
+        },
+      },
+    },
+  })
+end)
+
+-- blink.cmp setup. https://cmp.saghen.dev
+-- blink.cmp is a completion plugin with support for LSPs and external sources that updates on every keystroke with minimal overhead (0.5-4ms async).
+---@diagnostic disable-next-line: missing-fields
+vim.schedule(function()
   require('blink.cmp').setup({
     keymap = {
       ['<return>'] = { 'accept', 'fallback' },
@@ -168,20 +193,27 @@ vim.schedule(function()
         },
       },
     },
-    ---@diagnostic disable-next-line: missing-fields
-    signature = {
-      enabled = true,
-    },
+    signature = { enabled = true },
     fuzzy = {
       implementation = 'prefer_rust_with_warning',
-      sorts = {
-        'exact',
-        -- defaults
-        'score',
-        'sort_text',
-      },
+      sorts = { 'exact', 'score', 'sort_text' },
     },
     snippets = { preset = 'luasnip' },
+  })
+end)
+
+-- HakonHarnes/img-clip.nvim setup. https://github.com/HakonHarnes/img-clip.nvim
+vim.schedule(function()
+  require('img-clip').setup({
+    default = {
+      embed_image_as_base64 = false,
+      prompt_for_file_name = false,
+      drag_and_drop = {
+        insert_mode = true,
+      },
+      -- required for Windows users
+      use_absolute_path = true,
+    },
   })
 end)
 
@@ -197,16 +229,21 @@ vim.schedule(function()
       javascriptreact = { 'prettierd', 'prettier', stop_after_first = true },
       typescriptreact = { 'prettierd', 'prettier', stop_after_first = true },
       markdown = { 'prettierd', 'prettier', stop_after_first = true },
+      graphql = { 'prettierd', 'prettier', stop_after_first = true },
       vue = { 'prettierd', 'prettier', stop_after_first = true },
+      css = { 'prettierd', 'prettier', stop_after_first = true },
       go = { 'goimports', 'gofumpt' },
       json = { 'jq' },
       templ = { 'templ' },
+      svg = { 'xmlformat' },
+      sql = { 'pg_format' },
+      proto = { 'clang-format' },
+
       ['_'] = { 'trim_whitespace', 'trim_newlines', 'squeeze_blanks' },
     },
-    format_on_save = {
-      lsp_format = 'fallback',
-      timeout_ms = 500,
-    },
+    -- format_on_save = {
+    --   lsp_format = 'fallback',
+    -- },
     notify_on_error = true,
   })
 
@@ -227,6 +264,8 @@ vim.schedule(function()
     })
   end, { range = true })
   vim.keymap.set('n', '<leader>fm', '<CMD>Format<CR>', { desc = '[F]or[m]at Current Buffer' })
+  vim.keymap.set({ 'n', 'i' }, '<F12>', '<CMD>Format<CR>', { desc = 'Format', silent = true })
+  vim.keymap.set({ 'n', 'i' }, '<C-f>', '<CMD>Format<CR>', { desc = 'Format', silent = true })
 end)
 
 -- Oil setup. https://github.com/stevearc/oil.nvim

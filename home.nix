@@ -50,7 +50,7 @@
         font-family-bold = "ComicCodeLigatures-Bold";
         font-family-italic = "ComicCodeLigatures-Italic";
         font-family-bold-italic = "ComicCodeLigatures-BoldItalic";
-        #gtk-titlebar = false;
+        gtk-titlebar = false;
         window-decoration = false;
         bold-is-bright = true;
         copy-on-select = false;

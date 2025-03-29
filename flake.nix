@@ -27,7 +27,6 @@
     };
   };
 
-
   outputs = inputs@{ nixpkgs, home-manager, ghostty, color-schemes, nixgl, ... }:
     let
       system = "x86_64-linux";
