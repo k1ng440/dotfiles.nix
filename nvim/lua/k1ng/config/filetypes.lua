@@ -31,5 +31,6 @@ vim.filetype.add({
     -- systemd
     ['.*%.service'] = 'systemd',
     ['.*%.service%.j2'] = 'systemd',
+    ['.*/%.github[%w/]+workflows[%w/]+.*%.ya?ml'] = 'yaml.github',
   },
 })
