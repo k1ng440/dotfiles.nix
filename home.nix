@@ -1,18 +1,16 @@
-{ config, pkgs, system, nixgl, ghostty, color-schemes, ... }: {
-
+{ config, lib, pkgs, system, nixgl, ghostty, color-schemes, ... }: {
   home.username = "k1ng";
   home.homeDirectory = "/home/k1ng";
-  home.stateVersion = "24.11"; # Please read the comment before changing.
+  home.stateVersion = "25.05";
   targets.genericLinux.enable = true;
-  nixpkgs.config.allowUnfree = true;
 
-  nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (pkgs.lib.getName pkg) [
+  nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
     "nvidia"
   ];
 
   nixGL = {
     packages = nixgl.packages;
-    defaultWrapper = "nvidia"; # I'm using nvidia, change for your system
+    defaultWrapper = "nvidia";
   };
 
   programs = {

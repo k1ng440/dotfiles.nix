@@ -2,16 +2,16 @@
   description = "Home Manager configuration of k1ng";
 
   inputs = {
-    nixpkgs = {
+    nixpkgs-unstable = {
       url = "github:nixos/nixpkgs/nixos-unstable";
     };
     home-manager = {
       url = "github:nix-community/home-manager";
-      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
     kubectl = {
       url = "github:LongerHV/kubectl-overlay";
-      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
     ghostty = {
       url = "github:ghostty-org/ghostty";
@@ -22,20 +22,20 @@
     };
     nixgl = {
       url = "github:nix-community/nixGL";
-      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
   };
 
-  outputs = inputs@{ nixpkgs, home-manager, ghostty, color-schemes, nixgl, ... }:
+  outputs = inputs@{ self, nixpkgs-unstable, home-manager, ghostty, color-schemes, nixgl, kubectl, ... }:
     let
       system = "x86_64-linux";
+      pkgs = import nixpkgs-unstable {
+        inherit system;
+        config.allowUnfree = true;
+      };
     in {
-      nixpkgs.config.allowUnfree = true;
       homeConfigurations."k1ng" = home-manager.lib.homeManagerConfiguration {
-        pkgs = import nixpkgs {
-          system = system;
-          config.allowUnfree = true;
-        };
+        inherit pkgs;
         extraSpecialArgs = {
           inherit system;
           inherit color-schemes;

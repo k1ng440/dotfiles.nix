@@ -8,6 +8,7 @@ in {
     "nvim/lsp".source = ./lsp;
     "nvim/after".source = ./after;
     "nvim/init.lua".source = ./init.lua;
+    "nvim/intelephense-license.txt".source = ../secrets/intelephense-license.txt;
   };
 
   programs.neovim = {
