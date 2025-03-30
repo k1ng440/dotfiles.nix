@@ -1,6 +1,5 @@
-require('neoconf').setup({})
 local Util = require('k1ng.util')
-local keymap = Util.keymap
+local keymap = Util.buf_keymap
 local methods = vim.lsp.protocol.Methods
 
 local diagnostic_signs = {
@@ -79,31 +78,55 @@ local restart_lsp_servers = function()
   local bufnr = vim.api.nvim_get_current_buf()
   local active_clients = vim.lsp.get_clients({ bufnr = bufnr })
   for _, client in ipairs(active_clients) do
-    vim.lsp.stop_client(client.id, true)
-    vim.lsp.start(client.config)
+    local client_name = client.name
+    local client_config = vim.lsp.config[client_name]
+    if client_config then
+      ---@diagnostic disable-next-line: missing-parameter
+      client.stop(true)
+      vim.lsp.buf_detach_client(bufnr, client.id)
+      vim.lsp.start(vim.tbl_deep_extend("force", client_config, {
+        root_dir = client.config.root_dir
+      }), {bufnr = bufnr })
+      vim.print(vim.inspect(client.config))
+      vim.notify('LSP Restarted: ' .. client_name, vim.log.levels.INFO)
+    else
+      vim.notify('LSP Restart Failed: Configuration for ' .. client_name .. ' not found.', vim.log.levels.ERROR)
+    end
   end
 end
 
 vim.api.nvim_create_user_command('LspRestart', function()
   restart_lsp_servers()
-end, { force = true })
+end, { desc = 'Manually restart the given language client(s)' })
 
--- stylua: ignore start
-keymap('n', '[d', function() next_diagnostic_or_trouble(false) end, { desc = 'LSP: Go to previous diagnostic message' })
-keymap('n', ']d', function() next_diagnostic_or_trouble(true) end, { desc = 'LSP: Go to next diagnostic message' })
-keymap('n', 'gl', vim.diagnostic.open_float, { desc = 'LSP: Open floating diagnostic message' })
-keymap('n', 'gd', vim.lsp.buf.definition, '[G]oto [D]efinition')
-keymap('n', 'gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
-keymap('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'LSP: Open diagnostics list' })
-keymap('n', '<leader>lrs', restart_lsp_servers, { desc = 'LSP: Restart' })
-keymap('n', '<leader>D', '<cmd>FzfLua lsp_typedefs<CR>', 'Type [D]efinition')
-keymap('n', '<leader>ds', '<cmd>FzfLua lsp_document_symbols<CR>', '[D]ocument [S]ymbols')
-keymap('n', '<leader>ws', '<cmd>FzfLua lsp_workspace_symbols<CR>', '[W]orkspace [S]ymbols')
-keymap('n', '<leader>wl', function() print(vim.inspect(vim.lsp.buf.list_workspace_folders())) end, '[W]orkspace [L]ist Folders')
--- stylua: ignore end
+vim.api.nvim_create_user_command('LspLog', function()
+  vim.cmd(string.format('tabnew %s', vim.lsp.get_log_path()))
+end, { desc = 'Opens the Nvim LSP client log.' })
+
+vim.api.nvim_create_user_command('LspInfo', ':checkhealth vim.lsp', { desc = 'Alias to `:checkhealth vim.lsp`' })
 
 vim.api.nvim_create_autocmd('LspAttach', {
-  group = vim.api.nvim_create_augroup('lsp.global', { clear = true }),
+  group = vim.api.nvim_create_augroup('keymaps.lsp', { clear = true }),
+  callback = function(event)
+    local buffer = event.buf
+    -- stylua: ignore start
+    keymap(buffer, 'n', '[d', function() next_diagnostic_or_trouble(false) end, { desc = 'LSP: Go to previous diagnostic message' })
+    keymap(buffer, 'n', ']d', function() next_diagnostic_or_trouble(true) end, { desc = 'LSP: Go to next diagnostic message' })
+    keymap(buffer, 'n', 'gl', vim.diagnostic.open_float, { desc = 'LSP: Open floating diagnostic message' })
+    keymap(buffer, 'n', 'gd', vim.lsp.buf.definition, { desc = '[G]oto [D]efinition' })
+    keymap(buffer, 'n', 'gD', vim.lsp.buf.declaration, { desc = '[G]oto [D]eclaration' })
+    keymap(buffer, 'n', '<leader>q', vim.diagnostic.setloclist, { desc = 'LSP: Open diagnostics list' })
+    keymap(buffer, 'n', '<leader>lrs', restart_lsp_servers, { desc = 'LSP: Restart' })
+    keymap(buffer, 'n', '<leader>D', '<cmd>FzfLua lsp_typedefs<CR>', { desc = 'Type [D]efinition' })
+    keymap(buffer, 'n', '<leader>ds', '<cmd>FzfLua lsp_document_symbols<CR>',{ desc =  '[D]ocument [S]ymbols' })
+    keymap(buffer, 'n', '<leader>ws', '<cmd>FzfLua lsp_workspace_symbols<CR>', { desc = '[W]orkspace [S]ymbols' })
+    keymap(buffer, 'n', '<leader>wl', function() print(vim.inspect(vim.lsp.buf.list_workspace_folders())) end, { desc = '[W]orkspace [L]ist Folders' })
+    -- stylua: ignore end
+  end,
+})
+
+vim.api.nvim_create_autocmd('LspAttach', {
+  group = vim.api.nvim_create_augroup('global.lsp', { clear = true }),
   callback = function(event)
     local buffer = event.buf
     local client = vim.lsp.get_client_by_id(event.data.client_id)
@@ -143,6 +166,23 @@ vim.api.nvim_create_autocmd('LspAttach', {
           })
         end
       end, { desc = 'Toggle inlay hints' })
+    end
+  end,
+})
+
+vim.api.nvim_create_autocmd('LspNotify', {
+  group = vim.api.nvim_create_augroup('autofold.lsp', { clear = true }),
+  callback = function(args)
+    local client = vim.lsp.get_client_by_id(args.data.client_id)
+    if not client then return end
+
+    if client:supports_method('textDocument/foldingRange') then
+      local win = vim.api.nvim_get_current_win()
+      vim.wo[win][0].foldexpr = 'v:lua.vim.lsp.foldexpr()'
+    end
+
+    if args.data.method == 'textDocument/didOpen' then
+      vim.lsp.foldclose('imports', vim.fn.bufwinid(args.buf))
     end
   end,
 })

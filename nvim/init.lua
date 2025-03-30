@@ -5,6 +5,9 @@ end
 local opt = vim.opt
 local g = vim.g
 
+-- Do not load lspconfig
+vim.g.lspconfig = {}
+
 g.mapleader = ' '
 g.maplocalleader = ' '
 g.header_field_author = "Asaduzzaman 'Asad' Pavel"

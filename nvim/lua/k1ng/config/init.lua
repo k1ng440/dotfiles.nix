@@ -7,6 +7,7 @@ require('k1ng.config.lastplace')
 require('k1ng.config.filetypes')
 
 require('k1ng.config.lsp-setup')
+require('k1ng.config.lint-setup')
 
 --- plugins
 require('k1ng.config.plugins-setup')

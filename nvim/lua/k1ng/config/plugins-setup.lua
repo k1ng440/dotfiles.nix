@@ -75,10 +75,10 @@ vim.schedule(function()
   luasnip.config.setup({
     ext_opts = {
       [types.choiceNode] = {
-        active = { virt_text = { { '●', 'DiagnosticHint' } }, },
+        active = { virt_text = { { '●', 'DiagnosticHint' } } },
       },
       [types.insertNode] = {
-        active = { virt_text = { { '●', 'String' } }, },
+        active = { virt_text = { { '●', 'String' } } },
       },
     },
   })
@@ -92,14 +92,14 @@ vim.schedule(function()
     keymap = {
       ['<return>'] = { 'accept', 'fallback' },
       ['<C-d>'] = { 'show', 'show_documentation', 'hide_documentation' },
-      ["<C-e>"] = { "cancel", "fallback" },
+      ['<C-e>'] = { 'cancel', 'fallback' },
       ['<C-p>'] = { 'select_prev', 'fallback' },
       ['<C-n>'] = { 'select_next', 'fallback' },
       ['<Tab>'] = { 'snippet_forward', 'fallback' },
       ['<S-Tab>'] = { 'snippet_backward', 'fallback' },
-      ["<C-Space>"] = { "show_documentation", "hide_documentation", "fallback", },
-      ["<C-f>"] = { "scroll_documentation_down", "fallback" },
-      ["<C-b>"] = { "scroll_documentation_up", "fallback" },
+      ['<C-Space>'] = { 'show_documentation', 'hide_documentation', 'fallback' },
+      ['<C-f>'] = { 'scroll_documentation_down', 'fallback' },
+      ['<C-b>'] = { 'scroll_documentation_up', 'fallback' },
     },
     ---@diagnostic disable-next-line: missing-fields
     appearance = {
@@ -270,7 +270,6 @@ end)
 
 -- Oil setup. https://github.com/stevearc/oil.nvim
 -- file explorer that lets you edit your filesystem like a normal Neovim buffer.
-
 local oil_detail = false
 require('oil').setup({
   default_file_explorer = true,
@@ -516,13 +515,19 @@ for name, fn in pairs(move) do
   end
 end
 
+-- nvim-treesitter-context. https://github.com/nvim-treesitter/nvim-treesitter-context
+require('treesitter-context').setup({
+  enable = true,
+})
+-- stylua: ignore start
+vim.keymap.set('n', '[c', function() require('treesitter-context').go_to_context(vim.v.count1) end, { silent = true })
+-- stylua: ignore end
+
 -- trouble.nvim setup. https://github.com/folke/trouble.nvim
 -- A pretty list for showing diagnostics, references, telescope results, quickfix and location lists to help you solve all the trouble your code is causing.
 ---@diagnostic disable-next-line: missing-fields
-require('trouble').setup({
-  action_keys = { open_tab = '<c-q>' },
-})
-
+require('trouble').setup({ action_keys = { open_tab = '<c-q>' } })
+-- stylua: ignore start
 vim.keymap.set('n', '<leader>cs', '<cmd>Trouble symbols toggle<cr>', { desc = 'Symbols (Trouble)' })
 vim.keymap.set('n', 'gD', '<cmd>Trouble lsp_definitions<cr>', { desc = '[G]to [D]efinitions' })
 vim.keymap.set('n', '<leader>D', '<cmd>Trouble lsp_type_definitions<cr>', { desc = 'Type [D]efinition' })
@@ -531,3 +536,24 @@ vim.keymap.set('n', '<leader>xQ', '<cmd>Trouble qflist toggle<cr>', { desc = 'Qu
 vim.keymap.set('n', '<leader>cl', '<cmd>Trouble lsp toggle focus=false win.position=right<cr>', { desc = 'LSP Definitions / references / ... (Trouble)' })
 vim.keymap.set('n', '<leader>xx', '<cmd>Trouble<cr>', { desc = 'Trouble Selector' })
 vim.keymap.set('n', '<C-t>', '<cmd>Trouble diagnostics toggle filter.severity = vim.diagnostic.severity.ERROR<cr>', { noremap = true })
+-- stylua: ignore end
+
+
+-- other.nvim. https://github.com/rgroli/other.nvim
+require("other-nvim").setup({
+  mappings = {
+    "golang",
+    "angular",
+    "laravel",
+    "python",
+    "react",
+    "rust",
+  }
+})
+-- stylua: ignore start
+vim.keymap.set("n", "<leader>ll", "<cmd>:Other<CR>", { noremap = true, silent = true, desc = "Opens the other/alternative file according to the configured mapping." })
+vim.keymap.set("n", "<leader>ltn", "<cmd>:OtherTabNew<CR>", { noremap = true, silent = true, desc = "Like :Other but opens the file in a new tab." })
+vim.keymap.set("n", "<leader>lp", "<cmd>:OtherSplit<CR>", { noremap = true, silent = true, desc = "Like :Other but opens the file in an horizontal split."  })
+vim.keymap.set("n", "<leader>lv", "<cmd>:OtherVSplit<CR>", { noremap = true, silent = true, desc = "Like :Other but opens the file in a vertical split." })
+vim.keymap.set("n", "<leader>lc", "<cmd>:OtherClear<CR>", { noremap = true, silent = true, desc = "Clears the internal reference to the other/alternative file" })
+-- stylua: ignore end

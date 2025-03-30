@@ -18,6 +18,7 @@ in {
     plugins = with pkgs.vimPlugins; [
       nvim-treesitter.withAllGrammars
       nvim-treesitter-textobjects
+      nvim-treesitter-context
       plenary-nvim
       vim-sleuth
       vim-abolish
@@ -35,7 +36,6 @@ in {
       friendly-snippets
       conform-nvim
       nvim-lint
-      neoconf-nvim
       nui-nvim
       nvim-web-devicons
       nvim-dap
@@ -62,6 +62,7 @@ in {
       (fromGitHub { inherit pkgs; rev="4bbfdd92d547d2862a75b4e80afaf30e73f7bbb4"; ref="main"; user="akinsho"; repo="git-conflict.nvim"; }) # 2.1.0
       (fromGitHub { inherit pkgs; rev="24c13df08e3fe66624bed5350a2a780f77f1f65b"; ref="main"; user="HakonHarnes"; repo="img-clip.nvim"; })
       (fromGitHub { inherit pkgs; rev="356f79853dbb3b3e200064367603751895153c29"; ref="main"; user="fredrikaverpil"; repo="godoc.nvim"; })
+      (fromGitHub { inherit pkgs; rev="20128ea7158dd12df619283a45f336182b369294"; ref="main"; user="rgroli"; repo="other.nvim"; })
     ];
 
     extraPackages = [
