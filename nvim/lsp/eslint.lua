@@ -9,8 +9,6 @@ end
 ---@type vim.lsp.Config
 return {
   cmd = { "vscode-eslint-language-server", "--stdio" },
-  filetypes = { "javascript", "typescript", "typescriptreact", "javascriptreact" },
-  root_markers = { ".eslintrc.json", "package.json", "tsconfig.json", ".git" },
   settings = {
     codeAction = {
       disableRuleComment = {
@@ -41,5 +39,7 @@ return {
     validate = "on",
     workingDirectory = { mode = "location" },
     workspaceFolder = get_workspace_folder(),
-  }
+  },
+  filetypes = { "javascript", "typescript", "typescriptreact", "javascriptreact" },
+  root_markers = { ".eslintrc.json", "package.json", "tsconfig.json", ".git" },
 }

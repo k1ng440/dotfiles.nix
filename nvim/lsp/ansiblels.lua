@@ -2,7 +2,6 @@
 return {
   cmd = { 'ansible-language-server', '--stdio' },
   single_file_support = true,
-  filetypes = { 'yaml.ansible' },
   settings = {
     ansible = {
       python = {
@@ -23,5 +22,6 @@ return {
       },
     },
   },
+  filetypes = { 'yaml.ansible' },
   root_markers = { 'ansible.cfg', '.ansible-lint' },
 }

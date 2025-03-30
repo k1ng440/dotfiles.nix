@@ -79,6 +79,7 @@ in {
       pkgs.nodePackages.dockerfile-language-server-nodejs
       pkgs.nodePackages.typescript-language-server
       pkgs.nodePackages.vscode-langservers-extracted
+      pkgs.nodePackages."@vue/language-server"
       pkgs.prettierd
       pkgs.pyright
       pkgs.rust-analyzer

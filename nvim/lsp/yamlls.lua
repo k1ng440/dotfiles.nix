@@ -17,6 +17,6 @@ return {
       hover = true,
     },
   },
-  root_markers = { '.git' },
   filetypes = { 'yaml', 'yaml.docker-compose', 'yaml.gitlab' },
+  root_markers = { '.git' },
 }

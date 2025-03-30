@@ -7,6 +7,6 @@ return {
     '--clang-tidy',
     '--background-index',
   },
-  root_markers = { '.clangd', 'compile_commands.json' },
   filetypes = { 'c', 'cpp' },
+  root_markers = { '.clangd', 'compile_commands.json' },
 }

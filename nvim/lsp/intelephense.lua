@@ -13,6 +13,6 @@ return {
     },
     format = { braces = 'k&r' },
   },
-  root_markers = { 'composer.json', 'composer.lock', '.git', 'phpunit.xml', '.php_cs' },
   filetypes = { 'php' },
+  root_markers = { 'composer.json', 'composer.lock', '.git', 'phpunit.xml', '.php_cs' },
 }

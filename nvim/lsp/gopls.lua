@@ -37,7 +37,7 @@ return {
       semanticTokens = false,
     },
   },
-  filetypes = { 'go', 'gomod', 'gowork', 'gotmpl' },
   single_file_support = true,
+  filetypes = { 'go', 'gomod', 'gowork', 'gotmpl' },
   root_markers = { 'go.work', 'go.mod', '.git' },
 }
