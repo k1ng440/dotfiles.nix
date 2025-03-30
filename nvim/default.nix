@@ -15,7 +15,6 @@ in {
     defaultEditor = true;
     viAlias = true;
     plugins = with pkgs.vimPlugins; [
-      nvim-lspconfig
       nvim-treesitter.withAllGrammars
       nvim-treesitter-textobjects
       plenary-nvim

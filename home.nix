@@ -113,6 +113,7 @@
     pkgs.ripgrep
     pkgs.thefuck
     pkgs.htop
+    pkgs.nixd
   ];
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage

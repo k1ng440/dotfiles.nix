@@ -1,4 +1,3 @@
-local lspconfig = require('lspconfig')
 require('neoconf').setup({})
 
 local diagnostic_signs = {

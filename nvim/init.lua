@@ -100,4 +100,3 @@ if vim.fn.isdirectory(lsp_dir) == 1 then
   end
 end
 vim.lsp.enable(lspconfigs)
-
