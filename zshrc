@@ -28,6 +28,13 @@ function addToPath() {
     fi
 }
 
+# Load completions
+autoload -Uz compinit
+[[ -z "$ZSH_COMPLETION_INITIALIZED" ]] && {
+    ZSH_COMPLETION_INITIALIZED=1
+    compinit
+}
+
 # ZINIT plugin manager
 ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
 if [ ! -d "$ZINIT_HOME" ]; then
@@ -50,18 +57,12 @@ zinit snippet OMZP::kubectx
 zinit snippet OMZP::command-not-found
 zinit snippet OMZP::ssh-agent
 
-# Load completions
-autoload -Uz compinit
-[[ -z "$ZSH_COMPLETION_INITIALIZED" ]] && {
-    ZSH_COMPLETION_INITIALIZED=1
-    compinit
-}
 
 # Add in zsh plugins
+zinit light Aloxaf/fzf-tab
 zinit light zsh-users/zsh-syntax-highlighting
 zinit light zsh-users/zsh-completions
 zinit light zsh-users/zsh-autosuggestions
-zinit light Aloxaf/fzf-tab
 
 zinit cdreplay -q
 
@@ -124,6 +125,7 @@ zstyle ':fzf-tab:*' fzf-flags --color=fg:1,fg+:2 --bind=tab:accept
 zstyle ':fzf-tab:*' use-fzf-default-opts yes
 zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
 zstyle ':fzf-tab:*' continuous-trigger 'ctrl-e'
+enable-fzf-tab
 
 export NIXPKGS_ALLOW_UNFREE=1
 export LANG=en_US.UTF-8

@@ -13,6 +13,22 @@
     defaultWrapper = "nvidia";
   };
 
+  home.packages = [
+    pkgs.bat
+    pkgs.cowsay
+    pkgs.devenv
+    pkgs.mise
+    pkgs.eza
+    pkgs.nerd-fonts.fira-code
+    pkgs.glow
+    pkgs.ripgrep
+    pkgs.thefuck
+    pkgs.htop
+    pkgs.nixd
+    pkgs.watchman
+    pkgs.rlwrap
+  ];
+
   programs = {
     home-manager = {
       enable = true;
@@ -100,20 +116,6 @@
     };
   };
 
-  home.packages = [
-    pkgs.bat
-    pkgs.cowsay
-    pkgs.devenv
-    pkgs.mise
-    pkgs.eza
-    pkgs.nerd-fonts.fira-code
-    pkgs.glow
-    pkgs.ripgrep
-    pkgs.thefuck
-    pkgs.htop
-    pkgs.nixd
-    pkgs.watchman
-  ];
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
   # plain files is through 'home.file'.
