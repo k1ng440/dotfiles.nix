@@ -14,9 +14,9 @@ local next_diagnostic_or_trouble = function(forwards)
     return
   end
   if forwards then
-    vim.diagnostic.goto_next()
+    vim.diagnostic.jump( { count = 1, float = true })
   else
-    vim.diagnostic.goto_prev({})
+    vim.diagnostic.jump( { count = -1, float = true })
   end
 end
 
@@ -162,11 +162,6 @@ vim.api.nvim_create_autocmd('LspAttach', {
         ---@diagnostic enable: need-check-nil
         range = true,
       }
-    end
-
-    for name, icon in pairs(require('k1ng.config.icons').diagnostics) do
-      name = 'DiagnosticSign' .. name
-      vim.fn.sign_define(name, { text = icon, texthl = name, numhl = '' })
     end
   end,
 })

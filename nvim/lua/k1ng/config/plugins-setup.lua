@@ -75,14 +75,10 @@ vim.schedule(function()
   luasnip.config.setup({
     ext_opts = {
       [types.choiceNode] = {
-        active = {
-          virt_text = { { '●', 'GruvboxOrange' } },
-        },
+        active = { virt_text = { { '●', 'DiagnosticHint' } }, },
       },
       [types.insertNode] = {
-        active = {
-          virt_text = { { '●', 'GruvboxBlue' } },
-        },
+        active = { virt_text = { { '●', 'String' } }, },
       },
     },
   })
@@ -108,13 +104,16 @@ vim.schedule(function()
       kind_icons = require('k1ng.config.icons').kinds,
     },
     completion = {
-      accept = { auto_brackets = { enabled = false } },
+      accept = { auto_brackets = { enabled = true } },
       documentation = { auto_show = false, auto_show_delay_ms = 500, window = { border = 'rounded' } },
       ghost_text = { enabled = true, show_with_menu = false },
       menu = {
-        border = 'rounded',
         draw = {
           treesitter = { 'lsp' },
+          columns = {
+            { 'label', 'label_description' },
+            { 'kind_icon', 'kind', gap = 1 },
+          },
         },
         --   auto_show = function(ctx)
         --     return ctx.mode ~= 'cmdline' or not vim.tbl_contains({ '/', '?' }, vim.fn.getcmdtype())
@@ -131,23 +130,22 @@ vim.schedule(function()
     sources = {
       default = { 'lsp', 'path', 'snippets', 'buffer', 'lazydev', 'markdown', 'ripgrep' },
       providers = {
-        ---@diagnostic disable-next-line: missing-fields
         lsp = {
           name = 'LSP',
           module = 'blink.cmp.sources.lsp',
           fallbacks = { 'lazydev' },
           score_offset = 200, -- the higher the number, the higher the priority
           -- Filter text items from the LSP provider, since we have the buffer provider for that
-          transform_items = function(_, items)
-            for _, item in ipairs(items) do
-              if item.kind == require('blink.cmp.types').CompletionItemKind.Snippet then
-                item.score_offset = item.score_offset - 3
-              end
-            end
-            return vim.tbl_filter(function(item)
-              return item.kind ~= require('blink.cmp.types').CompletionItemKind.Text
-            end, items)
-          end,
+          -- transform_items = function(_, items)
+          --   for _, item in ipairs(items) do
+          --     if item.kind == require('blink.cmp.types').CompletionItemKind.Snippet then
+          --       item.score_offset = item.score_offset - 3
+          --     end
+          --   end
+          --   return vim.tbl_filter(function(item)
+          --     return item.kind ~= require('blink.cmp.types').CompletionItemKind.Text
+          --   end, items)
+          -- end,
         },
         path = {
           name = 'Path',
@@ -170,9 +168,7 @@ vim.schedule(function()
           min_keyword_length = 2,
           score_offset = 60, -- the higher the number, the higher the priority
         },
-        ---@diagnostic disable-next-line: missing-fields
-        lazydev = { name = 'LazyDev', module = 'lazydev.integrations.blink' },
-        ---@diagnostic disable-next-line: missing-fields
+        lazydev = { name = 'LazyDev', module = 'lazydev.integrations.blink', score_offset = 100 },
         markdown = { name = 'RenderMarkdown', module = 'render-markdown.integ.blink' },
         cmdline = {
           enabled = function()

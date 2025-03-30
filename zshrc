@@ -6,7 +6,7 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
 fi
 
 bindkey -e
-bindkey -s '^o' 'nvim $(fzf)^M'
+bindkey -s '^o' 'TERM=xterm-ghostty nvim $(fzf)^M'
 
 bindkey '^[[1;5C' emacs-forward-word
 bindkey '^[[1;5D' emacs-backward-word
@@ -74,6 +74,8 @@ alias nv='nvim .'
 alias ll='eza -la'
 alias ls='eza -a'
 alias tree='eza --tree'
+alias ssh='TERM=xterm-256color ssh'
+alias ansible-playbook='TERM=xterm-256color ansible-playbook'
 
 # Shell integrations
 eval "$(fzf --zsh)"
@@ -129,7 +131,6 @@ zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
 zstyle ':fzf-tab:*' continuous-trigger 'ctrl-e'
 
 export NIXPKGS_ALLOW_UNFREE=1
-export TERM=xterm-256color
 export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
 export LC_CTYPE=en_US.UTF-8

@@ -9,7 +9,41 @@ vim.schedule(function()
   fzf.setup({
     'fzf-native',
     fzf_colors = true,
-    file_ignore_patterns = { 'node_modules/.*', '.git/.*' },
+    file_ignore_patterns = {
+      'node_modules/',
+      '.git/',
+      'dist/',
+      'build/',
+      'target/',
+      '__pycache__/',
+      '%.lock',
+      '%.log',
+      '%.tmp',
+      '%.swp',
+      '%.swo',
+      '%.bak',
+      '%.exe',
+      '%.dll',
+      '%.o',
+      '%.a',
+      '%.so',
+      '%.dylib',
+      '%.jar',
+      '%.class',
+      '%.min.js',
+      '%.min.css',
+      '%.png',
+      '%.jpg',
+      '%.jpeg',
+      '%.gif',
+      '%.bmp',
+      '%.svg',
+      '%.ico',
+      '%.pdf',
+      '%.docx',
+      '%.xlsx',
+      '%.pptx',
+    },
     actions = {
       files = {
         ['default'] = actions.file_edit,
@@ -59,11 +93,16 @@ vim.schedule(function()
   local Util = require('k1ng.util')
   local map = Util.keymap
 
+
   map('n', '<leader>sr', fzf.files, { desc = '[S]earch [R]esume' })
   map('n', '<leader>sf', fzf.files, { desc = '[S]earch [F]iles' })
-  map('n', '<leader>sg', fzf.grep, { desc = '[S]earch [G]rep' })
+  map('n', '<leader>sg', fzf.live_grep_glob, { desc = '[S]earch [G]rep' })
   map('n', '<leader>sw', fzf.grep_cword, { desc = '[S]earch [W]ord' })
   map('n', '<leader>fh', fzf.oldfiles, { desc = '[S]earch Recent Files' })
-  map('n', '<leader>/', fzf.buffers, { desc = '[/] Fuzzily search in current buffer' })
+  map('n', '<C-\\>', fzf.buffers, { desc = '[/] Fuzzily search in current buffer' })
   map('n', '<leader>sh', fzf.helptags, { desc = 'Help Pages' })
+  -- stylua: ignore
+  map({ 'n', 'v', 'i' }, '<C-x><C-f>', fzf.complete_path, { silent = true, desc = 'Fuzzy complete path' })
 end)
+
+

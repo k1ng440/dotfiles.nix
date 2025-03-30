@@ -74,3 +74,4 @@ map('n', ']q', '<cmd>cnext<cr>', { desc = 'Next quickfix' })
 
 map('n', '<M-j>', '<cmd>cnext<cr>', { desc = 'Next quickfix' })
 map('n', '<M-k>', '<cmd>cprev<cr>', { desc = 'Previous quickfix' })
+

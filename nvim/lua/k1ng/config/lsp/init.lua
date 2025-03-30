@@ -1,10 +1,7 @@
 local lspconfig = require('lspconfig')
 
 require('neoconf').setup({})
-
 require('k1ng.config.lsp.on_attach')
-
-local methods = vim.lsp.protocol.Methods
 
 local neodevstatus, neodev = pcall(require, 'neodev')
 if neodevstatus then
@@ -16,53 +13,41 @@ end
 -- ui
 require('lspconfig.ui.windows').default_options.border = 'rounded'
 
--- hover
-vim.lsp.handlers[methods.textDocument_hover] = vim.lsp.with(vim.lsp.handlers.hover, {
-  width = 80,
-  focusable = false,
-})
-
--- publishDiagnostics
-vim.lsp.handlers[methods.textDocument_publishDiagnostics] = vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, {
-  underline = true,
-  virtual_text = {
-    prefix = '',
-    spacing = 8,
-  },
-  signs = true,
-  update_in_insert = false,
-})
-
--- Workaround for truncating long TypeScript inlay hints.
--- TODO: Remove this if https://github.com/neovim/neovim/issues/27240 gets addressed.
-local inlay_hint_handler = vim.lsp.handlers[methods.textDocument_inlayHint]
-vim.lsp.handlers[methods.textDocument_inlayHint] = function(err, result, ctx, config)
-  local client = vim.lsp.get_client_by_id(ctx.client_id)
-  if client and client.name == 'typescript-tools' then
-    result = vim.iter.map(function(hint)
-      local label = hint.label ---@type string
-      if label:len() >= 30 then
-        label = label:sub(1, 29) .. '…'
-      end
-      hint.label = label
-      return hint
-    end, result)
-  end
-  inlay_hint_handler(err, result, ctx, config)
+local diagnostic_signs = {
+    [vim.diagnostic.severity.ERROR] = "",
+    [vim.diagnostic.severity.WARN] = "",
+    [vim.diagnostic.severity.INFO] = "",
+    [vim.diagnostic.severity.HINT] = "󰌵",
+}
+local shorter_source_names = {
+  ['Lua Diagnostics.'] = 'Lua',
+  ['Lua Syntax Check.'] = 'Lua',
+}
+local function diagnostic_format(diagnostic)
+  return string.format(
+    '%s %s (%s): %s',
+    diagnostic_signs[diagnostic.severity] or diagnostic.severity,
+    shorter_source_names[diagnostic.source] or diagnostic.source,
+    diagnostic.code,
+    diagnostic.message
+  )
 end
 
--- Configure vim.diagnostic
 vim.diagnostic.config({
   underline = true,
-  virtual_text = {
-    severity = { min = vim.diagnostic.severity.WARN },
-  },
-  signs = true,
   update_in_insert = false,
   severity_sort = true,
-  float = {
-    border = 'rounded',
+  virtual_lines = {
+    current_line = true,
+    format = diagnostic_format,
   },
+  virtual_text = {
+    severity = { min = vim.diagnostic.severity.WARN },
+    spacing = 4,
+    format = diagnostic_format,
+  },
+  float = { border = 'rounded' },
+  signs = { text = diagnostic_signs },
 })
 
 -- local capabilities = vim.lsp.protocol.make_client_capabilities()

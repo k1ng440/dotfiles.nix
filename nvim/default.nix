@@ -5,6 +5,7 @@ let
 in {
   xdg.configFile = {
     "nvim/lua".source = ./lua;
+    "nvim/lsp".source = ./lsp;
     "nvim/after".source = ./after;
     "nvim/init.lua".source = ./init.lua;
   };
@@ -60,7 +61,6 @@ in {
       (fromGitHub { inherit pkgs; rev="d3f72beec9967eebbdcc1ad687c8826382b28b40"; ref="master"; user="alpertuna"; repo="vim-header"; })
       (fromGitHub { inherit pkgs; rev="af61f99945e15b195fbce017230cedb0497ded4d"; ref="main"; user="mikavilpas"; repo="blink-ripgrep.nvim"; })
       (fromGitHub { inherit pkgs; rev="4bbfdd92d547d2862a75b4e80afaf30e73f7bbb4"; ref="main"; user="akinsho"; repo="git-conflict.nvim"; }) # 2.1.0
-      (fromGitHub { inherit pkgs; rev="e58cb0df716d3c88605ae49db5c4741db8b48aa9"; ref="master"; user="farmergreg"; repo="vim-lastplace"; })
       (fromGitHub { inherit pkgs; rev="24c13df08e3fe66624bed5350a2a780f77f1f65b"; ref="main"; user="HakonHarnes"; repo="img-clip.nvim"; })
     ];
 

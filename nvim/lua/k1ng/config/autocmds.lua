@@ -35,16 +35,16 @@ vim.api.nvim_create_autocmd('TermOpen', {
 })
 
 -- Check if we need to reload the file when it changed
-vim.api.nvim_create_autocmd({ 'FocusGained', 'TermClose', 'TermLeave' }, {
-  group = augroup('checktime'),
-  command = 'checktime',
-})
+-- vim.api.nvim_create_autocmd({ 'FocusGained', 'TermClose', 'TermLeave' }, {
+--   group = augroup('checktime'),
+--   command = 'checktime',
+-- })
 
 -- Highlight on yank
 vim.api.nvim_create_autocmd('TextYankPost', {
   group = augroup('highlight_yank'),
   callback = function()
-    vim.highlight.on_yank()
+    vim.hl.on_yank()
   end,
 })
 

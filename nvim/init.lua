@@ -2,17 +2,6 @@ if vim.loader then
   vim.loader.enable()
 end
 
-local disabled_providers = {
-  'node',
-  'perl',
-  'python3',
-  'ruby',
-}
-
-for _, provider in pairs(disabled_providers) do
-  vim.g['loaded_' .. provider .. '_provider'] = 0
-end
-
 local opt = vim.opt
 local g = vim.g
 
@@ -21,6 +10,7 @@ g.maplocalleader = ' '
 g.header_field_author = "Asaduzzaman 'Asad' Pavel"
 g.header_field_author_email = 'contact@iampavel.dev'
 g.have_nerd_fonts = true
+g.health = { style = 'float' }
 
 opt.autowrite = false
 opt.clipboard:append('unnamedplus') -- Sync with system clipboard
@@ -38,7 +28,7 @@ opt.smartcase = true -- Don't ignore case with capitals
 opt.inccommand = 'nosplit'
 opt.list = false -- Show some invisible characters (tabs...
 opt.mouse = 'a' -- Enable mouse mode
-opt.mousemodel = '' -- Disable right click menu
+-- opt.mousemodel = '' -- Disable right click menu
 opt.pumblend = 10 -- Popup blend
 opt.pumheight = 10 -- Maximum number of entries in a popup
 opt.number = true -- Print line number
@@ -72,7 +62,6 @@ opt.lazyredraw = true
 opt.title = true
 opt.titlelen = 70
 opt.exrc = true -- Enable local .nvimrc
-
 opt.wrap = false -- Disable line wrap
 opt.foldmethod = 'expr' -- code folding
 opt.foldexpr = 'nvim_treesitter#foldexpr()' -- code folding with treesitter
@@ -100,3 +89,15 @@ opt.wildignore:append('*/.idea/*')
 opt.wildignore:append('*/.gitignore')
 
 require('k1ng.config')
+
+local lspconfigs = {}
+local lsp_dir = vim.fn.stdpath('config') .. '/lsp'
+if vim.fn.isdirectory(lsp_dir) == 1 then
+  for _, entry in ipairs(vim.fn.readdir(lsp_dir)) do
+    if vim.fn.isdirectory(lsp_dir .. '/' .. entry) == 0 and entry:sub(-4) == ".lua" then
+      table.insert(lspconfigs, (entry:gsub("%.lua$", "")))
+    end
+  end
+end
+vim.lsp.enable(lspconfigs)
+

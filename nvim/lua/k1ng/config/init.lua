@@ -5,7 +5,8 @@ require('k1ng.config.disable-bultin')
 require('k1ng.config.keymaps')
 require('k1ng.config.lastplace')
 require('k1ng.config.filetypes')
-require('k1ng.config.lsp')
+
+require('k1ng.config.lint-setup')
 
 --- plugins
 require('k1ng.config.plugins-setup')
