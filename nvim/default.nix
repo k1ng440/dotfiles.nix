@@ -76,6 +76,7 @@ in {
       pkgs.lua-language-server
       pkgs.luaformatter
       pkgs.nixfmt-rfc-style
+      pkgs.docker-compose-language-service
       pkgs.nodePackages.dockerfile-language-server-nodejs
       pkgs.nodePackages.typescript-language-server
       pkgs.nodePackages.vscode-langservers-extracted
