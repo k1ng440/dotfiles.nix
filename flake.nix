@@ -13,8 +13,8 @@
       url = "github:LongerHV/kubectl-overlay";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    ghostty = { 
-      url = "github:ghostty-org/ghostty"; 
+    ghostty = {
+      url = "github:ghostty-org/ghostty";
     };
     color-schemes = {
       url = "github:mbadolato/iTerm2-Color-Schemes";
@@ -35,11 +35,12 @@
         pkgs = import nixpkgs {
           system = system;
           config.allowUnfree = true;
-        };    
-        extraSpecialArgs = { 
-          inherit inputs; 
+        };
+        extraSpecialArgs = {
           inherit system;
           inherit color-schemes;
+          inherit ghostty;
+          inherit nixgl;
         };
         modules = [
           ./home.nix

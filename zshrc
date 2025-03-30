@@ -6,7 +6,7 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
 fi
 
 bindkey -e
-bindkey -s '^o' 'TERM=xterm-ghostty nvim $(fzf)^M'
+bindkey -s '^o' 'nvim $(fzf)^M'
 
 bindkey '^[[1;5C' emacs-forward-word
 bindkey '^[[1;5D' emacs-backward-word
@@ -93,12 +93,7 @@ export GOROOT=/usr/local/go
 export GOPATH=$HOME/go
 
 export NVM_DIR="$HOME/.nvm"
-nvm() {
-    echo "🚨 NVM not loaded! Loading now..."
-    unset -f nvm
-    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-    [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
-}
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh

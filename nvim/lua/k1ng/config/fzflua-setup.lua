@@ -99,6 +99,7 @@ vim.schedule(function()
   map('n', '<leader>sg', fzf.live_grep_glob, { desc = '[S]earch [G]rep' })
   map('n', '<leader>sw', fzf.grep_cword, { desc = '[S]earch [W]ord' })
   map('n', '<leader>fh', fzf.oldfiles, { desc = '[S]earch Recent Files' })
+  map('n', '<leader>sk', fzf.keymaps, { desc = '[S]earch [K]eymaps' })
   map('n', '<C-\\>', fzf.buffers, { desc = '[/] Fuzzily search in current buffer' })
   map('n', '<leader>sh', fzf.helptags, { desc = 'Help Pages' })
   -- stylua: ignore

@@ -1,4 +1,4 @@
-{ config, pkgs, system, inputs, color-schemes, ... }: {
+{ config, pkgs, system, nixgl, ghostty, color-schemes, ... }: {
 
   home.username = "k1ng";
   home.homeDirectory = "/home/k1ng";
@@ -11,7 +11,7 @@
   ];
 
   nixGL = {
-    packages = inputs.nixgl.packages;
+    packages = nixgl.packages;
     defaultWrapper = "nvidia"; # I'm using nvidia, change for your system
   };
 
@@ -40,7 +40,7 @@
       enableZshIntegration = true;
       installBatSyntax = true;
       clearDefaultKeybinds = false;
-      package = (config.lib.nixGL.wrap inputs.ghostty.packages.${system}.default);
+      package = (config.lib.nixGL.wrap ghostty.packages.${system}.default);
 
       # shellIntegration.enableZshIntegration = true;
 
@@ -114,6 +114,7 @@
     pkgs.thefuck
     pkgs.htop
     pkgs.nixd
+    pkgs.watchman
   ];
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
