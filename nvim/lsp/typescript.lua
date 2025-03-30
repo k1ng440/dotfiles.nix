@@ -1,3 +1,4 @@
+local Util = require('k1ng.util')
 local inlayHints = {
   includeInlayParameterNameHints = 'all',
   includeInlayParameterNameHintsWhenArgumentMatchesName = false,
@@ -8,22 +9,11 @@ local inlayHints = {
   includeInlayEnumMemberValueHints = true,
 }
 
----@return string
-local function getNPMPrefix()
-  local handle = io.popen('npm config get prefix')
-  if not handle then
-    return ''
-  end
-  local result = handle:read('*a')
-  handle:close()
-  return result:gsub('^%s+', ''):gsub('%s+$', '')
-end
-
 ---@type vim.lsp.Config
 return {
   cmd = { 'typescript-language-server', '--stdio' },
   before_init = function(params, config)
-    local vue_typescript_plugin_path = getNPMPrefix() .. '/lib/node_modules/@vue/language-server' .. '/node_modules/@vue/typescript-plugin'
+    local vue_typescript_plugin_path = Util.getNPMPrefix() .. '/lib/node_modules/@vue/language-server' .. '/node_modules/@vue/typescript-plugin'
     local vue_plugin_config = {}
     if vim.uv.fs_stat(vue_typescript_plugin_path) then
       vue_plugin_config = {

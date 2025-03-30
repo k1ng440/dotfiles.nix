@@ -111,4 +111,15 @@ function M.set_yadm_git()
     end
 end
 
+---@return string
+function M.getNPMPrefix()
+  local handle = io.popen('npm config get prefix')
+  if not handle then
+    return ''
+  end
+  local result = handle:read('*a')
+  handle:close()
+  return result:gsub('^%s+', ''):gsub('%s+$', '')
+end
+
 return M
