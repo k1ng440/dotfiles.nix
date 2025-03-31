@@ -1,3 +1,4 @@
+---@diagnostic disable: missing-fields
 local Util = require('k1ng.util.init')
 vim.schedule(function()
   local diagnostic_signs = {
@@ -34,7 +35,16 @@ vim.schedule(function()
     --   spacing = 4,
     --   format = diagnostic_format,
     -- },
-    float = { border = 'rounded' },
+    float = {
+      source = false,
+      header = 'Diagnostics:',
+      prefix = ' ',
+      format = diagnostic_format,
+      border = 'rounded',
+    },
+    -- float = {
+    --   border = 'rounded'
+    -- },
     signs = { text = diagnostic_signs },
   })
 
@@ -78,6 +88,7 @@ vim.schedule(function()
     local is_trouble_open = Util.has_buffer_in_list('Trouble')
     if is_trouble_open then
       if forwards then
+        ---@diagnostic disable-next-line: missing-parameter
         require('trouble').next({ skip_groups = true, jump = true })
       else
         require('trouble').previous({ skip_groups = true, jump = true })
@@ -142,6 +153,28 @@ vim.schedule(function()
     keymap(buffer, 'n', '<leader>ws', '<cmd>FzfLua lsp_workspace_symbols<CR>', { desc = '[W]orkspace [S]ymbols' })
     keymap(buffer, 'n', '<leader>wl', function() print(vim.inspect(vim.lsp.buf.list_workspace_folders())) end, { desc = '[W]orkspace [L]ist Folders' })
       -- stylua: ignore end
+    end,
+  })
+
+  -- automatically show diagnostic in float win for current line
+  vim.api.nvim_create_autocmd('CursorHold', {
+    pattern = '*',
+    callback = function()
+      if #vim.diagnostic.get(0) == 0 then
+        return
+      end
+
+      if not vim.b.diagnostics_pos then
+        vim.b.diagnostics_pos = { nil, nil }
+      end
+
+      local cursor_pos = vim.api.nvim_win_get_cursor(0)
+
+      if not vim.deep_equal(cursor_pos, vim.b.diagnostics_pos) then
+        vim.diagnostic.open_float({ width = 100 })
+      end
+
+      vim.b.diagnostics_pos = cursor_pos
     end,
   })
 

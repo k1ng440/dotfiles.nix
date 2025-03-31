@@ -2,6 +2,20 @@ local function augroup(name)
   return vim.api.nvim_create_augroup('nvimtrap_' .. name, { clear = true })
 end
 
+
+-- Display a message when the current file is not in utf-8 format.
+-- Note that we need to use `unsilent` command here because of this issue:
+-- https://github.com/vim/vim/issues/4379
+vim.api.nvim_create_autocmd({ "BufRead" }, {
+  pattern = "*",
+  group = augroup("non_utf8_file"),
+  callback = function()
+    if vim.bo.fileencoding ~= "utf-8" then
+      vim.notify("File not in UTF-8 format!", vim.log.levels.WARN, { title = "nvim-config" })
+    end
+  end,
+})
+
 vim.api.nvim_create_autocmd('BufEnter', {
   group = augroup('no_auto_comment'),
   command = [[set formatoptions-=cro]],
@@ -44,7 +58,7 @@ vim.api.nvim_create_autocmd('TermOpen', {
 vim.api.nvim_create_autocmd('TextYankPost', {
   group = augroup('highlight_yank'),
   callback = function()
-    vim.hl.on_yank()
+    vim.hl.on_yank({ higroup = "YankColor", timeout = 300 })
   end,
 })
 
@@ -138,5 +152,24 @@ vim.api.nvim_create_autocmd('User', {
   pattern = 'GitConflictDetected',
   callback = function()
     vim.notify('Conflict detected in ' .. vim.fn.expand('<afile>'))
+  end,
+})
+
+-- Resize all windows when we resize the terminal
+vim.api.nvim_create_autocmd("VimResized", {
+  group = augroup("win_autoresize"),
+  desc = "autoresize windows on resizing operation",
+  command = "wincmd =",
+})
+
+
+-- Automatically reload the file if it is changed outside of Nvim, see https://unix.stackexchange.com/a/383044/221410.
+-- It seems that `checktime` does not work in command line. We need to check if we are in command
+-- line before executing this command, see also https://vi.stackexchange.com/a/20397/15292 .
+vim.api.nvim_create_autocmd({ "FileChangedShellPost" }, {
+  pattern = "*",
+  group = augroup("auto_read"),
+  callback = function()
+    vim.notify("File changed on disk. Buffer reloaded!", vim.log.levels.WARN, { title = "nvim-config" })
   end,
 })

@@ -82,6 +82,12 @@ vim.schedule(function()
   -- git-conflict.nvim. https://github.com/akinsho/git-conflict.nvim
   -- A plugin to visualise and resolve conflicts
   require('git-conflict').setup({})
+
+  -- inc-rename. https://github.com/smjonas/inc-rename.nvim
+  require("inc_rename").setup({ })
+  vim.keymap.set("n", "gra", function()
+    return ":IncRename " .. vim.fn.expand("<cword>")
+  end, { expr = true })
 end)
 
 -- luasnip setup

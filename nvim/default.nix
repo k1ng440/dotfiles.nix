@@ -63,6 +63,7 @@ in {
       (fromGitHub { inherit pkgs; rev="20128ea7158dd12df619283a45f336182b369294"; ref="main"; user="rgroli"; repo="other.nvim"; })
       (fromGitHub { inherit pkgs; rev="7d1b5c7dcd274921f0f58e90a8bf935f6a95fbf3"; ref="main"; user="rose-pine"; repo="neovim"; })
       (fromGitHub { inherit pkgs; rev="4b7418d6689bc0fd3c1db0500c67133422522384"; ref="main"; user="davidosomething"; repo="format-ts-errors.nvim"; })
+      (fromGitHub { inherit pkgs; rev="87ebe7bee0b83d3b6e4f1494c74abed21b318175"; ref="main"; user="smjonas"; repo="inc-rename.nvim"; })
     ];
 
     extraPackages = [
