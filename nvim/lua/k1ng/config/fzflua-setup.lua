@@ -46,13 +46,16 @@ vim.schedule(function()
     },
     actions = {
       files = {
+        true,
         ['default'] = actions.file_edit,
         ['ctrl-s'] = actions.file_split,
         ['ctrl-v'] = actions.file_vsplit,
         ['ctrl-t'] = actions.file_tabedit,
-        ['alt-q'] = actions.file_sel_to_qf,
+        ['alt-q'] = actions.file_edit_or_qf,
+        ["ctrl-q"] = { fn = fzf.actions.file_sel_to_qf, prefix = "select-all" }
       },
       buffers = {
+        true,
         ['default'] = actions.buf_switch_or_edit,
         ['ctrl-d'] = actions.buf_del,
         ['ctrl-s'] = actions.buf_split,

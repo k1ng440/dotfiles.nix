@@ -1,3 +1,4 @@
+local Util = require('k1ng.util.init')
 vim.schedule(function()
   local diagnostic_signs = {
     [vim.diagnostic.severity.ERROR] = '',
@@ -26,13 +27,13 @@ vim.schedule(function()
     virtual_lines = {
       current_line = true,
       format = diagnostic_format,
-      severity = vim.diagnostic.severity.WARN,
+      severity = vim.diagnostic.severity.INFO,
     },
-    virtual_text = {
-      severity = { min = vim.diagnostic.severity.WARN },
-      spacing = 4,
-      format = diagnostic_format,
-    },
+    -- virtual_text = {
+    --   severity = { min = vim.diagnostic.severity.WARN },
+    --   spacing = 4,
+    --   format = diagnostic_format,
+    -- },
     float = { border = 'rounded' },
     signs = { text = diagnostic_signs },
   })
@@ -49,27 +50,37 @@ vim.schedule(function()
       textDocument = {
         foldingRange = { dynamicRegistration = true, lineFoldingOnly = true },
         semanticTokens = { multilineTokenSupport = true },
+        completion = {
+          completionItem = {
+            documentationFormat = { 'markdown', 'plaintext' },
+            snippetSupport = true,
+            preselectSupport = true,
+            insertReplaceSupport = true,
+            labelDetailsSupport = true,
+            deprecatedSupport = true,
+            commitCharactersSupport = true,
+            tagSupport = { valueSet = { 1 } },
+            resolveSupport = {
+              properties = {
+                'documentation',
+                'detail',
+                'additionalTextEdits',
+              },
+            },
+          },
+        },
       },
     }),
   })
-
-  ---@module "trouble"
-  local trouble
-  local function getTrouble()
-    if not trouble then
-      trouble  = require('trouble')
-    end
-    return trouble
-  end
 
   -- Step through diagnostic messages or trouble entries if there
   local next_diagnostic_or_trouble = function(forwards)
     local is_trouble_open = Util.has_buffer_in_list('Trouble')
     if is_trouble_open then
       if forwards then
-        getTrouble().next({ skip_groups = true, jump = true })
+        require('trouble').next({ skip_groups = true, jump = true })
       else
-        getTrouble().previous({ skip_groups = true, jump = true })
+        require('trouble').previous({ skip_groups = true, jump = true })
       end
       return
     end
@@ -113,7 +124,6 @@ vim.schedule(function()
 
   vim.api.nvim_create_user_command('LspInfo', ':checkhealth vim.lsp', { desc = 'Alias to `:checkhealth vim.lsp`' })
 
-  local Util = require('k1ng.util')
   local keymap = Util.buf_keymap
   vim.api.nvim_create_autocmd('LspAttach', {
     group = vim.api.nvim_create_augroup('keymaps.lsp', { clear = true }),
@@ -179,15 +189,13 @@ vim.schedule(function()
         end, { desc = 'Toggle inlay hints' })
       end
 
-      -- gopls semanticTokens
-      if client.name == 'gopls' then
-        client.server_capabilities.semanticTokensProvider = {
-          full = true,
-          legend = {
-            tokenTypes = { 'namespace', 'type', 'class', 'enum', 'interface', 'struct', 'typeParameter', 'parameter', 'variable', 'property', 'enumMember', 'event', 'function', 'method', 'macro', 'keyword', 'modifier', 'comment', 'string', 'number', 'regexp', 'operator', 'decorator' },
-            tokenModifiers = { 'declaration', 'definition', 'readonly', 'static', 'deprecated', 'abstract', 'async', 'modification', 'documentation', 'defaultLibrary'}
-          }
-        }
+      if
+        client:supports_method('textDocument/semanticTokens')
+        or client:supports_method(methods.textDocument_semanticTokens_full)
+        or client:supports_method(methods.textDocument_semanticTokens_full_delta)
+        or client:supports_method(methods.textDocument_semanticTokens_range)
+      then
+        client.server_capabilities.semanticTokensProvider = nil
       end
     end,
   })

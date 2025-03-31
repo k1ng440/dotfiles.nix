@@ -102,5 +102,5 @@ if vim.fn.isdirectory(lsp_dir) == 1 then
 end
 vim.lsp.enable(lspconfigs)
 
-require('k1ng.config')
+require('k1ng.config.init')
 vim.api.nvim_set_hl(0, "@go.package", { fg = "#FFD700", bold = true })

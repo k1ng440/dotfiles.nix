@@ -78,10 +78,12 @@
         window-padding-x = 2;
         window-padding-y = 2;
         window-vsync = false;
-        shell-integration-features = "no-cursor,sudo,no-title";
-        config-file = [
-          (color-schemes + "/ghostty/catppuccin-mocha")
-        ];
+        shell-integration = "zsh";
+        shell-integration-features = "cursor,sudo,title";
+        theme = "rose-pine";
+        # config-file = [
+        #   (color-schemes + "/ghostty/catppuccin-mocha")
+        # ];
 
         keybind = [
           "ctrl+shift+c=copy_to_clipboard"

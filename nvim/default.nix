@@ -61,6 +61,8 @@ in {
       (fromGitHub { inherit pkgs; rev="24c13df08e3fe66624bed5350a2a780f77f1f65b"; ref="main"; user="HakonHarnes"; repo="img-clip.nvim"; })
       (fromGitHub { inherit pkgs; rev="356f79853dbb3b3e200064367603751895153c29"; ref="main"; user="fredrikaverpil"; repo="godoc.nvim"; })
       (fromGitHub { inherit pkgs; rev="20128ea7158dd12df619283a45f336182b369294"; ref="main"; user="rgroli"; repo="other.nvim"; })
+      (fromGitHub { inherit pkgs; rev="7d1b5c7dcd274921f0f58e90a8bf935f6a95fbf3"; ref="main"; user="rose-pine"; repo="neovim"; })
+      (fromGitHub { inherit pkgs; rev="4b7418d6689bc0fd3c1db0500c67133422522384"; ref="main"; user="davidosomething"; repo="format-ts-errors.nvim"; })
     ];
 
     extraPackages = [

@@ -34,7 +34,7 @@ return {
       staticcheck = true,
       vulncheck = 'imports',
       directoryFilters = { '-**/.git', '-.vscode', '-.idea', '-.vscode-test', '-**/node_modules', '-dist' },
-      semanticTokens = true,
+      semanticTokens = false,
     },
   },
   single_file_support = true,

@@ -7,7 +7,7 @@ end
 return {
   cmd = { 'vue-language-server', '--stdio' },
   before_init = function (params, config)
-    local Util = require('k1ng.util')
+    local Util = require('k1ng.util.init')
     -- Try to use a global TypeScript Server installation
     local tsdk = Util.getNPMPrefix() .. '/lib/node_modules/typescript/lib'
     if not vim.uv.fs_stat(tsdk) then

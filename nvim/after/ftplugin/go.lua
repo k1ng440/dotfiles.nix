@@ -1,4 +1,4 @@
-local remap = require('k1ng.util').keymap
+local remap = require('k1ng.util.init').keymap
 
 vim.opt_local.expandtab = false
 vim.opt_local.tabstop = 4

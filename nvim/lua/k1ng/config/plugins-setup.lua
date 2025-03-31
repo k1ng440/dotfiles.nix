@@ -1,10 +1,79 @@
 -- nvim-web-devicons setup. https://github.com/nvim-tree/nvim-web-devicons
 require('nvim-web-devicons').setup({})
 
+-- Oil setup. https://github.com/stevearc/oil.nvim
+-- file explorer that lets you edit your filesystem like a normal Neovim buffer.
+local oil = require('oil')
+local oil_detail = false
+
+oil.setup({
+  default_file_explorer = true,
+  delete_to_trash = true,
+  win_options = {
+    winbar = " %{v:lua.require('oil').get_current_dir()}",
+  },
+  float = {
+    -- Padding around the floating window
+    padding = 2,
+    max_width = 90,
+    max_height = 0,
+    -- border = "rounded",
+    win_options = {
+      winblend = 0,
+    },
+  },
+  columns = {
+    'icon',
+  },
+  keymaps = {
+    ['g?'] = 'actions.show_help',
+    ['<CR>'] = 'actions.select',
+    ['<C-v>'] = 'actions.select_vsplit',
+    ['<C-x>'] = 'actions.select_split',
+    ['<C-t>'] = 'actions.select_tab',
+    ['<M-p>'] = 'actions.preview',
+    ['<C-p>'] = 'actions.preview',
+    ['<C-c>'] = 'actions.close',
+    ['<C-l>'] = false,
+    ['<C-L>'] = 'actions.refresh',
+    ['-'] = 'actions.parent',
+    ['_'] = 'actions.open_cwd',
+    ['`'] = 'actions.cd',
+    ['~'] = 'actions.tcd',
+    ['gs'] = 'actions.change_sort',
+    ['gx'] = 'actions.open_external',
+    ['g.'] = 'actions.toggle_hidden',
+    ['gd'] = {
+      desc = 'Toggle file detail view',
+      callback = function()
+        oil_detail = not oil_detail
+        if oil_detail then
+          oil.set_columns({ 'permissions', 'size', 'mtime', 'icon' })
+        else
+          oil.set_columns({ 'icon' })
+        end
+      end,
+    },
+  },
+  use_default_keymaps = false,
+  view_options = {
+    show_hidden = true,
+    natural_order = true,
+    is_always_hidden = function(name, _)
+      return name == '.git' or name == '..'
+    end,
+    win_options = {
+      wrap = true,
+    },
+  },
+})
+
 vim.schedule(function()
   -- bufferline.nvim setup. https://github.com/akinsho/bufferline.nvim
   -- A snazzy 💅 buffer line (with tabpage integration) for Neovim built using lua.
-  require('bufferline').setup({})
+  require('bufferline').setup({
+    highlights = require('rose-pine.plugins.bufferline'),
+  })
 
   -- render-markdown.nvim setup. https://github.com/MeanderingProgrammer/render-markdown.nvim
   -- Plugin to improve viewing Markdown files in Neovim
@@ -241,75 +310,6 @@ vim.schedule(function()
   vim.keymap.set({ 'n', 'i' }, '<C-f>', '<CMD>Format<CR>', { desc = 'Format', silent = true })
 end)
 
--- Oil setup. https://github.com/stevearc/oil.nvim
--- file explorer that lets you edit your filesystem like a normal Neovim buffer.
-vim.schedule(function()
-  local oil = require('oil')
-  local oil_detail = false
-
-  oil.setup({
-    default_file_explorer = true,
-    delete_to_trash = true,
-    win_options = {
-      winbar = " %{v:lua.require('oil').get_current_dir()}",
-    },
-    float = {
-      -- Padding around the floating window
-      padding = 2,
-      max_width = 90,
-      max_height = 0,
-      -- border = "rounded",
-      win_options = {
-        winblend = 0,
-      },
-    },
-    columns = {
-      'icon',
-    },
-    keymaps = {
-      ['g?'] = 'actions.show_help',
-      ['<CR>'] = 'actions.select',
-      ['<C-v>'] = 'actions.select_vsplit',
-      ['<C-x>'] = 'actions.select_split',
-      ['<C-t>'] = 'actions.select_tab',
-      ['<M-p>'] = 'actions.preview',
-      ['<C-p>'] = 'actions.preview',
-      ['<C-c>'] = 'actions.close',
-      ['<C-l>'] = false,
-      ['<C-L>'] = 'actions.refresh',
-      ['-'] = 'actions.parent',
-      ['_'] = 'actions.open_cwd',
-      ['`'] = 'actions.cd',
-      ['~'] = 'actions.tcd',
-      ['gs'] = 'actions.change_sort',
-      ['gx'] = 'actions.open_external',
-      ['g.'] = 'actions.toggle_hidden',
-      ['gd'] = {
-        desc = 'Toggle file detail view',
-        callback = function()
-          oil_detail = not oil_detail
-          if oil_detail then
-            oil.set_columns({ 'permissions', 'size', 'mtime', 'icon' })
-          else
-            oil.set_columns({ 'icon' })
-          end
-        end,
-      },
-    },
-    use_default_keymaps = false,
-    view_options = {
-      show_hidden = true,
-      natural_order = true,
-      is_always_hidden = function(name, _)
-        return name == '.git' or name == '..'
-      end,
-      win_options = {
-        wrap = true,
-      },
-    },
-  })
-end)
-
 vim.schedule(function()
   -- dressing.nvim setup. https://github.com/stevearc/dressing.nvim
   require('dressing').setup({})
@@ -416,96 +416,110 @@ vim.schedule(function()
 end)
 
 -- treesitter.
----@diagnostic disable-next-line: missing-fields
-require('nvim-treesitter.configs').setup({
-  highlight = {
-    disable = function(_, buf)
-      local max_filesize = 100 * 1024 -- 100 KB
-      local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
-      if ok and stats and stats.size > max_filesize then
-        return true
-      end
-    end,
-  },
-  indent = { enable = true, disable = {} },
-  incremental_selection = {
-    enable = true,
-    keymaps = {
-      init_selection = '<C-space>',
-      node_incremental = '<C-space>',
-      scope_incremental = false,
-      node_decremental = '<bs>',
-    },
-  },
-  textobjects = {
-    move = {
+vim.schedule(function()
+  local parser_install_dir = os.getenv('HOME') .. '/.local/share/nvim/treesitter/parser'
+  vim.opt.runtimepath:append(parser_install_dir)
+  ---@diagnostic disable-next-line: missing-fields
+  require('nvim-treesitter.configs').setup({
+    ensure_installed = 'all',
+    sync_install = false,
+    auto_install = false,
+    parser_install_dir = parser_install_dir,
+    highlight = {
       enable = true,
-      goto_next_start = { [']f'] = '@function.outer', [']c'] = '@class.outer', [']a'] = '@parameter.inner' },
-      goto_next_end = { [']F'] = '@function.outer', [']C'] = '@class.outer', [']A'] = '@parameter.inner' },
-      goto_previous_start = { ['[f'] = '@function.outer', ['[c'] = '@class.outer', ['[a'] = '@parameter.inner' },
-      goto_previous_end = { ['[F'] = '@function.outer', ['[C'] = '@class.outer', ['[A'] = '@parameter.inner' },
+      disable = function(_, buf)
+        local max_filesize = 100 * 1024 -- 100 KB
+        local ok, stats = pcall(vim.uv.fs_stat, vim.api.nvim_buf_get_name(buf))
+        if ok and stats and stats.size > max_filesize then
+          return true
+        end
+      end,
+      additional_vim_regex_highlighting = false,
     },
-  },
-})
+    indent = { enable = true, disable = {} },
+    incremental_selection = {
+      enable = true,
+      keymaps = {
+        init_selection = '<C-space>',
+        node_incremental = '<C-space>',
+        scope_incremental = false,
+        node_decremental = '<bs>',
+      },
+    },
+    textobjects = {
+      move = {
+        enable = true,
+        goto_next_start = { [']f'] = '@function.outer', [']c'] = '@class.outer', [']a'] = '@parameter.inner' },
+        goto_next_end = { [']F'] = '@function.outer', [']C'] = '@class.outer', [']A'] = '@parameter.inner' },
+        goto_previous_start = { ['[f'] = '@function.outer', ['[c'] = '@class.outer', ['[a'] = '@parameter.inner' },
+        goto_previous_end = { ['[F'] = '@function.outer', ['[C'] = '@class.outer', ['[A'] = '@parameter.inner' },
+      },
+    },
+  })
 
--- nvim-treesitter/nvim-treesitter-textobjects
-local move = require('nvim-treesitter.textobjects.move') ---@type table<string,fun(...)>
-local configs = require('nvim-treesitter.configs')
-for name, fn in pairs(move) do
-  if name:find('goto') == 1 then
-    move[name] = function(q, ...)
-      if vim.wo.diff then
-        local config = configs.get_module('textobjects.move')[name] ---@type table<string,string>
-        for key, query in pairs(config or {}) do
-          if q == query and key:find('[%]%[][cC]') then
-            vim.cmd('normal! ' .. key)
-            return
+  -- nvim-treesitter/nvim-treesitter-textobjects
+  local move = require('nvim-treesitter.textobjects.move') ---@type table<string,fun(...)>
+  local configs = require('nvim-treesitter.configs')
+  for name, fn in pairs(move) do
+    if name:find('goto') == 1 then
+      move[name] = function(q, ...)
+        if vim.wo.diff then
+          local config = configs.get_module('textobjects.move')[name] ---@type table<string,string>
+          for key, query in pairs(config or {}) do
+            if q == query and key:find('[%]%[][cC]') then
+              vim.cmd('normal! ' .. key)
+              return
+            end
           end
         end
+        return fn(q, ...)
       end
-      return fn(q, ...)
     end
   end
-end
 
--- nvim-treesitter-context. https://github.com/nvim-treesitter/nvim-treesitter-context
-require('treesitter-context').setup({
-  enable = true,
-})
+  -- nvim-treesitter-context. https://github.com/nvim-treesitter/nvim-treesitter-context
+  require('treesitter-context').setup({
+    enable = true,
+  })
+end)
 -- stylua: ignore start
 vim.keymap.set('n', '[c', function() require('treesitter-context').go_to_context(vim.v.count1) end, { silent = true })
 -- stylua: ignore end
 
 -- trouble.nvim setup. https://github.com/folke/trouble.nvim
 -- A pretty list for showing diagnostics, references, telescope results, quickfix and location lists to help you solve all the trouble your code is causing.
----@diagnostic disable-next-line: missing-fields
-require('trouble').setup({ action_keys = { open_tab = '<c-q>' } })
--- stylua: ignore start
-vim.keymap.set('n', '<leader>cs', '<cmd>Trouble symbols toggle<cr>', { desc = 'Symbols (Trouble)' })
-vim.keymap.set('n', 'gD', '<cmd>Trouble lsp_definitions<cr>', { desc = '[G]to [D]efinitions' })
-vim.keymap.set('n', '<leader>D', '<cmd>Trouble lsp_type_definitions<cr>', { desc = 'Type [D]efinition' })
-vim.keymap.set('n', '<leader>xL', '<cmd>Trouble loclist toggle<cr>', { desc = 'Location List (Trouble)' })
-vim.keymap.set('n', '<leader>xQ', '<cmd>Trouble qflist toggle<cr>', { desc = 'Quickfix List (Trouble)' })
-vim.keymap.set('n', '<leader>cl', '<cmd>Trouble lsp toggle focus=false win.position=right<cr>', { desc = 'LSP Definitions / references / ... (Trouble)' })
-vim.keymap.set('n', '<leader>xx', '<cmd>Trouble<cr>', { desc = 'Trouble Selector' })
-vim.keymap.set('n', '<C-t>', '<cmd>Trouble diagnostics toggle filter.severity = vim.diagnostic.severity.ERROR<cr>', { noremap = true })
--- stylua: ignore end
+vim.schedule(function()
+  ---@diagnostic disable-next-line: missing-fields
+  require('trouble').setup({ action_keys = { open_tab = '<c-q>' } })
+  -- stylua: ignore start
+  vim.keymap.set('n', '<leader>cs', '<cmd>Trouble symbols toggle<cr>', { desc = 'Symbols (Trouble)' })
+  vim.keymap.set('n', 'gD', '<cmd>Trouble lsp_definitions<cr>', { desc = '[G]to [D]efinitions' })
+  vim.keymap.set('n', '<leader>D', '<cmd>Trouble lsp_type_definitions<cr>', { desc = 'Type [D]efinition' })
+  vim.keymap.set('n', '<leader>xL', '<cmd>Trouble loclist toggle<cr>', { desc = 'Location List (Trouble)' })
+  vim.keymap.set('n', '<leader>xQ', '<cmd>Trouble qflist toggle<cr>', { desc = 'Quickfix List (Trouble)' })
+  vim.keymap.set('n', '<leader>cl', '<cmd>Trouble lsp toggle focus=false win.position=right<cr>', { desc = 'LSP Definitions / references / ... (Trouble)' })
+  vim.keymap.set('n', '<leader>xx', '<cmd>Trouble<cr>', { desc = 'Trouble Selector' })
+  vim.keymap.set('n', '<C-t>', '<cmd>Trouble diagnostics toggle filter.severity = vim.diagnostic.severity.ERROR<cr>', { noremap = true })
+  -- stylua: ignore end
+end)
 
 -- other.nvim. https://github.com/rgroli/other.nvim
-require('other-nvim').setup({
-  mappings = {
-    'golang',
-    'angular',
-    'laravel',
-    'python',
-    'react',
-    'rust',
-  },
-})
--- stylua: ignore start
-vim.keymap.set("n", "<leader>ll", "<cmd>:Other<CR>", { noremap = true, silent = true, desc = "Opens the other/alternative file according to the configured mapping." })
-vim.keymap.set("n", "<leader>ltn", "<cmd>:OtherTabNew<CR>", { noremap = true, silent = true, desc = "Like :Other but opens the file in a new tab." })
-vim.keymap.set("n", "<leader>lp", "<cmd>:OtherSplit<CR>", { noremap = true, silent = true, desc = "Like :Other but opens the file in an horizontal split."  })
-vim.keymap.set("n", "<leader>lv", "<cmd>:OtherVSplit<CR>", { noremap = true, silent = true, desc = "Like :Other but opens the file in a vertical split." })
-vim.keymap.set("n", "<leader>lc", "<cmd>:OtherClear<CR>", { noremap = true, silent = true, desc = "Clears the internal reference to the other/alternative file" })
--- stylua: ignore end
+vim.schedule(function()
+  require('other-nvim').setup({
+    mappings = {
+      'golang',
+      'angular',
+      'laravel',
+      'python',
+      'react',
+      'rust',
+    },
+  })
+  -- stylua: ignore start
+  vim.keymap.set("n", "<leader>ll", "<cmd>:Other<CR>", { noremap = true, silent = true, desc = "Opens the other/alternative file according to the configured mapping." })
+  vim.keymap.set("n", "<leader>ltn", "<cmd>:OtherTabNew<CR>", { noremap = true, silent = true, desc = "Like :Other but opens the file in a new tab." })
+  vim.keymap.set("n", "<leader>lp", "<cmd>:OtherSplit<CR>", { noremap = true, silent = true, desc = "Like :Other but opens the file in an horizontal split."  })
+  vim.keymap.set("n", "<leader>lv", "<cmd>:OtherVSplit<CR>", { noremap = true, silent = true, desc = "Like :Other but opens the file in a vertical split." })
+  vim.keymap.set("n", "<leader>lc", "<cmd>:OtherClear<CR>", { noremap = true, silent = true, desc = "Clears the internal reference to the other/alternative file" })
+  -- stylua: ignore end
+end)
