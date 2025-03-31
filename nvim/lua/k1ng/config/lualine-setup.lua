@@ -1,6 +1,5 @@
 vim.schedule(function()
   local Util = require('k1ng.util')
-  local navic = require('nvim-navic')
   local icons = require('k1ng.config.icons')
 
   local colors = {
@@ -43,14 +42,6 @@ vim.schedule(function()
           path = 1,
           shorting_target = 40,
           symbols = { modified = '  ', readonly = '', unnamed = '' },
-        },
-        {
-          function()
-            return navic.get_location()
-          end,
-          cond = function()
-            return navic.is_available()
-          end,
         },
       },
       lualine_x = {

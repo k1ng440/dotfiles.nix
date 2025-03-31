@@ -1,46 +1,19 @@
 -- nvim-web-devicons setup. https://github.com/nvim-tree/nvim-web-devicons
 require('nvim-web-devicons').setup({})
 
--- bufferline.nvim setup. https://github.com/akinsho/bufferline.nvim
--- A snazzy 💅 buffer line (with tabpage integration) for Neovim built using lua.
-require('bufferline').setup({})
+vim.schedule(function()
+  -- bufferline.nvim setup. https://github.com/akinsho/bufferline.nvim
+  -- A snazzy 💅 buffer line (with tabpage integration) for Neovim built using lua.
+  require('bufferline').setup({})
 
--- render-markdown.nvim setup. https://github.com/MeanderingProgrammer/render-markdown.nvim
--- Plugin to improve viewing Markdown files in Neovim
-require('render-markdown').setup({})
+  -- render-markdown.nvim setup. https://github.com/MeanderingProgrammer/render-markdown.nvim
+  -- Plugin to improve viewing Markdown files in Neovim
+  require('render-markdown').setup({})
 
-require('git-conflict').setup()
-
--- gen.nvim setup. https://github.com/David-Kunz/gen.nvim
--- Generate text using LLMs with customizable prompts
-require('gen').setup({
-  model = 'mistral', -- The default model to use.
-  quit_map = 'q', -- set keymap to close the response window
-  retry_map = '<c-r>', -- set keymap to re-send the current prompt
-  accept_map = '<c-cr>', -- set keymap to replace the previous selection with the last result
-  host = 'localhost', -- The host running the Ollama service.
-  port = '11434', -- The port on which the Ollama service is listening.
-  display_mode = 'float', -- The display mode. Can be "float" or "split" or "horizontal-split".
-  show_prompt = false, -- Shows the prompt submitted to Ollama.
-  show_model = false, -- Displays which model you are using at the beginning of your chat session.
-  no_auto_close = false, -- Never closes the window automatically.
-  file = false, -- Write the payload to a temporary file to keep the command short.
-  hidden = false, -- Hide the generation window (if true, will implicitly set `prompt.replace = true`), requires Neovim >= 0.10
-  init = function(options)
-    pcall(io.popen, 'ollama serve > /dev/null 2>&1 &')
-  end,
-  -- Function to initialize Ollama
-  command = function(options)
-    local body = { model = options.model, stream = true }
-    return 'curl --silent --no-buffer -X POST http://' .. options.host .. ':' .. options.port .. '/api/chat -d $body'
-  end,
-  -- The command for the Ollama service. You can use placeholders $prompt, $model and $body (shellescaped).
-  -- This can also be a command string.
-  -- The executed command must return a JSON object with { response, context }
-  -- (context property is optional).
-  -- list_models = '<omitted lua function>', -- Retrieves a list of model names
-  debug = false, -- Prints errors and the command which is run.
-})
+  -- git-conflict.nvim. https://github.com/akinsho/git-conflict.nvim
+  -- A plugin to visualise and resolve conflicts
+  require('git-conflict').setup({})
+end)
 
 -- luasnip setup
 vim.schedule(function()
@@ -270,108 +243,88 @@ end)
 
 -- Oil setup. https://github.com/stevearc/oil.nvim
 -- file explorer that lets you edit your filesystem like a normal Neovim buffer.
-local oil_detail = false
-require('oil').setup({
-  default_file_explorer = true,
-  delete_to_trash = true,
-  win_options = {
-    winbar = " %{v:lua.require('oil').get_current_dir()}",
-  },
-  float = {
-    -- Padding around the floating window
-    padding = 2,
-    max_width = 90,
-    max_height = 0,
-    -- border = "rounded",
-    win_options = {
-      winblend = 0,
-    },
-  },
-  columns = {
-    'icon',
-  },
-  keymaps = {
-    ['g?'] = 'actions.show_help',
-    ['<CR>'] = 'actions.select',
-    ['<C-v>'] = 'actions.select_vsplit',
-    ['<C-x>'] = 'actions.select_split',
-    ['<C-t>'] = 'actions.select_tab',
-    ['<M-p>'] = 'actions.preview',
-    ['<C-p>'] = 'actions.preview',
-    ['<C-c>'] = 'actions.close',
-    ['<C-l>'] = false,
-    ['<C-L>'] = 'actions.refresh',
-    ['-'] = 'actions.parent',
-    ['_'] = 'actions.open_cwd',
-    ['`'] = 'actions.cd',
-    ['~'] = 'actions.tcd',
-    ['gs'] = 'actions.change_sort',
-    ['gx'] = 'actions.open_external',
-    ['g.'] = 'actions.toggle_hidden',
-    ['gd'] = {
-      desc = 'Toggle file detail view',
-      callback = function()
-        oil_detail = not oil_detail
-        if oil_detail then
-          require('oil').set_columns({ 'permissions', 'size', 'mtime', 'icon' })
-        else
-          require('oil').set_columns({ 'icon' })
-        end
-      end,
-    },
-  },
-  use_default_keymaps = false,
-  view_options = {
-    show_hidden = true,
-    natural_order = true,
-    is_always_hidden = function(name, _)
-      return name == '.git' or name == '..'
-    end,
-    win_options = {
-      wrap = true,
-    },
-  },
-})
-
--- dressing.nvim setup. https://github.com/stevearc/dressing.nvim
 vim.schedule(function()
-  require('dressing').setup({})
+  local oil = require('oil')
+  local oil_detail = false
+
+  oil.setup({
+    default_file_explorer = true,
+    delete_to_trash = true,
+    win_options = {
+      winbar = " %{v:lua.require('oil').get_current_dir()}",
+    },
+    float = {
+      -- Padding around the floating window
+      padding = 2,
+      max_width = 90,
+      max_height = 0,
+      -- border = "rounded",
+      win_options = {
+        winblend = 0,
+      },
+    },
+    columns = {
+      'icon',
+    },
+    keymaps = {
+      ['g?'] = 'actions.show_help',
+      ['<CR>'] = 'actions.select',
+      ['<C-v>'] = 'actions.select_vsplit',
+      ['<C-x>'] = 'actions.select_split',
+      ['<C-t>'] = 'actions.select_tab',
+      ['<M-p>'] = 'actions.preview',
+      ['<C-p>'] = 'actions.preview',
+      ['<C-c>'] = 'actions.close',
+      ['<C-l>'] = false,
+      ['<C-L>'] = 'actions.refresh',
+      ['-'] = 'actions.parent',
+      ['_'] = 'actions.open_cwd',
+      ['`'] = 'actions.cd',
+      ['~'] = 'actions.tcd',
+      ['gs'] = 'actions.change_sort',
+      ['gx'] = 'actions.open_external',
+      ['g.'] = 'actions.toggle_hidden',
+      ['gd'] = {
+        desc = 'Toggle file detail view',
+        callback = function()
+          oil_detail = not oil_detail
+          if oil_detail then
+            oil.set_columns({ 'permissions', 'size', 'mtime', 'icon' })
+          else
+            oil.set_columns({ 'icon' })
+          end
+        end,
+      },
+    },
+    use_default_keymaps = false,
+    view_options = {
+      show_hidden = true,
+      natural_order = true,
+      is_always_hidden = function(name, _)
+        return name == '.git' or name == '..'
+      end,
+      win_options = {
+        wrap = true,
+      },
+    },
+  })
 end)
 
--- echasnovski/mini.indentscope setup. https://github.com/echasnovski/mini.indentscope
--- Visualize and work with indent scope
-require('mini.indentscope').setup()
+vim.schedule(function()
+  -- dressing.nvim setup. https://github.com/stevearc/dressing.nvim
+  require('dressing').setup({})
 
--- rainbow-delimiters setup. https://github.com/HiPhish/rainbow-delimiters.nvim
--- Rainbow Parentheses
-require('rainbow-delimiters.setup').setup({})
+  -- echasnovski/mini.indentscope setup. https://github.com/echasnovski/mini.indentscope
+  -- Visualize and work with indent scope
+  require('mini.indentscope').setup()
+
+  -- rainbow-delimiters setup. https://github.com/HiPhish/rainbow-delimiters.nvim
+  -- Rainbow Parentheses
+  require('rainbow-delimiters.setup').setup({})
+end)
 
 -- undotree setup.
 vim.keymap.set('n', '<leader>ut', '<CMD>UndotreeToggle<CR>', { desc = 'Undo buffer' })
-
--- nvim-navic setup. https://github.com/SmiteshP/nvim-navic
--- statusline/winbar component that uses LSP to show your current code
-
-vim.schedule(function()
-  vim.g.navic_silence = true
-  local navic = require('nvim-navic')
-  navic.setup({
-    separator = ' ',
-    highlight = true,
-    depth_limit = 5,
-    icons = require('k1ng.config.icons').kinds,
-  })
-
-  require('k1ng.util').on_attach(function(client, buffer)
-    if client.name == 'copilot' then
-      return
-    end
-
-    if client.server_capabilities.documentSymbolProvider then
-      navic.attach(client, buffer)
-    end
-  end)
-end)
 
 -- fidget.nvim setup. https://github.com/j-hui/fidget.nvim
 -- Extensible UI for Neovim notifications and LSP progress messages.
@@ -538,17 +491,16 @@ vim.keymap.set('n', '<leader>xx', '<cmd>Trouble<cr>', { desc = 'Trouble Selector
 vim.keymap.set('n', '<C-t>', '<cmd>Trouble diagnostics toggle filter.severity = vim.diagnostic.severity.ERROR<cr>', { noremap = true })
 -- stylua: ignore end
 
-
 -- other.nvim. https://github.com/rgroli/other.nvim
-require("other-nvim").setup({
+require('other-nvim').setup({
   mappings = {
-    "golang",
-    "angular",
-    "laravel",
-    "python",
-    "react",
-    "rust",
-  }
+    'golang',
+    'angular',
+    'laravel',
+    'python',
+    'react',
+    'rust',
+  },
 })
 -- stylua: ignore start
 vim.keymap.set("n", "<leader>ll", "<cmd>:Other<CR>", { noremap = true, silent = true, desc = "Opens the other/alternative file according to the configured mapping." })

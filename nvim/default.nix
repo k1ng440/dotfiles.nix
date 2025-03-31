@@ -42,7 +42,6 @@ in {
       nvim-dap-virtual-text
       nvim-dap-ui
       nvim-dap-go
-      nvim-navic
       oil-nvim
       trouble-nvim
       todo-comments-nvim
@@ -56,7 +55,6 @@ in {
       tokyonight-nvim
       vim-speeddating
       vim-abolish
-      (fromGitHub { inherit pkgs; rev="b9721662daedd880ca0a0358cf6ffbff60617ab3"; ref="main"; user="David-Kunz"; repo="gen.nvim"; })
       (fromGitHub { inherit pkgs; rev="d3f72beec9967eebbdcc1ad687c8826382b28b40"; ref="master"; user="alpertuna"; repo="vim-header"; })
       (fromGitHub { inherit pkgs; rev="af61f99945e15b195fbce017230cedb0497ded4d"; ref="main"; user="mikavilpas"; repo="blink-ripgrep.nvim"; })
       (fromGitHub { inherit pkgs; rev="4bbfdd92d547d2862a75b4e80afaf30e73f7bbb4"; ref="main"; user="akinsho"; repo="git-conflict.nvim"; }) # 2.1.0
@@ -81,6 +79,7 @@ in {
       pkgs.nodePackages.typescript-language-server
       pkgs.nodePackages.vscode-langservers-extracted
       pkgs.nodePackages."@vue/language-server"
+      pkgs.basedpyright
       pkgs.prettierd
       pkgs.pyright
       pkgs.rust-analyzer
