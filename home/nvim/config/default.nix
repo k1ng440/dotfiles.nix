@@ -1,14 +1,13 @@
-{pkgs, ...}:
+{config, pkgs, ...}:
 
 let 
   fromGitHub = import ../functions/fromGitHub.nix;
+  nvimConfigDirectory = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/home-manager/nvim";
+  intelephenseLicenseFile = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/home-manager/secrets/intelephense-license.txt";
 in {
   xdg.configFile = {
-    "nvim/lua".source = ./lua;
-    "nvim/lsp".source = ./lsp;
-    "nvim/after".source = ./after;
-    "nvim/init.lua".source = ./init.lua;
-    "nvim/intelephense-license.txt".source = ../secrets/intelephense-license.txt;
+    "nvim".source = nvimConfigDirectory;
+    "intelephense/license.txt".source = intelephenseLicenseFile;
   };
 
   programs.neovim = {
