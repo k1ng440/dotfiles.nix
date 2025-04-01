@@ -1,5 +1,4 @@
-{ pkgs, ... }:
-{
+{pkgs, ...}: {
   programs = {
     gh.enable = true;
     lazygit.enable = true;

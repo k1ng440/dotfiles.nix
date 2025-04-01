@@ -98,7 +98,7 @@
     }:
     let
       nvimLib = import ./lib/nvim-plugin-utils.nix {
-        lib = nixpkgs.lib;  # or nixpkgs-unstable.lib depending on what you're using
+        lib = nixpkgs.lib; # or nixpkgs-unstable.lib depending on what you're using
       };
 
       extraArgs = {

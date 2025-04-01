@@ -1,7 +1,5 @@
-{ ... }:
-let
+{...}: let
   name = "rog-beast";
-in
-{
+in {
   name = name;
 }

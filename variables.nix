@@ -1,8 +1,7 @@
 let
   username = "k1ng";
   homeDirectory = builtins.toPath "/home/${username}";
-in
-{
+in {
   inherit username;
 
   homeDirectory = {

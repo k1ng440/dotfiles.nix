@@ -284,7 +284,6 @@ vim.schedule(function()
       svg = { 'xmlformat' },
       sql = { 'pg_format' },
       proto = { 'clang-format' },
-
       ['_'] = { 'trim_whitespace', 'trim_newlines', 'squeeze_blanks' },
     },
     -- format_on_save = {
@@ -421,14 +420,13 @@ end)
 
 -- treesitter.
 vim.schedule(function()
-  local parser_install_dir = os.getenv('HOME') .. '/.local/share/nvim/treesitter/parser'
-  vim.opt.runtimepath:append(parser_install_dir)
+  -- local parser_install_dir = os.getenv('HOME') .. '/.local/share/nvim/treesitter/parser'
+  -- vim.opt.runtimepath:append(parser_install_dir)
   ---@diagnostic disable-next-line: missing-fields
   require('nvim-treesitter.configs').setup({
-    ensure_installed = 'all',
     sync_install = false,
     auto_install = false,
-    parser_install_dir = parser_install_dir,
+    -- parser_install_dir = parser_install_dir,
     highlight = {
       enable = true,
       disable = function(_, buf)
