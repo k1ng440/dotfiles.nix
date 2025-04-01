@@ -1,10 +1,13 @@
-{pkgs, ...}: {
+{config, inputs, pkgs, system, ...}: {
+
+
+
   programs.ghostty = {
     enable = true;
     enableZshIntegration = true;
     installBatSyntax = true;
     clearDefaultKeybinds = false;
-    package = (config.lib.nixGL.wrap ghostty.packages.${system}.default);
+    package = (config.lib.nixGL.wrap inputs.ghostty.packages.${system}.default);
     settings = {
       font-size = 14;
       font-family = "Comic Code Ligatures";
@@ -62,5 +65,5 @@
         "ctrl+s>z=toggle_split_zoom"
       ];
     };
-  }
+  };
 }

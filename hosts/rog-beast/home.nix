@@ -3,13 +3,12 @@
   nixpkgs.config.allowUnfree = true;
   imports = [
     ../../home/common.nix
+    ../../home/fzf
+    ../../home/zsh
     ../../home/nvim
-    ../../zsh.nix
-    ../../git.nix
-    ../../devops.nix
-    ../../fd.nix
-    ../../fzf
-    ../../ghostty
-    # other inputs
+    ../../home/git.nix
+    ../../home/devops.nix
+    ../../home/fd.nix
+    ../../home/ghostty
   ];
 }
