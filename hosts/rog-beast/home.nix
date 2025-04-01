@@ -9,5 +9,6 @@
     ../../home/devops.nix
     ../../home/fd.nix
     ../../home/ghostty
+    ../../home/lazygit
   ];
 }

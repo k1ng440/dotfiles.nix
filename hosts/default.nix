@@ -2,6 +2,7 @@
   nixpkgs,
   nixos-generators,
   home-manager,
+  disko,
   self,
   specialArgs,
   configurations,
@@ -18,7 +19,7 @@
 
   systemArgs =
     {
-      inherit nixos-generators home-manager;
+      inherit disko nixos-generators home-manager;
       system = x64System;
     }
     // baseArgs;
@@ -26,6 +27,7 @@
   hosts =
     builtins.mapAttrs (host: hostConf: {
       name = hostConf.info.name;
+      disko = hostConf.info.disko;
       diskPath = hostConf.info.diskPath;
       configuration = {
         inherit (hostConf) nixosModules homeModules;

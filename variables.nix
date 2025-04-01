@@ -1,8 +1,9 @@
 let
   username = "k1ng";
   homeDirectory = builtins.toPath "/home/${username}";
+  timeZone = "Asia/Dhaka";
 in {
-  inherit username;
+  inherit username timeZone;
 
   homeDirectory = {
     path = homeDirectory;
@@ -15,14 +16,16 @@ in {
     ];
   };
 
+  initialUserPassword = "changeme";
+
   git = {
     username = "k1ng";
     email = "contact@iampavel.dev";
   };
 
-  # Change me.
   dotfilesLocation = homeDirectory + (builtins.toPath "/nix-config");
 
-  system = "x86_64-linux";
+  nameservers = ["1.1.1.1#one.one.one.one" "1.0.0.1#one.one.one.one"];
+
   stateVersion = "24.11";
 }

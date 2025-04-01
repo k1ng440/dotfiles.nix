@@ -1,9 +1,7 @@
 {
-  inputs,
   pkgs,
   rawNvimPlugins,
 }: let
-  # fromGitHub = import ../../functions/fromGitHub.nix;
   mkVimPlugin = name: plugin:
     pkgs.vimUtils.buildVimPlugin {
       pname = name;

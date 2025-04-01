@@ -3,7 +3,8 @@
   config,
   lib,
   ...
-}: {
+}:
+{
   home.packages = with pkgs; [
     act
     ansible
@@ -22,12 +23,16 @@
     terraform
     tilt
     kubernetes-polaris
+    fzf
     kubeshark
     k3d
     k9s
     (writeShellApplication {
       name = "kctx";
-      runtimeInputs = [kubectl fzf];
+      runtimeInputs = [
+        kubectl
+        fzf
+      ];
       text = ''
         kubectl config get-contexts -o name \
         | fzf --height=10 \
@@ -36,7 +41,10 @@
     })
     (writeShellApplication {
       name = "kctn";
-      runtimeInputs = [kubectl fzf];
+      runtimeInputs = [
+        kubectl
+        fzf
+      ];
       text = ''
         kubectl get namespaces -o jsonpath='{range .items[*]}{.metadata.name}{"\n"}{end}' \
           | fzf --height=10 \
@@ -44,9 +52,4 @@
       '';
     })
   ];
-
-  nixpkgs.config.allowUnfreePredicate = pkg:
-    builtins.elem (lib.getName pkg) [
-      "terraform"
-    ];
 }

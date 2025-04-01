@@ -1,5 +1,4 @@
 {
-  inputs,
   pkgs,
   system,
   pkgs-unstable,
@@ -11,7 +10,7 @@
   normalPackages = [];
   nvimConfigDirectory = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/nix-config/nvim";
   intelephenseLicenseFile = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/nix-config/secrets/intelephense-license.txt";
-  plugins = import ./plugins.nix {inherit inputs pkgs rawNvimPlugins;};
+  plugins = import ./plugins.nix {inherit pkgs rawNvimPlugins;};
 in {
   programs.neovim = {
     enable = true;
@@ -59,15 +58,6 @@ in {
       pkgs.nixd
     ];
   };
-
-  # home.packages = with pkgs-unstable;
-  #   [
-  #     neovim
-  #     tree-sitter
-  #     basedpyright
-  #     ruff
-  #   ]
-  #   ++ normalPackages;
 
   xdg.configFile = {
     nvim.source = config.lib.file.mkOutOfStoreSymlink "${variables.dotfilesLocation}" + (builtins.toPath "/home/nvim/config");

@@ -19,6 +19,13 @@
       url = "github:nix-community/nixos-generators";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    disko = {
+      url = "github:nix-community/disko";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    nixos-hardware = {
+      url = "github:NixOS/nixos-hardware/master";
+    };
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs-unstable";
@@ -41,6 +48,9 @@
     treefmt-nix = {
       url = "github:numtide/treefmt-nix";
       inputs.nixpkgs.follows = "nixpkgs-unstable";
+    };
+    zen-browser = {
+      url = "github:0xc000022070/zen-browser-flake";
     };
 
     # neovim external plugins
@@ -68,11 +78,6 @@
       url = "github:rgroli/other.nvim";
       flake = false;
     };
-    # nvim-plugin-rosepine = {
-    #   url = "github:rose-pine/neovim";
-    #   rev = "7d1b5c7dcd274921f0f58e90a8bf935f6a95fbf3";
-    #   flake = false;
-    # };
     nvim-plugin-format-ts-errors = {
       url = "github:davidosomething/format-ts-errors.nvim";
       flake = false;
@@ -83,82 +88,91 @@
     };
   };
 
-  outputs =
-    inputs@{
-      self,
-      nixpkgs,
-      nixpkgs-unstable,
-      nixos-generators,
-      home-manager,
-      ghostty,
-      color-schemes,
-      nixgl,
-      kubectl,
-      ...
-    }:
-    let
-      nvimLib = import ./lib/nvim-plugin-utils.nix {
-        lib = nixpkgs.lib; # or nixpkgs-unstable.lib depending on what you're using
+  outputs = inputs @ {
+    self,
+    nixpkgs,
+    nixpkgs-unstable,
+    nixos-generators,
+    nixos-hardware,
+    home-manager,
+    ghostty,
+    color-schemes,
+    nixgl,
+    kubectl,
+    zen-browser,
+    ...
+  }: let
+    nvimLib = import ./lib/nvim-plugin-utils.nix {
+      lib = nixpkgs.lib; # or nixpkgs-unstable.lib depending on what you're using
+    };
+
+    theme = import ./theme.nix;
+    extraArgs = {
+      inputs = inputs;
+      variables = import ./variables.nix;
+      rawNvimPlugins = nvimLib.fromInputs inputs "nvim-plugin-";
+      theme = theme;
+    };
+
+    specialArgs = import ./lib/special-args.nix (
+      {
+        inherit nixpkgs-unstable nixos-hardware zen-browser;
+      }
+      // extraArgs
+    );
+
+    configurations =
+      builtins.mapAttrs
+      (_: hostConf: {
+        inherit (hostConf) info nixosModules homeModules;
+        homeManager = import ./lib/home-manager.nix {
+          inherit nixpkgs nixpkgs-unstable home-manager;
+          specialArgs = specialArgs.x64SpecialArgs;
+          host = hostConf;
+        };
+      })
+      {
+        rog-beast = import ./hosts/rog-beast {};
       };
 
-      extraArgs = {
-        inputs = inputs;
-        variables = import ./variables.nix;
-        rawNvimPlugins = nvimLib.fromInputs inputs "nvim-plugin-";
-      };
-
-      specialArgs = import ./lib/special-args.nix (
-        {
-          inherit nixpkgs-unstable;
-        }
-        // extraArgs
-      );
-
-      configurations =
-        builtins.mapAttrs
-          (_: hostConf: {
-            inherit (hostConf) info nixosModules homeModules;
-            homeManager = import ./lib/home-manager.nix {
-              inherit nixpkgs nixpkgs-unstable home-manager;
-              specialArgs = specialArgs.x64SpecialArgs;
-              host = hostConf;
-            };
-          })
-          {
-            rog-beast = import ./hosts/rog-beast { };
-          };
-
-      osConfigurations = nixpkgs.lib.filterAttrs (
+    osConfigurations =
+      nixpkgs.lib.filterAttrs (
         _: hostConf: builtins.hasAttr "nixosModules" hostConf
-      ) configurations;
+      )
+      configurations;
 
-      args = {
+    args =
+      {
+        inherit (extraArgs) variables;
         inherit specialArgs home-manager;
         configurations = osConfigurations;
-      } // inputs;
+      }
+      // inputs;
 
-      hosts = import ./hosts args;
-      # installers = import ./hosts/installers.nix (
-      #   {
-      #     hosts = hosts.hosts;
-      #     systems = hosts.allSystems;
-      #   }
-      #   // args
-      # );
-    in
-    {
-      confs = configurations;
-      homeConfigurations = builtins.mapAttrs (
+    hosts = import ./hosts args;
+    installers = import ./hosts/installers.nix (
+      {
+        hosts = hosts.hosts;
+        systems = hosts.allSystems;
+        theme = theme;
+      }
+      // args
+    );
+  in {
+    confs = configurations;
+    homeConfigurations =
+      builtins.mapAttrs (
         _: hostConf: hostConf.homeManager.configuration
-      ) configurations;
+      )
+      configurations;
 
-      hosts = hosts;
-      nixosConfigurations = hosts.nixosConfigurations;
-      packages = hosts.packages;
-      # installers = installers;
+    hosts = hosts;
+    nixosConfigurations = hosts.nixosConfigurations;
+    packages = hosts.packages;
+    installers = installers;
 
-      formatter = nixpkgs.lib.genAttrs hosts.allSystems (
-        system: nixpkgs.legacyPackages.${system}.alejandra
-      );
-    };
+    formatter = nixpkgs.lib.genAttrs hosts.allSystems (
+      system: nixpkgs.legacyPackages.${system}.alejandra
+    );
+  };
 }

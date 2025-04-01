@@ -1,4 +1,6 @@
-{}: {
-  info = (import ./info.nix) {};
+{ }:
+{
+  info = (import ./info.nix) { };
+  nixosModules = ./os.nix;
   homeModules = ./home.nix;
 }
