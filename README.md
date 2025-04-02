@@ -57,7 +57,9 @@ Contributions are welcome! If you have suggestions, improvements, or encounter i
 
 ## Reference 
 - [NixOS Wiki](https://nixos.wiki/).
-- Inspiration from the exemplary work [albe2669/dotfiles](https://github.com/albe2669/dotfiles)
+- Inspiration from the exemplary work 
+    - [albe2669/dotfiles](https://github.com/albe2669/dotfiles)
+    - [wimpysworld/nix-config](https://github.com/wimpysworld/nix-config)
 
 
 

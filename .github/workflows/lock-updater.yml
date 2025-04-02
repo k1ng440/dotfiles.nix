@@ -1,0 +1,29 @@
+name: Flake ❄️ Lock 🔒️ Updater ✨
+
+on:
+  schedule:
+    # Pi o'clock
+    - cron: '3 14 * * 1,5'
+  workflow_dispatch:
+
+jobs:
+  lock-updater:
+    name: Flake Lock Updater
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: write
+      id-token: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: DeterminateSystems/nix-installer-action@v16
+        with:
+          determinate: true
+      - uses: DeterminateSystems/flakehub-cache-action@v1
+      - uses: DeterminateSystems/update-flake-lock@v24
+        with:
+          pr-title: "chore: update flake.lock"
+          # Labels to be set on the PR
+          pr-labels: |
+            dependencies
+            automated
