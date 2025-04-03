@@ -24,7 +24,6 @@ function run_disko() {
     read -p "Proceed with $DISKO_CONFIG format? [y/N]" -n 1 -r
     echo
 
-
     sudo true
     if [[ $REPLY =~ ^[Yy]$ ]]; then
         # Workaround for mounting encrypted bcachefs filesystems.
@@ -37,8 +36,8 @@ function run_disko() {
     fi
 }
 
-sudo umount -R /mnt || true
-
+echo "Unmounting /mnt"
+sudo umount -R /mnt 2>/dev/null || true
 if [ "$(id -u)" -eq 0 ]; then
     echo "ERROR! $(basename "$0") should be run as a regular user"
     exit 1
@@ -46,15 +45,15 @@ fi
 
 if [ ! -d "$HOME/nix-config/.git" ]; then
     mkdir -p "$HOME/nix-config"
-    pushd "$HOME/nix-config"
+    pushd "$HOME/nix-config" || (echo "ERROR: $HOME/nix-config does not exist" && exit)
     git init
-    git remote add origin https://github.com/k1ng440/dotfiles.nix.git 
+    git remote add origin https://github.com/k1ng440/dotfiles.nix.git
     git branch --set-upstream-to="origin/${TARGET_BRANCH}" "${TARGET_BRANCH}"
     git pull
     popd
 fi
 
-pushd "$HOME/nix-config"
+pushd "$HOME/nix-config" || (echo "ERROR: $HOME/nix-config does not exist" && exit)
 
 if [[ -n "$TARGET_BRANCH" ]]; then
     git checkout "$TARGET_BRANCH"
@@ -76,7 +75,7 @@ if [[ -z "$TARGET_USER" ]]; then
     exit 1
 fi
 
-SOPS_AGE_KEY_FILE="/var/lib/private/sops/age/keys.txt"
+SOPS_AGE_KEY_FILE="$HOME/.config/sops/age/keys.txt"
 if [ ! -e "$SOPS_AGE_KEY_FILE" ]; then
     echo "WARNING! $SOPS_AGE_KEY_FILE was not found."
     echo "         Do you want to continue without it?"
@@ -85,13 +84,14 @@ if [ ! -e "$SOPS_AGE_KEY_FILE" ]; then
     echo
     if [[ $REPLY =~ ^[Nn]$ ]]; then
         IP=$(ip route get 1.1.1.1 | awk '{print $7}' | head -n 1)
-        sudo mkdir -p "$SOPS_AGE_KEY_FILE" 2>/dev/null || true
-        mkdir -p "$HOME/.config/sops/age" 2>/dev/null || true
+        mkdir -p "$(dirname "$SOPS_AGE_KEY_FILE")" 2>/dev/null || true
         echo "From a trusted host run:"
         echo "scp ~/.config/sops/age/keys.txt root@$IP:$SOPS_AGE_KEY_FILE"
         exit
     fi
 fi
+
+chown nixos:users "$SOPS_AGE_KEY_FILE" || true
 
 if [ -x "nixos/$TARGET_HOST/disks.sh" ]; then
     if ! sudo "nixos/$TARGET_HOST/disks.sh" "$TARGET_USER"; then
@@ -104,42 +104,29 @@ else
         exit 1
     fi
 
-if grep -q "data.passwordFile" "nixos/$TARGET_HOST/disks.nix"; then
-    # If the machine we're provisioning expects a password to unlock a disk, prompt for it.
-    while true; do
-        # Prompt for the password, input is hidden
-        read -rsp "Enter password:   " password
-        echo
-        # Prompt for the password again for confirmation
-        read -rsp "Confirm password: " password_confirm
-        echo
-        # Check if both entered passwords match
-        if [ "$password" == "$password_confirm" ]; then
-            break
-        else
-            echo "Passwords do not match, please try again."
-        fi
+    DISK_FILE_CONFIG_FILENAME="nixos/$TARGET_HOST/disks.nix"
+    KEY_LOCATION=$(awk -F'"' '/keylocation/ {gsub("file://", "", $2); print $2}' "DISK_FILE_CONFIG_FILENAME")
+    if [ ! -f "$KEY_LOCATION" ]; then
+        if [ -f "$SOPS_AGE_KEY_FILE" ]; then
+            DISK_KEY="${HOME}/nix-config/secrets/${TARGET_HOST}_disks.key"
+            sops decrypt "${DISK_KEY}" | sudo tee /etc/drive.key > /dev/null
+        else 
+            # Check if the machine we're provisioning expects a keyfile to unlock a disk.
+            # If it does, generate a new key, and write to a known location.
+            if [ "$KEY_LOCATION" != "" ] && [ ! -f "$KEY_LOCATION" ]; then
+                echo -n "$(head -c32 /dev/random | base64)" > "$KEY_LOCATION"
+            fi
+        fi 
+    fi
+
+    echo "MD5 of key:"
+    echo md5sum "$DISK_FILE_CONFIG_FILENAME"
+
+
+    run_disko "$DISK_FILE_CONFIG_FILENAME"
+    for CONFIG in $(find "nixos/$TARGET_HOST" -name "disks-*.nix" | sort); do
+        run_disko "$CONFIG"
     done
-
-    # Write the password to /tmp/data.passwordFile with no trailing newline
-    echo -n "$password" > /tmp/data.passwordFile
-fi
-
-if grep -q "data.keyFile" "nixos/$TARGET_HOST/disks.nix"; then
-    # Check if the machine we're provisioning expects a keyfile to unlock a disk.
-    # If it does, generate a new key, and write to a known location.
-    echo -n "$(head -c32 /dev/random | base64)" > /tmp/data.keyFile
-fi
-
-if [ -f "$SOPS_AGE_KEY_FILE" ]; then
-    DISK_KEY="$HOME/nix-config/secrets/${TARGET_HOST}_disks.key"
-    sops decrypt $DISK_KEY | sudo tee /etc/drive.key > /dev/null
-fi
-
-run_disko "nixos/$TARGET_HOST/disks.nix"
-for CONFIG in $(find "nixos/$TARGET_HOST" -name "disks-*.nix" | sort); do
-    run_disko "$CONFIG"
-done
 fi
 
 if ! mountpoint -q /mnt; then
@@ -162,6 +149,14 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
     git remote set-url origin git@github.com:k1ng440/dotfiles.nix.git
     popd
 
+
+    # If there is a keyfile for a data disk, put copy it to the root partition and
+    # ensure the permissions are set appropriately.
+    if [[ -f "/etc/drive.key" ]]; then
+        sudo cp /etc/drive.key /mnt/etc/drive.key
+        sudo chmod 0400 /mnt/etc/drive.key
+    fi
+
     # Copy the sops keys.txt to the target install
     if [ -e "$HOME/.config/sops/age/keys.txt" ]; then
         mkdir -p "/mnt/home/$TARGET_USER/.config/sops/age"
@@ -174,10 +169,4 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
     sudo nixos-enter --root /mnt --command "cd /home/$TARGET_USER/nix-config; env USER=$TARGET_USER HOME=/home/$TARGET_USER home-manager switch --flake \".#$TARGET_USER@$TARGET_HOST\""
     sudo nixos-enter --root /mnt --command "chown -R $TARGET_USER:users /home/$TARGET_USER"
 
-    # If there is a keyfile for a data disk, put copy it to the root partition and
-    # ensure the permissions are set appropriately.
-    if [[ -f "/tmp/data.keyFile" ]]; then
-        sudo cp /tmp/data.keyFile /mnt/etc/data.keyFile
-        sudo chmod 0400 /mnt/etc/data.keyFile
-    fi
 fi

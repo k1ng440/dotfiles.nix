@@ -38,7 +38,6 @@
     kernelModules = [ "vhost_vsock" ];
     kernelPackages = lib.mkForce pkgs.linuxPackages_6_12;
 
-
     # Only enable the systemd-boot on installs, not live media (.ISO images)
     loader = lib.mkIf isInstall {
       efi.canTouchEfiVariables = true;
@@ -71,13 +70,14 @@
         nix-output-monitor
         rsync
         sops
+        age
+        curl
       ]
       ++ lib.optionals isInstall [
         # inputs.nixos-needsreboot.packages.${platform}.default
         nvd
         nvme-cli
         smartmontools
-        sops
       ];
 
     variables = {
@@ -108,10 +108,11 @@
     in
     {
       settings = {
-        # Disable global registry
         flake-registry = "";
         nix-path = config.nix.nixPath;
         warn-dirty = false;
+        experimental-features = "nix-command flakes";
+        auto-optimise-store = true;
       };
       # Disable channels
       channel.enable = false;
@@ -155,14 +156,15 @@
   };
 
   # https://dl.thalheim.io/
-  sops = lib.mkIf (isInstall) {
-    validateSopsFiles = false;
+  sops = {
+    validateSopsFiles = true;
     age = {
-      keyFile = "/var/lib/private/sops/age/keys.txt";
+      keyFile = "/var/lib/sops-nix/keys.txt";
       generateKey = false;
     };
     defaultSopsFile = ../secrets/secrets.yaml;
     secrets = {
+      test_key = { };
       ssh_key = {
         mode = "0600";
         path = "/root/.ssh/id_rsa";
@@ -201,6 +203,12 @@
         mode = "0644";
         path = "/etc/ssh/ssh_host_rsa_key.pub";
         sopsFile = ../secrets/${hostname}.yaml;
+      };
+      xenomorph = {
+        sopsFile = ../secrets/${hostname}.yaml;
+        neededForBoot = true;
+        hashed_password_file = { };
+        zfs_root_key_bin = { };
       };
 
       xenomorph_enc = {

@@ -17,35 +17,28 @@
     ./disks.nix
   ];
 
-  # config.sops.secrets.drive_key =
-  #   {
-  #     sopsFile = "../../secrets/xenomorph_disks.key";
-  #     path = "/mnt/etc/drive.key";
-  #     format = "binary";
-  #     mode = "0600";
-  #     gid = 0;
-  #     uid = 0;
-  #   };
-    # // lib.mkIf isInstall {
-    #   path = "/etc/drive.key";
-    # };
-
-  # environment.etc."zfs/zroot.key" lib.mkIf (isInstall) = {
-  #   source = config.sops.secrets.xenomorph_enc.path;
-  #   mode = "0600";
-  #   gid = 0;
-  #   uid = 0;
-  # };
+  environment.etc."hostid".source = config.sops.secrets.xenomorph.host_id.path;
+  networking.networkmanager.enable = true;
+  time.timeZone = "Asia/Dhaka";
 
   boot = {
     # https://mynixos.com/nixpkgs/option/boot.zfs.forceImportRoot
-    zfs.forceImportRoot = false;
+    zfs = {
+      forceImportRoot = false;
+    };
 
-    initrd = lib.mkIf (isInstall) {
+    boot.extraModprobeConfig = ''
+      options zfs l2arc_noprefetch=0 l2arc_write_boost=33554432 l2arc_write_max=16777216 zfs_arc_max=2147483648
+    '';
+
+    initrd = lib.mkIf isInstall {
       verbose = false;
       luks.reusePassphrases = true;
       supportedFilesystems = [ "zfs" ];
-      kernelModules = [ "zfs" ];
+      kernelModules = [
+        "zfs"
+        "r8169"
+      ];
       availableKernelModules = [
         "nvme"
         "ahci"
@@ -54,16 +47,27 @@
         "uas"
         "sd_mod"
       ];
-      postDeviceCommands = lib.mkBefore ''
-        zfs load-key -a
-      '';
+      network = {
+        enable = true;
+        useDHCP = true;
+        ssh = {
+          enable = true;
+          port = 2222;
+          hostKeys = [ /etc/ssh/initrd_ssh_host_ed25519_key ];
+          authorizedKeys = [
+            "ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAQEAqMh6k4NRNF4MzW/RYXlQ2FzFHkDE3rL3UuWT91ZzYK6oybFW2dXugxxHXA0a5d6jU4sToBB0zYLqCyCfb0rEJ+ukN0LIC+IJ2MVb7b7WSJyju0PeJqri1tice2quZO8C27rbYEMa1QgpUapDhEuNfFnDkXzkr0NnxOs2vwOdnGRm3VF1FRaV/0xmmJDeh8GmHdj40StH/UtNU63YvsTY1DJHb6Tw3O0hY4cvxx3z3SZv18bDDfn6EA/47Ao6BO88bT/b3qhmoQc55ESWX5siUk4/BtgEgQNuqZm8rxhRmW4NqdsWbLIwHdJCVn51DwokykP1A9x1QEAQRw5yqRy0fQ== rsa-key-20151130"
+          ];
+        };
+      };
     };
     kernelModules = [
       "kvm-amd"
       "nvidia"
+      "r8169"
     ];
     kernelParams = [
       "zfs_force=1"
+      "zfs.zfs_arc_max=12884901888" # 12 GB
       "video=DP-0:3440x1440@100"
       "video=DP-2:3440x1440@120"
       "video=HDMI-0:1920x1080@60"
@@ -93,6 +97,7 @@
   };
 
   services = {
+    zfs.autoScrub.enable = true;
     cron = {
       enable = false;
       systemCronJobs = [

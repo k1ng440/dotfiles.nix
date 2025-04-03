@@ -242,10 +242,7 @@
       url = "https://flakehub.com/f/quickemu-project/quickgui/*";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    sops-nix = {
-      url = "github:Mic92/sops-nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    sops-nix.url = "github:Mic92/sops-nix";
     flake-utils.url = "github:numtide/flake-utils";
     nix-flatpak.url = "https://flakehub.com/f/gmodena/nix-flatpak/*";
 
