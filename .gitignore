@@ -1,2 +1,4 @@
 dotfiles
 result
+pkgs/fonts/*
+pkgs/nerd-font-patcher/*

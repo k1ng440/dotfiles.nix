@@ -32,22 +32,22 @@ lib.mkIf isInstall {
         libva-utils
         vdpauinfo
         vulkan-tools
-      ]
-      ++ lib.optionals isWorkstation [ gpu-viewer ]
-      ++ lib.optionals (isWorkstation && hasAmdGPU) [ lact ]
-      ++ lib.optionals (isWorkstation && hasNvidiaGPU) [ gwe ]
-      ++ lib.optionals hasNvidiaGPU [
-        cudaPackages.cudatoolkit
-        nvitop
-        nvtopPackages.full
-      ]
-      ++ lib.optionals (!hasNvidiaGPU) [ nvtopPackages.amd ]
-      ++ lib.optionals hasAmdGPU [ amdgpu_top ]
-      ++ lib.optionals config.hardware.amdgpu.opencl.enable [
-        rocmPackages.rocminfo
-        rocmPackages.rocm-smi
-      ]
-      ++ lib.optionals hasIntelGPU [ intel-gpu-tools ];
+      ];
+      # ++ lib.optionals isWorkstation [ gpu-viewer ]
+      # ++ lib.optionals (isWorkstation && hasAmdGPU) [ lact ]
+      # ++ lib.optionals (isWorkstation && hasNvidiaGPU) [ gwe ]
+      # ++ lib.optionals hasNvidiaGPU [
+      #   cudaPackages.cudatoolkit
+      #   nvitop
+      #   nvtopPackages.full
+      # ]
+      # ++ lib.optionals (!hasNvidiaGPU) [ nvtopPackages.amd ]
+      # ++ lib.optionals hasAmdGPU [ amdgpu_top ]
+      # ++ lib.optionals config.hardware.amdgpu.opencl.enable [
+      #   rocmPackages.rocminfo
+      #   rocmPackages.rocm-smi
+      # ]
+      # ++ lib.optionals hasIntelGPU [ intel-gpu-tools ];
   };
   hardware = {
     amdgpu = lib.mkIf hasAmdGPU { opencl.enable = isInstall; };

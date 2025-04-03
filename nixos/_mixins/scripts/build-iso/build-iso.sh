@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 if [ -z "${1}" ]; then
-    echo "Usage: build-iso <console|lomiri|pantheon|hyperland|i3>"
+    echo "Usage: build-iso <console|lomiri|pantheon|hyprland|i3>"
     exit 1
 fi
 

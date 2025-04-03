@@ -12,6 +12,7 @@
 }:
 let
   inherit (pkgs.stdenv) isDarwin isLinux;
+  hasNvidiaGPU = lib.elem "nvidia" config.services.xserver.videoDrivers;
 in
 {
   imports = [
@@ -237,8 +238,8 @@ in
     btop = {
       enable = true;
       package = pkgs.btop.override {
-        cudaSupport = isLinux;
-        rocmSupport = isLinux;
+        cudaSupport = isLinux && hasNvidiaGPU;
+        rocmSupport = isLinux && hasNvidiaGPU;
       };
     };
     cava = {

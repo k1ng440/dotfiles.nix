@@ -24,6 +24,7 @@ function run_disko() {
     read -p "Proceed with $DISKO_CONFIG format? [y/N]" -n 1 -r
     echo
 
+
     sudo true
     if [[ $REPLY =~ ^[Yy]$ ]]; then
         # Workaround for mounting encrypted bcachefs filesystems.
@@ -44,7 +45,13 @@ if [ "$(id -u)" -eq 0 ]; then
 fi
 
 if [ ! -d "$HOME/nix-config/.git" ]; then
-    git clone https://github.com/wimpysworld/nix-config.git "$HOME/nix-config"
+    mkdir -p "$HOME/nix-config"
+    pushd "$HOME/nix-config"
+    git init
+    git remote add origin https://github.com/k1ng440/dotfiles.nix.git 
+    git branch --set-upstream-to="origin/${TARGET_BRANCH}" "${TARGET_BRANCH}"
+    git pull
+    popd
 fi
 
 pushd "$HOME/nix-config"
@@ -57,6 +64,7 @@ if [[ -z "$TARGET_HOST" ]]; then
     echo "ERROR! $(basename "$0") requires a hostname as the first argument"
     echo "       The following hosts are available"
     find nixos -mindepth 2 -maxdepth 2 -type f -name default.nix | cut -d'/' -f2 | grep -v iso
+    echo ""
     exit 1
 fi
 
@@ -64,20 +72,23 @@ if [[ -z "$TARGET_USER" ]]; then
     echo "ERROR! $(basename "$0") requires a username as the second argument"
     echo "       The following users are available"
     find nixos/_mixins/users/ -mindepth 1 -maxdepth 1 -type d | cut -d'/' -f4 | grep -v -E "nixos|root"
+    echo ""
     exit 1
 fi
 
-if [ ! -e "$HOME/.config/sops/age/keys.txt" ]; then
-    echo "WARNING! $HOME/.config/sops/age/keys.txt was not found."
+SOPS_AGE_KEY_FILE="/var/lib/private/sops/age/keys.txt"
+if [ ! -e "$SOPS_AGE_KEY_FILE" ]; then
+    echo "WARNING! $SOPS_AGE_KEY_FILE was not found."
     echo "         Do you want to continue without it?"
     echo
     read -p "Are you sure? [y/N]" -n 1 -r
     echo
     if [[ $REPLY =~ ^[Nn]$ ]]; then
         IP=$(ip route get 1.1.1.1 | awk '{print $7}' | head -n 1)
+        sudo mkdir -p "$SOPS_AGE_KEY_FILE" 2>/dev/null || true
         mkdir -p "$HOME/.config/sops/age" 2>/dev/null || true
         echo "From a trusted host run:"
-        echo "scp ~/.config/sops/age/keys.txt $USER@$IP:.config/sops/age/keys.txt"
+        echo "scp ~/.config/sops/age/keys.txt root@$IP:$SOPS_AGE_KEY_FILE"
         exit
     fi
 fi
@@ -120,8 +131,12 @@ if grep -q "data.keyFile" "nixos/$TARGET_HOST/disks.nix"; then
     echo -n "$(head -c32 /dev/random | base64)" > /tmp/data.keyFile
 fi
 
-run_disko "nixos/$TARGET_HOST/disks.nix"
+if [ -f "$SOPS_AGE_KEY_FILE" ]; then
+    DISK_KEY="$HOME/nix-config/secrets/${TARGET_HOST}_disks.key"
+    sops decrypt $DISK_KEY | sudo tee /etc/drive.key > /dev/null
+fi
 
+run_disko "nixos/$TARGET_HOST/disks.nix"
 for CONFIG in $(find "nixos/$TARGET_HOST" -name "disks-*.nix" | sort); do
     run_disko "$CONFIG"
 done
@@ -139,15 +154,13 @@ read -p "Are you sure? [y/N]" -n 1 -r
 echo
 if [[ $REPLY =~ ^[Yy]$ ]]; then
     # Copy the sops keys.txt to the target install
-    sudo nixos-install --no-root-password --flake ".#$TARGET_HOST"
+    sudo nixos-install --show-trace --no-root-password --flake ".#$TARGET_HOST"
 
     # Rsync nix-config to the target install and set the remote origin to SSH.
-    rsync -a --delete "$HOME/nix-config" "/mnt/home/$TARGET_USER/nix-config/"
-    if [ "$TARGET_HOST" != "crawler" ] && [ "$TARGET_HOST" != "dagger" ]; then
-        pushd "/mnt/home/$TARGET_USER/nix-config"
-        git remote set-url origin git@github.com:k1ng440/dotfiles.nix.git
-        popd
-    fi
+    rsync -a --delete "$HOME/nix-config/" "/mnt/home/$TARGET_USER/nix-config/"
+    pushd "/mnt/home/$TARGET_USER/nix-config"
+    git remote set-url origin git@github.com:k1ng440/dotfiles.nix.git
+    popd
 
     # Copy the sops keys.txt to the target install
     if [ -e "$HOME/.config/sops/age/keys.txt" ]; then

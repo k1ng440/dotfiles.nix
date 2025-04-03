@@ -23,7 +23,7 @@ keys:
   - &user_k1ng age17nvawapnvmhw7q43dk20lc8hytypm4qa3jqrpajh2c6t2sekwy4s3w7x6w
   - &host_xenomorph age13g7cfstkzft7dw4veg7e9e9t4dv8zjsu3yt2xf8t4w8qwq2uaufq9a0sht
 creation_rules:
-  - path_regex: secrets/[^/]+\.(yaml|json|env|ini)$
+  - path_regex: secrets/[^/]+\.(yaml|json|env|ini|key)$
     key_groups:
     - age:
       - *user_k1ng

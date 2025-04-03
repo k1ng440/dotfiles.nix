@@ -8,7 +8,7 @@
 }:
 let
   accelerationMap = {
-    xenomorph = "cuda";
+    xxxxxxxxxxxxxxxenomorph = "cuda";
   };
   hasAcceleration = builtins.hasAttr hostname accelerationMap;
   installOpenWebUI = hostname == "xenomorph";

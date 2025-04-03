@@ -19,7 +19,6 @@
     #outputs.nixosModules.my-module
     # Use modules from other flakes
     inputs.catppuccin.nixosModules.catppuccin
-    inputs.determinate.nixosModules.default
     inputs.disko.nixosModules.disko
     inputs.nix-flatpak.nixosModules.nix-flatpak
     inputs.nix-index-database.nixosModules.nix-index
@@ -36,9 +35,10 @@
 
   boot = {
     consoleLogLevel = lib.mkDefault 0;
-    initrd.verbose = false;
     kernelModules = [ "vhost_vsock" ];
     kernelPackages = lib.mkForce pkgs.linuxPackages_6_12;
+
+
     # Only enable the systemd-boot on installs, not live media (.ISO images)
     loader = lib.mkIf isInstall {
       efi.canTouchEfiVariables = true;
@@ -61,7 +61,7 @@
       with pkgs;
       lib.mkForce [
         coreutils-full
-        inputs.nixpkgs-unstable.legacyPackages.${platform}.neovim
+        # inputs.nixpkgs-unstable.packages.${platform}.neovim
       ];
 
     systemPackages =
@@ -69,14 +69,13 @@
       [
         git
         nix-output-monitor
+        rsync
+        sops
       ]
       ++ lib.optionals isInstall [
-        inputs.determinate.packages.${platform}.default
-        inputs.fh.packages.${platform}.default
-        inputs.nixos-needsreboot.packages.${platform}.default
+        # inputs.nixos-needsreboot.packages.${platform}.default
         nvd
         nvme-cli
-        rsync
         smartmontools
         sops
       ];
@@ -155,16 +154,15 @@
     smartd.enable = isInstall;
   };
 
-
   # https://dl.thalheim.io/
   sops = lib.mkIf (isInstall) {
+    validateSopsFiles = false;
     age = {
       keyFile = "/var/lib/private/sops/age/keys.txt";
       generateKey = false;
     };
     defaultSopsFile = ../secrets/secrets.yaml;
     secrets = {
-      test-key = { };
       ssh_key = {
         mode = "0600";
         path = "/root/.ssh/id_rsa";
@@ -204,7 +202,28 @@
         path = "/etc/ssh/ssh_host_rsa_key.pub";
         sopsFile = ../secrets/${hostname}.yaml;
       };
-      xenomorph_enc.sopsFile = ../secrets/disks.yaml;
+
+      xenomorph_enc = {
+        sopsFile = ../secrets/xenomorph_disks.key;
+        format = "binary";
+      };
+      roglaptop_enc = {
+        sopsFile = ../secrets/roglaptop_disks.key;
+        format = "binary";
+      };
     };
+  };
+
+  system = {
+    # activationScripts = {
+    #   nixos-needsreboot = lib.mkIf isInstall {
+    #     supportsDryActivation = true;
+    #     text = "${
+    #       lib.getExe inputs.nixos-needsreboot.packages.${pkgs.system}.default
+    #     } \"$systemConfig\" || true";
+    #   };
+    # };
+    nixos.label = lib.mkIf isInstall "-";
+    inherit stateVersion;
   };
 }

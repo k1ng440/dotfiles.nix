@@ -50,8 +50,6 @@
       wmctrl
       xdotool
       ydotool
-      xrandr
-      arandr
     ];
 
   programs.dconf.enable = true;

@@ -16,8 +16,8 @@ update:
 rebuild:
 	sudo nixos-rebuild switch --show-trace --flake .#$(host)
 
-installer:
-	nix --extra-experimental-features "nix-command flakes" build --show-trace --option eval-cache false .#installers.x86_64-linux.$(host)
+build-console:
+	nix build --extra-experimental-features "nix-command flakes" --show-trace --option eval-cache false .#nixosConfigurations.iso-console.config.system.build.isoImage
 
 hms:
 	home-manager switch -b backup --extra-experimental-features "nix-command flakes repl-flake" --show-trace --flake .#$(host)

@@ -4,33 +4,66 @@
   lib,
   pkgs,
   username,
+  isInstall,
   ...
 }:
 {
   imports = [
     inputs.nixos-hardware.nixosModules.common-cpu-amd
     inputs.nixos-hardware.nixosModules.common-gpu-amd
-    inputs.nixos-hardware.nixosModules.common-gpu-nvidia
+    # inputs.nixos-hardware.nixosModules.common-gpu-nvidia
     inputs.nixos-hardware.nixosModules.common-pc
     inputs.nixos-hardware.nixosModules.common-pc-ssd
     ./disks.nix
   ];
 
+  # config.sops.secrets.drive_key =
+  #   {
+  #     sopsFile = "../../secrets/xenomorph_disks.key";
+  #     path = "/mnt/etc/drive.key";
+  #     format = "binary";
+  #     mode = "0600";
+  #     gid = 0;
+  #     uid = 0;
+  #   };
+    # // lib.mkIf isInstall {
+    #   path = "/etc/drive.key";
+    # };
+
+  # environment.etc."zfs/zroot.key" lib.mkIf (isInstall) = {
+  #   source = config.sops.secrets.xenomorph_enc.path;
+  #   mode = "0600";
+  #   gid = 0;
+  #   uid = 0;
+  # };
+
   boot = {
-    initrd.availableKernelModules = [
-      "nvme"
-      "ahci"
-      "xhci_pci"
-      "usbhid"
-      "uas"
-      "sd_mod"
-    ];
+    # https://mynixos.com/nixpkgs/option/boot.zfs.forceImportRoot
+    zfs.forceImportRoot = false;
+
+    initrd = lib.mkIf (isInstall) {
+      verbose = false;
+      luks.reusePassphrases = true;
+      supportedFilesystems = [ "zfs" ];
+      kernelModules = [ "zfs" ];
+      availableKernelModules = [
+        "nvme"
+        "ahci"
+        "xhci_pci"
+        "usbhid"
+        "uas"
+        "sd_mod"
+      ];
+      postDeviceCommands = lib.mkBefore ''
+        zfs load-key -a
+      '';
+    };
     kernelModules = [
-      "amdgpu"
       "kvm-amd"
       "nvidia"
     ];
     kernelParams = [
+      "zfs_force=1"
       "video=DP-0:3440x1440@100"
       "video=DP-2:3440x1440@120"
       "video=HDMI-0:1920x1080@60"
@@ -54,28 +87,20 @@
       #  persistencedSha256 = "sha256-a1D7ZZmcKFWfPjjH1REqPM5j/YLWKnbkP9qfRyIyxAw=";
       #};
       open = false;
-      # prime = {
-      #   amdgpuBusId = "PCI:33:0:0";
-      #   nvidiaBusId = "PCI:30:0:0";
-      #   offload = {
-      #     enable = true;
-      #     enableOffloadCmd = true;
-      #   };
-      #   # Make the Radeon RX6700 XT default; the NVIDIA T1000 is for CUDA/NVENC
-      #   reverseSync.enable = true;
-      # };
+
+      prime = { };
     };
   };
 
   services = {
     cron = {
-      enable = true;
+      enable = false;
       systemCronJobs = [
       ];
     };
   };
   services.xserver.videoDrivers = [
-    "amdgpu"
-    "nvidia"
+    # "nvidia"
   ];
+
 }

@@ -121,6 +121,7 @@ in
         wl-clipboard
         wtype
         catppuccin-cursors
+        foot
       ];
   };
 

@@ -6,6 +6,7 @@
   lib,
   pkgs,
   username,
+  hostId,
   ...
 }:
 let
@@ -114,6 +115,7 @@ in
           allowedUDPPorts.${hostname};
       inherit trustedInterfaces;
     };
+    hostId = hostId;
     hostName = hostname;
     nameservers = if builtins.hasAttr username userDns then userDns.${username} else fallbackDns;
     networkmanager = lib.mkIf isWorkstation {
@@ -132,6 +134,7 @@ in
     nftables.enable = lib.mkIf config.virtualisation.incus.enable true;
     useDHCP = lib.mkDefault true;
   };
+
   services = {
     avahi = {
       enable = true;

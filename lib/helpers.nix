@@ -70,12 +70,12 @@ in
       username ? "k1ng",
       desktop ? null,
       platform ? "x86_64-linux",
+      hostId,
     }:
     let
       isISO = builtins.substring 0 4 hostname == "iso-";
       isInstall = !isISO;
-      isLaptop =
-        hostname != "vader" && hostname != "phasma" && hostname != "revan" && hostname != "malak";
+      isLaptop = hostname == "rog-laptop";
       isWorkstation = builtins.isString desktop;
       tailNet = "drongo-gamma.ts.net";
     in
@@ -94,6 +94,7 @@ in
           isLaptop
           isWorkstation
           tailNet
+          hostId
           ;
       };
       # If the hostname starts with "iso-", generate an ISO image
