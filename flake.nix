@@ -18,12 +18,14 @@
       home-manager,
       mission-control,
       nixpkgs,
+      nixpkgs-unstable,
       treefmt-nix,
       devshell,
+      sops-nix,
       ...
     }:
     let
-      inherit (self) outputs;
+      inherit (self) outputs config;
       stateVersion = 24.11;
       lib =
         import ./nix/lib {
@@ -31,7 +33,6 @@
         }
         // nixpkgs.lib
         // home-manager.lib;
-
       # rawNvimPlugins = helper.filterInputsByPrefix { inherit (nixpkgs) lib; } "nvim-plugin-";
     in
     # evalFlakeModule evaluates and integrates modules from external Flakes
@@ -40,36 +41,46 @@
         inherit inputs;
         specialArgs = { inherit lib; };
       }
-      ({
-        # Debug: https://flake.parts/debug.html
-        debug = true;
-        imports = [
-          (_: {
-            perSystem =
-              { inputs', ... }:
-              {
-                # make pkgs available to all `perSystem` functions
-                _module.args.pkgs = inputs'.nixpkgs.legacyPackages;
-                _modules.args.nixpkgs-unstable = inputs'.nixpkgs-unstable.nixpkgs.legacyPackages;
-                # make custom lib available to all `perSystem` functions
-                _module.args.lib = lib;
-                # make home-manager available to all `perSystem` functions
-                _module.args.home-manager = inputs'.home-manager;
+      (
+        top@{
+          config,
+          withSystem,
+          moduleWithSystem,
+          ...
+        }:
+        {
+          flake.nixosModules.sops = sops-nix.nixosModules.sops;
 
-                # make stateVersion available
-                _modules.args.stateVersion = stateVersion;
-              };
-          })
-          treefmt-nix.flakeModule
-          flake-root.flakeModule
-          mission-control.flakeModule
-          devshell.flakeModule
-          ./nix
-          ./nixos
-        ];
-        systems = [ "x86_64-linux" ];
-      })
-    ).config.flake;
+          # Debug: https://flake.parts/debug.html
+          debug = true;
+          imports = [
+            (_: {
+              perSystem =
+                { inputs', ... }:
+                {
+                  # make pkgs available to all `perSystem` functions
+                  _module.args.pkgs = inputs'.nixpkgs.legacyPackages;
+                  # _modules.args.nixpkgs-unstable = inputs'.nixpkgs-unstable.legacyPackages;
+                  # make custom lib available to all `perSystem` functions
+                  _module.args.lib = lib;
+                  # make home-manager available to all `perSystem` functions
+                  _module.args.home-manager = inputs'.home-manager;
+
+                  # make stateVersion available
+                  # _modules.args.stateVersion = stateVersion;
+                };
+            })
+            treefmt-nix.flakeModule
+            flake-root.flakeModule
+            mission-control.flakeModule
+            devshell.flakeModule
+            ./nix
+            ./nixos
+          ];
+          systems = [ "x86_64-linux" ];
+        }
+      )
+    );
 
   # Imports
   inputs = {
@@ -122,6 +133,10 @@
     devshell = {
       url = "github:numtide/devshell";
       inputs.nixpkgs.follows = "nixpkgs";
+    };
+    flake-registry = {
+      url = "github:NixOS/flake-registry";
+      flake = false;
     };
 
     # nixos-needsreboot = {

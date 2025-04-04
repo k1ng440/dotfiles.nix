@@ -26,3 +26,7 @@ vim.lsp.config["nix"] = {
         },
     },
 }
+
+vim.cmd [[
+  set makeprg=nix\ flake\ check\ --show-trace
+]]

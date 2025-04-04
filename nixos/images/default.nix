@@ -1,6 +1,7 @@
 {
   self,
   inputs,
+  nixpkgs-unstable,
   ...
 }:
 {
@@ -28,6 +29,7 @@
       packages = {
         xenomorph-iso-image = nixos-generators.nixosGenerate {
           inherit pkgs;
+          inherit nixpkgs-unstable;
           format = "install-iso";
           modules = [
             defaultModule
@@ -64,6 +66,7 @@
               in
               {
                 imports = [
+                  # TODO: Figure out how to set this disk with hostname or something
                   ../hosts/xenomorph/disko.nix
                 ];
 
@@ -80,7 +83,6 @@
               }
             )
           ];
-
         };
       };
     };

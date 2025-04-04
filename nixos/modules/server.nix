@@ -21,6 +21,7 @@
   environment.shells = with pkgs; [
     bash
     zsh
+    fish
   ];
 
   # Print the URL instead
@@ -28,9 +29,6 @@
 
   # Use helix as the default editor
   environment.variables.EDITOR = "hx";
-
-  # No need for sound on a server
-  sound.enable = false;
 
   # Use firewalls everywhere
   networking.firewall = {
@@ -45,7 +43,7 @@
   time.timeZone = lib.mkDefault "UTC";
 
   # No mutable users by default
-  users.mutableUsers = false;
+  # users.mutableUsers = false;
 
   # We don't want to request password for sudoers
   security.sudo = {
@@ -62,6 +60,7 @@
   ];
 
   # Use zsh as default shell
+  programs.zsh.enable = lib.mkDefault true;
   users.defaultUserShell = pkgs.zsh;
 
   # Define default system version

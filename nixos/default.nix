@@ -10,7 +10,7 @@ let
     flake-registry
     nixos-hardware
     nixpkgs
-    pkgs-unstable
+    nixpkgs-unstable
     ;
 
   nixosSystem =
@@ -20,14 +20,12 @@ let
         modules = args.modules ++ [
           {
             config.nixpkgs.pkgs = lib.mkDefault args.pkgs;
-            config.nixpkgs.pkgs-unstable = lib.mkDefault args.pkgs-unstable;
             config.nixpkgs.localSystem = lib.mkDefault args.pkgs.stdenv.hostPlatform;
           }
         ];
       }
     );
 
-  hosts = lib.rakeLeaves ./hosts;
   modules = lib.rakeLeaves ./modules;
 
   defaultModules = [
@@ -43,7 +41,6 @@ let
       {
         imports = [
           disko.nixosModules.disko
-          ethereum-nix.nixosModules.default
           modules.i18n
           modules.minimal-docs
           modules.nix
@@ -64,7 +61,7 @@ let
     inherit lib;
     system = "x86_64-linux";
     config.allowUnfree = true;
-  }
+  };
 in
 {
   imports = [
@@ -72,16 +69,18 @@ in
   ];
 
   flake.nixosConfigurations = {
-    nuc-1 = nixosSystem {
+    xenomorph = nixosSystem {
       pkgs = pkgs.x86_64-linux;
-      pkgs-unstable = pkgs.x86_64-linux-unstable;
+      specialArgs = {
+        nixpkgs-unstable = pkgs.x86_64-linux-unstable;
+      };
       modules =
         defaultModules
         ++ [
-            # https://github.com/NixOS/nixos-hardware/blob/master/flake.nix
-            nixos-hardware.nixosModules.common-pc
-            nixos-hardware.nixosModules.common-gpu-nvidia-nonprime
-            nixos-hardware.nixosModules.common-cpu-amd-zenpower
+          # https://github.com/NixOS/nixos-hardware/blob/master/flake.nix
+          nixos-hardware.nixosModules.common-pc
+          # nixos-hardware.nixosModules.common-gpu-nvidia-nonprime
+          nixos-hardware.nixosModules.common-cpu-amd-zenpower
         ]
         ++ [
           modules.serial-console
@@ -90,7 +89,9 @@ in
           modules.tmpfs
           modules.fs-trim
         ]
-        ++ [ hosts.xenomorph ];
+        ++ [
+          (import ./hosts/xenomorph)
+        ];
     };
   };
 }

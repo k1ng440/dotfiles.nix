@@ -2,11 +2,11 @@
   inputs,
   lib,
   pkgs,
-  nixpkgs-unstable,
   ...
 }:
 let
   inherit (lib) mapAttrs' nameValuePair mkForce;
+  inherit nixpkgs-unstable;
 in
 {
   environment.systemPackages = with pkgs; [
@@ -14,7 +14,7 @@ in
     curl
     diskrsync
     httpie
-    nixpkgs-unstable.neovim
+    inputs.nixpkgs-unstable.neovim
     ntfs3g
     ntfsprogs
     partclone
@@ -103,9 +103,9 @@ in
     ];
   };
 
-  users.extraUsers.root.openssh.authorizedKeys.keys = [
-    "sk-ecdsa-sha2-nistp256@openssh.com AAAAInNrLWVjZHNhLXNoYTItbmlzdHAyNTZAb3BlbnNzaC5jb20AAAAIbmlzdHAyNTYAAABBBKYBN4nrD/zxmIuuXvwqU3lqJPvjIHDs2fXOvq9ZKaglkNCK2p223siEMmOhN7qPZ+JKVPo0/oOrEQ8y/ovVbFgAAAAEc3NoOg== contact@iampavel.dev"
-  ];
+  # users.users.root.openssh.authorizedKeys.keys = [
+  #   "sk-ecdsa-sha2-nistp256@openssh.com AAAAInNrLWVjZHNhLXNoYTItbmlzdHAyNTZAb3BlbnNzaC5jb20AAAAIbmlzdHAyNTYAAABBBKYBN4nrD/zxmIuuXvwqU3lqJPvjIHDs2fXOvq9ZKaglkNCK2p223siEMmOhN7qPZ+JKVPo0/oOrEQ8y/ovVbFgAAAAEc3NoOg== contact@iampavel.dev"
+  # ];
 
   system.stateVersion = "24.11";
 }
