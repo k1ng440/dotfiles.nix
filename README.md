@@ -1,16 +1,19 @@
 # dotfiles.nix
+
 This project is dedicated to crafting and maintaining development environments that are declarative, reproducible, and cross-platform. By leveraging the power of Nix
 
 ## Goals
+
 - Declarative Configurations: Define development environment in a clear and structured manner.
 - Reproducibility: Guarantee that the same configuration yields identical environments across different machines and operating systems.
 - Cross-Platform Support: Ensure compatibility operation on various operating systems.
 
 📂 Repository Structure
+
 ```
 .
 ├── home
-├── hosts
+├── nixos/hosts
 │  └── <host>
 │     ├── hardware-configuration.nix
 │     ├── home.nix
@@ -26,7 +29,9 @@ This project is dedicated to crafting and maintaining development environments t
 ```
 
 ## Get started
+
 1. Clone the Repository:
+
 ```bash
     git clone https://github.com/k1ng440/dotfiles.nix.git ~/nix-config
     cd ~/nix-config
@@ -35,38 +40,54 @@ This project is dedicated to crafting and maintaining development environments t
 2. Install Nix: If you haven't already, install the Nix package manager by following the instructions at https://nixos.org/download.html.
 
 3. Set Up the Environment:
-    - For NixOS Systems:
-    ```bash
-        make rebuild
-    ```
 
-    - For Non-NixOS Systems: Utilize Home Manager to manage user environments
-    ```bash
-        make hms
-    ```
+   - For NixOS Systems:
 
+   ```bash
+       make rebuild
+   ```
+
+   - For Non-NixOS Systems: Utilize Home Manager to manage user environments
+
+   ```bash
+       make hms
+   ```
 
 ## 🔧 Customization
+
 Feel free to tailor the configurations to suit your personal preferences and project requirements. The declarative nature of Nix makes it straightforward to adjust packages, settings, and environments. For guidance on customizing Nix configurations, refer to the [NixOS Wiki](https://nixos.wiki/).
 
 ## TODOs
+
 All TODOs, known issues, etc, are tracked in the [issues](https://github.com/k1ng440/dotfiles.nix/issues)
 
 ## 🤝 Contributing
+
 Contributions are welcome! If you have suggestions, improvements, or encounter issues, please open an issue or submit a pull request. Collaborative efforts help make dotfiles.nix more robust and versatile.
 
-## Reference 
-- [NixOS Wiki](https://nixos.wiki/).
-- Inspiration from the exemplary work 
-    - [albe2669/dotfiles](https://github.com/albe2669/dotfiles)
-    - [wimpysworld/nix-config](https://github.com/wimpysworld/nix-config)
+## Reference
 
+- [NixOS Wiki](https://nixos.wiki/wiki/Main_Page).
+
+- Inspiration from the exemplary work:
+  - [albe2669/dotfiles](https://github.com/albe2669/dotfiles)
+  - [wimpysworld/nix-config](https://github.com/wimpysworld/nix-config)
+
+- Videos / Tutorials:
+  - [Nixos and Hyprland - Best Match Ever](https://www.youtube.com/watch?v=61wGzIv12Ds)
+  - [Flake-parts: writing custom flake modules](https://www.vtimofeenko.com/posts/flake-parts-writing-custom-flake-modules/)
+
+## Search:
+
+- [noogle](https://noogle.dev)
+- [NixOS Search Options](https://search.nixos.org/options)
+- [NixOS Search Packages](https://search.nixos.org/packages)
+- [home-manager specific config options](https://mipmip.github.io/home-manager-option-search/)
 
 ## Commands
+
 - List all packages in system path
 
 ```bash
 nix eval --json .#nixosConfigurations.xenomorph.config.environment.systemPackages --apply 'builtins.map (p: p.name)' | jq . | less
 ```
-
-

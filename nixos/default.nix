@@ -1,230 +1,96 @@
 {
-  config,
-  hostname,
-  isInstall,
-  isWorkstation,
+  self,
   inputs,
   lib,
-  modulesPath,
-  outputs,
-  pkgs,
-  platform,
-  stateVersion,
-  username,
   ...
 }:
+let
+  inherit (inputs)
+    disko
+    flake-registry
+    nixos-hardware
+    nixpkgs
+    pkgs-unstable
+    ;
+
+  nixosSystem =
+    args:
+    (lib.makeOverridable lib.nixosSystem) (
+      lib.recursiveUpdate args {
+        modules = args.modules ++ [
+          {
+            config.nixpkgs.pkgs = lib.mkDefault args.pkgs;
+            config.nixpkgs.pkgs-unstable = lib.mkDefault args.pkgs-unstable;
+            config.nixpkgs.localSystem = lib.mkDefault args.pkgs.stdenv.hostPlatform;
+          }
+        ];
+      }
+    );
+
+  hosts = lib.rakeLeaves ./hosts;
+  modules = lib.rakeLeaves ./modules;
+
+  defaultModules = [
+    # make flake inputs accessible in NixOS
+    {
+      _module.args.self = self;
+      _module.args.inputs = inputs;
+      _module.args.lib = lib;
+    }
+    # load common modules
+    (
+      { ... }:
+      {
+        imports = [
+          disko.nixosModules.disko
+          ethereum-nix.nixosModules.default
+          modules.i18n
+          modules.minimal-docs
+          modules.nix
+          modules.openssh
+          modules.server
+          modules.tailscale
+        ];
+      }
+    )
+  ];
+
+  pkgs.x86_64-linux = import nixpkgs {
+    inherit lib;
+    system = "x86_64-linux";
+    config.allowUnfree = true;
+  };
+  pkgs.x86_64-linux-unstable = import nixpkgs-unstable {
+    inherit lib;
+    system = "x86_64-linux";
+    config.allowUnfree = true;
+  }
+in
 {
   imports = [
-    # Use module this flake exports; from modules/nixos
-    #outputs.nixosModules.my-module
-    # Use modules from other flakes
-    inputs.catppuccin.nixosModules.catppuccin
-    inputs.disko.nixosModules.disko
-    # inputs.nix-flatpak.nixosModules.nix-flatpak
-    inputs.nix-index-database.nixosModules.nix-index
-    # inputs.nix-snapd.nixosModules.default
-    inputs.sops-nix.nixosModules.sops
-    (modulesPath + "/installer/scan/not-detected.nix")
-    ./${hostname}
-    ./_mixins/configs
-    ./_mixins/features
-    ./_mixins/scripts
-    ./_mixins/services
-    ./_mixins/users
-  ] ++ lib.optional isWorkstation ./_mixins/desktop;
+    ./images
+  ];
 
-  boot = {
-    consoleLogLevel = lib.mkDefault 0;
-    kernelModules = [ "vhost_vsock" ];
-    kernelPackages = lib.mkForce pkgs.linuxPackages_6_12;
-
-    # Only enable the systemd-boot on installs, not live media (.ISO images)
-    loader = lib.mkIf isInstall {
-      efi.canTouchEfiVariables = true;
-      systemd-boot.configurationLimit = 10;
-      systemd-boot.consoleMode = "max";
-      systemd-boot.enable = true;
-      systemd-boot.memtest86.enable = true;
-      timeout = 10;
+  flake.nixosConfigurations = {
+    nuc-1 = nixosSystem {
+      pkgs = pkgs.x86_64-linux;
+      pkgs-unstable = pkgs.x86_64-linux-unstable;
+      modules =
+        defaultModules
+        ++ [
+            # https://github.com/NixOS/nixos-hardware/blob/master/flake.nix
+            nixos-hardware.nixosModules.common-pc
+            nixos-hardware.nixosModules.common-gpu-nvidia-nonprime
+            nixos-hardware.nixosModules.common-cpu-amd-zenpower
+        ]
+        ++ [
+          modules.serial-console
+          modules.tcp-hardening
+          modules.tcp-optimizations
+          modules.tmpfs
+          modules.fs-trim
+        ]
+        ++ [ hosts.xenomorph ];
     };
-  };
-  documentation.enable = true;
-  documentation.nixos.enable = false;
-  documentation.man.enable = true;
-  documentation.info.enable = false;
-  documentation.doc.enable = false;
-
-  environment = {
-    # Eject nano and perl from the system
-    defaultPackages =
-      with pkgs;
-      lib.mkForce [
-        coreutils-full
-        # inputs.nixpkgs-unstable.packages.${platform}.neovim
-      ];
-
-    systemPackages =
-      with pkgs;
-      [
-        git
-        nix-output-monitor
-        rsync
-        sops
-        age
-        curl
-      ]
-      ++ lib.optionals isInstall [
-        # inputs.nixos-needsreboot.packages.${platform}.default
-        nvd
-        nvme-cli
-        smartmontools
-      ];
-
-    variables = {
-      EDITOR = "nvim";
-      SYSTEMD_EDITOR = "nvim";
-      VISUAL = "nvim";
-    };
-  };
-
-  nixpkgs = {
-    # You can add overlays here
-    overlays = [
-      # Add overlays your own flake exports (from overlays and pkgs dir):
-      outputs.overlays.additions
-      outputs.overlays.modifications
-      outputs.overlays.unstable-packages
-      # Add overlays exported from other flakes:
-    ];
-    # Configure your nixpkgs instance
-    config = {
-      allowUnfree = true;
-    };
-  };
-
-  nix =
-    let
-      flakeInputs = lib.filterAttrs (_: lib.isType "flake") inputs;
-    in
-    {
-      settings = {
-        flake-registry = "";
-        nix-path = config.nix.nixPath;
-        warn-dirty = false;
-        experimental-features = "nix-command flakes";
-        auto-optimise-store = true;
-      };
-      # Disable channels
-      channel.enable = false;
-      # Make flake registry and nix path match flake inputs
-      registry = lib.mapAttrs (_: flake: { inherit flake; }) flakeInputs;
-      nixPath = lib.mapAttrsToList (n: _: "${n}=flake:${n}") flakeInputs;
-    };
-
-  nixpkgs.hostPlatform = lib.mkDefault "${platform}";
-
-  programs = {
-    command-not-found.enable = false;
-    fish = {
-      enable = true;
-    };
-
-    nh = {
-      clean = {
-        enable = true;
-        extraArgs = "--keep-since 15d --keep 10";
-      };
-      enable = true;
-      flake = "/home/${username}/nix-config";
-    };
-
-    nix-index-database.comma.enable = isInstall;
-
-    nix-ld = lib.mkIf isInstall {
-      enable = true;
-      libraries = with pkgs; [
-        # Add any missing dynamic libraries for unpackaged
-        # programs here, NOT in environment.systemPackages
-      ];
-    };
-  };
-
-  services = {
-    fwupd.enable = isInstall;
-    hardware.bolt.enable = true;
-    smartd.enable = isInstall;
-  };
-
-  # https://dl.thalheim.io/
-  sops = lib.mkIf isInstall {
-    validateSopsFiles = true;
-    age = {
-      keyFile = "/var/lib/sops-nix/keys.txt";
-      generateKey = false;
-    };
-    defaultSopsFile = ../secrets/secrets.yaml;
-    secrets = {
-      ssh_key = {
-        mode = "0600";
-        path = "/root/.ssh/id_rsa";
-      };
-      ssh_pub = {
-        mode = "0644";
-        path = "/root/.ssh/id_rsa.pub";
-      };
-      # Use `make-host-keys` to enroll new host keys.
-      initrd_ssh_host_ed25519_key = {
-        mode = "0600";
-        path = "/etc/ssh/initrd_ssh_host_ed25519_key";
-        sopsFile = ../secrets/initrd.yaml;
-      };
-      initrd_ssh_host_ed25519_key_pub = {
-        mode = "0644";
-        path = "/etc/ssh/initrd_ssh_host_ed25519_key.pub";
-        sopsFile = ../secrets/initrd.yaml;
-      };
-      ssh_host_ed25519_key = {
-        mode = "0600";
-        path = "/etc/ssh/ssh_host_ed25519_key";
-        sopsFile = ../secrets/${hostname}.yaml;
-      };
-      ssh_host_ed25519_key_pub = {
-        mode = "0644";
-        path = "/etc/ssh/ssh_host_ed25519_key.pub";
-        sopsFile = ../secrets/${hostname}.yaml;
-      };
-      ssh_host_rsa_key = {
-        mode = "0600";
-        path = "/etc/ssh/ssh_host_rsa_key";
-        sopsFile = ../secrets/${hostname}.yaml;
-      };
-      ssh_host_rsa_key_pub = {
-        mode = "0644";
-        path = "/etc/ssh/ssh_host_rsa_key.pub";
-        sopsFile = ../secrets/${hostname}.yaml;
-      };
-      "xenomorph/hashed_password_file" = {
-        sopsFile = ../secrets/${hostname}.yaml;
-      };
-      "xenomorph/zfs_root_key_bin" = {
-        sopsFile = ../secrets/${hostname}.yaml;
-      };
-      "xenomorph/host_id" = {
-        sopsFile = ../secrets/${hostname}.yaml;
-      };
-    };
-  };
-
-  system = {
-    # activationScripts = {
-    #   nixos-needsreboot = lib.mkIf isInstall {
-    #     supportsDryActivation = true;
-    #     text = "${
-    #       lib.getExe inputs.nixos-needsreboot.packages.${pkgs.system}.default
-    #     } \"$systemConfig\" || true";
-    #   };
-    # };
-    nixos.label = lib.mkIf isInstall "-";
-    inherit stateVersion;
   };
 }
