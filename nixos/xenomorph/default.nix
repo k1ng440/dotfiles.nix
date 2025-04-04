@@ -5,6 +5,7 @@
   pkgs,
   username,
   isInstall,
+  hostname,
   ...
 }:
 {
@@ -17,9 +18,9 @@
     ./disks.nix
   ];
 
-  environment.etc."hostid".source = config.sops.secrets.xenomorph.host_id.path;
+  environment.etc."hostid".source = lib.mkForce config.sops.secrets."${hostname}/host_id".path;
   networking.networkmanager.enable = true;
-  time.timeZone = "Asia/Dhaka";
+  # time.timeZone = "Asia/Dacca";
 
   boot = {
     # https://mynixos.com/nixpkgs/option/boot.zfs.forceImportRoot
@@ -27,7 +28,7 @@
       forceImportRoot = false;
     };
 
-    boot.extraModprobeConfig = ''
+    extraModprobeConfig = ''
       options zfs l2arc_noprefetch=0 l2arc_write_boost=33554432 l2arc_write_max=16777216 zfs_arc_max=2147483648
     '';
 
@@ -49,7 +50,6 @@
       ];
       network = {
         enable = true;
-        useDHCP = true;
         ssh = {
           enable = true;
           port = 2222;

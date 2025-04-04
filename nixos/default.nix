@@ -20,9 +20,9 @@
     # Use modules from other flakes
     inputs.catppuccin.nixosModules.catppuccin
     inputs.disko.nixosModules.disko
-    inputs.nix-flatpak.nixosModules.nix-flatpak
+    # inputs.nix-flatpak.nixosModules.nix-flatpak
     inputs.nix-index-database.nixosModules.nix-index
-    inputs.nix-snapd.nixosModules.default
+    # inputs.nix-snapd.nixosModules.default
     inputs.sops-nix.nixosModules.sops
     (modulesPath + "/installer/scan/not-detected.nix")
     ./${hostname}
@@ -156,7 +156,7 @@
   };
 
   # https://dl.thalheim.io/
-  sops = {
+  sops = lib.mkIf isInstall {
     validateSopsFiles = true;
     age = {
       keyFile = "/var/lib/sops-nix/keys.txt";
@@ -164,7 +164,6 @@
     };
     defaultSopsFile = ../secrets/secrets.yaml;
     secrets = {
-      test_key = { };
       ssh_key = {
         mode = "0600";
         path = "/root/.ssh/id_rsa";
@@ -204,20 +203,14 @@
         path = "/etc/ssh/ssh_host_rsa_key.pub";
         sopsFile = ../secrets/${hostname}.yaml;
       };
-      xenomorph = {
+      "xenomorph/hashed_password_file" = {
         sopsFile = ../secrets/${hostname}.yaml;
-        neededForBoot = true;
-        hashed_password_file = { };
-        zfs_root_key_bin = { };
       };
-
-      xenomorph_enc = {
-        sopsFile = ../secrets/xenomorph_disks.key;
-        format = "binary";
+      "xenomorph/zfs_root_key_bin" = {
+        sopsFile = ../secrets/${hostname}.yaml;
       };
-      roglaptop_enc = {
-        sopsFile = ../secrets/roglaptop_disks.key;
-        format = "binary";
+      "xenomorph/host_id" = {
+        sopsFile = ../secrets/${hostname}.yaml;
       };
     };
   };

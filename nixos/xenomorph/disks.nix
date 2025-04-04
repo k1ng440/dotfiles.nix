@@ -1,27 +1,30 @@
-# disko-zfs-config.nix (Corrected Structure)
 {
   lib,
   config,
   pkgs,
+  hostname,
   ...
 }:
-
 let
-  # Define your target disk carefully! Use by-id if possible.
-  disk = "/dev/vda"; # Or /dev/nvme0n1 etc.
+  # Define your target disk device carefully! Use by-id if possible.
+  diskDevice = "/dev/vda"; # Or /dev/nvme0n1 etc.
 
-  zfsKeyPath = config.sops.secrets.xenomorph.zfs_root_key_bin.path;
+  zfsKeyPath = config.sops.secrets."${hostname}/zfs_root_key_bin".path;
 in
 {
+  fileSystems."/" = {
+    device = "zroot/root";
+    fsType = "zfs";
+  };
+
   disko.devices = {
     disk = {
-      "${disk}" = {
+      "${diskDevice}" = {
         type = "disk";
-        device = disk;
+        device = diskDevice;
         content = {
           type = "gpt";
           partitions = {
-            # Partition 1: ESP (EFI System Partition) - REQUIRED for UEFI
             ESP = {
               name = "ESP";
               size = "1G";
@@ -30,6 +33,7 @@ in
                 type = "filesystem";
                 format = "vfat";
                 mountpoint = "/boot";
+                mountOptions = [ "nofail" ];
               };
             };
             zfs = {

@@ -62,4 +62,11 @@ Contributions are welcome! If you have suggestions, improvements, or encounter i
     - [wimpysworld/nix-config](https://github.com/wimpysworld/nix-config)
 
 
+## Commands
+- List all packages in system path
+
+```bash
+nix eval --json .#nixosConfigurations.xenomorph.config.environment.systemPackages --apply 'builtins.map (p: p.name)' | jq . | less
+```
+
 
