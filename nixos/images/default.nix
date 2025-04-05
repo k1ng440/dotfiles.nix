@@ -1,6 +1,7 @@
 {
   self,
   inputs,
+  withSystem,
   ...
 }: {
   perSystem = {
@@ -9,6 +10,8 @@
     ...
   }: let
     inherit (inputs) nixos-generators;
+    commonSpecialArgs = { inherit inputs pkgs; };
+    commonExtraSpecialArgs = { inherit inputs pkgs; };
 
     defaultModule = {...}: {
       imports = [
@@ -21,7 +24,7 @@
   in {
     packages = {
       xenomorph-iso-image = nixos-generators.nixosGenerate {
-        inherit pkgs;
+        pkgs = pkgs;
         format = "install-iso";
         modules = [
           defaultModule
@@ -33,7 +36,7 @@
               ...
             }: let
               # disko
-              disko = pkgs.writeShellScriptBin "disko" ''${config.system.build.disko}'';
+              disko = pkgs.writeShellScriptBin "disko" ''${config.system.build.diskoScript}'';
               disko-mount = pkgs.writeShellScriptBin "disko-mount" "${config.system.build.mountScript}";
               disko-format = pkgs.writeShellScriptBin "disko-format" "${config.system.build.formatScript}";
 
@@ -56,8 +59,7 @@
               '';
             in {
               imports = [
-                # TODO: Figure out how to set this disk with hostname or something
-                ../hosts/xenomorph/disko.nix
+                  ../hosts/xenomorph/disko.nix
               ];
 
               # we don't want to generate filesystem entries on this image
@@ -69,6 +71,18 @@
                 disko-mount
                 disko-format
                 install-system
+              ];
+
+              users.users.nixos = {
+                isNormalUser = true;
+                extraGroups = ["wheel"]; # sudo access
+                password = ""; # empty password
+              };
+
+              security.sudo.wheelNeedsPassword = false;
+
+              users.users.root.openssh.authorizedKeys.keys = [
+                "sk-ecdsa-sha2-nistp256@openssh.com AAAAInNrLWVjZHNhLXNoYTItbmlzdHAyNTZAb3BlbnNzaC5jb20AAAAIbmlzdHAyNTYAAABBBKYBN4nrD/zxmIuuXvwqU3lqJPvjIHDs2fXOvq9ZKaglkNCK2p223siEMmOhN7qPZ+JKVPo0/oOrEQ8y/ovVbFgAAAAEc3NoOg== contact@iampavel.dev"
               ];
             }
           )

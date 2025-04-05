@@ -1,19 +1,15 @@
-{
-  self,
-  inputs,
-  lib,
-  mylib,
-  ...
-}: let
-  inherit
-    (inputs)
-    disko
-    flake-registry
-    flake-parts
-    nixos-hardware
-    nixpkgs
-    nixpkgs-unstable
-    ;
+{ self, moduleWithSystem, inputs, lib, mylib, ... }: let
+  inherit (inputs) disko flake-registry flake-parts nixos-hardware nixpkgs nixpkgs-unstable;
+
+
+  nixosModules.default = moduleWithSystem (
+    perSystem@{ config }:
+      nixos@:{ ... }:
+    {
+    }
+    );
+
+
 
   nixosSystem = args:
     (lib.makeOverridable lib.nixosSystem) (
@@ -48,7 +44,7 @@
           modules.nix
           modules.openssh
           modules.server
-          modules.tailscale
+          # modules.zerotierone
         ];
       }
     )

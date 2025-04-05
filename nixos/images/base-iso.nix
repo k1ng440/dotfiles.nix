@@ -17,6 +17,9 @@ in {
     wget
   ];
 
+  boot.loader.grub.efiSupport = lib.mkDefault true;
+  boot.loader.grub.efiInstallAsRemovable = lib.mkDefault true;
+
   # Use helix as the default editor
   environment.variables.EDITOR = "nvim";
 
@@ -32,40 +35,6 @@ in {
   };
 
   services.resolved.enable = false;
-
-  systemd = {
-    network.networks =
-      mapAttrs'
-      (
-        num: _:
-          nameValuePair "eth${num}" {
-            extraConfig = ''
-              [Match]
-              Name = eth${num}
-              [Network]
-              DHCP = both
-              LLMNR = true
-              IPv4LL = true
-              LLDP = true
-              IPv6AcceptRA = true
-              IPv6Token = ::521a:c5ff:fefe:65d9
-              # used to have a stable address for zfs send
-              Address = fd42:4492:6a6d:43:1::${num}/64
-              [DHCP]
-              UseHostname = false
-              RouteMetric = 512
-            '';
-          }
-      )
-      {
-        "0" = {};
-        "1" = {};
-        "2" = {};
-        "3" = {};
-      };
-    services.update-prefetch.enable = false;
-    services.sshd.wantedBy = mkForce ["multi-user.target"];
-  };
 
   documentation = {
     enable = false;
@@ -97,10 +66,6 @@ in {
       "nixpkgs=${pkgs.path}"
     ];
   };
-
-  # users.users.root.openssh.authorizedKeys.keys = [
-  #   "sk-ecdsa-sha2-nistp256@openssh.com AAAAInNrLWVjZHNhLXNoYTItbmlzdHAyNTZAb3BlbnNzaC5jb20AAAAIbmlzdHAyNTYAAABBBKYBN4nrD/zxmIuuXvwqU3lqJPvjIHDs2fXOvq9ZKaglkNCK2p223siEMmOhN7qPZ+JKVPo0/oOrEQ8y/ovVbFgAAAAEc3NoOg== contact@iampavel.dev"
-  # ];
 
   system.stateVersion = "24.11";
 }

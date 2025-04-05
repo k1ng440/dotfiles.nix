@@ -279,7 +279,7 @@ vim.schedule(function()
       vue = { 'prettierd', 'prettier', stop_after_first = true },
       css = { 'prettierd', 'prettier', stop_after_first = true },
       go = { 'goimports', 'gofumpt' },
-      nix = { 'nix fmt' },
+      nix = { 'nix' },
       json = { 'jq' },
       templ = { 'templ' },
       svg = { 'xmlformat' },
@@ -291,6 +291,12 @@ vim.schedule(function()
     --   lsp_format = 'fallback',
     -- },
     notify_on_error = true,
+    formatters = {
+      nix = {
+        command = 'nix',
+        args = { 'fmt', '--impure', '--file', '$RELATIVE_FILEPATH' },
+      },
+    },
   })
 
   vim.api.nvim_create_user_command('Format', function(args)

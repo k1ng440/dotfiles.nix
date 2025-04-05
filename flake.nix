@@ -10,83 +10,70 @@
     ];
   };
 
-  outputs =
-    inputs@{
-      self,
-      flake-parts,
-      flake-root,
-      home-manager,
-      mission-control,
-      nixpkgs,
-      nixpkgs-unstable,
-      treefmt-nix,
-      devshell,
-      sops-nix,
-      ...
-    }:
-    let
-      inherit (self) outputs config;
+  outputs = inputs @ {
+    self,
+    flake-parts,
+    flake-root,
+    home-manager,
+    mission-control,
+    nixpkgs,
+    nixpkgs-unstable,
+    treefmt-nix,
+    devshell,
+    sops-nix,
+    ...
+  }: let
+    inherit (self) outputs config;
+    lib = nixpkgs.lib;
+    home-manager-lib = home-manager.lib;
+    flake-parts-lib = flake-parts.lib;
+    mylib = import ./nix/lib {
       lib = nixpkgs.lib;
-      home-manager-lib = home-manager.lib;
-      flake-parts-lib = flake-parts.lib;
-      mylib = import ./nix/lib {
-        lib = nixpkgs.lib;
+    };
+    # rawNvimPlugins = helper.filterInputsByPrefix { inherit (nixpkgs) lib; } "nvim-plugin-";
+  in (
+    flake-parts.lib.mkFlake
+    {
+      inherit inputs;
+      specialArgs = {
+        inherit
+          lib
+          mylib
+          home-manager-lib
+          flake-parts-lib
+          ;
       };
-      # rawNvimPlugins = helper.filterInputsByPrefix { inherit (nixpkgs) lib; } "nvim-plugin-";
-    in
-    # evalFlakeModule evaluates and integrates modules from external Flakes
-    (flake-parts.lib.mkFlake
+    }
+    (
       {
-        inherit inputs;
-        specialArgs = {
-          inherit
-            lib
-            mylib
-            home-manager-lib
-            flake-parts-lib
-            ;
-        };
-      }
-      (
-        top@{
-          config,
-          withSystem,
-          moduleWithSystem,
-          ...
-        }:
-        {
-          flake.nixosModules.sops = sops-nix.nixosModules.sops;
+        withSystem,
+        self,
+        config,
+        ...
+      }: let
+       in {
+        flake.nixosModules.sops = sops-nix.nixosModules.sops;
 
-          # Debug: https://flake.parts/debug.html
-          debug = true;
-          imports = [
-            (_: {
-              perSystem =
-                { inputs', ... }:
-                {
-                  # make pkgs available to all `perSystem` functions
-                  # _module.args.pkgs = inputs'.nixpkgs.legacyPackages;
-                  # _module.args.nixpkgs-unstable = inputs'.nixpkgs-unstable;
-                  # make custom lib available to all `perSystem` functions
-                  # _module.args.lib = lib;
-                  # make home-manager available to all `perSystem` functions
-                  # _module.args.home-manager = inputs'.home-manager;
-                  # make stateVersion available
-                  # _modules.args.stateVersion = stateVersion;
-                };
-            })
-            home-manager.flakeModules.home-manager
-            treefmt-nix.flakeModule
-            flake-root.flakeModule
-            mission-control.flakeModule
-            devshell.flakeModule
-            ./nix
-            ./nixos
-          ];
-          systems = [ "x86_64-linux" ];
-        }
-      )
-    );
+        # Debug: https://flake.parts/debug.html
+        debug = true;
+        imports = [
+          home-manager.flakeModules.home-manager
+          treefmt-nix.flakeModule
+          flake-root.flakeModule
+          mission-control.flakeModule
+          devshell.flakeModule
+          ./nix
+          ./nixos
+        ];
+        systems = [
+          "x86_64-linux"
+          "aarch64-linux"
+          "x86_64-darwin"
+          "aarch64-darwin"
+        ];
+      }
+    )
+  );
 
   # Imports
   inputs = {
