@@ -4,7 +4,7 @@
   pkgs,
   ...
 }: {
-  #boot.supportedFilesystems = [ "zfs" ];
-  # services.zfs.autoScrub.enable = true;
-  # services.zfs.trim.enable = true;
+  boot.supportedFilesystems = [ "ntfs" "zfs" "btrfs" ];
+  services.zfs.autoScrub.enable = true;
+  services.zfs.trim.enable = true;
 }

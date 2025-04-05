@@ -7,17 +7,17 @@
   # initrd
   boot.initrd.enable = true;
   boot.initrd.verbose = false;
-  boot.initrd.availableKernelModules = [ "xhci_pci" "ahci" "nvme" "usbhid" "sd_mod" ];
+  boot.initrd.availableKernelModules = [ "zfs" "xhci_pci" "ahci" "nvme" "usbhid" "sd_mod" ];
 
   # grub
-  boot.loader.grub.enable = true;
+  boot.loader.grub.enable = false;
   boot.loader.grub.efiSupport = true;
   boot.loader.grub.device = "nodev";
   boot.loader.grub.useOSProber = true;
   boot.loader.grub.devices = ["nodev"];
 
-
   # systemd-boot
-  boot.loader.systemd-boot.enable = false;
+  boot.loader.systemd-boot.enable = true;
   boot.loader.systemd-boot.editor  = false;
+  boot.loader.systemd-boot.rebootForBitlocker = true;
 }

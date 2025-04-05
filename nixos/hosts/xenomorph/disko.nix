@@ -6,7 +6,7 @@
   ...
 }: let
   # Define your target disk device carefully! Use by-id if possible.
-  diskDevice = "/dev/vda"; # Or /dev/nvme0n1 etc.
+  diskDevice = "/dev/disk/by-id/ata-VBOX_HARDDISK_VBcc1af7e2-bd693cbf"; # Or /dev/nvme0n1 etc.
 in {
   fileSystems."/" = {
     device = "zroot/root";
