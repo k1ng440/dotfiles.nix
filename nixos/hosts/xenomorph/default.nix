@@ -8,6 +8,4 @@
     ./users.nix
     ./networking.nix
   ];
-
-  programs.fish.enable = true;
 }

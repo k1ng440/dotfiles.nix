@@ -68,11 +68,7 @@ Contributions are welcome! If you have suggestions, improvements, or encounter i
 ## Reference
 
 - [NixOS Wiki](https://nixos.wiki/wiki/Main_Page).
-
-- Inspiration from the exemplary work:
-
-  - [albe2669/dotfiles](https://github.com/albe2669/dotfiles)
-  - [wimpysworld/nix-config](https://github.com/wimpysworld/nix-config)
+- [Manual](https://nixos.org/manual/nixos/stable/index.html)
 
 - Videos / Tutorials:
 
@@ -83,7 +79,6 @@ Contributions are welcome! If you have suggestions, improvements, or encounter i
 
 - articles:
   - [Nix by example](https://medium.com/@MrJamesFisher/nix-by-example-a0063a1a4c55)
-  - [Why you don't need flake-utils](https://ayats.org/blog/no-flake-utils)
   - [Flake-parts: writing custom flake modules](https://www.vtimofeenko.com/posts/flake-parts-writing-custom-flake-modules/#declaring-a-package)
 
 ## Search:

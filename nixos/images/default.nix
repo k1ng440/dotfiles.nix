@@ -10,12 +10,11 @@
     ...
   }: let
     inherit (inputs) nixos-generators;
-    commonSpecialArgs = { inherit inputs pkgs; };
-    commonExtraSpecialArgs = { inherit inputs pkgs; };
 
     defaultModule = {...}: {
       imports = [
         inputs.disko.nixosModules.disko
+        ../modules/fish.nix
         ./base-iso.nix
       ];
       _module.args.self = self;
@@ -23,6 +22,7 @@
     };
   in {
     packages = {
+      # nix build .#xenomorph-iso-image
       xenomorph-iso-image = nixos-generators.nixosGenerate {
         pkgs = pkgs;
         format = "install-iso";
@@ -59,7 +59,7 @@
               '';
             in {
               imports = [
-                  ../hosts/xenomorph/disko.nix
+                ../hosts/xenomorph/disko.nix
               ];
 
               # we don't want to generate filesystem entries on this image
@@ -75,12 +75,12 @@
 
               users.users.nixos = {
                 isNormalUser = true;
-                extraGroups = ["wheel"]; # sudo access
-                password = ""; # empty password
+                extraGroups = ["wheel"];
+                hashedPassword = "$y$j9T$UExSwLltSqOgCfYBEt7sa.$d/a68xX7TnHlNxxD2LttItl.gSMGFgVQApgKQXN/mh4";
               };
-
               security.sudo.wheelNeedsPassword = false;
-
+              users.users.root.hashedPassword = "$y$j9T$UExSwLltSqOgCfYBEt7sa.$d/a68xX7TnHlNxxD2LttItl.gSMGFgVQApgKQXN/mh4";
+              users.mutableUsers = false;
               users.users.root.openssh.authorizedKeys.keys = [
                 "sk-ecdsa-sha2-nistp256@openssh.com AAAAInNrLWVjZHNhLXNoYTItbmlzdHAyNTZAb3BlbnNzaC5jb20AAAAIbmlzdHAyNTYAAABBBKYBN4nrD/zxmIuuXvwqU3lqJPvjIHDs2fXOvq9ZKaglkNCK2p223siEMmOhN7qPZ+JKVPo0/oOrEQ8y/ovVbFgAAAAEc3NoOg== contact@iampavel.dev"
               ];

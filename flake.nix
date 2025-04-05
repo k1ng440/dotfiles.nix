@@ -17,13 +17,11 @@
     home-manager,
     mission-control,
     nixpkgs,
-    nixpkgs-unstable,
     treefmt-nix,
     devshell,
     sops-nix,
     ...
   }: let
-    inherit (self) outputs config;
     lib = nixpkgs.lib;
     home-manager-lib = home-manager.lib;
     flake-parts-lib = flake-parts.lib;
@@ -44,35 +42,27 @@
           ;
       };
     }
-    (
-      {
-        withSystem,
-        self,
-        config,
-        ...
-      }: let
-       in {
-        flake.nixosModules.sops = sops-nix.nixosModules.sops;
-
-        # Debug: https://flake.parts/debug.html
-        debug = true;
-        imports = [
-          home-manager.flakeModules.home-manager
-          treefmt-nix.flakeModule
-          flake-root.flakeModule
-          mission-control.flakeModule
-          devshell.flakeModule
-          ./nix
-          ./nixos
-        ];
-        systems = [
-          "x86_64-linux"
-          "aarch64-linux"
-          "x86_64-darwin"
-          "aarch64-darwin"
-        ];
-      }
-    )
+    {
+      # Debug: https://flake.parts/debug.html
+      debug = true;
+      imports = [
+        home-manager.flakeModules.home-manager
+        treefmt-nix.flakeModule
+        flake-root.flakeModule
+        mission-control.flakeModule
+        devshell.flakeModule
+        # sops-nix.nixosModules.sops
+        ./nix
+        ./nixos
+        # ./home
+      ];
+      systems = [
+        "x86_64-linux"
+        "aarch64-linux"
+        "x86_64-darwin"
+        "aarch64-darwin"
+      ];
+    }
   );
 
   # Imports

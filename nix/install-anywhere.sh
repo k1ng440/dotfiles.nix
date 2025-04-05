@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-set +e  # Disable errexit
-set +u  # Disable nounset
-set +o pipefail  # Disable pipefail
+set +e          # Disable errexit
+set +u          # Disable nounset
+set +o pipefail # Disable pipefail
 
 function usage() {
   echo "Usage: $(basename "$0") -h HOST -r REMOTE_ADDRESS [-k] [-t]"
@@ -22,11 +22,11 @@ VM_TEST=0
 
 while getopts "k:h:r:t" opt; do
   case $opt in
-    h ) HOST=$OPTARG;;
-    k ) KEEP_DISKS=1;;
-    r ) REMOTE_ADDRESS=$OPTARG;;
-    t ) VM_TEST=1;;
-    \? ) usage;;
+  h) HOST=$OPTARG ;;
+  k) KEEP_DISKS=1 ;;
+  r) REMOTE_ADDRESS=$OPTARG ;;
+  t) VM_TEST=1 ;;
+  \?) usage ;;
   esac
 done
 

@@ -68,9 +68,9 @@ in {
             options = {
               mountpoint = "/"; # Mount this dataset at the root
               # --- Encryption Settings ---
-              encryption = "aes-256-gcm";
-              keyformat = "raw";
-              keylocation = "file://root/zfs.key"; # Use the sops-provided key file
+              # encryption = "aes-256-gcm";
+              # keyformat = "raw";
+              # keylocation = "file://root/zfs.key"; # Use the sops-provided key file
             };
           };
 
