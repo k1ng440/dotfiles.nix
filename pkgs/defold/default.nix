@@ -32,8 +32,7 @@
   pango,
   zlib,
   uiScale ? "1.0",
-}:
-let
+}: let
   pname = "defold";
   version = "1.9.4";
 
@@ -53,7 +52,7 @@ let
       addDriverRunpath
       copyDesktopItems
       gnused
-      (jdk17.override { enableJavaFX = true; })
+      (jdk17.override {enableJavaFX = true;})
       makeWrapper
     ];
 
@@ -104,64 +103,64 @@ let
     ];
   };
 in
-buildFHSEnv {
-  name = pname;
-  targetPkgs = pkgs: [
-    cairo
-    defold
-    fontconfig
-    freetype
-    gdk-pixbuf
-    git
-    glib
-    gobject-introspection
-    gtk3
-    libGL
-    libGLU
-    libX11
-    libXcursor
-    libXext
-    libXi
-    libXrandr
-    libXrender
-    libXtst
-    libXxf86vm
-    openal
-    pango
-    zlib
-  ];
-  runScript = "Defold";
-
-  extraInstallCommands = ''
-    mkdir -p $out/share/applications $out/share/icons/hicolor/512x512/apps
-    ln -s ${defold}/share/applications/*.desktop \
-      $out/share/applications/
-    ln -s ${defold}/share/icons/hicolor/512x512/apps/defold.png \
-      $out/share/icons/hicolor/512x512/apps/defold.png
-  '';
-
-  passthru = {
-    updateScript = writeScript "update-defold" ''
-      #!/usr/bin/env nix-shell
-      #!nix-shell -i bash -p curl jq nix-update
-      version=$(curl -s https://d.defold.com/editor-alpha/info.json | jq -r .version)
-      nix-update defold --version "$version"
-    '';
-  };
-
-  meta = {
-    description = "The game engine for high-performance cross-platform games";
-    homepage = "https://www.defold.com";
-    license = lib.licenses.free;
-    longDescription = ''
-      Defold is a completely free to use game engine for development of desktop, mobile, console and web games.
-    '';
-    sourceProvenance = with lib.sourceTypes; [
-      binaryBytecode
-      binaryNativeCode
+  buildFHSEnv {
+    name = pname;
+    targetPkgs = pkgs: [
+      cairo
+      defold
+      fontconfig
+      freetype
+      gdk-pixbuf
+      git
+      glib
+      gobject-introspection
+      gtk3
+      libGL
+      libGLU
+      libX11
+      libXcursor
+      libXext
+      libXi
+      libXrandr
+      libXrender
+      libXtst
+      libXxf86vm
+      openal
+      pango
+      zlib
     ];
-    maintainers = with lib.maintainers; [ flexiondotorg ];
-    platforms = [ "x86_64-linux" ];
-    mainProgram = "defold";
-  };
-}
+    runScript = "Defold";
+
+    extraInstallCommands = ''
+      mkdir -p $out/share/applications $out/share/icons/hicolor/512x512/apps
+      ln -s ${defold}/share/applications/*.desktop \
+        $out/share/applications/
+      ln -s ${defold}/share/icons/hicolor/512x512/apps/defold.png \
+        $out/share/icons/hicolor/512x512/apps/defold.png
+    '';
+
+    passthru = {
+      updateScript = writeScript "update-defold" ''
+        #!/usr/bin/env nix-shell
+        #!nix-shell -i bash -p curl jq nix-update
+        version=$(curl -s https://d.defold.com/editor-alpha/info.json | jq -r .version)
+        nix-update defold --version "$version"
+      '';
+    };
+
+    meta = {
+      description = "The game engine for high-performance cross-platform games";
+      homepage = "https://www.defold.com";
+      license = lib.licenses.free;
+      longDescription = ''
+        Defold is a completely free to use game engine for development of desktop, mobile, console and web games.
+      '';
+      sourceProvenance = with lib.sourceTypes; [
+        binaryBytecode
+        binaryNativeCode
+      ];
+      maintainers = with lib.maintainers; [flexiondotorg];
+      platforms = ["x86_64-linux"];
+      mainProgram = "defold";
+    };
+  }

@@ -17,7 +17,7 @@ stdenv.mkDerivation rec {
     hash = "sha256-b/PFgm7IrSTaKTcwTzntoxGd5KtGsgWvq2ZTteLw6GA=";
   };
 
-  nativeBuildInputs = [ makeWrapper ];
+  nativeBuildInputs = [makeWrapper];
 
   buildInputs = [
     jdk17
@@ -50,9 +50,9 @@ stdenv.mkDerivation rec {
     description = "Bob is a command line tool for building Defold projects outside of the normal editor workflow.";
     homepage = "https://defold.com/manuals/bob/";
     license = lib.licenses.free;
-    sourceProvenance = with lib.sourceTypes; [ binaryNativeCode ];
-    maintainers = with lib.maintainers; [ flexiondotorg ];
-    platforms = [ "x86_64-linux" ];
+    sourceProvenance = with lib.sourceTypes; [binaryNativeCode];
+    maintainers = with lib.maintainers; [flexiondotorg];
+    platforms = ["x86_64-linux"];
     mainProgram = "defold-bob";
   };
 }

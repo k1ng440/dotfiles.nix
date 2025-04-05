@@ -3,7 +3,7 @@ name: Flake ❄️ Checker ✅
 on:
   schedule:
     # l33t o'clock
-    - cron: '37 13 * * *'
+    - cron: "37 13 * * *"
   workflow_dispatch:
 
 jobs:

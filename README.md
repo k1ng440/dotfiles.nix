@@ -70,10 +70,12 @@ Contributions are welcome! If you have suggestions, improvements, or encounter i
 - [NixOS Wiki](https://nixos.wiki/wiki/Main_Page).
 
 - Inspiration from the exemplary work:
+
   - [albe2669/dotfiles](https://github.com/albe2669/dotfiles)
   - [wimpysworld/nix-config](https://github.com/wimpysworld/nix-config)
 
 - Videos / Tutorials:
+
   - [Nixos and Hyprland - Best Match Ever](https://www.youtube.com/watch?v=61wGzIv12Ds)
   - [Flake-parts: writing custom flake modules](https://www.vtimofeenko.com/posts/flake-parts-writing-custom-flake-modules/)
   - [Ultimate Nix Flakes Guide - Vimjoyer](https://www.youtube.com/watch?v=JCeYq72Sko0)
@@ -91,9 +93,10 @@ Contributions are welcome! If you have suggestions, improvements, or encounter i
 - [NixOS Search Packages](https://search.nixos.org/packages)
 - [home-manager specific config options](https://mipmip.github.io/home-manager-option-search/)
 
-
 ## example nix repl
+
 - nixpkgs.lib
+
 ```nix
 $ nix repl
 Welcome to Nix version 2.3.2. Type :? for help.
@@ -105,6 +108,13 @@ nix-repl> lib.platforms.i686
 [ "i686-cygwin" "i686-freebsd" "i686-linux" "i686-netbsd" "i686-openbsd" "i686-darwin" "i686-windows" "i686-none" ]
 ```
 
+- [flake-parts debugging](https://flake.parts/options/flake-parts.html)
+
+```
+$ nix repl
+nix-repl> :lf .
+nix-repl> currentSystem._module.args.pkgs.hello
+```
 
 ## Commands
 

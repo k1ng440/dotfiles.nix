@@ -3,7 +3,6 @@
   lib,
   stdenvNoCC,
 }:
-
 stdenvNoCC.mkDerivation rec {
   pname = "commodore_64_pixelized";
   version = "1.2";
@@ -24,8 +23,8 @@ stdenvNoCC.mkDerivation rec {
     longdescription = "The Commodore 64 font.";
     homepage = "https://www.dafont.com/${pname}.font";
     license = lib.licenses.free;
-    maintainers = with lib.maintainers; [ flexiondotorg ];
+    maintainers = with lib.maintainers; [flexiondotorg];
     platforms = lib.platforms.all;
-    sourceProvenance = [ lib.sourceTypes.binaryBytecode ];
+    sourceProvenance = [lib.sourceTypes.binaryBytecode];
   };
 }

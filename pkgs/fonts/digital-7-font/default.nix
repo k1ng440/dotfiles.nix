@@ -3,7 +3,6 @@
   lib,
   stdenvNoCC,
 }:
-
 stdenvNoCC.mkDerivation rec {
   pname = "digital_7";
   version = "1.020";
@@ -24,8 +23,8 @@ stdenvNoCC.mkDerivation rec {
     longdescription = "Digital 7, a seven-segment font.";
     homepage = "https://www.dafont.com/${pname}.font";
     license = lib.licenses.free;
-    maintainers = with lib.maintainers; [ flexiondotorg ];
+    maintainers = with lib.maintainers; [flexiondotorg];
     platforms = lib.platforms.all;
-    sourceProvenance = [ lib.sourceTypes.binaryBytecode ];
+    sourceProvenance = [lib.sourceTypes.binaryBytecode];
   };
 }

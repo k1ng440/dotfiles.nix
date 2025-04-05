@@ -4,12 +4,10 @@
   pkgs,
   hostname,
   ...
-}:
-let
+}: let
   # Define your target disk device carefully! Use by-id if possible.
   diskDevice = "/dev/vda"; # Or /dev/nvme0n1 etc.
-in
-{
+in {
   fileSystems."/" = {
     device = "zroot/root";
     fsType = "zfs";
@@ -31,7 +29,7 @@ in
                 type = "filesystem";
                 format = "vfat";
                 mountpoint = "/boot";
-                mountOptions = [ "nofail" ];
+                mountOptions = ["nofail"];
               };
             };
             zfs = {

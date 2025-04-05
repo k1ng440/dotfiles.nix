@@ -58,9 +58,9 @@ stdenv.mkDerivation rec {
     description = "Defold gamepad calibration tool";
     homepage = "https://defold.com/";
     license = lib.licenses.free;
-    sourceProvenance = with lib.sourceTypes; [ binaryNativeCode ];
-    maintainers = with lib.maintainers; [ flexiondotorg ];
-    platforms = [ "x86_64-linux" ];
+    sourceProvenance = with lib.sourceTypes; [binaryNativeCode];
+    maintainers = with lib.maintainers; [flexiondotorg];
+    platforms = ["x86_64-linux"];
     mainProgram = "defold-gdc";
   };
 }

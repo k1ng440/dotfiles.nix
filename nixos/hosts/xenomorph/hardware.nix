@@ -3,8 +3,7 @@
   modulesPath,
   lib,
   ...
-}:
-{
+}: {
   imports = [
     "${modulesPath}/installer/scan/not-detected.nix"
   ];
@@ -19,9 +18,9 @@
       "sd_mod"
       "rtsx_pci_sdmmc"
     ];
-    initrd.kernelModules = [ "zfs" ];
-    kernelModules = [ "kvm-amd" ];
-    extraModulePackages = [ ];
+    initrd.kernelModules = ["zfs"];
+    kernelModules = ["kvm-amd"];
+    extraModulePackages = [];
   };
 
   networking.useDHCP = lib.mkDefault true;

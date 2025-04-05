@@ -1,6 +1,5 @@
 # This file defines overlays
-{ inputs, ... }:
-{
+{inputs, ...}: {
   # This one brings our custom packages from the 'pkgs' directory
   additions = final: _prev: import ../pkgs final.pkgs;
 
@@ -29,31 +28,34 @@
       '';
     });
 
-    custom-caddy = import ./custom-caddy.nix { pkgs = prev; };
+    custom-caddy = import ./custom-caddy.nix {pkgs = prev;};
 
     gitkraken = prev.gitkraken.overrideAttrs (old: rec {
       version = "11.0.0";
 
-      src = {
-        x86_64-linux = prev.fetchzip {
-          url = "https://release.axocdn.com/linux/GitKraken-v${version}.tar.gz";
-          hash = "sha256-rUOBCxquTw5wh5cK0AEGmIMq808tZQe5E90V7lGRuNY=";
-        };
+      src =
+        {
+          x86_64-linux = prev.fetchzip {
+            url = "https://release.axocdn.com/linux/GitKraken-v${version}.tar.gz";
+            hash = "sha256-rUOBCxquTw5wh5cK0AEGmIMq808tZQe5E90V7lGRuNY=";
+          };
 
-        x86_64-darwin = prev.fetchzip {
-          url = "https://release.axocdn.com/darwin/GitKraken-v${version}.zip";
-          hash = "";
-        };
+          x86_64-darwin = prev.fetchzip {
+            url = "https://release.axocdn.com/darwin/GitKraken-v${version}.zip";
+            hash = "";
+          };
 
-        aarch64-darwin = prev.fetchzip {
-          url = "https://release.axocdn.com/darwin-arm64/GitKraken-v${version}.zip";
-          hash = "";
-        };
-      }.${prev.stdenv.hostPlatform.system} or (throw "Unsupported system: ${prev.stdenv.hostPlatform.system}");
+          aarch64-darwin = prev.fetchzip {
+            url = "https://release.axocdn.com/darwin-arm64/GitKraken-v${version}.zip";
+            hash = "";
+          };
+        }
+        .${prev.stdenv.hostPlatform.system}
+        or (throw "Unsupported system: ${prev.stdenv.hostPlatform.system}");
     });
 
     linuxPackages_6_12 = prev.linuxPackages_6_12.extend (_lpself: lpsuper: {
-      mwprocapture = lpsuper.mwprocapture.overrideAttrs ( old: rec {
+      mwprocapture = lpsuper.mwprocapture.overrideAttrs (old: rec {
         pname = "mwprocapture";
         subVersion = "4418";
         version = "1.3.${subVersion}";

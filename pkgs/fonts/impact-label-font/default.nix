@@ -3,7 +3,6 @@
   lib,
   stdenvNoCC,
 }:
-
 stdenvNoCC.mkDerivation rec {
   pname = "impact_label";
   version = "2.000";
@@ -24,8 +23,8 @@ stdenvNoCC.mkDerivation rec {
     longdescription = "Label everything. Just like your Dad used to in the 1970's!";
     homepage = "https://www.dafont.com/${pname}.font";
     license = lib.licenses.free;
-    maintainers = with lib.maintainers; [ flexiondotorg ];
+    maintainers = with lib.maintainers; [flexiondotorg];
     platforms = lib.platforms.all;
-    sourceProvenance = [ lib.sourceTypes.binaryBytecode ];
+    sourceProvenance = [lib.sourceTypes.binaryBytecode];
   };
 }

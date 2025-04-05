@@ -1,5 +1,4 @@
-{ pkgs, ... }:
-{
+{pkgs, ...}: {
   users.users.k1ng = {
     shell = pkgs.fish;
     isNormalUser = true;

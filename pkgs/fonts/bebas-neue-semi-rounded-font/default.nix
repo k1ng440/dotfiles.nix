@@ -3,7 +3,6 @@
   lib,
   stdenvNoCC,
 }:
-
 stdenvNoCC.mkDerivation rec {
   pname = "bebas_neue_semi_rounded";
   version = "1.000";
@@ -28,8 +27,8 @@ stdenvNoCC.mkDerivation rec {
     '';
     homepage = "https://dharmatype.com/bebas-neue";
     license = lib.licenses.unfree;
-    maintainers = with lib.maintainers; [ flexiondotorg ];
+    maintainers = with lib.maintainers; [flexiondotorg];
     platforms = lib.platforms.all;
-    sourceProvenance = [ lib.sourceTypes.binaryBytecode ];
+    sourceProvenance = [lib.sourceTypes.binaryBytecode];
   };
 }

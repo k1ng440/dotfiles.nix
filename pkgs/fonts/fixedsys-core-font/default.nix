@@ -1,5 +1,7 @@
-{ lib, stdenvNoCC }:
-
+{
+  lib,
+  stdenvNoCC,
+}:
 stdenvNoCC.mkDerivation rec {
   pname = "fixedsys_core";
   version = "0.6";
@@ -21,8 +23,8 @@ stdenvNoCC.mkDerivation rec {
     '';
     homepage = "https://github.com/delinx/Fixedsys-Core";
     license = lib.licenses.free;
-    maintainers = with lib.maintainers; [ flexiondotorg ];
+    maintainers = with lib.maintainers; [flexiondotorg];
     platforms = lib.platforms.all;
-    sourceProvenance = [ lib.sourceTypes.binaryBytecode ];
+    sourceProvenance = [lib.sourceTypes.binaryBytecode];
   };
 }

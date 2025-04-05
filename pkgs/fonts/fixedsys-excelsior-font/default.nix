@@ -1,5 +1,7 @@
-{ lib, stdenvNoCC }:
-
+{
+  lib,
+  stdenvNoCC,
+}:
 stdenvNoCC.mkDerivation rec {
   pname = "fixedsys_excelsior";
   version = "3.022";
@@ -22,8 +24,8 @@ stdenvNoCC.mkDerivation rec {
     '';
     homepage = "https://github.com/MARTYR-X-LTD/fixedsys-excelsior";
     license = lib.licenses.free;
-    maintainers = with lib.maintainers; [ flexiondotorg ];
+    maintainers = with lib.maintainers; [flexiondotorg];
     platforms = lib.platforms.all;
-    sourceProvenance = [ lib.sourceTypes.binaryBytecode ];
+    sourceProvenance = [lib.sourceTypes.binaryBytecode];
   };
 }

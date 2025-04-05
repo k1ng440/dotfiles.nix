@@ -2,31 +2,34 @@
   self,
   inputs,
   lib,
+  mylib,
   ...
-}:
-let
-  inherit (inputs)
+}: let
+  inherit
+    (inputs)
     disko
     flake-registry
+    flake-parts
     nixos-hardware
     nixpkgs
     nixpkgs-unstable
     ;
 
-  nixosSystem =
-    args:
+  nixosSystem = args:
     (lib.makeOverridable lib.nixosSystem) (
       lib.recursiveUpdate args {
-        modules = args.modules ++ [
-          {
-            config.nixpkgs.pkgs = lib.mkDefault args.pkgs;
-            config.nixpkgs.localSystem = lib.mkDefault args.pkgs.stdenv.hostPlatform;
-          }
-        ];
+        modules =
+          args.modules
+          ++ [
+            {
+              config.nixpkgs.pkgs = lib.mkDefault args.pkgs;
+              config.nixpkgs.localSystem = lib.mkDefault args.pkgs.stdenv.hostPlatform;
+            }
+          ];
       }
     );
 
-  modules = lib.rakeLeaves ./modules;
+  modules = mylib.rakeLeaves ./modules;
 
   defaultModules = [
     # make flake inputs accessible in NixOS
@@ -37,8 +40,7 @@ let
     }
     # load common modules
     (
-      { ... }:
-      {
+      {...}: {
         imports = [
           disko.nixosModules.disko
           modules.i18n
@@ -62,8 +64,7 @@ let
     system = "x86_64-linux";
     config.allowUnfree = true;
   };
-in
-{
+in {
   imports = [
     ./images
   ];
@@ -83,7 +84,6 @@ in
           nixos-hardware.nixosModules.common-cpu-amd-zenpower
         ]
         ++ [
-          modules.serial-console
           modules.tcp-hardening
           modules.tcp-optimizations
           modules.tmpfs

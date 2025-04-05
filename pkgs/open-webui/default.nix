@@ -5,8 +5,7 @@
   ffmpeg,
   python312,
   nixosTests,
-}:
-{}
+}: {}
 # let
 #   pname = "open-webui";
 #   version = "0.6.0";
@@ -180,3 +179,4 @@
 #     ];
 #   };
 #}
+

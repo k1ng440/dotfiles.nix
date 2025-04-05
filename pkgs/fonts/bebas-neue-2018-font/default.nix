@@ -3,7 +3,6 @@
   lib,
   stdenvNoCC,
 }:
-
 stdenvNoCC.mkDerivation rec {
   pname = "bebas_neue_2018";
   version = "2.000";
@@ -13,7 +12,7 @@ stdenvNoCC.mkDerivation rec {
     repo = "Bebas-Neue";
     rev = "46e72cec95ee599f72c0de4a12cfe64828949236";
     hash = "sha256-dKn8qSVRg2jc7xURw/X7XX//V5nV4a0qENVLiwLEcTg=";
-    sparseCheckout = [ "fonts/BebasNeue(2018)ByDhamraType/ttf" ];
+    sparseCheckout = ["fonts/BebasNeue(2018)ByDhamraType/ttf"];
   };
 
   installPhase = ''
@@ -41,8 +40,8 @@ stdenvNoCC.mkDerivation rec {
     '';
     homepage = "https://bebasneue.com/";
     license = lib.licenses.ofl;
-    maintainers = with lib.maintainers; [ flexiondotorg ];
+    maintainers = with lib.maintainers; [flexiondotorg];
     platforms = lib.platforms.all;
-    sourceProvenance = [ lib.sourceTypes.binaryBytecode ];
+    sourceProvenance = [lib.sourceTypes.binaryBytecode];
   };
 }

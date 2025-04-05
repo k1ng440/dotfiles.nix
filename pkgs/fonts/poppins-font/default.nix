@@ -3,7 +3,6 @@
   lib,
   stdenvNoCC,
 }:
-
 stdenvNoCC.mkDerivation rec {
   pname = "poppins";
   version = "4.003";
@@ -23,8 +22,8 @@ stdenvNoCC.mkDerivation rec {
     longdescription = "Poppins, a Devanagari + Latin family for Google Fonts.";
     homepage = "https://github.com/itfoundry/Poppins";
     license = lib.licenses.ofl;
-    maintainers = with lib.maintainers; [ flexiondotorg ];
+    maintainers = with lib.maintainers; [flexiondotorg];
     platforms = lib.platforms.all;
-    sourceProvenance = [ lib.sourceTypes.binaryBytecode ];
+    sourceProvenance = [lib.sourceTypes.binaryBytecode];
   };
 }

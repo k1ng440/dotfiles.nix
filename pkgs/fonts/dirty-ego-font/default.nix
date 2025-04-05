@@ -5,7 +5,6 @@
   lib,
   stdenvNoCC,
 }:
-
 stdenvNoCC.mkDerivation rec {
   pname = "dirty_ego";
   version = "2001";
@@ -29,8 +28,8 @@ stdenvNoCC.mkDerivation rec {
     '';
     homepage = "https://www.misprintedtype.com/freeware";
     license = lib.licenses.free;
-    maintainers = with lib.maintainers; [ flexiondotorg ];
+    maintainers = with lib.maintainers; [flexiondotorg];
     platforms = lib.platforms.all;
-    sourceProvenance = [ lib.sourceTypes.binaryBytecode ];
+    sourceProvenance = [lib.sourceTypes.binaryBytecode];
   };
 }

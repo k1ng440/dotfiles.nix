@@ -29,7 +29,10 @@ stdenv.mkDerivation (finalAttrs: {
     hash = "sha256-CWmzXhsdk+c1d7Ub7TXQ2BVYla1HSJ9jbgOilbVl1so=";
   };
 
-  cmakeBuildType = if debug then "Debug" else "Release";
+  cmakeBuildType =
+    if debug
+    then "Debug"
+    else "Release";
 
   nativeBuildInputs = [
     cmake
@@ -55,7 +58,7 @@ stdenv.mkDerivation (finalAttrs: {
     install -Dm644 $src/LICENSE -t $out/share/licenses/hyprpicker
   '';
 
-  passthru.updateScript = nix-update-script { };
+  passthru.updateScript = nix-update-script {};
 
   meta = {
     description = "Wlroots-compatible Wayland color picker that does not suck";

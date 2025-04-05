@@ -1,9 +1,9 @@
-{ pkgs }:
+{pkgs}:
 # This is a stub package for Cider (Apple Music client)
 # Used in CI/testing environments where the actual proprietary binary cannot be distributed
 pkgs.writeShellApplication {
   name = "pico8";
-  runtimeInputs = [ pkgs.coreutils ];
+  runtimeInputs = [pkgs.coreutils];
   text = ''
     echo "pico8 (stub package)"
   '';
@@ -18,6 +18,6 @@ pkgs.writeShellApplication {
     '';
     license = licenses.free;
     platforms = platforms.all;
-    maintainers = [ flexiondotorg ];
+    maintainers = [flexiondotorg];
   };
 }

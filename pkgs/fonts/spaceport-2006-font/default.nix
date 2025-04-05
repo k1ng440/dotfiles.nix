@@ -3,7 +3,6 @@
   lib,
   stdenvNoCC,
 }:
-
 stdenvNoCC.mkDerivation rec {
   pname = "spaceport_2006";
   version = "1.000";
@@ -28,8 +27,8 @@ stdenvNoCC.mkDerivation rec {
     '';
     homepage = "https://www.dafont.com/${pname}.font";
     license = lib.licenses.ofl;
-    maintainers = with lib.maintainers; [ flexiondotorg ];
+    maintainers = with lib.maintainers; [flexiondotorg];
     platforms = lib.platforms.all;
-    sourceProvenance = [ lib.sourceTypes.binaryBytecode ];
+    sourceProvenance = [lib.sourceTypes.binaryBytecode];
   };
 }

@@ -1,12 +1,15 @@
-{ python3Packages, lib, fetchzip }:
-
+{
+  python3Packages,
+  lib,
+  fetchzip,
+}:
 python3Packages.buildPythonApplication rec {
   pname = "nerd-font-patcher";
   version = "3.1.1";
 
   src = lib.cleanSource ./${version};
 
-  propagatedBuildInputs = with python3Packages; [ fontforge ];
+  propagatedBuildInputs = with python3Packages; [fontforge];
 
   format = "other";
 
@@ -32,6 +35,6 @@ python3Packages.buildPythonApplication rec {
     mainProgram = "nerd-font-patcher";
     homepage = "https://nerdfonts.com/";
     license = licenses.mit;
-    maintainers = with maintainers; [ ck3d ];
+    maintainers = with maintainers; [ck3d];
   };
 }

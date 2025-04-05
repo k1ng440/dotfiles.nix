@@ -3,18 +3,14 @@
   lib,
   pkgs,
   ...
-}:
-let
+}: let
   inherit (lib) mapAttrs' nameValuePair mkForce;
-  inherit nixpkgs-unstable;
-in
-{
+in {
   environment.systemPackages = with pkgs; [
     zfs
     curl
     diskrsync
     httpie
-    inputs.nixpkgs-unstable.neovim
     ntfs3g
     ntfsprogs
     partclone
@@ -38,11 +34,10 @@ in
   services.resolved.enable = false;
 
   systemd = {
-    network.enable = true;
     network.networks =
       mapAttrs'
-        (
-          num: _:
+      (
+        num: _:
           nameValuePair "eth${num}" {
             extraConfig = ''
               [Match]
@@ -61,15 +56,15 @@ in
               RouteMetric = 512
             '';
           }
-        )
-        {
-          "0" = { };
-          "1" = { };
-          "2" = { };
-          "3" = { };
-        };
+      )
+      {
+        "0" = {};
+        "1" = {};
+        "2" = {};
+        "3" = {};
+      };
     services.update-prefetch.enable = false;
-    services.sshd.wantedBy = mkForce [ "multi-user.target" ];
+    services.sshd.wantedBy = mkForce ["multi-user.target"];
   };
 
   documentation = {
