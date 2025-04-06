@@ -1,20 +1,22 @@
-{
+{inputs, ...}: {
+  imports = [inputs.treefmt-nix.flakeModule];
+
   perSystem = {
-    config,
+    inputs',
     pkgs,
     lib,
+    config,
     ...
   }: {
-    treefmt.config = {
+    treefmt = {
       inherit (config.flake-root) projectRootFile;
-      package = pkgs.treefmt;
+      programs.alejandra.enable = true;
+      programs.alejandra.package = inputs'.nixpkgs-unstable.legacyPackages.alejandra;
 
-      programs = {
-        alejandra.enable = true;
-        prettier.enable = true;
-        shfmt.enable = true;
-        terraform.enable = true;
-      };
+      programs.nixfmt.enable = false;
+      programs.nixfmt.package = pkgs.nixfmt;
+
+      programs.shellcheck.enable = false;
     };
 
     formatter = config.treefmt.build.wrapper;

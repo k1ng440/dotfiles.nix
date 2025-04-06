@@ -4,8 +4,7 @@
     config,
     ...
   }: {
-    devShells.default = pkgs.mkShell {
-      inputsFrom = [config.mission-control.devShell];
-    };
+    devShells.default =
+      pkgs.mkShell {inputsFrom = [config.mission-control.devShell];};
   };
 }

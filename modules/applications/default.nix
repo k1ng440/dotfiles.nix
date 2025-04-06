@@ -1,7 +1,1 @@
-{ ... }:
-{
-  imports = [
-    ./firejail.nix
-    ./flatpak.nix
-  ];
-}
+{...}: {imports = [./firejail.nix ./flatpak.nix];}

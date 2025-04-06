@@ -4,10 +4,7 @@
   variables,
   ...
 }: {
-  home.packages = with pkgs; [
-    lazygit
-    commitizen
-  ];
+  home.packages = with pkgs; [lazygit commitizen];
 
   xdg.configFile.lazygit = {
     source =

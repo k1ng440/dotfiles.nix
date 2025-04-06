@@ -17,23 +17,15 @@
   };
 
   config = {
-    systemd.services.zerotierone.serviceConfig.IPAddressDeny =
-      lib.mkIf config.services.zerotierone.blockRfc1918Addresses
-      [
-        "10.0.0.0/8"
-        "172.16.0.0/12"
-        "192.168.0.0/16"
-      ];
-    services.zerotierone.joinNetworks = [
+    systemd.services.zerotierone.serviceConfig.IPAddressDeny = lib.mkIf config.services.zerotierone.blockRfc1918Addresses [
+      "10.0.0.0/8"
+      "172.16.0.0/12"
+      "192.168.0.0/16"
     ];
+    services.zerotierone.joinNetworks = [];
 
     services.zerotierone.localConf.settings = {
-      interfacePrefixBlacklist = [
-        "tinc"
-        "wiregrill"
-        "hyprspace"
-        "tailscale"
-      ];
+      interfacePrefixBlacklist = ["tinc" "wiregrill" "hyprspace" "tailscale"];
     };
   };
 }

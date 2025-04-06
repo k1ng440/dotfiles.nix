@@ -9,7 +9,8 @@
       version = plugin.src.lastModifiedDate or "0.0.0";
     };
 
-  builtPlugins = builtins.attrValues (builtins.mapAttrs mkVimPlugin rawNvimPlugins);
+  builtPlugins =
+    builtins.attrValues (builtins.mapAttrs mkVimPlugin rawNvimPlugins);
 
   # Merge nvim-treesitter parsers together to reduce vim.api.nvim_list_runtime_paths()
   nvim-treesitter-grammars = pkgs.symlinkJoin {

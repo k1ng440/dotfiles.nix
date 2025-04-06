@@ -58,11 +58,7 @@ in
           gtk-decoration-layout = "${buttonLayout}";
         };
       };
-      gtk4 = {
-        extraConfig = {
-          gtk-decoration-layout = "${buttonLayout}";
-        };
-      };
+      gtk4 = {extraConfig = {gtk-decoration-layout = "${buttonLayout}";};};
       iconTheme = {
         name = "Papirus-Dark";
         package = pkgs.catppuccin-papirus-folders.override {

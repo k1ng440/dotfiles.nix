@@ -51,7 +51,8 @@
           };
         }
         .${prev.stdenv.hostPlatform.system}
-        or (throw "Unsupported system: ${prev.stdenv.hostPlatform.system}");
+        or (throw
+          "Unsupported system: ${prev.stdenv.hostPlatform.system}");
     });
 
     linuxPackages_6_12 = prev.linuxPackages_6_12.extend (_lpself: lpsuper: {

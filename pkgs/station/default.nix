@@ -11,9 +11,7 @@
     url = "https://github.com/getstation/desktop-app/releases/download/v${version}/Station-x86_64.AppImage";
     hash = "sha256-OiUVRKpU2W1dJ6z9Dqvxd+W4/oNpG+Zolj43ZHpKaO0=";
   };
-  appimageContents = appimageTools.extractType2 {
-    inherit pname version src;
-  };
+  appimageContents = appimageTools.extractType2 {inherit pname version src;};
 in
   appimageTools.wrapType2 {
     inherit pname version src;

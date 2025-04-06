@@ -15,9 +15,17 @@ let
     t = "kitty";
   };
 in {
-  nixosModule = {lib, ...}: {
+  nixosModule = {
+    inputs,
+    lib,
+    ...
+  }: {
     services.xremap.config = {
       virtual_modifiers = ["F18"];
+
+      imports = [
+        inputs.xremap-flake.nixosModules.default
+      ];
 
       modmap = [
         {
@@ -37,24 +45,32 @@ in {
           # Needs explicit bindings it seems. Maybe accept F18 as modifier in Hyprland?
           # Basically produces bindings like "F18-e" = "SHIFT-C-M-SUPER-e"
           # These are later handled by hyprland
-          remap = lib.mapAttrs' (name: _: lib.nameValuePair "F18-${name}" "SHIFT-C-M-SUPER-${name}") appMap;
+          remap =
+            lib.mapAttrs'
+            (name: _: lib.nameValuePair "F18-${name}" "SHIFT-C-M-SUPER-${name}")
+            appMap;
         }
       ];
     };
   };
-  homeManagerModule = {srvLib, ...}: let
+  homeManagerModule = {
+    inputs,
+    srvLib,
+    ...
+  }: let
     inherit (srvLib) lib Hyper mainMod;
   in {
-    wayland.windowManager.hyprland.myBinds =
-      lib.mapAttrs' (
-        name: value:
-          lib.nameValuePair "${Hyper}+${name}" {
-            mod = mainMod;
-            dispatcher = "focuswindow";
-            arg = "^(${value})$";
-            description = "Focus '${value}' window";
-          }
-      )
-      appMap;
+    imports = [
+      inputs.xremap-flake.homeManagerModules.default
+    ];
+
+    wayland.windowManager.hyprland.myBinds = lib.mapAttrs' (name: value:
+      lib.nameValuePair "${Hyper}+${name}" {
+        mod = mainMod;
+        dispatcher = "focuswindow";
+        arg = "^(${value})$";
+        description = "Focus '${value}' window";
+      })
+    appMap;
   };
 }

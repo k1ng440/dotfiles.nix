@@ -5,10 +5,10 @@ local project_root = vim.fs.root(0, {
 vim.lsp.config["nix"] = {
     settings = {
         nixpkgs = {
-            expr = "import <nixpkgs> { }",
+           expr = 'import (builtins.getFlake "' .. project_root .. '").inputs.nixpkgs { }   '
         },
         formatting = {
-            command = { "nix fmt" },
+            command = { "nix", "fmt" },
         },
         options = {
             nixos = {

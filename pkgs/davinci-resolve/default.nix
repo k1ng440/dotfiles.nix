@@ -30,153 +30,142 @@
   common-updater-scripts,
   writeShellApplication,
   # overriding pythonPackage allows customizing python in the FHS environment
-  pythonPackage ? (python3.withPackages (python-pkgs:
-    with python-pkgs; [
-      numpy
-    ])),
+  pythonPackage ? (python3.withPackages (python-pkgs: with python-pkgs; [numpy])),
 }: let
-  davinci = (
-    stdenv.mkDerivation rec {
-      pname = "davinci-resolve${lib.optionalString studioVariant "-studio"}";
-      version = "19.1.3";
+  davinci = stdenv.mkDerivation rec {
+    pname = "davinci-resolve${lib.optionalString studioVariant "-studio"}";
+    version = "19.1.3";
 
-      nativeBuildInputs = [
-        (appimage-run.override {buildFHSEnv = buildFHSEnvChroot;})
-        addDriverRunpath
-        copyDesktopItems
-        unzip
-      ];
+    nativeBuildInputs = [
+      (appimage-run.override {buildFHSEnv = buildFHSEnvChroot;})
+      addDriverRunpath
+      copyDesktopItems
+      unzip
+    ];
 
-      # Pretty sure, there are missing dependencies ...
-      buildInputs = [
-        libGLU
-        xorg.libXxf86vm
-      ];
+    # Pretty sure, there are missing dependencies ...
+    buildInputs = [libGLU xorg.libXxf86vm];
 
-      src =
-        runCommandLocal "${pname}-src.zip"
-        rec {
-          outputHashMode = "recursive";
-          outputHashAlgo = "sha256";
-          outputHash =
-            if studioVariant
-            then "sha256-aAKE+AY/a2XjVzdU0VXT3ekFrTp3rO6zUd7pRTTDc9E="
-            else "sha256-CCr4/h0W1fhzUT4o6WyX2hBodzy9iqVLZwzdplzq9SI=";
+    src =
+      runCommandLocal "${pname}-src.zip" rec {
+        outputHashMode = "recursive";
+        outputHashAlgo = "sha256";
+        outputHash =
+          if studioVariant
+          then "sha256-aAKE+AY/a2XjVzdU0VXT3ekFrTp3rO6zUd7pRTTDc9E="
+          else "sha256-CCr4/h0W1fhzUT4o6WyX2hBodzy9iqVLZwzdplzq9SI=";
 
-          impureEnvVars = lib.fetchers.proxyImpureEnvVars;
+        impureEnvVars = lib.fetchers.proxyImpureEnvVars;
 
-          nativeBuildInputs = [
-            curl
-            jq
-          ];
+        nativeBuildInputs = [curl jq];
 
-          # ENV VARS
-          SSL_CERT_FILE = "${cacert}/etc/ssl/certs/ca-bundle.crt";
+        # ENV VARS
+        SSL_CERT_FILE = "${cacert}/etc/ssl/certs/ca-bundle.crt";
 
-          # Get linux.downloadId from HTTP response on https://www.blackmagicdesign.com/products/davinciresolve
-          REFERID = "263d62f31cbb49e0868005059abcb0c9";
-          DOWNLOADSURL = "https://www.blackmagicdesign.com/api/support/us/downloads.json";
-          SITEURL = "https://www.blackmagicdesign.com/api/register/us/download";
-          PRODUCT = "DaVinci Resolve${lib.optionalString studioVariant " Studio"}";
-          VERSION = version;
+        # Get linux.downloadId from HTTP response on https://www.blackmagicdesign.com/products/davinciresolve
+        REFERID = "263d62f31cbb49e0868005059abcb0c9";
+        DOWNLOADSURL = "https://www.blackmagicdesign.com/api/support/us/downloads.json";
+        SITEURL = "https://www.blackmagicdesign.com/api/register/us/download";
+        PRODUCT = "DaVinci Resolve${lib.optionalString studioVariant " Studio"}";
+        VERSION = version;
 
-          USERAGENT = builtins.concatStringsSep " " [
-            "User-Agent: Mozilla/5.0 (X11; Linux ${stdenv.hostPlatform.linuxArch})"
-            "AppleWebKit/537.36 (KHTML, like Gecko)"
-            "Chrome/77.0.3865.75"
-            "Safari/537.36"
-          ];
+        USERAGENT = builtins.concatStringsSep " " [
+          "User-Agent: Mozilla/5.0 (X11; Linux ${stdenv.hostPlatform.linuxArch})"
+          "AppleWebKit/537.36 (KHTML, like Gecko)"
+          "Chrome/77.0.3865.75"
+          "Safari/537.36"
+        ];
 
-          REQJSON = builtins.toJSON {
-            "firstname" = "NixOS";
-            "lastname" = "Linux";
-            "email" = "someone@nixos.org";
-            "phone" = "+31 71 452 5670";
-            "country" = "nl";
-            "street" = "-";
-            "state" = "Province of Utrecht";
-            "city" = "Utrecht";
-            "product" = PRODUCT;
-          };
-        }
-        ''
-          DOWNLOADID=$(
-            curl --silent --compressed "$DOWNLOADSURL" \
-              | jq --raw-output '.downloads[] | .urls.Linux?[]? | select(.downloadTitle | test("^'"$PRODUCT $VERSION"'( Update)?$")) | .downloadId'
-          )
-          echo "downloadid is $DOWNLOADID"
-          test -n "$DOWNLOADID"
-          RESOLVEURL=$(curl \
-            --silent \
-            --header 'Host: www.blackmagicdesign.com' \
-            --header 'Accept: application/json, text/plain, */*' \
-            --header 'Origin: https://www.blackmagicdesign.com' \
-            --header "$USERAGENT" \
-            --header 'Content-Type: application/json;charset=UTF-8' \
-            --header "Referer: https://www.blackmagicdesign.com/support/download/$REFERID/Linux" \
-            --header 'Accept-Encoding: gzip, deflate, br' \
-            --header 'Accept-Language: en-US,en;q=0.9' \
-            --header 'Authority: www.blackmagicdesign.com' \
-            --header 'Cookie: _ga=GA1.2.1849503966.1518103294; _gid=GA1.2.953840595.1518103294' \
-            --data-ascii "$REQJSON" \
-            --compressed \
-            "$SITEURL/$DOWNLOADID")
-          echo "resolveurl is $RESOLVEURL"
+        REQJSON = builtins.toJSON {
+          "firstname" = "NixOS";
+          "lastname" = "Linux";
+          "email" = "someone@nixos.org";
+          "phone" = "+31 71 452 5670";
+          "country" = "nl";
+          "street" = "-";
+          "state" = "Province of Utrecht";
+          "city" = "Utrecht";
+          "product" = PRODUCT;
+        };
+      } ''
+        DOWNLOADID=$(
+          curl --silent --compressed "$DOWNLOADSURL" \
+            | jq --raw-output '.downloads[] | .urls.Linux?[]? | select(.downloadTitle | test("^'"$PRODUCT $VERSION"'( Update)?$")) | .downloadId'
+        )
+        echo "downloadid is $DOWNLOADID"
+        test -n "$DOWNLOADID"
+        RESOLVEURL=$(curl \
+          --silent \
+          --header 'Host: www.blackmagicdesign.com' \
+          --header 'Accept: application/json, text/plain, */*' \
+          --header 'Origin: https://www.blackmagicdesign.com' \
+          --header "$USERAGENT" \
+          --header 'Content-Type: application/json;charset=UTF-8' \
+          --header "Referer: https://www.blackmagicdesign.com/support/download/$REFERID/Linux" \
+          --header 'Accept-Encoding: gzip, deflate, br' \
+          --header 'Accept-Language: en-US,en;q=0.9' \
+          --header 'Authority: www.blackmagicdesign.com' \
+          --header 'Cookie: _ga=GA1.2.1849503966.1518103294; _gid=GA1.2.953840595.1518103294' \
+          --data-ascii "$REQJSON" \
+          --compressed \
+          "$SITEURL/$DOWNLOADID")
+        echo "resolveurl is $RESOLVEURL"
 
-          curl \
-            --retry 3 --retry-delay 3 \
-            --header "Upgrade-Insecure-Requests: 1" \
-            --header "$USERAGENT" \
-            --header "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8" \
-            --header "Accept-Language: en-US,en;q=0.9" \
-            --compressed \
-            "$RESOLVEURL" \
-            > $out
-        '';
-
-      # The unpack phase won't generate a directory
-      sourceRoot = ".";
-
-      installPhase = let
-        appimageName = "DaVinci_Resolve_${lib.optionalString studioVariant "Studio_"}${version}_Linux.run";
-      in ''
-        runHook preInstall
-
-        export HOME=$PWD/home
-        mkdir -p $HOME
-
-        mkdir -p $out
-        test -e ${lib.escapeShellArg appimageName}
-        appimage-run ${lib.escapeShellArg appimageName} -i -y -n -C $out
-
-        mkdir -p $out/{configs,DolbyVision,easyDCP,Fairlight,GPUCache,lib,logs,Media,"Resolve Disk Database",.crashreport,.license,.LUT}
-
-        # For hardware panel support, Resolve requires the panel libraries to be unpacked to the
-        # library search path within the FHS environment.
-        tar xf $out/share/panels/dvpanel-framework-linux-x86_64.tgz -C $out/lib
-
-        runHook postInstall
+        curl \
+          --retry 3 --retry-delay 3 \
+          --header "Upgrade-Insecure-Requests: 1" \
+          --header "$USERAGENT" \
+          --header "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8" \
+          --header "Accept-Language: en-US,en;q=0.9" \
+          --compressed \
+          "$RESOLVEURL" \
+          > $out
       '';
 
-      dontStrip = true;
+    # The unpack phase won't generate a directory
+    sourceRoot = ".";
 
-      postFixup = ''
-        for program in $out/bin/*; do
-          isELF "$program" || continue
+    installPhase = let
+      appimageName = "DaVinci_Resolve_${
+        lib.optionalString studioVariant "Studio_"
+      }${version}_Linux.run";
+    in ''
+      runHook preInstall
+
+      export HOME=$PWD/home
+      mkdir -p $HOME
+
+      mkdir -p $out
+      test -e ${lib.escapeShellArg appimageName}
+      appimage-run ${lib.escapeShellArg appimageName} -i -y -n -C $out
+
+      mkdir -p $out/{configs,DolbyVision,easyDCP,Fairlight,GPUCache,lib,logs,Media,"Resolve Disk Database",.crashreport,.license,.LUT}
+
+      # For hardware panel support, Resolve requires the panel libraries to be unpacked to the
+      # library search path within the FHS environment.
+      tar xf $out/share/panels/dvpanel-framework-linux-x86_64.tgz -C $out/lib
+
+      runHook postInstall
+    '';
+
+    dontStrip = true;
+
+    postFixup = ''
+      for program in $out/bin/*; do
+        isELF "$program" || continue
+        addDriverRunpath "$program"
+      done
+
+      for program in $out/libs/*; do
+        isELF "$program" || continue
+        if [[ "$program" != *"libcudnn_cnn_infer"* ]];then
+          echo $program
           addDriverRunpath "$program"
-        done
-
-        for program in $out/libs/*; do
-          isELF "$program" || continue
-          if [[ "$program" != *"libcudnn_cnn_infer"* ]];then
-            echo $program
-            addDriverRunpath "$program"
-          fi
-        done
-        ln -s $out/libs/libcrypto.so.1.1 $out/libs/libcrypt.so.1
-      '';
-    }
-  );
+        fi
+      done
+      ln -s $out/libs/libcrypto.so.1.1 $out/libs/libcrypt.so.1
+    '';
+  };
 
   fhs = buildFHSEnv {
     pname = "${davinci.pname}-fhs";
@@ -247,15 +236,15 @@
     # https://discourse.nixos.org/t/davinci-resolve-studio-install-issues/37699/44
     extraBwrapArgs =
       lib.optionals studioVariant [
-        "--bind \"$HOME\"/.local/share/DaVinciResolve/license ${davinci}/.license"
+        ''--bind "$HOME"/.local/share/DaVinciResolve/license ${davinci}/.license''
       ]
-      ++ [
-        "--bind /run/opengl-driver/etc/OpenCL /etc/OpenCL"
-      ];
+      ++ ["--bind /run/opengl-driver/etc/OpenCL /etc/OpenCL"];
 
-    runScript = "${bash}/bin/bash ${writeText "davinci-wrapper" ''
-      exec "$@"
-    ''}";
+    runScript = "${bash}/bin/bash ${
+      writeText "davinci-wrapper" ''
+        exec "$@"
+      ''
+    }";
 
     extraInstallCommands = ''
       mkdir -p $out/share/applications
@@ -314,7 +303,7 @@
       > $out/share/mime/packages/${davinci.pname}.xml
   '';
 
-  wrapper = ''${fhs}/bin/${davinci.pname}-fhs'';
+  wrapper = "${fhs}/bin/${davinci.pname}-fhs";
 
   # creates a derivation that wraps the "path" command with arguments in "args" list to run inside the FHS
   # the directories in "libs" and "plugins" are put into LD_LIBRARY_PATH and QT_PLUGIN_PATH
@@ -329,25 +318,47 @@
       export RESOLVE_SCRIPT_LIB="${davinci}/libs/Fusion/fusionscript.so"
       export PYTHONPATH="$PYTHONPATH:${davinci}/Developer/Scripting/Modules"
 
-      exec ${lib.strings.concatMapStringsSep " " lib.escapeShellArg ([wrapper] ++ args)} "$@"
+      exec ${
+        lib.strings.concatMapStringsSep " " lib.escapeShellArg
+        ([wrapper] ++ args)
+      } "$@"
     '';
 
   # wrap main executable
-  resolveWrapper = mkWrapper "${davinci.pname}" "${davinci}/libs" "${davinci}/libs/plugins" ["${davinci}/bin/resolve"];
+  resolveWrapper =
+    mkWrapper "${davinci.pname}" "${davinci}/libs" "${davinci}/libs/plugins"
+    ["${davinci}/bin/resolve"];
 
   # This provides the "davinci-resolve-shell"/"davinci-resolve-studio-shell" command to open a shell in the correct FHS
   # in order to simplify running Resolve and related tools from the command line.
-  resolveShellWrapper = mkWrapper "${davinci.pname}-shell" "${davinci}/libs" "${davinci}/libs/plugins" ["/usr/bin/env" "bash"];
+  resolveShellWrapper =
+    mkWrapper "${davinci.pname}-shell" "${davinci}/libs"
+    "${davinci}/libs/plugins" ["/usr/bin/env" "bash"];
 
-  panelSetupWrapper = mkWrapper "${davinci.pname}-panels" "${davinci}/DaVinci Control Panels Setup" "${davinci}/DaVinci Control Panels Setup/plugins" ["${davinci}/DaVinci Control Panels Setup/DaVinci Control Panels Setup"];
+  panelSetupWrapper =
+    mkWrapper "${davinci.pname}-panels"
+    "${davinci}/DaVinci Control Panels Setup"
+    "${davinci}/DaVinci Control Panels Setup/plugins"
+    ["${davinci}/DaVinci Control Panels Setup/DaVinci Control Panels Setup"];
 
-  rawSpeedTestWrapper = mkWrapper "${davinci.pname}-raw-speed-test" "${davinci}/BlackmagicRAWSpeedTest/lib" "${davinci}/BlackmagicRAWSpeedTest/plugins" ["${davinci}/BlackmagicRAWSpeedTest/BlackmagicRAWSpeedTest"];
+  rawSpeedTestWrapper =
+    mkWrapper "${davinci.pname}-raw-speed-test"
+    "${davinci}/BlackmagicRAWSpeedTest/lib"
+    "${davinci}/BlackmagicRAWSpeedTest/plugins"
+    ["${davinci}/BlackmagicRAWSpeedTest/BlackmagicRAWSpeedTest"];
 
-  rawPlayerWrapper = mkWrapper "${davinci.pname}-raw-player" "${davinci}/BlackmagicRAWPlayer/lib" "${davinci}/BlackmagicRAWPlayer/plugins" ["${davinci}/BlackmagicRAWPlayer/BlackmagicRAWPlayer"];
+  rawPlayerWrapper =
+    mkWrapper "${davinci.pname}-raw-player" "${davinci}/BlackmagicRAWPlayer/lib"
+    "${davinci}/BlackmagicRAWPlayer/plugins"
+    ["${davinci}/BlackmagicRAWPlayer/BlackmagicRAWPlayer"];
 
-  remoteMonitorWrapper = mkWrapper "${davinci.pname}-monitor" "${davinci}/libs" "${davinci}/libs/plugins" ["${davinci}/bin/DaVinci Remote Monitor"];
+  remoteMonitorWrapper =
+    mkWrapper "${davinci.pname}-monitor" "${davinci}/libs"
+    "${davinci}/libs/plugins" ["${davinci}/bin/DaVinci Remote Monitor"];
 
-  pythonWrapper = mkWrapper "${davinci.pname}-python" "${davinci}/libs" "${davinci}/libs/plugins" ["${pythonPackage}/bin/python"];
+  pythonWrapper =
+    mkWrapper "${davinci.pname}-python" "${davinci}/libs"
+    "${davinci}/libs/plugins" ["${pythonPackage}/bin/python"];
 
   product = "DaVinci Resolve${lib.optionalString studioVariant " Studio"}";
 in
@@ -377,12 +388,7 @@ in
           mimeTypes = ["application/x-resolveproj"];
           startupNotify = true;
           terminal = false;
-          categories = [
-            "AudioVideo"
-            "AudioVideoEditing"
-            "Video"
-            "Graphics"
-          ];
+          categories = ["AudioVideo" "AudioVideoEditing" "Video" "Graphics"];
         })
 
         (makeDesktopItem {
@@ -390,12 +396,7 @@ in
           desktopName = "${product} Control Panels Setup";
           exec = "${panelSetupWrapper}/bin/${davinci.pname}-panels";
           icon = "${davinci.pname}-panels";
-          categories = [
-            "AudioVideo"
-            "AudioVideoEditing"
-            "Video"
-            "Graphics"
-          ];
+          categories = ["AudioVideo" "AudioVideoEditing" "Video" "Graphics"];
         })
 
         (makeDesktopItem {
@@ -403,12 +404,7 @@ in
           desktopName = "${product} Blackmagic RAW Speed Test";
           exec = "${rawSpeedTestWrapper}/bin/${davinci.pname}-raw-speed-test";
           icon = "${davinci.pname}-raw-speed-test";
-          categories = [
-            "AudioVideo"
-            "AudioVideoEditing"
-            "Video"
-            "Graphics"
-          ];
+          categories = ["AudioVideo" "AudioVideoEditing" "Video" "Graphics"];
         })
 
         (makeDesktopItem {
@@ -418,12 +414,7 @@ in
           icon = "${davinci.pname}-raw-player";
           mimeTypes = ["application/x-braw-clip" "application/x-braw-sidecar"];
           terminal = false;
-          categories = [
-            "AudioVideo"
-            "AudioVideoEditing"
-            "Video"
-            "Graphics"
-          ];
+          categories = ["AudioVideo" "AudioVideoEditing" "Video" "Graphics"];
         })
       ]
       ++ lib.lists.optionals studioVariant [
@@ -437,12 +428,7 @@ in
           exec = "${remoteMonitorWrapper}/bin/${davinci.pname}-monitor";
           icon = "${davinci.pname}-monitor";
           startupNotify = true;
-          categories = [
-            "AudioVideo"
-            "AudioVideoEditing"
-            "Video"
-            "Graphics"
-          ];
+          categories = ["AudioVideo" "AudioVideoEditing" "Video" "Graphics"];
         })
       ];
 
@@ -450,11 +436,7 @@ in
       inherit davinci;
       updateScript = lib.getExe (writeShellApplication {
         name = "update-davinci-resolve";
-        runtimeInputs = [
-          curl
-          jq
-          common-updater-scripts
-        ];
+        runtimeInputs = [curl jq common-updater-scripts];
         text = ''
           set -o errexit
           drv=pkgs/by-name/da/davinci-resolve/package.nix
@@ -509,17 +491,13 @@ in
           DaVinci Resolve Studio additionally support remote scripting. Example:
           ```
           ${davinci.pname} -nogui & sleep 30  # wait until Resolve has started up
-          SCRIPTING_PATH=''$(${davinci.pname}-shell -c "printenv RESOLVE_SCRIPT_API")
-          ${davinci.pname}-python ''$SCRIPTING_PATH/Examples/4_display_project_and_folder_tree.py
+          SCRIPTING_PATH=$(${davinci.pname}-shell -c "printenv RESOLVE_SCRIPT_API")
+          ${davinci.pname}-python $SCRIPTING_PATH/Examples/4_display_project_and_folder_tree.py
           ```
         '');
       homepage = "https://www.blackmagicdesign.com/products/davinciresolve";
       license = licenses.unfree;
-      maintainers = with maintainers; [
-        amarshall
-        jshcmpbll
-        orivej
-      ];
+      maintainers = with maintainers; [amarshall jshcmpbll orivej];
       platforms = ["x86_64-linux"];
       sourceProvenance = with sourceTypes; [binaryNativeCode];
       mainProgram = "${davinci.pname}";

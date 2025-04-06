@@ -74,7 +74,9 @@
       clean = {
         category = "Utils";
         description = "Cleans any result produced by Nix or associated tools";
-        exec = pkgs.writeShellScriptBin "clean" "rm -rf result* *.qcow2 && echo 'done'";
+        exec =
+          pkgs.writeShellScriptBin "clean"
+          "rm -rf result* *.qcow2 && echo 'done'";
       };
 
       run-vm = {
@@ -86,7 +88,8 @@
       save-disk-encryption-key = {
         category = "Encryption";
         description = "Decrypt encrypted file using sops and save it to disk";
-        exec = "${pkgs.sops}/bin/sops --decrypt --extract \"['$TARGET_HOST']['luks_password']\" \"$CONFIG_DIR/secrets/secrets.yaml\" > /tmp/luks_password";
+        exec = ''
+          ${pkgs.sops}/bin/sops --decrypt --extract "['$TARGET_HOST']['luks_password']" "$CONFIG_DIR/secrets/secrets.yaml" > /tmp/luks_password'';
       };
     };
   };

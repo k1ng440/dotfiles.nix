@@ -5,6 +5,4 @@
     runtimeInputs = with pkgs; [coreutils-full];
     text = builtins.readFile ./${name}.sh;
   };
-in {
-  home.packages = with pkgs; [shellApplication];
-}
+in {home.packages = with pkgs; [shellApplication];}

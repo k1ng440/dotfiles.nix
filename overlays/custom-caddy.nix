@@ -2,21 +2,11 @@
 # https://mdleom.com/blog/2021/12/27/caddy-plugins-nixos/#build-custom-plugins-with-xcaddy
 # https://vincent.bernat.ch/en/blog/2024-caddy-nix-plugins
 {pkgs, ...}: let
-  inherit
-    (pkgs)
-    buildGoModule
-    cacert
-    caddy
-    go
-    lib
-    stdenv
-    xcaddy
-    ;
+  inherit (pkgs) buildGoModule cacert caddy go lib stdenv xcaddy;
 in
   caddy.override {
     buildGoModule = args:
-      buildGoModule (
-        args
+      buildGoModule (args
         // {
           src = stdenv.mkDerivation rec {
             pname = "caddy-using-xcaddy-${xcaddy.version}";
@@ -25,14 +15,9 @@ in
             dontUnpack = true;
             dontFixup = true;
 
-            nativeBuildInputs = [
-              cacert
-              go
-            ];
+            nativeBuildInputs = [cacert go];
 
-            plugins = [
-              "github.com/WeidiDeng/caddy-cloudflare-ip"
-            ];
+            plugins = ["github.com/WeidiDeng/caddy-cloudflare-ip"];
 
             configurePhase = ''
               export GOCACHE=$TMPDIR/go-cache
@@ -57,11 +42,7 @@ in
           };
 
           subPackages = ["."];
-          ldflags = [
-            "-s"
-            "-w"
-          ]; # # don't include version info twice
+          ldflags = ["-s" "-w"]; # # don't include version info twice
           vendorHash = null;
-        }
-      );
+        });
   }

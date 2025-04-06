@@ -27,15 +27,9 @@ in
 
     vendorHash = null;
 
-    ldflags = [
-      "-s"
-      "-w"
-      "-X main.Version=${version}"
-    ];
+    ldflags = ["-s" "-w" "-X main.Version=${version}"];
 
-    tags = [
-      "kvformat"
-    ];
+    tags = ["kvformat"];
 
     postInstall = ''
       tar xf ${web-assets}

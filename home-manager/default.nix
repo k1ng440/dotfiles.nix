@@ -62,7 +62,7 @@ in {
         builtins.readFile ./_mixins/configs/yazi-keymap.toml;
       "${config.xdg.configHome}/fish/functions/help.fish".text =
         builtins.readFile ./_mixins/configs/help.fish;
-      ".hidden".text = ''snap'';
+      ".hidden".text = "snap";
     };
 
     # A Modern Unix experience
@@ -173,14 +173,10 @@ in {
       outputs.overlays.unstable-packages
     ];
     # Configure your nixpkgs instance
-    config = {
-      allowUnfree = true;
-    };
+    config = {allowUnfree = true;};
   };
 
-  nix = {
-    package = pkgs.nixVersions.latest;
-  };
+  nix = {package = pkgs.nixVersions.latest;};
 
   programs = {
     aria2.enable = true;
@@ -204,14 +200,8 @@ in {
     };
     bat = {
       enable = true;
-      extraPackages = with pkgs.bat-extras; [
-        batgrep
-        batwatch
-        prettybat
-      ];
-      config = {
-        style = "plain";
-      };
+      extraPackages = with pkgs.bat-extras; [batgrep batwatch prettybat];
+      config = {style = "plain";};
     };
     bottom = {
       enable = true;
@@ -240,9 +230,7 @@ in {
         rocmSupport = isLinux && hasNvidiaGPU;
       };
     };
-    cava = {
-      enable = isLinux;
-    };
+    cava = {enable = isLinux;};
     dircolors = {
       enable = true;
       enableBashIntegration = true;
@@ -253,19 +241,14 @@ in {
       enable = true;
       enableBashIntegration = true;
       enableZshIntegration = true;
-      nix-direnv = {
-        enable = true;
-      };
+      nix-direnv = {enable = true;};
     };
     eza = {
       enable = true;
       enableBashIntegration = true;
       enableFishIntegration = true;
       enableZshIntegration = true;
-      extraOptions = [
-        "--group-directories-first"
-        "--header"
-      ];
+      extraOptions = ["--group-directories-first" "--header"];
       git = true;
       icons = "auto";
     };
@@ -273,7 +256,9 @@ in {
       enable = true;
       shellAliases = {
         banner = lib.mkIf isLinux "${pkgs.figlet}/bin/figlet";
-        banner-color = lib.mkIf isLinux "${pkgs.figlet}/bin/figlet $argv | ${pkgs.dotacat}/bin/dotacat";
+        banner-color =
+          lib.mkIf isLinux
+          "${pkgs.figlet}/bin/figlet $argv | ${pkgs.dotacat}/bin/dotacat";
         brg = "${pkgs.bat-extras.batgrep}/bin/batgrep";
         cat = "${pkgs.bat}/bin/bat --paging=never";
         clock =
@@ -338,11 +323,7 @@ in {
     };
     nix-index.enable = true;
     ripgrep = {
-      arguments = [
-        "--colors=line:style:bold"
-        "--max-columns-preview"
-        "--smart-case"
-      ];
+      arguments = ["--colors=line:style:bold" "--max-columns-preview" "--smart-case"];
       enable = true;
     };
     starship = {
@@ -353,9 +334,7 @@ in {
       settings = {
         add_newline = false;
         command_timeout = 1000;
-        time = {
-          disabled = true;
-        };
+        time = {disabled = true;};
         format = lib.concatStrings [
           "[](surface1)"
           "$os"
@@ -770,7 +749,12 @@ in {
       settings = {
         daemon = {
           default_parallel_tasks = 1;
-          callback = "${pkgs.notify-desktop}/bin/notify-desktop \"Task {{ id }}\nCommand: {{ command }}\nPath: {{ path }}\nFinished with status '{{ result }}'\nTook: $(bc <<< \"{{end}} - {{start}}\") seconds\" --app-name=pueue";
+          callback = ''
+            ${pkgs.notify-desktop}/bin/notify-desktop "Task {{ id }}
+            Command: {{ command }}
+            Path: {{ path }}
+            Finished with status '{{ result }}'
+            Took: $(bc <<< "{{end}} - {{start}}") seconds" --app-name=pueue'';
         };
       };
     };

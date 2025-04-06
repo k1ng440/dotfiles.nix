@@ -28,10 +28,7 @@
     k9s
     (writeShellApplication {
       name = "kctx";
-      runtimeInputs = [
-        kubectl
-        fzf
-      ];
+      runtimeInputs = [kubectl fzf];
       text = ''
         kubectl config get-contexts -o name \
         | fzf --height=10 \
@@ -40,10 +37,7 @@
     })
     (writeShellApplication {
       name = "kctn";
-      runtimeInputs = [
-        kubectl
-        fzf
-      ];
+      runtimeInputs = [kubectl fzf];
       text = ''
         kubectl get namespaces -o jsonpath='{range .items[*]}{.metadata.name}{"\n"}{end}' \
           | fzf --height=10 \

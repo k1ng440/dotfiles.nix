@@ -2,9 +2,7 @@
   description = "k1ng's NixOS, nix-darwin and Home Manager Configuration";
 
   nixConfig = {
-    extra-substituters = [
-      "https://nix-community.cachix.org"
-    ];
+    extra-substituters = ["https://nix-community.cachix.org"];
     extra-trusted-public-keys = [
       "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
     ];
@@ -25,101 +23,83 @@
     lib = nixpkgs.lib;
     home-manager-lib = home-manager.lib;
     flake-parts-lib = flake-parts.lib;
-    mylib = import ./nix/lib {
-      lib = nixpkgs.lib;
-    };
+    mylib = import ./nix/lib {lib = nixpkgs.lib;};
     # rawNvimPlugins = helper.filterInputsByPrefix { inherit (nixpkgs) lib; } "nvim-plugin-";
-  in (
-    flake-parts.lib.mkFlake
-    {
+  in (flake-parts.lib.mkFlake {
       inherit inputs;
-      specialArgs = {
-        inherit
-          lib
-          mylib
-          home-manager-lib
-          flake-parts-lib
-          ;
-      };
-    } (
-      {
-        withSystem,
-        moduleWithSystem,
-        flake-parts-lib,
-        ...
-      }: let
-        inherit (flake-parts-lib) importApply;
+      specialArgs = {inherit lib mylib home-manager-lib flake-parts-lib;};
+    } ({
+      withSystem,
+      moduleWithSystem,
+      flake-parts-lib,
+      ...
+    }: let
+      inherit (flake-parts-lib) importApply;
 
-        flakeModules = {
-          desktopEnvironment = importApply ./flake-modules/desktopEnvironment { inherit withSystem self; };
-          nixosModules = importApply ./nixos {inherit withSystem moduleWithSystem flake-parts-lib;};
+      flakeModules = {
+        desktop-environment = importApply ./flake-modules/desktop-environment {
+          inherit withSystem self;
         };
-
-        # # Nix Modules
-        # nixModules = importApply ./nix {inherit withSystem moduleWithSystem flake-parts-lib;};
-        #
-        #
-        # # NixOS and Home manager modules
-        # homeixModules = importApply ./homeix {inherit withSystem moduleWithSystem flake-parts-lib;};
-        #
-        # # Home manager modules
-        # homeModules = importApply ./home {inherit withSystem moduleWithSystem flake-parts-lib;};
-        #
-        #   desktopEnvironment = importApply ./flake-modules/desktopEnvironment { inherit withSystem self; };
-
-      in {
-        # Debug: https://flake.parts/debug.html
-        debug = true;
-        imports = [
+        nixosModules = importApply ./nixos {
+          inherit withSystem moduleWithSystem flake-parts-lib;
+        };
+      };
+      # # Nix Modules
+      # nixModules = importApply ./nix {inherit withSystem moduleWithSystem flake-parts-lib;};
+      #
+      #
+      # # NixOS and Home manager modules
+      # homeixModules = importApply ./homeix {inherit withSystem moduleWithSystem flake-parts-lib;};
+      #
+      # # Home manager modules
+      # homeModules = importApply ./home {inherit withSystem moduleWithSystem flake-parts-lib;};
+      #
+      #   desktopEnvironment = importApply ./flake-modules/desktopEnvironment { inherit withSystem self; };
+    in {
+      # Debug: https://flake.parts/debug.html
+      debug = true;
+      imports =
+        [
           ./nix/merger/mkHomeManagerOutputsMerge.nix
           treefmt-nix.flakeModule
           flake-root.flakeModule
           mission-control.flakeModule
           devshell.flakeModule
-        ] ++ (builtins.attrValues flakeModules);
+          ./nix/formatter.nix
+        ]
+        ++ (builtins.attrValues flakeModules);
 
-
-        # imports =
-        #     [ # mergers
-        #       ./nix/merger/mkHomeManagerOutputsMerge.nix
-        #     ] ++
-        #     [
-        #   treefmt-nix.flakeModule
-        #   flake-root.flakeModule
-        #   mission-control.flakeModule
-        #   devshell.flakeModule
-        #   # sops-nix.nixosModules.sops
-        #
-        #   nixModules
-        #   nixosModules
-        #   homeixModules
-        #   homeModules
-        #   desktopEnvironment
-        # ];
-        systems = [
-          "x86_64-linux"
-          "aarch64-linux"
-          "x86_64-darwin"
-          "aarch64-darwin"
-        ];
-      }
-    )
-  );
+      # imports =
+      #     [ # mergers
+      #       ./nix/merger/mkHomeManagerOutputsMerge.nix
+      #     ] ++
+      #     [
+      #   treefmt-nix.flakeModule
+      #   flake-root.flakeModule
+      #   mission-control.flakeModule
+      #   devshell.flakeModule
+      #   # sops-nix.nixosModules.sops
+      #
+      #   nixModules
+      #   nixosModules
+      #   homeixModules
+      #   homeModules
+      #   desktopEnvironment
+      # ];
+      systems = ["x86_64-linux" "aarch64-linux" "x86_64-darwin" "aarch64-darwin"];
+    }));
 
   # Imports
   inputs = {
-    nixpkgs = {
-      url = "github:nixos/nixpkgs/nixos-24.11";
-    };
-    nixpkgs-unstable = {
-      url = "github:nixos/nixpkgs/nixos-unstable";
-    };
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-24.11";
+    nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
+    stub-flake.url = "github:k1ng440/stub-flake"; # A completely empty flake
 
     # flake-parts
     flake-parts = {
       url = "github:hercules-ci/flake-parts";
-      inputs.nixpkgs-lib.follows = "nixpkgs";
     };
+
     flake-root.url = "github:srid/flake-root";
     mission-control.url = "github:Platonic-Systems/mission-control";
 
@@ -137,7 +117,7 @@
     };
     disko = {
       url = "github:nix-community/disko";
-      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
     treefmt-nix = {
       url = "github:numtide/treefmt-nix";
@@ -161,6 +141,23 @@
     flake-registry = {
       url = "github:NixOS/flake-registry";
       flake = false;
+    };
+    agenix = {
+      url = "github:ryantm/agenix";
+      inputs = {
+        nixpkgs.follows = "nixpkgs-unstable";
+        darwin.follows = "stub-flake";
+        home-manager.follows = "home-manager";
+      };
+    };
+    xremap-flake = {
+      url = "github:xremap/nix-flake";
+      inputs = {
+        treefmt-nix.follows = "treefmt-nix";
+        devshell.follows = "devshell";
+        hyprland.follows = "stub-flake";
+        home-manager.follows = "stub-flake";
+      };
     };
 
     # nixos-needsreboot = {

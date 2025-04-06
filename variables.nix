@@ -7,13 +7,7 @@ in {
 
   homeDirectory = {
     path = homeDirectory;
-    directories = [
-      "Documents"
-      "Downloads"
-      "Music"
-      "Pictures"
-      "Videos"
-    ];
+    directories = ["Documents" "Downloads" "Music" "Pictures" "Videos"];
   };
 
   initialUserPassword = "changeme";

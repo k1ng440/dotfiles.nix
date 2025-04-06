@@ -8,8 +8,12 @@
   ...
 }: let
   normalPackages = [];
-  nvimConfigDirectory = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/nix-config/nvim";
-  intelephenseLicenseFile = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/nix-config/secrets/intelephense-license.txt";
+  nvimConfigDirectory =
+    config.lib.file.mkOutOfStoreSymlink
+    "${config.home.homeDirectory}/nix-config/nvim";
+  intelephenseLicenseFile =
+    config.lib.file.mkOutOfStoreSymlink
+    "${config.home.homeDirectory}/nix-config/secrets/intelephense-license.txt";
   plugins = import ./plugins.nix {inherit pkgs rawNvimPlugins;};
 in {
   programs.neovim = {
@@ -60,7 +64,9 @@ in {
   };
 
   xdg.configFile = {
-    nvim.source = config.lib.file.mkOutOfStoreSymlink "${variables.dotfilesLocation}" + (builtins.toPath "/home/nvim/config");
+    nvim.source =
+      config.lib.file.mkOutOfStoreSymlink "${variables.dotfilesLocation}"
+      + (builtins.toPath "/home/nvim/config");
     "intelephense/license.txt".source = intelephenseLicenseFile;
   };
 }

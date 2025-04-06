@@ -5,6 +5,6 @@ _: {
     ./xdgPortal.nix
     ./hyprland.nix
     ./lock.nix
-    (import ../app-jumps.nix).nixosModule
+    # (import ../app-jumps.nix).nixosModule
   ];
 }

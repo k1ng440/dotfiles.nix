@@ -16,8 +16,7 @@ in
         [
           "${pkgs.swayosd}/bin/swayosd-client"
           "--brightness=-${toString settings.brightnessStepPct}"
-        ]
-        |> lib.concatStringsSep " ";
+        ] |> lib.concatStringsSep " ";
     };
     XF86MonBrightnessUp = {
       dispatcher = "exec";
@@ -26,8 +25,7 @@ in
         [
           "${pkgs.swayosd}/bin/swayosd-client"
           "--brightness=+${toString settings.brightnessStepPct}"
-        ]
-        |> lib.concatStringsSep " ";
+        ] |> lib.concatStringsSep " ";
     };
     F7 = XF86MonBrightnessDown;
     F8 = XF86MonBrightnessUp;

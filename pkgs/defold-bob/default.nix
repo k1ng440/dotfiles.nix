@@ -19,11 +19,7 @@ stdenv.mkDerivation rec {
 
   nativeBuildInputs = [makeWrapper];
 
-  buildInputs = [
-    jdk17
-    libXext
-    libXtst
-  ];
+  buildInputs = [jdk17 libXext libXtst];
 
   dontBuild = true;
   dontConfigure = true;

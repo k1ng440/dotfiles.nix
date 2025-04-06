@@ -25,13 +25,8 @@ stdenv.mkDerivation rec {
 
   unpackCmd = ''${unzip}/bin/unzip "$src"'';
 
-  nativeBuildInputs = [
-    autoPatchelfHook
-    copyDesktopItems
-  ];
-  buildInputs = [
-    SDL2
-  ];
+  nativeBuildInputs = [autoPatchelfHook copyDesktopItems];
+  buildInputs = [SDL2];
 
   dontBuild = true;
   dontConfigure = true;
@@ -51,20 +46,12 @@ stdenv.mkDerivation rec {
     (makeDesktopItem rec {
       name = "pico-8";
       desktopName = "PICO-8";
-      keywords = [
-        "Game"
-        "Retro"
-        "Development"
-      ];
+      keywords = ["Game" "Retro" "Development"];
       exec = "pico8";
       terminal = false;
       type = "Application";
       icon = "pico8";
-      categories = [
-        "Development"
-        "IDE"
-        "Game"
-      ];
+      categories = ["Development" "IDE" "Game"];
       startupNotify = true;
       actions = {
         "Windowed" = {

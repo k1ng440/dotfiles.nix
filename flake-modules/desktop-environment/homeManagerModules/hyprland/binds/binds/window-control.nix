@@ -65,8 +65,7 @@ in
         # this is done in the attrname so that the later update does not overwrite the keys
         transforms
         |> lib.mapAttrs' (n: v: lib.nameValuePair ("${smallToBigKeyboardButton}+${n}") v)
-        # Change the small step to the big step
-        |> lib.mapAttrs (
+        |> (lib.mapAttrs (
           _: v:
           let
             # These functions will be applied to the value at the corresponding positions
@@ -86,7 +85,7 @@ in
           |> lib.lists.zipLists funcs
           # Apply func (fst) to values (fst), end up with a list
           |> (map (x: x.fst x.snd))
-        )
+        ))
         |> lib.mergeAttrs transforms;
     in
     {
@@ -154,5 +153,4 @@ in
     arg = 1;
     description = "Toggle active window focus";
   };
-
 }

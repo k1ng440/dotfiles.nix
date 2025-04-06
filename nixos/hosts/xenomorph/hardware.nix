@@ -4,9 +4,7 @@
   lib,
   ...
 }: {
-  imports = [
-    "${modulesPath}/installer/scan/not-detected.nix"
-  ];
+  imports = ["${modulesPath}/installer/scan/not-detected.nix"];
 
   boot = {
     initrd.availableKernelModules = [
@@ -29,7 +27,8 @@
   powerManagement.cpuFreqGovernor = lib.mkDefault "powersave";
 
   hardware = {
-    cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
+    cpu.amd.updateMicrocode =
+      lib.mkDefault config.hardware.enableRedistributableFirmware;
     nvidia.open = lib.mkDefault false;
   };
 }

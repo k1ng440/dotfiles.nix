@@ -10,14 +10,10 @@
 in {
   # import the DE specific configuration and any user specific desktop configuration
   imports =
-    [
-      ./apps
-      ./features
-    ]
+    [./apps ./features]
     ++ lib.optional (builtins.pathExists (./. + "/${desktop}")) ./${desktop}
-    ++ lib.optional (builtins.pathExists (
-      ./. + "/${desktop}/${username}/default.nix"
-    ))
+    ++ lib.optional
+    (builtins.pathExists (./. + "/${desktop}/${username}/default.nix"))
     ./${desktop}/${username};
 
   # Enable the Catppuccin theme
@@ -32,12 +28,10 @@ in {
 
   # Authrorize X11 access in Distrobox
   home.file = lib.mkIf isLinux {
-    ".distroboxrc".text = ''${pkgs.xorg.xhost}/bin/xhost +si:localuser:$USER'';
+    ".distroboxrc".text = "${pkgs.xorg.xhost}/bin/xhost +si:localuser:$USER";
   };
 
-  programs =
-    lib.mkIf (username == "k1ng") {
-    };
+  programs = lib.mkIf (username == "k1ng") {};
 
   services.mpris-proxy.enable = isLinux;
 

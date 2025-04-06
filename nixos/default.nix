@@ -1,13 +1,25 @@
 localFlake: {
   # Arguments provided by flake-parts module system & perSystem
-  config, # Module system config object
-  inputs, # Flake inputs passed down
-  lib, # Nixpkgs lib and flake-parts lib merged
-  mylib, # Custom lib
-  self, # The flake's self reference
+  config,
+  # Module system config object
+  inputs,
+  # Flake inputs passed down
+  lib,
+  # Nixpkgs lib and flake-parts lib merged
+  mylib,
+  # Custom lib
+  self,
+  # The flake's self reference
   ...
 }: let
-  inherit (inputs) disko nixos-generators nixos-hardware nixpkgs nixpkgs-unstable;
+  inherit
+    (inputs)
+    disko
+    nixos-generators
+    nixos-hardware
+    nixpkgs
+    nixpkgs-unstable
+    ;
 
   # Load modules from ./modules directory
   modules = mylib.rakeLeaves ./modules;
@@ -34,9 +46,7 @@ localFlake: {
     })
   ];
 in {
-  imports = [
-    ./images
-  ];
+  imports = [./images];
 
   flake.nixosConfigurations = {
     xenomorph = lib.nixosSystem {
@@ -59,9 +69,7 @@ in {
           modules.fs-trim
           modules.fish
         ]
-        ++ [
-          ./hosts/xenomorph
-        ];
+        ++ [./hosts/xenomorph];
     };
   };
 }

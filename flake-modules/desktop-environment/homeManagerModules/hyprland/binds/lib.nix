@@ -1,8 +1,6 @@
-{ lib, ... }:
-let
+{lib, ...}: let
   inherit (lib) pipe listToAttrs;
-in
-rec {
+in rec {
   arrowKeys = {
     left = "H";
     down = "J";
@@ -29,13 +27,14 @@ rec {
 
   mkOneToTen =
     pipe (lib.genList (x: x + 1) 9) # [ 1 .. 9]
-      [
-        (map (x: {
-          name = x;
-          value = x;
-        }))
-        listToAttrs
-      ];
+    
+    [
+      (map (x: {
+        name = x;
+        value = x;
+      }))
+      listToAttrs
+    ];
 
   # Reexport lib for easier consumption by downstram
   # modules

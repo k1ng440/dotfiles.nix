@@ -86,18 +86,12 @@
       (makeDesktopItem rec {
         name = "defold-editor";
         desktopName = "Defold";
-        keywords = [
-          "Game"
-          "Development"
-        ];
+        keywords = ["Game" "Development"];
         exec = "defold";
         terminal = false;
         type = "Application";
         icon = "defold";
-        categories = [
-          "Development"
-          "IDE"
-        ];
+        categories = ["Development" "IDE"];
         startupNotify = true;
       })
     ];

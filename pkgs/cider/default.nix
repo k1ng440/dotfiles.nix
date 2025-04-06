@@ -13,9 +13,7 @@
     # sha256sum /nix/store/deadb33f-cider-linux-x64.AppImage
     sha256 = "6ee1ee9d4b45419d7860d1e7831dc7c2a9b94689f013a0bf483876c6b4d65062";
   };
-  appimageContents = appimageTools.extractType2 {
-    inherit pname version src;
-  };
+  appimageContents = appimageTools.extractType2 {inherit pname version src;};
 in
   appimageTools.wrapType2 {
     inherit pname version src;

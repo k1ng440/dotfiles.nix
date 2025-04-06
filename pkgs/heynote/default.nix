@@ -11,9 +11,7 @@
     url = "https://github.com/heyman/heynote/releases/download/v${version}/Heynote_${version}_x86_64.AppImage";
     hash = "sha256-qiNQtCBERmGyJh9bRmOQEfkjYyZmPrAjAJl+839jO3M=";
   };
-  appimageContents = appimageTools.extractType2 {
-    inherit pname version src;
-  };
+  appimageContents = appimageTools.extractType2 {inherit pname version src;};
 in
   appimageTools.wrapType2 {
     inherit pname version src;

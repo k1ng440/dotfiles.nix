@@ -9,7 +9,8 @@
   foreground = mkLiteral theme.colors.fg;
   background = mkLiteral theme.colors.bg0;
   active-background = mkLiteral theme.colors.bg1;
-  urgent-background = mkLiteral theme.colors.bg_yellow; # Should probably be theme.colors.bg_red
+  urgent-background =
+    mkLiteral theme.colors.bg_yellow; # Should probably be theme.colors.bg_red
   selected-background = active-background;
   selected-urgent-background = urgent-background;
   selected-active-background = active-background;

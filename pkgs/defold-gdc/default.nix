@@ -21,19 +21,9 @@ stdenv.mkDerivation rec {
     hash = "sha256-rBBfgeea/3MHJ8PM63P1DYKh8Vm0IZWXdYR/TfEWBa8=";
   };
 
-  nativeBuildInputs = [
-    autoPatchelfHook
-    makeWrapper
-  ];
+  nativeBuildInputs = [autoPatchelfHook makeWrapper];
 
-  buildInputs = [
-    libXext
-    libX11
-    libXi
-    libGL
-    libGLU
-    libstdcxx5
-  ];
+  buildInputs = [libXext libX11 libXi libGL libGLU libstdcxx5];
 
   dontBuild = true;
   dontConfigure = true;
