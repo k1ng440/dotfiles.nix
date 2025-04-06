@@ -1,6 +1,5 @@
 {...}: {
   fileSystems."/" = {
-    device = "zroot/root";
-    fsType = "zfs";
+    fsType = "ext4";
   };
 }

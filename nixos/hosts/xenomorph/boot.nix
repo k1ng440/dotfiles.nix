@@ -6,14 +6,21 @@ in {
   boot.loader.efi.canTouchEfiVariables = true;
   boot.initrd.includeDefaultModules = true;
   boot.supportedFilesystems = [ "ntfs" "zfs" "btrfs" ];
+  boot.zfs.forceImportRoot = true;
+
+  # zfs
+  boot.zfs.devNodes = "/dev/disk/by-label";
 
   # initrd
   boot.initrd.enable = true;
-  boot.initrd.verbose = false;
-  boot.initrd.availableKernelModules = [
-    "zfs" "xhci_pci" "ahci" "nvme" "usbhid" "sd_mod"
+  boot.initrd.verbose = true;
+
+  boot.initrd.kernelModules = [
+    "zfs" "xhci_pci" "ahci" "nvme" "usbhid" "sd_mod" "r8169"
     "uas" "usbcore" "usb_storage" "vfat" "nls_cp437" "nls_iso8859_1"
  ];
+
+  boot.kernelModules = [ "r8169" "zfs" ];
 
   # boot.initrd.postDeviceCommands = pkgs.lib.mkBefore ''
   #   mkdir -m 0755 -p /key
@@ -30,6 +37,6 @@ in {
 
   # systemd-boot
   boot.loader.systemd-boot.enable = true;
-  boot.loader.systemd-boot.editor  = false;
+  boot.loader.systemd-boot.editor = true;
   boot.loader.systemd-boot.rebootForBitlocker = true;
 }
