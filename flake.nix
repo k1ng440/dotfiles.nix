@@ -41,28 +41,56 @@
           flake-parts-lib
           ;
       };
-    }
-    {
-      # Debug: https://flake.parts/debug.html
-      debug = true;
-      imports = [
-        home-manager.flakeModules.home-manager
-        treefmt-nix.flakeModule
-        flake-root.flakeModule
-        mission-control.flakeModule
-        devshell.flakeModule
-        # sops-nix.nixosModules.sops
-        ./nix
-        ./nixos
-        # ./home
-      ];
-      systems = [
-        "x86_64-linux"
-        "aarch64-linux"
-        "x86_64-darwin"
-        "aarch64-darwin"
-      ];
-    }
+    } (
+      {
+        withSystem,
+        moduleWithSystem,
+        flake-parts-lib,
+        ...
+      }: let
+        inherit (flake-parts-lib) importApply;
+        # Nix Modules
+        nixModules = importApply ./nix {inherit withSystem moduleWithSystem flake-parts-lib;};
+
+        # NixOS modules
+        nixosModules = importApply ./nixos {inherit withSystem moduleWithSystem flake-parts-lib;};
+
+        # NixOS and Home manager modules
+        homeixModules = importApply ./homeix {inherit withSystem moduleWithSystem flake-parts-lib;};
+
+        # Home manager modules
+        homeModules = importApply ./home {inherit withSystem moduleWithSystem flake-parts-lib;};
+
+          desktopEnvironment = importApply ./flake-modules/desktopEnvironment { inherit withSystem self; };
+
+      in {
+        # Debug: https://flake.parts/debug.html
+        debug = true;
+        imports =
+            [ # mergers
+              ./nix/merger/mkHomeManagerOutputsMerge.nix
+            ] ++
+            [
+          treefmt-nix.flakeModule
+          flake-root.flakeModule
+          mission-control.flakeModule
+          devshell.flakeModule
+          # sops-nix.nixosModules.sops
+
+          nixModules
+          nixosModules
+          homeixModules
+          homeModules
+          desktopEnvironment
+        ];
+        systems = [
+          "x86_64-linux"
+          "aarch64-linux"
+          "x86_64-darwin"
+          "aarch64-darwin"
+        ];
+      }
+    )
   );
 
   # Imports

@@ -1,5 +1,11 @@
-{...}: {
+{lib, ...}: {
   fileSystems."/" = {
-    fsType = "ext4";
+    fsType = lib.mkDefault "btrfs";
+  };
+  fileSystems."/nix" = {
+    fsType = lib.mkDefault "btrfs";
+  };
+  fileSystems."/home" = {
+    fsType = lib.mkDefault "btrfs";
   };
 }

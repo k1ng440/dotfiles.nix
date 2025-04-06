@@ -5,7 +5,7 @@ in {
   # boot
   boot.loader.efi.canTouchEfiVariables = true;
   boot.initrd.includeDefaultModules = true;
-  boot.supportedFilesystems = [ "ntfs" "zfs" "btrfs" ];
+  boot.supportedFilesystems = ["ntfs" "zfs" "btrfs"];
   boot.zfs.forceImportRoot = true;
 
   # zfs
@@ -16,11 +16,22 @@ in {
   boot.initrd.verbose = true;
 
   boot.initrd.kernelModules = [
-    "zfs" "xhci_pci" "ahci" "nvme" "usbhid" "sd_mod" "r8169"
-    "uas" "usbcore" "usb_storage" "vfat" "nls_cp437" "nls_iso8859_1"
- ];
+    "zfs"
+    "xhci_pci"
+    "ahci"
+    "nvme"
+    "usbhid"
+    "sd_mod"
+    "r8169"
+    "uas"
+    "usbcore"
+    "usb_storage"
+    "vfat"
+    "nls_cp437"
+    "nls_iso8859_1"
+  ];
 
-  boot.kernelModules = [ "r8169" "zfs" ];
+  boot.kernelModules = ["r8169" "zfs"];
 
   # boot.initrd.postDeviceCommands = pkgs.lib.mkBefore ''
   #   mkdir -m 0755 -p /key

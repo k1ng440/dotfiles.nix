@@ -127,6 +127,5 @@ fi
 
 pushd "$HOME/nix-config" || exit 1
 # shellcheck disable=2086
-nix run github:nix-community/nixos-anywhere -- \
-  $EXTRA --flake ".#$HOST" "root@$REMOTE_ADDRESS"
+nix run github:nix-community/nixos-anywhere -- $EXTRA --flake ".#$HOST" "root@$REMOTE_ADDRESS"
 popd || true

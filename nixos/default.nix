@@ -1,4 +1,4 @@
-{
+localFlake: {
   # Arguments provided by flake-parts module system & perSystem
   config, # Module system config object
   inputs, # Flake inputs passed down
