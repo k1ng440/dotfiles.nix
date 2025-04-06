@@ -49,40 +49,53 @@
         ...
       }: let
         inherit (flake-parts-lib) importApply;
-        # Nix Modules
-        nixModules = importApply ./nix {inherit withSystem moduleWithSystem flake-parts-lib;};
 
-        # NixOS modules
-        nixosModules = importApply ./nixos {inherit withSystem moduleWithSystem flake-parts-lib;};
-
-        # NixOS and Home manager modules
-        homeixModules = importApply ./homeix {inherit withSystem moduleWithSystem flake-parts-lib;};
-
-        # Home manager modules
-        homeModules = importApply ./home {inherit withSystem moduleWithSystem flake-parts-lib;};
-
+        flakeModules = {
           desktopEnvironment = importApply ./flake-modules/desktopEnvironment { inherit withSystem self; };
+          nixosModules = importApply ./nixos {inherit withSystem moduleWithSystem flake-parts-lib;};
+        };
+
+        # # Nix Modules
+        # nixModules = importApply ./nix {inherit withSystem moduleWithSystem flake-parts-lib;};
+        #
+        #
+        # # NixOS and Home manager modules
+        # homeixModules = importApply ./homeix {inherit withSystem moduleWithSystem flake-parts-lib;};
+        #
+        # # Home manager modules
+        # homeModules = importApply ./home {inherit withSystem moduleWithSystem flake-parts-lib;};
+        #
+        #   desktopEnvironment = importApply ./flake-modules/desktopEnvironment { inherit withSystem self; };
 
       in {
         # Debug: https://flake.parts/debug.html
         debug = true;
-        imports =
-            [ # mergers
-              ./nix/merger/mkHomeManagerOutputsMerge.nix
-            ] ++
-            [
+        imports = [
+          ./nix/merger/mkHomeManagerOutputsMerge.nix
           treefmt-nix.flakeModule
           flake-root.flakeModule
           mission-control.flakeModule
           devshell.flakeModule
-          # sops-nix.nixosModules.sops
+        ] ++ (builtins.attrValues flakeModules);
 
-          nixModules
-          nixosModules
-          homeixModules
-          homeModules
-          desktopEnvironment
-        ];
+
+        # imports =
+        #     [ # mergers
+        #       ./nix/merger/mkHomeManagerOutputsMerge.nix
+        #     ] ++
+        #     [
+        #   treefmt-nix.flakeModule
+        #   flake-root.flakeModule
+        #   mission-control.flakeModule
+        #   devshell.flakeModule
+        #   # sops-nix.nixosModules.sops
+        #
+        #   nixModules
+        #   nixosModules
+        #   homeixModules
+        #   homeModules
+        #   desktopEnvironment
+        # ];
         systems = [
           "x86_64-linux"
           "aarch64-linux"

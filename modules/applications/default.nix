@@ -1,7 +1,7 @@
-_: {
+{ ... }:
+{
   imports = [
-    ./hyprland
-    ./centerpiece
     ./firejail.nix
+    ./flatpak.nix
   ];
 }
