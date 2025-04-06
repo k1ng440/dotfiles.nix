@@ -1,17 +1,8 @@
-{
-  lib,
-  config,
-  pkgs,
-  hostname,
-  ...
-}: let
+{ ... }: let
   # Define your target disk device carefully! Use by-id if possible.
-  diskDevice = "/dev/disk/by-id/ata-VBOX_HARDDISK_VBcc1af7e2-bd693cbf"; # Or /dev/nvme0n1 etc.
+  diskDevice = "/dev/disk/by-id/ata-VBOX_HARDDISK_VBcc1af7e2-bd693cbf";
 in {
-  fileSystems."/" = {
-    device = "zroot/root";
-    fsType = "zfs";
-  };
+
 
   disko.devices = {
     disk = {
@@ -66,11 +57,11 @@ in {
           "root" = {
             type = "zfs_fs";
             options = {
-              mountpoint = "/"; # Mount this dataset at the root
-              # --- Encryption Settings ---
+              mountpoint = "/";
               # encryption = "aes-256-gcm";
-              # keyformat = "raw";
-              # keylocation = "file://root/zfs.key"; # Use the sops-provided key file
+              # keyformat = "passphrase";
+              #keylocation = "file:///tmp/secret.key";
+              # keylocation = "prompt";
             };
           };
 
@@ -103,7 +94,7 @@ in {
           # README MORE: https://wiki.archlinux.org/title/ZFS#Swap_volume
           "root/swap" = {
             type = "zfs_volume";
-            size = "10M";
+            size = "16g";
             content = {
               type = "swap";
             };
@@ -134,3 +125,4 @@ in {
     };
   };
 }
+

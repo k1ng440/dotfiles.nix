@@ -1,6 +1,7 @@
 {pkgs, ...}: {
   imports = [
     ./boot.nix
+    ./filesystem.nix
     ./disko.nix
     ./hardware.nix
     ./services
