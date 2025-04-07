@@ -1,8 +1,4 @@
-{
-  pkgs,
-  lib,
-  ...
-}:
+{ pkgs, ... }:
 # NixOS module to enable hyprland and adjacent packages
 {
   programs.hyprland = {

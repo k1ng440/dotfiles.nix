@@ -1,9 +1,18 @@
 {pkgs, ...}: {
   users.mutableUsers = false;
+
+  users.groups.k1ng = {
+      gid = 1000;
+  };
+
   users.users.k1ng = {
+    uid = 1000;
+    group = "k1ng";
     shell = pkgs.fish;
     isNormalUser = true;
-    extraGroups = ["wheel" "networkmanager"];
+    createHome = true;
+    home = "/home/k1ng";
+    extraGroups = ["wheel" "networkmanager" "docker"];
     openssh.authorizedKeys.keys = [
       "sk-ecdsa-sha2-nistp256@openssh.com AAAAInNrLWVjZHNhLXNoYTItbmlzdHAyNTZAb3BlbnNzaC5jb20AAAAIbmlzdHAyNTYAAABBBKYBN4nrD/zxmIuuXvwqU3lqJPvjIHDs2fXOvq9ZKaglkNCK2p223siEMmOhN7qPZ+JKVPo0/oOrEQ8y/ovVbFgAAAAEc3NoOg== contact@iampavel.dev"
     ];

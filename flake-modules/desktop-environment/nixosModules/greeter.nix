@@ -1,6 +1,7 @@
 {
   pkgs,
   lib,
+  osConfig,
   ...
 }: let
   inherit (lib) getExe;
@@ -20,9 +21,10 @@ in {
     vt = 2; # This prevents kernel logs from mangling greetd
     settings.default_session = {
       user = "greeter";
-      command = "${getExe pkgs.greetd.tuigreet} --time --cmd ${
-        getExe pkgs.zsh
-      }"; # Shell only by default
+      command = "${getExe pkgs.greetd.tuigreet} --time --time-format '%a, %d %b %Y • %T' --greeting  '[Become \n          Visible]' --asterisks --remember --cmd Hyprland";
+      # command = "${getExe pkgs.greetd.tuigreet} --time --cmd ${
+      #   getExe pkgs.zsh
+      # }"; # Shell only by default
     };
   };
 

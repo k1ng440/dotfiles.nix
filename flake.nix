@@ -40,6 +40,7 @@
         desktopEnvironment = importApply ./flake-modules/desktop-environment { localFlake = self; inherit self withSystem moduleWithSystem; };
         nixosModules = importApply ./nixos { inherit self withSystem moduleWithSystem; };
         nixModules = importApply ./nix { inherit withSystem moduleWithSystem; };
+        virtualisation = importApply ./flake-modules/virtualisation { localFlake = self; inherit self withSystem moduleWithSystem; };
       };
       # # Nix Modules
       #
@@ -82,6 +83,9 @@
       #   homeModules
       #   desktopEnvironment
       # ];
+      flake = {
+        nix.nixPath = [ "nixpkgs=${inputs.nixpkgs}" ];
+      };
       systems = ["x86_64-linux" "aarch64-linux" "x86_64-darwin" "aarch64-darwin"];
     }));
 

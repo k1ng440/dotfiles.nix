@@ -489,6 +489,9 @@ vim.schedule(function()
   -- nvim-treesitter-context. https://github.com/nvim-treesitter/nvim-treesitter-context
   require('treesitter-context').setup({
     enable = true,
+    max_lines = 10,
+    min_window_height = 0,
+    multiline_threshold = 10,
   })
 end)
 -- stylua: ignore start

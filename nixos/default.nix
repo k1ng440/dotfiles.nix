@@ -54,11 +54,6 @@ in {
           nixos-hardware.nixosModules.common-cpu-amd-zenpower
         ]
         ++ [
-          modules.tcp-hardening
-          modules.tcp-optimizations
-          modules.tmpfs
-          modules.fs-trim
-          modules.fish
         ]
         ++ [
           self.nixosModules.de
