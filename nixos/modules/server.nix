@@ -39,7 +39,7 @@
   time.timeZone = lib.mkDefault "UTC";
 
   # No mutable users by default
-  # users.mutableUsers = false;
+  users.mutableUsers = false;
 
   # We don't want to request password for sudoers
   security.sudo = {

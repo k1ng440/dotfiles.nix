@@ -37,15 +37,11 @@
       inherit (flake-parts-lib) importApply;
 
       flakeModules = {
-        desktop-environment = importApply ./flake-modules/desktop-environment {
-          inherit withSystem self;
-        };
-        nixosModules = importApply ./nixos {
-          inherit withSystem moduleWithSystem flake-parts-lib;
-        };
+        desktopEnvironment = importApply ./flake-modules/desktop-environment { localFlake = self; inherit self withSystem moduleWithSystem; };
+        nixosModules = importApply ./nixos { inherit self withSystem moduleWithSystem; };
+        nixModules = importApply ./nix { inherit withSystem moduleWithSystem; };
       };
       # # Nix Modules
-      # nixModules = importApply ./nix {inherit withSystem moduleWithSystem flake-parts-lib;};
       #
       #
       # # NixOS and Home manager modules

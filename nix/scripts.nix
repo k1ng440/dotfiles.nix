@@ -45,7 +45,7 @@
       nix-build-xenomorph = {
         category = "Nix";
         description = "Builds toplevel NixOS image for xenomorph host";
-        exec = pkgs.writeShellScriptBin "nix-build-nuc" ''
+        exec = pkgs.writeShellScriptBin "nix-build-xenomorph" ''
           set -euo pipefail
           nix build .#nixosConfigurations.xenomorph.config.system.build.toplevel
         '';
@@ -54,14 +54,14 @@
       make-xenomorph-iso = {
         category = "Images";
         description = "Create installer-iso image for xenomorph";
-        exec = make-iso "make-xenomorph-iso" "xenomorph-iso-image";
+        exec = make-iso "make-xenomorph-iso" "xenomorph-iso";
       };
 
       # ISOs
       flash-xenomorph-iso = {
         category = "Images";
         description = "Flash installer-iso image for xenomorph";
-        exec = flash-iso-image "flash-xenomorph-iso" "xenomorph-iso-image";
+        exec = flash-iso-image "flash-xenomorph-iso" "xenomorph-iso";
       };
 
       # Utils
