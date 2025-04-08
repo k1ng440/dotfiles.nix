@@ -10,11 +10,11 @@
 
   outputs = inputs @ {
     self,
+    nixpkgs,
     flake-parts,
     flake-root,
     home-manager,
     mission-control,
-    nixpkgs,
     treefmt-nix,
     devshell,
     sops-nix,
@@ -37,21 +37,13 @@
       inherit (flake-parts-lib) importApply;
 
       flakeModules = {
-        desktopEnvironment = importApply ./flake-modules/desktop-environment { localFlake = self; inherit self withSystem moduleWithSystem; };
-        nixosModules = importApply ./nixos { inherit self withSystem moduleWithSystem; };
-        nixModules = importApply ./nix { inherit withSystem moduleWithSystem; };
-        virtualisation = importApply ./flake-modules/virtualisation { localFlake = self; inherit self withSystem moduleWithSystem; };
+
+        desktopEnvironment = importApply ./flake-modules/desktop-environment { localFlake = self; inherit withSystem; };
+        nixosCommon = importApply ./flake-modules/nixos-common { localFlake = self; inherit withSystem; };
+        nixosModules = importApply ./nixos { localFlake = self; inherit withSystem; };
+        nixModules = importApply ./nix { localFlake = self; inherit withSystem; };
+        virtualisation = importApply ./flake-modules/virtualisation { localFlake = self; inherit withSystem; };
       };
-      # # Nix Modules
-      #
-      #
-      # # NixOS and Home manager modules
-      # homeixModules = importApply ./homeix {inherit withSystem moduleWithSystem flake-parts-lib;};
-      #
-      # # Home manager modules
-      # homeModules = importApply ./home {inherit withSystem moduleWithSystem flake-parts-lib;};
-      #
-      #   desktopEnvironment = importApply ./flake-modules/desktopEnvironment { inherit withSystem self; };
     in {
       # Debug: https://flake.parts/debug.html
       debug = true;
@@ -66,30 +58,17 @@
         ]
         ++ (builtins.attrValues flakeModules);
 
-      # imports =
-      #     [ # mergers
-      #       ./nix/merger/mkHomeManagerOutputsMerge.nix
-      #     ] ++
-      #     [
-      #   treefmt-nix.flakeModule
-      #   flake-root.flakeModule
-      #   mission-control.flakeModule
-      #   devshell.flakeModule
-      #   # sops-nix.nixosModules.sops
-      #
-      #   nixModules
-      #   nixosModules
-      #   homeixModules
-      #   homeModules
-      #   desktopEnvironment
-      # ];
       flake = {
         nix.nixPath = [ "nixpkgs=${inputs.nixpkgs}" ];
       };
       systems = ["x86_64-linux" "aarch64-linux" "x86_64-darwin" "aarch64-darwin"];
     }));
 
-  # Imports
+  /***********************************
+  ************************************
+  ************ IMPORTS ***************
+  ************************************
+  ***********************************/
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-24.11";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";

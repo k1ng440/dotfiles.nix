@@ -80,6 +80,8 @@ Contributions are welcome! If you have suggestions, improvements, or encounter i
 - articles:
   - [Nix by example](https://medium.com/@MrJamesFisher/nix-by-example-a0063a1a4c55)
   - [Flake-parts: writing custom flake modules](https://www.vtimofeenko.com/posts/flake-parts-writing-custom-flake-modules/#declaring-a-package)
+- Inspired by other's configurations:
+  - [Andrew Kvalheim](https://codeberg.org/AndrewKvalheim/configuration)
 
 ## Search:
 

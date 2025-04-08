@@ -4,14 +4,9 @@ localFlake: { # Arguments provided by flake-parts module system & perSystem
   lib, # Nixpkgs lib and flake-parts lib merged
   mylib, # Custom lib
   self, # The flake's self reference
-  withSystem,
-  moduleWithSystem,
   ...
 }: let
   inherit (inputs) disko nixos-generators nixos-hardware nixpkgs nixpkgs-unstable;
-
-  # Load modules from ./modules directory
-  modules = mylib.rakeLeaves ./modules;
 
   # Define default/common modules
   defaultModules = [
@@ -20,18 +15,11 @@ localFlake: { # Arguments provided by flake-parts module system & perSystem
       _module.args.self = self;
       _module.args.inputs = inputs;
     }
-    # load common modules
-    ({...}: {
-      imports = [
-        modules.i18n
-        modules.minimal-docs
-        modules.nix
-        modules.openssh
-        modules.server
-        modules.fish
-        # modules.zerotierone
-      ];
-    })
+    # # load common modules
+    # ({...}: {
+    #   # imports = [
+    #   # ];
+    # })
   ];
 in {
   imports = [
@@ -45,17 +33,13 @@ in {
         # Note: self, inputs, lib, etc., are passed via _module.args in defaultModules
       };
 
-      modules =
-        defaultModules
-        ++ [
+      modules = defaultModules ++ [
           disko.nixosModules.disko
           nixos-hardware.nixosModules.common-pc
-          # nixos-hardware.nixosModules.common-gpu-nvidia-nonprime
+          nixos-hardware.nixosModules.common-gpu-nvidia-nonprime
           nixos-hardware.nixosModules.common-cpu-amd-zenpower
-        ]
-        ++ [
-        ]
-        ++ [
+        ] ++ [
+          self.nixosModules.common
           self.nixosModules.de
           ./hosts/xenomorph
         ];

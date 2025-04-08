@@ -10,11 +10,8 @@
   }: {
     treefmt = {
       inherit (config.flake-root) projectRootFile;
-      programs.alejandra.enable = true;
-      programs.alejandra.package = inputs'.nixpkgs-unstable.legacyPackages.alejandra;
-
-      programs.nixfmt.enable = false;
-      programs.nixfmt.package = pkgs.nixfmt;
+      programs.nixfmt.enable = true;
+      programs.nixfmt.width = 100;
 
       programs.shellcheck.enable = false;
     };

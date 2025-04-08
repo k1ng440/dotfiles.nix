@@ -50,6 +50,14 @@
           nix build .#nixosConfigurations.xenomorph.config.system.build.toplevel
         '';
       };
+      nix-build-xenomorph-vm = {
+        category = "Nix";
+        description = "Builds toplevel NixOS vm for xenomorph host";
+        exec = pkgs.writeShellScriptBin "nix-build-xenomorph" ''
+          set -euo pipefail
+          nix build .#nixosConfigurations.xenomorph.config.system.build.vm
+        '';
+      };
 
       make-xenomorph-iso = {
         category = "Images";

@@ -17,12 +17,17 @@
   };
 
   config = {
+    nixpkgs = {
+      config = {
+        allowUnfree = true;
+      };
+    };
+
     nix = {
       gc = {
         persistent = true;
         automatic = true;
         dates = "weekly";
-        delete_generations = "+10";
       };
 
       settings = {

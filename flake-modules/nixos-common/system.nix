@@ -5,4 +5,6 @@
   # servers. You should change this only after NixOS release notes say you
   # should.
   system.stateVersion = lib.mkDefault "24.11";
+
+  hardware.enableRedistributableFirmware = lib.mkDefault true;
 }

@@ -1,4 +1,4 @@
-{self, pkgs, ...}: {
+{lib, self, pkgs, ...}: {
   imports = [
     ./boot.nix
     ./filesystem.nix

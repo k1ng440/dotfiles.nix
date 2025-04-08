@@ -1,4 +1,4 @@
-{pkgs}: {
+{pkgs, ...}: {
   # Common linux packages
   environment.systemPackages = with pkgs; [
     bat
