@@ -1,4 +1,5 @@
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   # Common linux packages
   environment.systemPackages = with pkgs; [
     bat
@@ -13,5 +14,9 @@
   ];
 
   # List of available shells
-  environment.shells = with pkgs; [bash zsh fish];
+  environment.shells = with pkgs; [
+    bash
+    zsh
+    fish
+  ];
 }

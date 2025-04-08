@@ -2,7 +2,8 @@
   pkgs,
   inputs,
   ...
-}: {
+}:
+{
   nix = {
     gc.automatic = true;
 
@@ -25,6 +26,6 @@
       flake-registry = ${inputs.flake-registry}/flake-registry.json
     '';
 
-    nixPath = ["nixpkgs=${pkgs.path}"];
+    nixPath = [ "nixpkgs=${pkgs.path}" ];
   };
 }

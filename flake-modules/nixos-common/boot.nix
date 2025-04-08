@@ -1,3 +1,4 @@
-{...}: {
+{ ... }:
+{
   boot.kernelModules = [ "coretemp" ];
 }

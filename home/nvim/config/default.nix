@@ -2,15 +2,13 @@
   config,
   pkgs,
   ...
-}: let
+}:
+let
   fromGitHub = import ../functions/fromGitHub.nix;
-  nvimConfigDirectory =
-    config.lib.file.mkOutOfStoreSymlink
-    "${config.home.homeDirectory}/.config/home-manager/nvim";
-  intelephenseLicenseFile =
-    config.lib.file.mkOutOfStoreSymlink
-    "${config.home.homeDirectory}/.config/home-manager/secrets/intelephense-license.txt";
-in {
+  nvimConfigDirectory = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/home-manager/nvim";
+  intelephenseLicenseFile = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/home-manager/secrets/intelephense-license.txt";
+in
+{
   xdg.configFile = {
     "nvim".source = nvimConfigDirectory;
     "intelephense/license.txt".source = intelephenseLicenseFile;

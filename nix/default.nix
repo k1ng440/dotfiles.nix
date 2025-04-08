@@ -1,1 +1,8 @@
-{...}: {imports = [./formatter.nix ./scripts.nix ./shell.nix];}
+{ ... }:
+{
+  imports = [
+    ./formatter.nix
+    ./scripts.nix
+    ./shell.nix
+  ];
+}

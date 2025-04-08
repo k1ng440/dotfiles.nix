@@ -1,4 +1,7 @@
-let inherit (builtins) readFile; in {
+let
+  inherit (builtins) readFile;
+in
+{
   name.long = "Asaduzzaman Pavel";
   name.short = "Pavel";
   username = "k1ng";
@@ -9,4 +12,3 @@ let inherit (builtins) readFile; in {
   ssh = readFile ./k1ng.pub;
   image = ./k1ng.jpg;
 }
-

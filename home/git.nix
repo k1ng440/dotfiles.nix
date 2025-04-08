@@ -1,4 +1,5 @@
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   programs = {
     gh.enable = true;
     lazygit.enable = true;
@@ -27,12 +28,21 @@
         pushf = "push --force-with-lease"; # only force pushes if no new commits have pushed after the last pull
         l = "log --graph --abbrev-commit --decorate --date=relative --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' --all -n 15";
       };
-      ignores = ["*~" "*.swp"];
+      ignores = [
+        "*~"
+        "*.swp"
+      ];
       extraConfig = {
-        rerere = {enabled = true;};
-        init = {defaultBranch = "master";};
+        rerere = {
+          enabled = true;
+        };
+        init = {
+          defaultBranch = "master";
+        };
       };
-      diff-so-fancy = {enable = true;};
+      diff-so-fancy = {
+        enable = true;
+      };
       lfs = {
         enable = true;
         skipSmudge = true;

@@ -9,26 +9,26 @@
   stateVersion,
   username,
   ...
-}: let
+}:
+let
   inherit (pkgs.stdenv) isDarwin isLinux;
   hasNvidiaGPU = lib.elem "nvidia" config.services.xserver.videoDrivers;
-in {
-  imports =
-    [
-      # If you want to use modules your own flake exports (from modules/home-manager):
-      # outputs.homeManagerModules.example
+in
+{
+  imports = [
+    # If you want to use modules your own flake exports (from modules/home-manager):
+    # outputs.homeManagerModules.example
 
-      # Modules exported from other flakes:
-      inputs.catppuccin.homeManagerModules.catppuccin
-      inputs.sops-nix.homeManagerModules.sops
-      inputs.nix-index-database.hmModules.nix-index
-      inputs.vscode-server.nixosModules.home
-      ./_mixins/features
-      ./_mixins/scripts
-      ./_mixins/services
-      ./_mixins/users
-    ]
-    ++ lib.optional isWorkstation ./_mixins/desktop;
+    # Modules exported from other flakes:
+    inputs.catppuccin.homeManagerModules.catppuccin
+    inputs.sops-nix.homeManagerModules.sops
+    inputs.nix-index-database.hmModules.nix-index
+    inputs.vscode-server.nixosModules.home
+    ./_mixins/features
+    ./_mixins/scripts
+    ./_mixins/services
+    ./_mixins/users
+  ] ++ lib.optional isWorkstation ./_mixins/desktop;
 
   # Enable the Catppuccin theme
   catppuccin = {
@@ -49,11 +49,12 @@ in {
     inherit stateVersion;
     inherit username;
     homeDirectory =
-      if isDarwin
-      then "/Users/${username}"
-      else if isLima
-      then "/home/${username}.linux"
-      else "/home/${username}";
+      if isDarwin then
+        "/Users/${username}"
+      else if isLima then
+        "/home/${username}.linux"
+      else
+        "/home/${username}";
 
     file = {
       "${config.xdg.configHome}/fastfetch/config.jsonc".text =
@@ -67,7 +68,8 @@ in {
 
     # A Modern Unix experience
     # https://jvns.ca/blog/2022/04/12/a-list-of-new-ish--command-line-tools/
-    packages = with pkgs;
+    packages =
+      with pkgs;
       [
         asciicam # Terminal webcam
         bc # Terminal calculator
@@ -173,10 +175,14 @@ in {
       outputs.overlays.unstable-packages
     ];
     # Configure your nixpkgs instance
-    config = {allowUnfree = true;};
+    config = {
+      allowUnfree = true;
+    };
   };
 
-  nix = {package = pkgs.nixVersions.latest;};
+  nix = {
+    package = pkgs.nixVersions.latest;
+  };
 
   programs = {
     aria2.enable = true;
@@ -185,7 +191,7 @@ in {
       enableBashIntegration = true;
       enableFishIntegration = true;
       enableZshIntegration = true;
-      flags = ["--disable-up-arrow"];
+      flags = [ "--disable-up-arrow" ];
       package = pkgs.atuin;
       settings = {
         auto_sync = true;
@@ -200,15 +206,21 @@ in {
     };
     bat = {
       enable = true;
-      extraPackages = with pkgs.bat-extras; [batgrep batwatch prettybat];
-      config = {style = "plain";};
+      extraPackages = with pkgs.bat-extras; [
+        batgrep
+        batwatch
+        prettybat
+      ];
+      config = {
+        style = "plain";
+      };
     };
     bottom = {
       enable = true;
       settings = {
         disk_filter = {
           is_list_ignored = true;
-          list = ["/dev/loop"];
+          list = [ "/dev/loop" ];
           regex = true;
           case_sensitive = false;
           whole_word = false;
@@ -230,7 +242,9 @@ in {
         rocmSupport = isLinux && hasNvidiaGPU;
       };
     };
-    cava = {enable = isLinux;};
+    cava = {
+      enable = isLinux;
+    };
     dircolors = {
       enable = true;
       enableBashIntegration = true;
@@ -241,14 +255,19 @@ in {
       enable = true;
       enableBashIntegration = true;
       enableZshIntegration = true;
-      nix-direnv = {enable = true;};
+      nix-direnv = {
+        enable = true;
+      };
     };
     eza = {
       enable = true;
       enableBashIntegration = true;
       enableFishIntegration = true;
       enableZshIntegration = true;
-      extraOptions = ["--group-directories-first" "--header"];
+      extraOptions = [
+        "--group-directories-first"
+        "--header"
+      ];
       git = true;
       icons = "auto";
     };
@@ -256,15 +275,10 @@ in {
       enable = true;
       shellAliases = {
         banner = lib.mkIf isLinux "${pkgs.figlet}/bin/figlet";
-        banner-color =
-          lib.mkIf isLinux
-          "${pkgs.figlet}/bin/figlet $argv | ${pkgs.dotacat}/bin/dotacat";
+        banner-color = lib.mkIf isLinux "${pkgs.figlet}/bin/figlet $argv | ${pkgs.dotacat}/bin/dotacat";
         brg = "${pkgs.bat-extras.batgrep}/bin/batgrep";
         cat = "${pkgs.bat}/bin/bat --paging=never";
-        clock =
-          if isLinux
-          then ''${pkgs.tty-clock}/bin/tty-clock -B -c -C 4 -f "%a, %d %b"''
-          else "";
+        clock = if isLinux then ''${pkgs.tty-clock}/bin/tty-clock -B -c -C 4 -f "%a, %d %b"'' else "";
         dmesg = "${pkgs.util-linux}/bin/dmesg --human --color=always";
         neofetch = "${pkgs.fastfetch}/bin/fastfetch";
         glow = "${pkgs.frogmouth}/bin/frogmouth";
@@ -323,7 +337,11 @@ in {
     };
     nix-index.enable = true;
     ripgrep = {
-      arguments = ["--colors=line:style:bold" "--max-columns-preview" "--smart-case"];
+      arguments = [
+        "--colors=line:style:bold"
+        "--max-columns-preview"
+        "--smart-case"
+      ];
       enable = true;
     };
     starship = {
@@ -334,7 +352,9 @@ in {
       settings = {
         add_newline = false;
         command_timeout = 1000;
-        time = {disabled = true;};
+        time = {
+          disabled = true;
+        };
         format = lib.concatStrings [
           "[](surface1)"
           "$os"
@@ -733,7 +753,7 @@ in {
       enableFishIntegration = true;
       enableZshIntegration = true;
       # Replace cd with z and add cdi to access zi
-      options = ["--cmd cd"];
+      options = [ "--cmd cd" ];
     };
   };
 
@@ -770,9 +790,9 @@ in {
     secrets = {
       asciinema.path = "${config.home.homeDirectory}/.config/asciinema/config";
       atuin_key.path = "${config.home.homeDirectory}/.local/share/atuin/key";
-      gpg_private = {};
-      gpg_public = {};
-      gpg_ownertrust = {};
+      gpg_private = { };
+      gpg_public = { };
+      gpg_ownertrust = { };
       ssh_config.path = "${config.home.homeDirectory}/.ssh/config";
       ssh_key.path = "${config.home.homeDirectory}/.ssh/id_rsa";
       ssh_pub.path = "${config.home.homeDirectory}/.ssh/id_rsa.pub";

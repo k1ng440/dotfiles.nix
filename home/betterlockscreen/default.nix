@@ -3,8 +3,13 @@
   config,
   variables,
   ...
-}: {
-  home.packages = with pkgs; [feh betterlockscreen i3lock-color];
+}:
+{
+  home.packages = with pkgs; [
+    feh
+    betterlockscreen
+    i3lock-color
+  ];
 
   xdg.configFile.betterlockscreen = {
     source =

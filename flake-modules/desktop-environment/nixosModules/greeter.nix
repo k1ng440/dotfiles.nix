@@ -3,19 +3,25 @@
   lib,
   osConfig,
   ...
-}: let
+}:
+let
   inherit (lib) getExe;
-in {
+in
+{
   # Create the greeter user
   users.users.greeter = {
     isSystemUser = true;
     description = "Greeter user";
-    extraGroups = [ "video" "input" "seat" ]; # Needed for TTY, Wayland, etc.
+    extraGroups = [
+      "video"
+      "input"
+      "seat"
+    ]; # Needed for TTY, Wayland, etc.
     shell = pkgs.bashInteractive;
   };
 
   # Shows kernel logs only on tty1
-  boot.kernelParams = ["console=tty1"];
+  boot.kernelParams = [ "console=tty1" ];
   services.greetd = {
     enable = true;
     vt = 2; # This prevents kernel logs from mangling greetd

@@ -1,7 +1,7 @@
 /*
-*
-Home manager and NixOS modules that configures xremap and hyprland to enable
-pressing capslock+$key or hyper+$key to jump to specific apps.
+  *
+  Home manager and NixOS modules that configures xremap and hyprland to enable
+  pressing capslock+$key or hyper+$key to jump to specific apps.
 */
 let
   appMap = {
@@ -14,63 +14,67 @@ let
     # just so happens to have same pname and class.
     t = "kitty";
   };
-in {
-  nixosModule = {
-    inputs,
-    lib,
-    ...
-  }: {
-    services.xremap.config = {
-      virtual_modifiers = ["F18"];
+in
+{
+  nixosModule =
+    {
+      inputs,
+      lib,
+      ...
+    }:
+    {
+      services.xremap.config = {
+        virtual_modifiers = [ "F18" ];
 
-      imports = [
-        inputs.xremap-flake.nixosModules.default
-      ];
+        imports = [
+          inputs.xremap-flake.nixosModules.default
+        ];
 
-      modmap = [
-        {
-          # Global remap CapsLock to emit F18 when held
-          name = "Global";
-          remap."CapsLock" = {
-            held = "F18";
-            alone = "Esc";
-            alone_timeout_millis = 250;
-          };
-        }
-      ];
+        modmap = [
+          {
+            # Global remap CapsLock to emit F18 when held
+            name = "Global";
+            remap."CapsLock" = {
+              held = "F18";
+              alone = "Esc";
+              alone_timeout_millis = 250;
+            };
+          }
+        ];
 
-      keymap = [
-        {
-          name = "Remap hyper key";
-          # Needs explicit bindings it seems. Maybe accept F18 as modifier in Hyprland?
-          # Basically produces bindings like "F18-e" = "SHIFT-C-M-SUPER-e"
-          # These are later handled by hyprland
-          remap =
-            lib.mapAttrs'
-            (name: _: lib.nameValuePair "F18-${name}" "SHIFT-C-M-SUPER-${name}")
-            appMap;
-        }
-      ];
+        keymap = [
+          {
+            name = "Remap hyper key";
+            # Needs explicit bindings it seems. Maybe accept F18 as modifier in Hyprland?
+            # Basically produces bindings like "F18-e" = "SHIFT-C-M-SUPER-e"
+            # These are later handled by hyprland
+            remap = lib.mapAttrs' (name: _: lib.nameValuePair "F18-${name}" "SHIFT-C-M-SUPER-${name}") appMap;
+          }
+        ];
+      };
     };
-  };
-  homeManagerModule = {
-    inputs,
-    srvLib,
-    ...
-  }: let
-    inherit (srvLib) lib Hyper mainMod;
-  in {
-    imports = [
-      inputs.xremap-flake.homeManagerModules.default
-    ];
+  homeManagerModule =
+    {
+      inputs,
+      srvLib,
+      ...
+    }:
+    let
+      inherit (srvLib) lib Hyper mainMod;
+    in
+    {
+      imports = [
+        inputs.xremap-flake.homeManagerModules.default
+      ];
 
-    wayland.windowManager.hyprland.myBinds = lib.mapAttrs' (name: value:
-      lib.nameValuePair "${Hyper}+${name}" {
-        mod = mainMod;
-        dispatcher = "focuswindow";
-        arg = "^(${value})$";
-        description = "Focus '${value}' window";
-      })
-    appMap;
-  };
+      wayland.windowManager.hyprland.myBinds = lib.mapAttrs' (
+        name: value:
+        lib.nameValuePair "${Hyper}+${name}" {
+          mod = mainMod;
+          dispatcher = "focuswindow";
+          arg = "^(${value})$";
+          description = "Focus '${value}' window";
+        }
+      ) appMap;
+    };
 }

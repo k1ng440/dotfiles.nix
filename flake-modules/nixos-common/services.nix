@@ -1,4 +1,5 @@
-{...}: {
+{ ... }:
+{
   # SMART monitoring
   services.smartd = {
     enable = true;

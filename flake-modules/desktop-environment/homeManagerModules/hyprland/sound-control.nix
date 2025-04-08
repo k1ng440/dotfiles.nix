@@ -1,6 +1,8 @@
-{ pkgs, lib, ... }: let
+{ pkgs, lib, ... }:
+let
   settings.volumeStepPct = 10;
-in {
+in
+{
   wayland.windowManager.hyprland.myBinds = rec {
     XF86AudioMute = {
       dispatcher = "exec";

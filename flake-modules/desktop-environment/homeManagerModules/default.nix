@@ -1,1 +1,7 @@
-_: {imports = [./hyprland ./centerpiece ./firejail.nix];}
+_: {
+  imports = [
+    ./hyprland
+    ./centerpiece
+    ./firejail.nix
+  ];
+}

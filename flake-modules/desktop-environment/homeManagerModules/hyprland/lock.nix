@@ -1,10 +1,11 @@
 /**
   Home manager module that configures session locking.
 */
-{ pkgs
-, lib
-, osConfig
-, ...
+{
+  pkgs,
+  lib,
+  osConfig,
+  ...
 }:
 let
   # Things that are often configured (or are expected to be so) go here.

@@ -1,21 +1,24 @@
-{inputs, ...}: {
-  imports = [inputs.treefmt-nix.flakeModule];
+{ inputs, ... }:
+{
+  imports = [ inputs.treefmt-nix.flakeModule ];
 
-  perSystem = {
-    inputs',
-    pkgs,
-    lib,
-    config,
-    ...
-  }: {
-    treefmt = {
-      inherit (config.flake-root) projectRootFile;
-      programs.nixfmt.enable = true;
-      programs.nixfmt.width = 100;
+  perSystem =
+    {
+      inputs',
+      pkgs,
+      lib,
+      config,
+      ...
+    }:
+    {
+      treefmt = {
+        inherit (config.flake-root) projectRootFile;
+        programs.nixfmt.enable = true;
+        programs.nixfmt.width = 100;
 
-      programs.shellcheck.enable = false;
+        programs.shellcheck.enable = false;
+      };
+
+      formatter = config.treefmt.build.wrapper;
     };
-
-    formatter = config.treefmt.build.wrapper;
-  };
 }

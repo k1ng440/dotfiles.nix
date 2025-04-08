@@ -1,1 +1,6 @@
-{pkgs, ...}: {programs.fd = {enable = true;};}
+{ pkgs, ... }:
+{
+  programs.fd = {
+    enable = true;
+  };
+}

@@ -25,7 +25,9 @@ let
   };
 
   mkMoveWindowBind =
-    key: mkSwitchBind key |> lib.flip lib.recursiveUpdate {
+    key:
+    mkSwitchBind key
+    |> lib.flip lib.recursiveUpdate {
       name = "${Shift}+${key}";
       value.dispatcher = "movetoworkspacesilent";
       value.description = "move window to workspace '${key}'";
@@ -45,43 +47,43 @@ in
         (mkMoveWindowBind wsNum)
       ])
       |> lib.flatten
-    |> builtins.listToAttrs
-    # add mod+` to switch back
-    |> lib.mergeAttrs {
-    ${srvLib."`"} = {
-    mod = mainMod;
-    dispatcher = "workspace";
-    arg = "previous";
-    description = "switch to previous workspace";
-  };
-}
-  # Add mod+shift+z/x for previous/next ws on same monitor
-  |> lib.mergeAttrs {
-  "${Shift}+Z" = {
-    mod = mainMod;
-    dispatcher = "workspace";
-    arg = "m-1";
-    description = "switch to numerically previous workspace on same monitor";
-  };
-  "${Shift}+X" = {
-    mod = mainMod;
-    dispatcher = "workspace";
-    arg = "m+1";
-    description = "switch to numerically next workspace on same monitor";
-  };
-};
+      |> builtins.listToAttrs
+      # add mod+` to switch back
+      |> lib.mergeAttrs {
+        ${srvLib."`"} = {
+          mod = mainMod;
+          dispatcher = "workspace";
+          arg = "previous";
+          description = "switch to previous workspace";
+        };
+      }
+      # Add mod+shift+z/x for previous/next ws on same monitor
+      |> lib.mergeAttrs {
+        "${Shift}+Z" = {
+          mod = mainMod;
+          dispatcher = "workspace";
+          arg = "m-1";
+          description = "switch to numerically previous workspace on same monitor";
+        };
+        "${Shift}+X" = {
+          mod = mainMod;
+          dispatcher = "workspace";
+          arg = "m+1";
+          description = "switch to numerically next workspace on same monitor";
+        };
+      };
 
-settings.binds = {
-# Given two workspaces ("1" and "2")
-# If I am on 1st:
-# mod+2 => switch to 2nd
-# mod+2 (again) => switch to 1st
-workspace_back_and_forth = true;
-# Main use case -- switch back and forth using mod+grave
-allow_workspace_cycles = true;
-};
+    settings.binds = {
+      # Given two workspaces ("1" and "2")
+      # If I am on 1st:
+      # mod+2 => switch to 2nd
+      # mod+2 (again) => switch to 1st
+      workspace_back_and_forth = true;
+      # Main use case -- switch back and forth using mod+grave
+      allow_workspace_cycles = true;
+    };
 
-# Mouse swipe = swipe workspace. Occasionally I use it.
-settings.gestures.workspace_swipe = true;
-};
+    # Mouse swipe = swipe workspace. Occasionally I use it.
+    settings.gestures.workspace_swipe = true;
+  };
 }

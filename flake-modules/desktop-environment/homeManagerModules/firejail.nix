@@ -2,7 +2,8 @@
   pkgs,
   lib,
   ...
-}: {
+}:
+{
   programs.firejail.enable = true;
   programs.firejail.wrappedBinaries = {
     thunderbird = {
@@ -40,7 +41,7 @@
         exec = "telegram-desktop -- %u";
         icon = "telegram";
         terminal = false;
-        mimeType = ["x-scheme-handler/tg"];
+        mimeType = [ "x-scheme-handler/tg" ];
       };
     };
   };

@@ -5,16 +5,21 @@
   pkgs,
   username,
   ...
-}: let
+}:
+let
   inherit (pkgs.stdenv) isLinux isDarwin;
-in {
+in
+{
   # import the DE specific configuration and any user specific desktop configuration
   imports =
-    [./apps ./features]
+    [
+      ./apps
+      ./features
+    ]
     ++ lib.optional (builtins.pathExists (./. + "/${desktop}")) ./${desktop}
-    ++ lib.optional
-    (builtins.pathExists (./. + "/${desktop}/${username}/default.nix"))
-    ./${desktop}/${username};
+    ++ lib.optional (builtins.pathExists (
+      ./. + "/${desktop}/${username}/default.nix"
+    )) ./${desktop}/${username};
 
   # Enable the Catppuccin theme
   catppuccin = {
@@ -31,7 +36,7 @@ in {
     ".distroboxrc".text = "${pkgs.xorg.xhost}/bin/xhost +si:localuser:$USER";
   };
 
-  programs = lib.mkIf (username == "k1ng") {};
+  programs = lib.mkIf (username == "k1ng") { };
 
   services.mpris-proxy.enable = isLinux;
 

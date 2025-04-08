@@ -2,7 +2,8 @@
   pkgs,
   lib,
   ...
-}: {
+}:
+{
   # Common server packages
   environment.systemPackages = with pkgs; [
     bat
@@ -18,7 +19,11 @@
   ];
 
   # List of available shells
-  environment.shells = with pkgs; [bash zsh fish];
+  environment.shells = with pkgs; [
+    bash
+    zsh
+    fish
+  ];
 
   # Print the URL instead
   environment.variables.BROWSER = "echo";
@@ -48,7 +53,12 @@
   };
 
   # Use Cloudflare DNS
-  networking.nameservers = ["1.1.1.1" "1.0.0.1" "2606:4700:4700::1111" "2606:4700:4700::1001"];
+  networking.nameservers = [
+    "1.1.1.1"
+    "1.0.0.1"
+    "2606:4700:4700::1111"
+    "2606:4700:4700::1001"
+  ];
 
   # Use zsh as default shell
   programs.zsh.enable = lib.mkDefault true;

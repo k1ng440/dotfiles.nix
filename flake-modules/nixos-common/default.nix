@@ -1,5 +1,12 @@
 localFlake:
-{ self, lib, config, pkgs, ... }: {
+{
+  self,
+  lib,
+  config,
+  pkgs,
+  ...
+}:
+{
   flake.nixosModules.common = {
     imports = [
       ./acme.nix

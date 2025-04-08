@@ -1,1 +1,1 @@
-localFlake: {...}: {}
+localFlake: { ... }: { }

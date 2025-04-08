@@ -1,5 +1,5 @@
 {
-  imports = [./impl.nix];
+  imports = [ ./impl.nix ];
 
   programs.centerpiece = {
     enable = true;

@@ -4,7 +4,8 @@
   pkgs,
   system,
   ...
-}: {
+}:
+{
   programs.ghostty = {
     enable = true;
     enableZshIntegration = true;

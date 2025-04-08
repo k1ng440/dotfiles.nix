@@ -1,9 +1,16 @@
 # Hyprland monitor config
-{lib, ...}: let
-  srvLib = import ./binds/lib.nix {inherit lib;};
+{ lib, ... }:
+let
+  srvLib = import ./binds/lib.nix { inherit lib; };
 
-  inherit (srvLib) mainMod Shift Alt Hyper;
-in {
+  inherit (srvLib)
+    mainMod
+    Shift
+    Alt
+    Hyper
+    ;
+in
+{
   wayland.windowManager.hyprland.myBinds = {
     "Tab" = {
       mod = mainMod;
@@ -31,9 +38,8 @@ in {
     };
   };
 
-  wayland.windowManager.hyprland.settings.monitor =
-    lib.mkDefault
-    (builtins.trace ''
+  wayland.windowManager.hyprland.settings.monitor = lib.mkDefault (
+    builtins.trace ''
       You probably want to override the
       `wayland.windowManager.hyprland.settings.monitor` setting.
 
@@ -41,5 +47,6 @@ in {
       resolution can be pretty bad.
 
       See https://wiki.hyprland.org/Configuring/Monitors/
-    '' {});
+    '' { }
+  );
 }

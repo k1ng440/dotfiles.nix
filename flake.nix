@@ -2,73 +2,110 @@
   description = "k1ng's NixOS, nix-darwin and Home Manager Configuration";
 
   nixConfig = {
-    extra-substituters = ["https://nix-community.cachix.org"];
+    extra-substituters = [ "https://nix-community.cachix.org" ];
     extra-trusted-public-keys = [
       "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
     ];
   };
 
-  outputs = inputs @ {
-    self,
-    nixpkgs,
-    flake-parts,
-    flake-root,
-    home-manager,
-    mission-control,
-    treefmt-nix,
-    devshell,
-    sops-nix,
-    ...
-  }: let
-    lib = nixpkgs.lib;
-    home-manager-lib = home-manager.lib;
-    flake-parts-lib = flake-parts.lib;
-    mylib = import ./nix/lib {lib = nixpkgs.lib;};
-    # rawNvimPlugins = helper.filterInputsByPrefix { inherit (nixpkgs) lib; } "nvim-plugin-";
-  in (flake-parts.lib.mkFlake {
-      inherit inputs;
-      specialArgs = {inherit lib mylib home-manager-lib flake-parts-lib;};
-    } ({
-      withSystem,
-      moduleWithSystem,
-      flake-parts-lib,
+  outputs =
+    inputs@{
+      self,
+      nixpkgs,
+      flake-parts,
+      flake-root,
+      home-manager,
+      mission-control,
+      treefmt-nix,
+      devshell,
+      sops-nix,
       ...
-    }: let
-      inherit (flake-parts-lib) importApply;
+    }:
+    let
+      lib = nixpkgs.lib;
+      home-manager-lib = home-manager.lib;
+      flake-parts-lib = flake-parts.lib;
+      mylib = import ./nix/lib { lib = nixpkgs.lib; };
+    in
+    # rawNvimPlugins = helper.filterInputsByPrefix { inherit (nixpkgs) lib; } "nvim-plugin-";
+    (flake-parts.lib.mkFlake
+      {
+        inherit inputs;
+        specialArgs = {
+          inherit
+            lib
+            mylib
+            home-manager-lib
+            flake-parts-lib
+            ;
+        };
+      }
+      (
+        {
+          withSystem,
+          moduleWithSystem,
+          flake-parts-lib,
+          ...
+        }:
+        let
+          inherit (flake-parts-lib) importApply;
 
-      flakeModules = {
+          flakeModules = {
 
-        desktopEnvironment = importApply ./flake-modules/desktop-environment { localFlake = self; inherit withSystem; };
-        nixosCommon = importApply ./flake-modules/nixos-common { localFlake = self; inherit withSystem; };
-        nixosModules = importApply ./nixos { localFlake = self; inherit withSystem; };
-        nixModules = importApply ./nix { localFlake = self; inherit withSystem; };
-        virtualisation = importApply ./flake-modules/virtualisation { localFlake = self; inherit withSystem; };
-      };
-    in {
-      # Debug: https://flake.parts/debug.html
-      debug = true;
-      imports =
-        [
-          ./nix/merger/mkHomeManagerOutputsMerge.nix
-          treefmt-nix.flakeModule
-          flake-root.flakeModule
-          mission-control.flakeModule
-          devshell.flakeModule
-          ./nix/formatter.nix
-        ]
-        ++ (builtins.attrValues flakeModules);
+            desktopEnvironment = importApply ./flake-modules/desktop-environment {
+              localFlake = self;
+              inherit withSystem;
+            };
+            nixosCommon = importApply ./flake-modules/nixos-common {
+              localFlake = self;
+              inherit withSystem;
+            };
+            nixosModules = importApply ./nixos {
+              localFlake = self;
+              inherit withSystem;
+            };
+            nixModules = importApply ./nix {
+              localFlake = self;
+              inherit withSystem;
+            };
+            virtualisation = importApply ./flake-modules/virtualisation {
+              localFlake = self;
+              inherit withSystem;
+            };
+          };
+        in
+        {
+          # Debug: https://flake.parts/debug.html
+          debug = true;
+          imports = [
+            ./nix/merger/mkHomeManagerOutputsMerge.nix
+            treefmt-nix.flakeModule
+            flake-root.flakeModule
+            mission-control.flakeModule
+            devshell.flakeModule
+            ./nix/formatter.nix
+          ] ++ (builtins.attrValues flakeModules);
 
-      flake = {
-        nix.nixPath = [ "nixpkgs=${inputs.nixpkgs}" ];
-      };
-      systems = ["x86_64-linux" "aarch64-linux" "x86_64-darwin" "aarch64-darwin"];
-    }));
+          flake = {
+            nix.nixPath = [ "nixpkgs=${inputs.nixpkgs}" ];
+          };
+          systems = [
+            "x86_64-linux"
+            "aarch64-linux"
+            "x86_64-darwin"
+            "aarch64-darwin"
+          ];
+        }
+      )
+    );
 
-  /***********************************
-  ************************************
-  ************ IMPORTS ***************
-  ************************************
-  ***********************************/
+  /**
+    *********************************
+    ************************************
+    ************ IMPORTS ***************
+    ************************************
+    **********************************
+  */
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-24.11";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";

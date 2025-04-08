@@ -6,16 +6,14 @@
   variables,
   rawNvimPlugins,
   ...
-}: let
-  normalPackages = [];
-  nvimConfigDirectory =
-    config.lib.file.mkOutOfStoreSymlink
-    "${config.home.homeDirectory}/nix-config/nvim";
-  intelephenseLicenseFile =
-    config.lib.file.mkOutOfStoreSymlink
-    "${config.home.homeDirectory}/nix-config/secrets/intelephense-license.txt";
-  plugins = import ./plugins.nix {inherit pkgs rawNvimPlugins;};
-in {
+}:
+let
+  normalPackages = [ ];
+  nvimConfigDirectory = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/nix-config/nvim";
+  intelephenseLicenseFile = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/nix-config/secrets/intelephense-license.txt";
+  plugins = import ./plugins.nix { inherit pkgs rawNvimPlugins; };
+in
+{
   programs.neovim = {
     enable = true;
     defaultEditor = true;

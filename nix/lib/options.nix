@@ -1,21 +1,26 @@
-{lib, ...}: let
+{ lib, ... }:
+let
   inherit (lib) mkEnableOption mkOption types;
-in {
+in
+{
   # Define another enable option that defaults to true
-  mkEnableOpt' = s: (mkEnableOption s) // {default = true;};
+  mkEnableOpt' = s: (mkEnableOption s) // { default = true; };
 
-  mkOpt = type: default: mkOption {inherit type default;};
+  mkOpt = type: default: mkOption { inherit type default; };
 
-  mkOpt' = type: default: description:
-    mkOption {inherit type default description;};
+  mkOpt' =
+    type: default: description:
+    mkOption { inherit type default description; };
 
-  mkOptStr = value:
+  mkOptStr =
+    value:
     mkOption {
       type = with types; uniq str;
       default = value;
     };
 
-  mkBoolOpt = default:
+  mkBoolOpt =
+    default:
     mkOption {
       inherit default;
       type = types.bool;

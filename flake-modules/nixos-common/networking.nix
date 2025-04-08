@@ -1,4 +1,10 @@
-{lib, config, pkgs, ...}: {
+{
+  lib,
+  config,
+  pkgs,
+  ...
+}:
+{
   networking.networkmanager.enable = true;
   networking.firewall = {
     enable = true;
