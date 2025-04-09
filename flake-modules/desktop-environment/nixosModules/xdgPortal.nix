@@ -2,8 +2,8 @@
 {
   xdg.portal = {
     enable = true;
-    config.common.default = [ "hyprland" ];
-    wlr.enable = true;
-    extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+    withUWSM = true;
+    xwayland.enable = true;
+    extraPortals = with pkgs; [ xdg-desktop-portal-hyprland ];
   };
 }
