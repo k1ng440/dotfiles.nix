@@ -5,6 +5,9 @@
   ...
 }:
 {
+  nixos-common.audio.enable = true;
+  nixos-common.bluetooth.enable = true;
+
   imports = [
     ./boot.nix
     ./filesystem.nix

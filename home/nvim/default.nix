@@ -57,6 +57,7 @@ in
       pkgs.pyright
       pkgs.xmlformat
       pkgs.nixd
+      pkgs.fzf
     ];
   };
 

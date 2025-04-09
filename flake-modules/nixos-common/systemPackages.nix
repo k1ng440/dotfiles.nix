@@ -12,6 +12,7 @@
     jq
     ripgrep
     home-manager
+    tree
   ];
 
   # List of available shells

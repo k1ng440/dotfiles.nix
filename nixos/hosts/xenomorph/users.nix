@@ -2,7 +2,7 @@
 {
   users.mutableUsers = false;
   users.users.k1ng.packages = [
-    inputs.pkgs-unstable.legacyPackages.${pkgs.system}.neovim
+    inputs.nixpkgs-unstable.legacyPackages.${pkgs.system}.neovim
     pkgs.vim
     pkgs.firefox
     pkgs.rofi

@@ -21,6 +21,7 @@ in
          # self.homeManagerModules.de
 	 inputs.nix-index-database.hmModules.nix-index
          ./nvim
+         ./git.nix
          {
            home = {
              username = "k1ng";

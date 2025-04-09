@@ -9,10 +9,11 @@ localFlake:
 {
   flake.nixosModules.common = {
     imports = [
-      ./acme.nix
-      ./audio.nix
       ./boot.nix
       ./fs-trim.nix
+      ./acme.nix
+      ./audio.nix
+      ./bluetooth.nix
       ./i18n.nix
       ./minimal-docs.nix
       ./networking.nix
