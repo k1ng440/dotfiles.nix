@@ -1,11 +1,5 @@
 localFlake:
-{
-  self,
-  lib,
-  config,
-  pkgs,
-  ...
-}:
+{ self, lib, config, pkgs, ... }:
 {
   flake.nixosModules.common = {
     imports = [
@@ -19,6 +13,7 @@ localFlake:
       ./networking.nix
       ./nix.nix
       ./nvidia-gpu.nix
+      ./power.nix
       ./powerManagement.nix
       ./security.nix
       ./services.nix
