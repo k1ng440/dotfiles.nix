@@ -48,6 +48,7 @@
         }:
         let
           inherit (flake-parts-lib) importApply;
+          inherit (inputs.home-manager.lib) homeManagerConfiguration;
 
           flakeModules = {
 
@@ -91,6 +92,31 @@
 
           flake = {
             nix.nixPath = [ "nixpkgs=${inputs.nixpkgs}" ];
+
+            nixosConfigurations = {
+              # Main Workstation
+              xenomorph = nixpkgs.lib.nixosSystem {
+                system = "x86_64-linux";
+                specialArgs = {
+                  inherit inputs;
+                  hostname = "xenomorph";
+                  username = "k1ng";
+                };
+
+                modules = [
+                  ./flake-modules/desktop-environment/nixosModules
+                  ./flake-modules/nixos-common
+                ];
+              };
+            };
+
+            homeConfigurations = {
+              k1ng = homeManagerConfiguration {
+                modules = [
+                  ./flake-modules/desktop-environment/homeManagerModules
+                ];
+              };
+            };
           };
 
           systems = [
