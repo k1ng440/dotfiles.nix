@@ -6,8 +6,10 @@ require('k1ng.config.keymaps')
 require('k1ng.config.lastplace')
 require('k1ng.config.filetypes')
 
-require('k1ng.config.lsp-setup')
-require('k1ng.config.lint-setup')
+if vim.fn.has('0.11.0') == 1 then
+  require('k1ng.config.lsp-setup')
+  require('k1ng.config.lint-setup')
+end
 
 --- plugins
 require('k1ng.config.plugins-setup')

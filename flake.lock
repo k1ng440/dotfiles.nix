@@ -185,19 +185,20 @@
     "home-manager": {
       "inputs": {
         "nixpkgs": [
-          "nixpkgs-unstable"
+          "nixpkgs"
         ]
       },
       "locked": {
-        "lastModified": 1743648554,
-        "narHash": "sha256-23JFd+zd2GamTTdnGuFVeIg8x8C3hLpQJRh/PGTORzo=",
+        "lastModified": 1744117652,
+        "narHash": "sha256-t7dFCDl4vIOOUMhEZnJF15aAzkpaup9x4ZRGToDFYWI=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "107352dde4ff3c01cb5a0b3fe17f5beef37215bc",
+        "rev": "b4e98224ad1336751a2ac7493967a4c9f6d9cb3f",
         "type": "github"
       },
       "original": {
         "owner": "nix-community",
+        "ref": "release-24.11",
         "repo": "home-manager",
         "type": "github"
       }
@@ -214,6 +215,26 @@
       "original": {
         "owner": "Platonic-Systems",
         "repo": "mission-control",
+        "type": "github"
+      }
+    },
+    "nix-index-database": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1743911143,
+        "narHash": "sha256-4j4JPwr0TXHH4ZyorXN5yIcmqIQr0WYacsuPA4ktONo=",
+        "owner": "nix-community",
+        "repo": "nix-index-database",
+        "rev": "a36f6a7148aec2c77d78e4466215cceb2f5f4bfb",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "repo": "nix-index-database",
         "type": "github"
       }
     },
@@ -421,6 +442,137 @@
         "type": "github"
       }
     },
+    "nvim-plugin-blink-ripgrep": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1743444288,
+        "narHash": "sha256-vYigzcEaTvXk/LLBzTYiM8ve5/epAP5kDa7Ey7f8zNM=",
+        "owner": "mikavilpas",
+        "repo": "blink-ripgrep.nvim",
+        "rev": "56084d1f45c8621d23d4bac724c2dc50b1eb75db",
+        "type": "github"
+      },
+      "original": {
+        "owner": "mikavilpas",
+        "repo": "blink-ripgrep.nvim",
+        "type": "github"
+      }
+    },
+    "nvim-plugin-format-ts-errors": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1742922377,
+        "narHash": "sha256-YMzjaOiHU6TOMcYRyMO1RhTtBA2MCPVfnN4pt+igaLY=",
+        "owner": "davidosomething",
+        "repo": "format-ts-errors.nvim",
+        "rev": "4b7418d6689bc0fd3c1db0500c67133422522384",
+        "type": "github"
+      },
+      "original": {
+        "owner": "davidosomething",
+        "repo": "format-ts-errors.nvim",
+        "type": "github"
+      }
+    },
+    "nvim-plugin-git-conflict": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1731162896,
+        "narHash": "sha256-1t0kKxTGLuOvuRkoLgkoqMZpF+oKo8+gMsTdgPsSb+8=",
+        "owner": "akinsho",
+        "repo": "git-conflict.nvim",
+        "rev": "4bbfdd92d547d2862a75b4e80afaf30e73f7bbb4",
+        "type": "github"
+      },
+      "original": {
+        "owner": "akinsho",
+        "ref": "v2.1.0",
+        "repo": "git-conflict.nvim",
+        "type": "github"
+      }
+    },
+    "nvim-plugin-godoc": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1742658653,
+        "narHash": "sha256-w5NP/Hb7e/ZROVvc5+C0xxz4ecnWPdo6ICaCPlpaWhs=",
+        "owner": "fredrikaverpil",
+        "repo": "godoc.nvim",
+        "rev": "356f79853dbb3b3e200064367603751895153c29",
+        "type": "github"
+      },
+      "original": {
+        "owner": "fredrikaverpil",
+        "ref": "v2.3.0",
+        "repo": "godoc.nvim",
+        "type": "github"
+      }
+    },
+    "nvim-plugin-img-clip": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1740346651,
+        "narHash": "sha256-CBZVQ7gTDAONfHrSJEUL4mBjjxj8eeV2KCuZIA/USv8=",
+        "owner": "HakonHarnes",
+        "repo": "img-clip.nvim",
+        "rev": "0bb8b5ced45c2672c70184c87d014194b0705815",
+        "type": "github"
+      },
+      "original": {
+        "owner": "HakonHarnes",
+        "ref": "v0.6.0",
+        "repo": "img-clip.nvim",
+        "type": "github"
+      }
+    },
+    "nvim-plugin-inc-rename": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1742763317,
+        "narHash": "sha256-Uz3nwx8Rvlo+Fuacq+xg/8maKbZ/83Va4IAFdf5HKrM=",
+        "owner": "smjonas",
+        "repo": "inc-rename.nvim",
+        "rev": "87ebe7bee0b83d3b6e4f1494c74abed21b318175",
+        "type": "github"
+      },
+      "original": {
+        "owner": "smjonas",
+        "repo": "inc-rename.nvim",
+        "type": "github"
+      }
+    },
+    "nvim-plugin-other": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1742930941,
+        "narHash": "sha256-n1R1mftE2HuluROGjgUcHM2n1tTQXjZrSLEqTx6Wq5g=",
+        "owner": "rgroli",
+        "repo": "other.nvim",
+        "rev": "20128ea7158dd12df619283a45f336182b369294",
+        "type": "github"
+      },
+      "original": {
+        "owner": "rgroli",
+        "repo": "other.nvim",
+        "type": "github"
+      }
+    },
+    "nvim-plugin-vim-header": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1733538093,
+        "narHash": "sha256-G0W1ElGBqBV+ZXbEdTcVkjZqur2ap4gi/67YuvkesVo=",
+        "owner": "alpertuna",
+        "repo": "vim-header",
+        "rev": "d3f72beec9967eebbdcc1ad687c8826382b28b40",
+        "type": "github"
+      },
+      "original": {
+        "owner": "alpertuna",
+        "repo": "vim-header",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
         "agenix": "agenix",
@@ -432,12 +584,21 @@
         "flake-utils": "flake-utils",
         "home-manager": "home-manager",
         "mission-control": "mission-control",
+        "nix-index-database": "nix-index-database",
         "nixgl": "nixgl",
         "nixos-generators": "nixos-generators",
         "nixos-hardware": "nixos-hardware",
         "nixpkgs": "nixpkgs",
         "nixpkgs-unstable": "nixpkgs-unstable",
         "nur": "nur",
+        "nvim-plugin-blink-ripgrep": "nvim-plugin-blink-ripgrep",
+        "nvim-plugin-format-ts-errors": "nvim-plugin-format-ts-errors",
+        "nvim-plugin-git-conflict": "nvim-plugin-git-conflict",
+        "nvim-plugin-godoc": "nvim-plugin-godoc",
+        "nvim-plugin-img-clip": "nvim-plugin-img-clip",
+        "nvim-plugin-inc-rename": "nvim-plugin-inc-rename",
+        "nvim-plugin-other": "nvim-plugin-other",
+        "nvim-plugin-vim-header": "nvim-plugin-vim-header",
         "sops-nix": "sops-nix",
         "stub-flake": "stub-flake",
         "treefmt-nix": "treefmt-nix",

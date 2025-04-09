@@ -1,7 +1,7 @@
 {
-  pkgs-unstable,
+  pkgs,
+  inputs,
   config,
-  variables,
   theme,
   ...
 }:
@@ -20,7 +20,7 @@ in
 {
   programs.rofi = {
     enable = true;
-    package = pkgs-unstable.rofi;
+    package = inputs.nixpkgs-unstable.legacyPackages.${pkgs.system}.rofi;
 
     theme = {
       "*" = {

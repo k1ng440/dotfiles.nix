@@ -1,6 +1,12 @@
-{ pkgs, ... }:
+{ inputs, pkgs, ... }:
 {
   users.mutableUsers = false;
+  users.users.k1ng.packages = [
+    inputs.pkgs-unstable.legacyPackages.${pkgs.system}.neovim
+    pkgs.vim
+    pkgs.firefox
+    pkgs.rofi
+  ];
 
   users.groups.k1ng = {
     gid = 1000;

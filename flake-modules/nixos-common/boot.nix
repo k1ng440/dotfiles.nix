@@ -1,4 +1,11 @@
 { ... }:
 {
-  boot.kernelModules = [ "coretemp" ];
+  boot.kernelModules = [
+    "coretemp"
+    "zfs"
+  ];
+  boot.supportedFilesystems = [
+    "btrfs"
+    "zfs"
+  ];
 }

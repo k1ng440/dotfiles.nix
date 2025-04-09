@@ -1,5 +1,4 @@
 {
-  variables,
   pkgs,
   config,
   ...

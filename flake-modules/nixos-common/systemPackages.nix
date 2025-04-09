@@ -11,6 +11,7 @@
     httpie
     jq
     ripgrep
+    home-manager
   ];
 
   # List of available shells

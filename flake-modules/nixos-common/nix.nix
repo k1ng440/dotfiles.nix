@@ -32,6 +32,9 @@
       };
 
       settings = {
+        trusted-users = [ "root" "k1ng" ];
+
+        experimental-features = [ "nix-command" "flakes" "pipe-operators" ];
         auto-optimise-store = true;
 
         /*
