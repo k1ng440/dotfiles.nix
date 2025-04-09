@@ -13,7 +13,6 @@
       self,
       nixpkgs,
       flake-parts,
-      flake-root,
       home-manager,
       treefmt-nix,
       devshell,
@@ -49,46 +48,15 @@
         let
           inherit (flake-parts-lib) importApply;
           inherit (inputs.home-manager.lib) homeManagerConfiguration;
-
-          flakeModules = {
-
-            desktopEnvironment = importApply ./flake-modules/desktop-environment {
-              localFlake = self;
-              inherit withSystem;
-            };
-            nixosCommon = importApply ./flake-modules/nixos-common {
-              localFlake = self;
-              inherit withSystem;
-            };
-            nixos = importApply ./nixos {
-              localFlake = self;
-              inherit withSystem;
-            };
-            nixModules = importApply ./nix {
-              localFlake = self;
-              inherit withSystem;
-            };
-            virtualisation = importApply ./flake-modules/virtualisation {
-              localFlake = self;
-              inherit withSystem;
-            };
-            homeConfiguratiions = importApply ./home {
-              localFlake = self;
-              inherit withSystem moduleWithSystem rawNvimPlugins;
-            };
-          };
         in
         {
           # Debug: https://flake.parts/debug.html
           debug = true;
           imports = [
-            ./nix/merger/mkHomeManagerOutputsMerge.nix
-            ./flake-modules/home-manager/flake-module.nix
             treefmt-nix.flakeModule
-            flake-root.flakeModule
             devshell.flakeModule
             ./nix/formatter.nix
-          ] ++ (builtins.attrValues flakeModules);
+          ];
 
           flake = {
             nix.nixPath = [ "nixpkgs=${inputs.nixpkgs}" ];
@@ -103,10 +71,18 @@
                   username = "k1ng";
                 };
 
-                modules = [
-                  ./flake-modules/desktop-environment/nixosModules
-                  ./flake-modules/nixos-common
-                ];
+                modules = [ ./profiles/xenomorph ];
+              };
+
+              vm = nixpkgs.lib.nixosSystem {
+                system = "x86_64-linux";
+                specialArgs = {
+                  inherit inputs;
+                  hostname = "vm";
+                  username = "k1ng";
+                };
+
+                modules = [ ./profiles/vm ];
               };
             };
 
@@ -158,17 +134,12 @@
       inputs.treefmt-nix.follows = "treefmt-nix";
     };
 
-
     stylix.url = "github:danth/stylix";
 
     # utilities
     nixos-generators = {
       url = "github:nix-community/nixos-generators";
       inputs.nixpkgs.follows = "nixpkgs";
-    };
-    disko = {
-      url = "github:nix-community/disko";
-      inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
     treefmt-nix = {
       url = "github:numtide/treefmt-nix";

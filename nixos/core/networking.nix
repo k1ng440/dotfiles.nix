@@ -1,7 +1,8 @@
-{ pkgs, host, options, ... }: {
+{ pkgs, hostname, options, ... }: {
   networking = {
-    hostName = "${host}";
+    hostName = "${hostname}";
     networkmanager.enable = true;
+    netwokring.enableIPv6 = true;
     timeServers = options.networking.timeServers.default ++ ["pool.ntp.org"];
     firewall = {
       enable = true;
@@ -10,5 +11,5 @@
     };
   };
 
-  environment.systemPackages = with pkgs; [networkmanagerapplet];
+  environment.systemPackages = with pkgs; [ networkmanagerapplet ];
 }

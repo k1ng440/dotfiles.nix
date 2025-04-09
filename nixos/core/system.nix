@@ -1,7 +1,13 @@
-{hostname, ...}: let
+{pkgs, hostname, ...}: let
   inherit (import ../../hosts/${hostname}/variables.nix) consoleKeyMap;
 in {
   nix = {
+    gc = {
+      persistent = true;
+      automatic = true;
+      dates = "weekly";
+    };
+
     settings = {
       download-buffer-size = 250000000;
       auto-optimise-store = true;
@@ -24,7 +30,14 @@ in {
         "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
       ];
     };
+    nixPath = [ "nixpkgs=${pkgs.path}" ];
+
+    extraoptions = ''
+        http-connections = 120
+        max-substitution-jobs = 120
+    '';
   };
+
   time.timeZone = "Asia/Dhaka";
   i18n.defaultLocale = "en_US.UTF-8";
   i18n.extraLocaleSettings = {

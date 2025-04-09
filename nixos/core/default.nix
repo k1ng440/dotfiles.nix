@@ -16,6 +16,7 @@
     ./thunar.nix
     ./virtualisation.nix
     ./xserver.nix
+    ./hardware.nix
     inputs.stylix.nixosModules.stylix
   ];
 }
