@@ -48,6 +48,7 @@ in
     gc.automatic = true;
 
     settings = {
+      experimental-features = [ "nix-command" "flakes" "pipe-operators" ];
       auto-optimise-store = true;
       substituters = [
         "https://cache.nixos.org"
@@ -60,7 +61,6 @@ in
     };
 
     extraOptions = ''
-      experimental-features = nix-command flakes
       flake-registry = ${inputs.flake-registry}/flake-registry.json
     '';
 

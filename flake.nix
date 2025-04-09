@@ -15,7 +15,6 @@
       flake-parts,
       flake-root,
       home-manager,
-      mission-control,
       treefmt-nix,
       devshell,
       sops-nix,
@@ -86,7 +85,6 @@
             ./flake-modules/home-manager/flake-module.nix
             treefmt-nix.flakeModule
             flake-root.flakeModule
-            mission-control.flakeModule
             devshell.flakeModule
             ./nix/formatter.nix
           ] ++ (builtins.attrValues flakeModules);
@@ -127,15 +125,15 @@
       url = "github:hercules-ci/flake-parts";
     };
 
-    flake-root.url = "github:srid/flake-root";
-    mission-control.url = "github:Platonic-Systems/mission-control";
-
     # NUR
     nur = {
       url = "github:nix-community/NUR";
       inputs.flake-parts.follows = "flake-parts";
       inputs.treefmt-nix.follows = "treefmt-nix";
     };
+
+
+    stylix.url = "github:danth/stylix";
 
     # utilities
     nixos-generators = {

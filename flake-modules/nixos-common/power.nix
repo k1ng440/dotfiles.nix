@@ -25,15 +25,15 @@ in
   config = lib.mkIf cfg.enable {
     services.upower = lib.mkIf cfg.upower.enable { enable = true; };
 
-    services.nut = lib.mkIf cfg.nut.enable {
-      enable = true;
-      upsmon = {
-        enable = true;
-        settings = {
-          MONITOR = [ "ups@localhost 1 upsmon password master" ];
-        };
-      };
-    };
+    # services.nut = lib.mkIf cfg.nut.enable {
+    #   enable = true;
+    #   upsmon = {
+    #     enable = true;
+    #     settings = {
+    #       MONITOR = [ "ups@localhost 1 upsmon password master" ];
+    #     };
+    #   };
+    # };
 
     # Ensure D-Bus is enabled (required for UPower)
     services.dbus.enable = lib.mkIf (cfg.upower.enable || hasDE) true;

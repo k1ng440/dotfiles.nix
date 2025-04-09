@@ -24,7 +24,7 @@
   wayland.windowManager.hyprland.enable = true;
   wayland.windowManager.hyprland.systemd.enable =
     assert lib.assertMsg osConfig.programs.uwsm.enable
-      "uwsm should be enabled for this setting to work as exxpected";
+      "uwsm should be enabled for this setting to work as expected";
     (lib.mkForce false);
 
   /*

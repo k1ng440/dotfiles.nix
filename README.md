@@ -76,11 +76,13 @@ Contributions are welcome! If you have suggestions, improvements, or encounter i
   - [Flake-parts: writing custom flake modules](https://www.vtimofeenko.com/posts/flake-parts-writing-custom-flake-modules/)
   - [Ultimate Nix Flakes Guide - Vimjoyer](https://www.youtube.com/watch?v=JCeYq72Sko0)
   - [Customize Nix Packages | Gentoo Experience on NixOS - Vimjoyer](https://www.youtube.com/watch?v=jHb7Pe7x1ZY)
+  - [Nix Hour](https://www.youtube.com/results?search_query=nix+hour)
 
 - articles:
   - [Nix by example](https://medium.com/@MrJamesFisher/nix-by-example-a0063a1a4c55)
   - [Flake-parts: writing custom flake modules](https://www.vtimofeenko.com/posts/flake-parts-writing-custom-flake-modules/#declaring-a-package)
 - Inspired by other's configurations:
+  - [Zaney](https://gitlab.com/Zaney/zaneyos)
   - [Andrew Kvalheim](https://codeberg.org/AndrewKvalheim/configuration)
 
 ## Search:

@@ -12,24 +12,29 @@ let
 in
 {
   flake.homeConfigurations = {
-   k1ng = withSystem system ({pkgs, ...}: homeManagerConfiguration {
-       pkgs = inputs.nixpkgs.legacyPackages.${system};
-       extraSpecialArgs = {
+    k1ng = withSystem system ({pkgs, ...}: homeManagerConfiguration {
+      pkgs = inputs.nixpkgs.legacyPackages.${system};
+      extraSpecialArgs = {
         inherit system inputs;
-       };
-       modules = [
-         # self.homeManagerModules.de
-	 inputs.nix-index-database.hmModules.nix-index
-         ./nvim
-         ./git.nix
-         {
-           home = {
-             username = "k1ng";
-             homeDirectory = "/home/k1ng";
-             stateVersion = "24.11";
-           };
-         }
-       ];
-     });
-   };
+      };
+      modules = [
+        self.homeManagerModules.de
+        inputs.nix-index-database.hmModules.nix-index
+        ./nvim
+        ./git.nix
+        ./packages.nix
+        {
+          useGlobalPkgs = true;
+          useUserPackages = true;
+          backupFileExtension = "backup";
+
+          home = {
+            username = "k1ng";
+            homeDirectory = "/home/k1ng";
+            stateVersion = "24.11";
+          };
+        }
+      ];
+    });
+  };
 }

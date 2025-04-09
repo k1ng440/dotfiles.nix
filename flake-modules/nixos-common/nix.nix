@@ -61,7 +61,6 @@
       };
 
       extraOptions = ''
-        experimental-features = nix-command flakes
         http-connections = 120
         max-substitution-jobs = 120
       '';
