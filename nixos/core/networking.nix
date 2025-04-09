@@ -2,7 +2,7 @@
   networking = {
     hostName = "${hostname}";
     networkmanager.enable = true;
-    netwokring.enableIPv6 = true;
+    enableIPv6 = true;
     timeServers = options.networking.timeServers.default ++ ["pool.ntp.org"];
     firewall = {
       enable = true;

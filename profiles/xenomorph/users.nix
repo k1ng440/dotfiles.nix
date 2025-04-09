@@ -1,6 +1,8 @@
 { inputs, pkgs, ... }:
 {
+  programs.fish.enable = true;
   users.mutableUsers = false;
+
   users.users.k1ng.packages = [
     inputs.nixpkgs-unstable.legacyPackages.${pkgs.system}.neovim
     pkgs.vim

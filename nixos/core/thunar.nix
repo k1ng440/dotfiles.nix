@@ -1,5 +1,5 @@
-{ host, pkgs, ... }: let
-  inherit (import ../../hosts/${host}/variables.nix) thunarEnable;
+{ hostname, pkgs, ... }: let
+  inherit (import ../../hosts/${hostname}/variables.nix) thunarEnable;
 in {
   programs = {
     thunar = {

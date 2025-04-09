@@ -23,8 +23,6 @@
       lib = nixpkgs.lib;
       home-manager-lib = home-manager.lib;
       flake-parts-lib = flake-parts.lib;
-      mylib = import ./nix/lib { lib = nixpkgs.lib; };
-      rawNvimPlugins = mylib.filterInputsByPrefix { inherit (nixpkgs) lib; } "nvim-plugin-";
     in
     (flake-parts.lib.mkFlake
       {
@@ -32,7 +30,6 @@
         specialArgs = {
           inherit
             lib
-            mylib
             home-manager-lib
             flake-parts-lib
             ;
@@ -55,7 +52,6 @@
           imports = [
             treefmt-nix.flakeModule
             devshell.flakeModule
-            ./nix/formatter.nix
           ];
 
           flake = {
@@ -69,6 +65,7 @@
                   inherit inputs;
                   hostname = "xenomorph";
                   username = "k1ng";
+                  profile = "nvidia";
                 };
 
                 modules = [ ./profiles/xenomorph ];
@@ -78,8 +75,9 @@
                 system = "x86_64-linux";
                 specialArgs = {
                   inherit inputs;
-                  hostname = "vm";
+                  hostname = "xenomorph";
                   username = "k1ng";
+                  profile = "vm";
                 };
 
                 modules = [ ./profiles/vm ];

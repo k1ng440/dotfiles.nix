@@ -1,5 +1,5 @@
 { lib, config, pkgs, ... }: {
-  fonts = lib.mkIf config.desktop-environment.enable {
+  fonts = {
     packages = with pkgs; [
       noto-fonts-emoji
       noto-fonts-cjk-sans
