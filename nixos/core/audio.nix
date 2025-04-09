@@ -1,5 +1,5 @@
 { config, lib, pkgs, ... }: let
-  cfg = config.nixos-common.audio;
+  cfg = config.audio;
 in {
 
   options.audio = {
@@ -35,6 +35,6 @@ in {
       pulse.enable = cfg.pulseaudioSupport;
     };
 
-    environment.systemPackages = with pkgs; [ pamixer pavucontrol]
+    environment.systemPackages = with pkgs; [ pamixer pavucontrol ];
   };
 }

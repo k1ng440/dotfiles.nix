@@ -1,4 +1,4 @@
-{lib, pkgs, config, ...}:
+{lib, inputs, pkgs, config, ...}:
 let
   cfg = config.desktop-environment;
 in {
@@ -8,17 +8,15 @@ in {
     hyprland = lib.mkEnableOption "Enable Hyprland Enviroment";
   };
 
-  config = lib.mkIf cfg.enable && cfg.hyprland {
+  config = lib.mkIf (cfg.enable && cfg.hyprland) {
     programs.hyprland = {
+      package = inputs.hyprland.packages.${pkgs.system}.hyprland;
+      portalPackage = inputs.hyprland.packages.${pkgs.system}.xdg-desktop-portal-hyprland;
       enable = true;
       withUWSM = true;
-      xwayland.enable = true;
+      xwayland = true;
     };
 
-    # Screensharing
-    xdg.portal = {
-      enable = true;
-      extraPortals = with pkgs; [ xdg-desktop-portal-hyprland ];
-    };
+    environment.systemPackages = with pkgs; [ kitty ];
   };
 }

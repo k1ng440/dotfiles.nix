@@ -6,8 +6,10 @@
     ./users.nix
   ];
 
-  # desktop-environment.enable = true;
-  # desktop-environment.hyprland = true;
+
+  desktop-environment.enable = true;
+  desktop-environment.hyprland = true;
+  audio.enable = true;
 
   # Enable GPU Drivers
   drivers.nvidia.enable = true;

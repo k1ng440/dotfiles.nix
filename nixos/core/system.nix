@@ -1,12 +1,12 @@
-{pkgs, hostname, ...}: let
+{inputs, pkgs, hostname, ...}: let
   inherit (import ../../hosts/${hostname}/variables.nix) consoleKeyMap;
 in {
   nix = {
-    gc = {
-      persistent = true;
-      automatic = true;
-      dates = "weekly";
-    };
+    # gc = {
+    #   persistent = true;
+    #   automatic = true;
+    #   dates = "weekly";
+    # };
 
     settings = {
       download-buffer-size = 250000000;
@@ -30,12 +30,10 @@ in {
         "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
       ];
     };
-    nixPath = [ "nixpkgs=${pkgs.path}" ];
-
-    extraoptions = ''
-        http-connections = 120
-        max-substitution-jobs = 120
+    extraOptions = ''
+        flake-registry = ${inputs.flake-registry}/flake-registry.json
     '';
+    nixPath = [ "nixpkgs=${pkgs.path}" ];
   };
 
   time.timeZone = "Asia/Dhaka";

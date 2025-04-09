@@ -13,10 +13,14 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
-    services.xserver.videoDrivers = [ "nvidia" ];
+    boot.initrd.kernelModules = [ "nvidia" "nvidia_modeset" "nvidia_drm" "nvidia_uvm" ];
+    services.xserver.videoDrivers = lib.mkForce [ "nvidia" ];
     hardware.nvidia = {
       prime.sync.enable = lib.mkForce false;
       open = cfg.open;
+      modesetting.enable = true;
+      powerManagement.enable = false;
+      nvidiaSettings = true;
     };
   };
 }
