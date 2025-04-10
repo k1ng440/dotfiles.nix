@@ -9,9 +9,11 @@
 
   desktop-environment.enable = true;
   desktop-environment.hyprland = true;
-  audio.enable = true;
+  desktop-environment.solaar.enable = true;
 
-  # Enable GPU Drivers
+
+  # Enable Drivers
+  audio.enable = true;
   drivers.nvidia.enable = true;
   vm.guest-services.enable = false;
 }

@@ -21,6 +21,8 @@
     ./applications.nix
     ./fonts.nix
     ./nh.nix
+    ./mime.nix
+    ./solaar.nix
     inputs.stylix.nixosModules.stylix
   ];
 }

@@ -2,7 +2,6 @@
 let
   cfg = config.desktop-environment;
 in {
-
   options.desktop-environment = {
     enable = lib.mkEnableOption "Enable Desktop Enviroment";
     hyprland = lib.mkEnableOption "Enable Hyprland Enviroment";
@@ -14,7 +13,9 @@ in {
       portalPackage = inputs.hyprland.packages.${pkgs.system}.xdg-desktop-portal-hyprland;
       enable = true;
       withUWSM = true;
-      xwayland = true;
+      xwayland = {
+        enable = true;
+      };
     };
 
     environment.systemPackages = with pkgs; [ kitty ];

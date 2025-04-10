@@ -176,6 +176,13 @@
         home-manager.follows = "stub-flake";
       };
     };
+    solaar = {
+      url = "https://flakehub.com/f/Svenum/Solaar-Flake/*.tar.gz";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    # catppuccin = {
+    #   url = "https://flakehub.com/f/catppuccin/nix/*";
+    # };
 
     # nixos-needsreboot = {
     #   url = "https://flakehub.com/f/thefossguy/nixos-needsreboot/*.tar.gz";
@@ -196,9 +203,6 @@
     # nix-vscode-extensions = {
     #   url = "github:nix-community/nix-vscode-extensions";
     #   inputs.nixpkgs.follows = "nixpkgs";
-    # };
-    # catppuccin = {
-    #   url = "https://flakehub.com/f/catppuccin/nix/*";
     # };
     # catppuccin-vsc = {
     #   url = "https://flakehub.com/f/catppuccin/vscode/*";
