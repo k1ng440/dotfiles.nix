@@ -12,6 +12,8 @@ let
   plugins = import ./plugins.nix { inherit pkgs inputs; };
 in
 {
+  home.packages = [ pkgs.wl-clipboard ];
+
   programs.neovim = {
     enable = true;
     defaultEditor = true;

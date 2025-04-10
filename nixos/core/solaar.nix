@@ -1,9 +1,9 @@
 {lib, inputs, pkgs, config, ...}:
 let
-  cfg = config.desktop-environment.solaar;
+  cfg = config.nixconfig.desktop-environment.solaar;
 in {
 
-  options.desktop-environment = {
+  options.nixconfig.desktop-environment = {
     solaar = {
      enable = lib.mkEnableOption "Enable Solaar For logitech";
     };

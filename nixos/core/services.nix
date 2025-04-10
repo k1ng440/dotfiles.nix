@@ -9,19 +9,16 @@
     tumbler.enable = true; # Image/video preview
     gnome.gnome-keyring.enable = true;
 
-    smartd = {
-      enable =
-        if profile == "vm"
-        then false
-        else true;
-      autodetect = true;
+    # TODO: Only enable this on truested networks.
+    avahi = {
+      enable = true;
+      nssmdns4 = true;
+      openFirewall = true;
     };
 
-    pipewire = {
-      enable = true;
-      alsa.enable = true;
-      alsa.support32Bit = true;
-      pulse.enable = true;
+    smartd = {
+      enable = (profile != "vm");
+      autodetect = true;
     };
   };
 }

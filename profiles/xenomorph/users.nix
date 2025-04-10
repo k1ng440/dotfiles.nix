@@ -1,6 +1,7 @@
 { inputs, pkgs, ... }:
 {
   programs.fish.enable = true;
+  nix.settings.trusted-users = [ "k1ng" ];
   users.mutableUsers = false;
 
   users.users.k1ng.packages = [

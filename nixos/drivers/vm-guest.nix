@@ -1,8 +1,8 @@
 { lib, pkgs, config, ... }:
 let
-  cfg = config.vm.guest-services;
+  cfg = config.nixconfig.vm.guest-services;
 in {
-  options.vm.guest-services = {
+  options.nixconfig.vm.guest-services = {
     enable = lib.mkEnableOption "Enable Virtual Machine Guest Services";
   };
 

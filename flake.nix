@@ -8,100 +8,60 @@
     ];
   };
 
-  outputs =
-    inputs@{
-      self,
-      nixpkgs,
-      flake-parts,
-      home-manager,
-      treefmt-nix,
-      devshell,
-      sops-nix,
-      ...
-    }:
+  outputs = inputs@{ self, nixpkgs, nixpkgs-unstable, home-manager, ... }:
     let
-      lib = nixpkgs.lib;
-      home-manager-lib = home-manager.lib;
-      flake-parts-lib = flake-parts.lib;
-    in
-    (flake-parts.lib.mkFlake
-      {
-        inherit inputs;
-        specialArgs = {
-          inherit
-            lib
-            home-manager-lib
-            flake-parts-lib
-            ;
-        };
-      }
-      (
-        {
-          withSystem,
-          moduleWithSystem,
-          flake-parts-lib,
-          ...
-        }:
-        let
-          inherit (flake-parts-lib) importApply;
-          inherit (inputs.home-manager.lib) homeManagerConfiguration;
-        in
-        {
-          # Debug: https://flake.parts/debug.html
-          debug = true;
-          imports = [
-            treefmt-nix.flakeModule
-            devshell.flakeModule
-          ];
+      stateVersion = "24.11"; # Do not change
+      inherit (self) outputs;
+      inherit (nixpkgs) lib;
+      myLib = import ./nix/lib { inherit inputs outputs stateVersion; };
+    in {
+      /*
+      Needed for nixd
+      */
+      nix.nixPath = [ "nixpkgs=${inputs.nixpkgs}" ];
 
-          flake = {
-            nix.nixPath = [ "nixpkgs=${inputs.nixpkgs}" ];
-
-            nixosConfigurations = {
-              # Main Workstation
-              xenomorph = nixpkgs.lib.nixosSystem {
-                system = "x86_64-linux";
-                specialArgs = {
-                  inherit inputs;
-                  hostname = "xenomorph";
-                  username = "k1ng";
-                  profile = "nvidia";
-                };
-
-                modules = [ ./profiles/xenomorph ];
-              };
-
-              vm = nixpkgs.lib.nixosSystem {
-                system = "x86_64-linux";
-                specialArgs = {
-                  inherit inputs;
-                  hostname = "xenomorph";
-                  username = "k1ng";
-                  profile = "vm";
-                };
-
-                modules = [ ./profiles/vm ];
-              };
-            };
-
-            homeConfigurations = {
-              k1ng = homeManagerConfiguration {
-                modules = [
-                  ./flake-modules/desktop-environment/homeManagerModules
-                ];
-              };
-            };
+      /**
+      NixOS Configurations
+      */
+      nixosConfigurations = {
+        xenomorph = nixpkgs.lib.nixosSystem {
+          system = "x86_64-linux";
+          specialArgs = {
+            inherit inputs;
+            hostname = "xenomorph";
+            username = "k1ng";
+            profile = "nvidia";
           };
 
-          systems = [
-            "x86_64-linux"
-            "aarch64-linux"
-            "x86_64-darwin"
-            "aarch64-darwin"
+          modules = [
+            ./profiles/xenomorph
           ];
-        }
-      )
-    );
+        };
+        vm = nixpkgs.lib.nixosSystem {
+          system = "x86_64-linux";
+          specialArgs = {
+            inherit inputs;
+            hostname = "xenomorph";
+            username = "k1ng";
+            profile = "vm";
+          };
+
+          modules = [ ./profiles/vm ];
+        };
+      };
+
+      /**
+       Home Manager Configurations
+      */
+      homeConfigurations = {
+        "k1ng@xenomorph" = myLib.mkHome {
+          desktop = "hyprland";
+          hostname = "xenomorph";
+          system = "x86_64-linux";
+        };
+      };
+    };
+
 
   /**
       ***********************************
@@ -180,9 +140,9 @@
       url = "https://flakehub.com/f/Svenum/Solaar-Flake/*.tar.gz";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    # catppuccin = {
-    #   url = "https://flakehub.com/f/catppuccin/nix/*";
-    # };
+    catppuccin = {
+      url = "https://flakehub.com/f/catppuccin/nix/*";
+    };
 
     # nixos-needsreboot = {
     #   url = "https://flakehub.com/f/thefossguy/nixos-needsreboot/*.tar.gz";
@@ -196,14 +156,14 @@
       url = "github:nix-community/nix-index-database";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    # vscode-server = {
-    #   url = "github:nix-community/nixos-vscode-server";
-    #   inputs.nixpkgs.follows = "nixpkgs";
-    # };
-    # nix-vscode-extensions = {
-    #   url = "github:nix-community/nix-vscode-extensions";
-    #   inputs.nixpkgs.follows = "nixpkgs";
-    # };
+    vscode-server = {
+      url = "github:nix-community/nixos-vscode-server";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    nix-vscode-extensions = {
+      url = "github:nix-community/nix-vscode-extensions";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     # catppuccin-vsc = {
     #   url = "https://flakehub.com/f/catppuccin/vscode/*";
     #   inputs.nixpkgs.follows = "nixpkgs-unstable";

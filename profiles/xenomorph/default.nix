@@ -1,5 +1,7 @@
 {lib, hostname, username, inputs, ...}: {
   imports = [
+    inputs.nixos-hardware.nixosModules.common-cpu-amd-zenpower
+
     ../../hosts/${hostname}
     ../../nixos/core
     ../../nixos/drivers
@@ -7,13 +9,13 @@
   ];
 
 
-  desktop-environment.enable = true;
-  desktop-environment.hyprland = true;
-  desktop-environment.solaar.enable = true;
-
+  nixconfig.desktop-environment.enable = true;
+  nixconfig.desktop-environment.hyprland = true;
+  nixconfig.desktop-environment.solaar.enable = true;
 
   # Enable Drivers
-  audio.enable = true;
-  drivers.nvidia.enable = true;
-  vm.guest-services.enable = false;
+  nixconfig.drivers.audio.enable = true;
+  nixconfig.drivers.nvidia.enable = true;
+  nixconfig.drivers.nvidia.open = false;
+  nixconfig.vm.guest-services.enable = false;
 }

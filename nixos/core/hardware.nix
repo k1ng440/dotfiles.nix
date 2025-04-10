@@ -9,7 +9,6 @@
       extraBackends = [ pkgs.sane-airscan ];
       # disabledDefaultBackends = [ "escl" ];
     };
-    graphics.enable = true;
     graphics.enable32Bit = true;
     enableRedistributableFirmware = true;
     keyboard.qmk.enable = true;

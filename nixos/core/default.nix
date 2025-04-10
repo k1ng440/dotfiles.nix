@@ -23,6 +23,7 @@
     ./nh.nix
     ./mime.nix
     ./solaar.nix
+    ./udev.nix
     inputs.stylix.nixosModules.stylix
   ];
 }
