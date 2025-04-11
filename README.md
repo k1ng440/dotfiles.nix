@@ -91,6 +91,7 @@ Contributions are welcome! If you have suggestions, improvements, or encounter i
 - [NixOS Search Options](https://search.nixos.org/options)
 - [NixOS Search Packages](https://search.nixos.org/packages)
 - [home-manager specific config options](https://mipmip.github.io/home-manager-option-search/)
+- [home-manager specific config search](https://home-manager-options.extranix.com/)
 
 ## example nix repl
 

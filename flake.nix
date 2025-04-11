@@ -8,100 +8,60 @@
     ];
   };
 
-  outputs =
-    inputs@{
-      self,
-      nixpkgs,
-      flake-parts,
-      flake-root,
-      home-manager,
-      treefmt-nix,
-      devshell,
-      sops-nix,
-      ...
-    }:
+  outputs = inputs@{ self, nixpkgs, nixpkgs-unstable, home-manager, ... }:
     let
-      lib = nixpkgs.lib;
-      home-manager-lib = home-manager.lib;
-      flake-parts-lib = flake-parts.lib;
-      mylib = import ./nix/lib { lib = nixpkgs.lib; };
-      rawNvimPlugins = mylib.filterInputsByPrefix { inherit (nixpkgs) lib; } "nvim-plugin-";
-    in
-    (flake-parts.lib.mkFlake
-      {
-        inherit inputs;
-        specialArgs = {
-          inherit
-            lib
-            mylib
-            home-manager-lib
-            flake-parts-lib
-            ;
-        };
-      }
-      (
-        {
-          withSystem,
-          moduleWithSystem,
-          flake-parts-lib,
-          ...
-        }:
-        let
-          inherit (flake-parts-lib) importApply;
+      stateVersion = "24.11"; # Do not change
+      inherit (self) outputs;
+      inherit (nixpkgs) lib;
+      myLib = import ./nix/lib { inherit inputs outputs stateVersion; };
+    in {
+      /*
+      Needed for nixd
+      */
+      nix.nixPath = [ "nixpkgs=${inputs.nixpkgs}" ];
 
-          flakeModules = {
-
-            desktopEnvironment = importApply ./flake-modules/desktop-environment {
-              localFlake = self;
-              inherit withSystem;
-            };
-            nixosCommon = importApply ./flake-modules/nixos-common {
-              localFlake = self;
-              inherit withSystem;
-            };
-            nixos = importApply ./nixos {
-              localFlake = self;
-              inherit withSystem;
-            };
-            nixModules = importApply ./nix {
-              localFlake = self;
-              inherit withSystem;
-            };
-            virtualisation = importApply ./flake-modules/virtualisation {
-              localFlake = self;
-              inherit withSystem;
-            };
-            homeConfiguratiions = importApply ./home {
-              localFlake = self;
-              inherit withSystem moduleWithSystem rawNvimPlugins;
-            };
-          };
-        in
-        {
-          # Debug: https://flake.parts/debug.html
-          debug = true;
-          imports = [
-            ./nix/merger/mkHomeManagerOutputsMerge.nix
-            ./flake-modules/home-manager/flake-module.nix
-            treefmt-nix.flakeModule
-            flake-root.flakeModule
-            devshell.flakeModule
-            ./nix/formatter.nix
-          ] ++ (builtins.attrValues flakeModules);
-
-          flake = {
-            nix.nixPath = [ "nixpkgs=${inputs.nixpkgs}" ];
+      /**
+      NixOS Configurations
+      */
+      nixosConfigurations = {
+        xenomorph = nixpkgs.lib.nixosSystem {
+          system = "x86_64-linux";
+          specialArgs = {
+            inherit inputs;
+            hostname = "xenomorph";
+            username = "k1ng";
+            profile = "nvidia";
           };
 
-          systems = [
-            "x86_64-linux"
-            "aarch64-linux"
-            "x86_64-darwin"
-            "aarch64-darwin"
+          modules = [
+            ./profiles/xenomorph
           ];
-        }
-      )
-    );
+        };
+        vm = nixpkgs.lib.nixosSystem {
+          system = "x86_64-linux";
+          specialArgs = {
+            inherit inputs;
+            hostname = "xenomorph";
+            username = "k1ng";
+            profile = "vm";
+          };
+
+          modules = [ ./profiles/vm ];
+        };
+      };
+
+      /**
+       Home Manager Configurations
+      */
+      homeConfigurations = {
+        "k1ng@xenomorph" = myLib.mkHome {
+          desktop = "hyprland";
+          hostname = "xenomorph";
+          system = "x86_64-linux";
+        };
+      };
+    };
+
 
   /**
       ***********************************
@@ -119,6 +79,7 @@
       url = "github:nix-community/home-manager/release-24.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    hyprland.url = "github:hyprwm/Hyprland";
 
     # flake-parts
     flake-parts = {
@@ -132,17 +93,12 @@
       inputs.treefmt-nix.follows = "treefmt-nix";
     };
 
-
     stylix.url = "github:danth/stylix";
 
     # utilities
     nixos-generators = {
       url = "github:nix-community/nixos-generators";
       inputs.nixpkgs.follows = "nixpkgs";
-    };
-    disko = {
-      url = "github:nix-community/disko";
-      inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
     treefmt-nix = {
       url = "github:numtide/treefmt-nix";
@@ -180,6 +136,13 @@
         home-manager.follows = "stub-flake";
       };
     };
+    solaar = {
+      url = "https://flakehub.com/f/Svenum/Solaar-Flake/*.tar.gz";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    catppuccin = {
+      url = "https://flakehub.com/f/catppuccin/nix/*";
+    };
 
     # nixos-needsreboot = {
     #   url = "https://flakehub.com/f/thefossguy/nixos-needsreboot/*.tar.gz";
@@ -193,17 +156,14 @@
       url = "github:nix-community/nix-index-database";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    # vscode-server = {
-    #   url = "github:nix-community/nixos-vscode-server";
-    #   inputs.nixpkgs.follows = "nixpkgs";
-    # };
-    # nix-vscode-extensions = {
-    #   url = "github:nix-community/nix-vscode-extensions";
-    #   inputs.nixpkgs.follows = "nixpkgs";
-    # };
-    # catppuccin = {
-    #   url = "https://flakehub.com/f/catppuccin/nix/*";
-    # };
+    vscode-server = {
+      url = "github:nix-community/nixos-vscode-server";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    nix-vscode-extensions = {
+      url = "github:nix-community/nix-vscode-extensions";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     # catppuccin-vsc = {
     #   url = "https://flakehub.com/f/catppuccin/vscode/*";
     #   inputs.nixpkgs.follows = "nixpkgs-unstable";

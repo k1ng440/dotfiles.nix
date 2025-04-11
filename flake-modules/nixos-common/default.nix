@@ -1,7 +1,4 @@
-localFlake:
-{ self, lib, config, pkgs, ... }:
-{
-  flake.nixosModules.common = {
+_: {
     imports = [
       ./boot.nix
       ./fs-trim.nix
@@ -22,5 +19,4 @@ localFlake:
       ./systemPackages.nix
       ./time.nix
     ];
-  };
 }
