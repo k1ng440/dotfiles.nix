@@ -1,230 +1,61 @@
+localFlake:
+# Arguments provided by flake-parts module system & perSystem
 {
-  config,
-  hostname,
-  isInstall,
-  isWorkstation,
-  inputs,
-  lib,
-  modulesPath,
-  outputs,
-  pkgs,
-  platform,
-  stateVersion,
-  username,
+  config, # Module system config object
+  inputs, # Flake inputs passed down
+  lib, # Nixpkgs lib and flake-parts lib merged
+  mylib, # Custom lib
+  self, # The flake's self reference
   ...
 }:
+let
+  inherit (inputs)
+    disko
+    nixos-generators
+    nixos-hardware
+    nixpkgs
+    nixpkgs-unstable
+    ;
+
+  # Define default/common modules
+  defaultModules = [
+    # make flake inputs accessible in NixOS module arguments
+    {
+      _module.args.self = self;
+      _module.args.inputs = inputs;
+    }
+    # # load common modules
+    # ({...}: {
+    #   # imports = [
+    #   # ];
+    # })
+  ];
+in
 {
   imports = [
-    # Use module this flake exports; from modules/nixos
-    #outputs.nixosModules.my-module
-    # Use modules from other flakes
-    inputs.catppuccin.nixosModules.catppuccin
-    inputs.disko.nixosModules.disko
-    # inputs.nix-flatpak.nixosModules.nix-flatpak
-    inputs.nix-index-database.nixosModules.nix-index
-    # inputs.nix-snapd.nixosModules.default
-    inputs.sops-nix.nixosModules.sops
-    (modulesPath + "/installer/scan/not-detected.nix")
-    ./${hostname}
-    ./_mixins/configs
-    ./_mixins/features
-    ./_mixins/scripts
-    ./_mixins/services
-    ./_mixins/users
-  ] ++ lib.optional isWorkstation ./_mixins/desktop;
+    ./images
+  ];
 
-  boot = {
-    consoleLogLevel = lib.mkDefault 0;
-    kernelModules = [ "vhost_vsock" ];
-    kernelPackages = lib.mkForce pkgs.linuxPackages_6_12;
+  flake.nixosConfigurations = {
+    xenomorph = lib.nixosSystem {
+      specialArgs = {
+        inherit lib mylib;
+        # Note: self, inputs, lib, etc., are passed via _module.args in defaultModules
+      };
 
-    # Only enable the systemd-boot on installs, not live media (.ISO images)
-    loader = lib.mkIf isInstall {
-      efi.canTouchEfiVariables = true;
-      systemd-boot.configurationLimit = 10;
-      systemd-boot.consoleMode = "max";
-      systemd-boot.enable = true;
-      systemd-boot.memtest86.enable = true;
-      timeout = 10;
+      modules =
+        defaultModules
+        ++ [
+          disko.nixosModules.disko
+          nixos-hardware.nixosModules.common-pc
+          nixos-hardware.nixosModules.common-gpu-nvidia-nonprime
+          nixos-hardware.nixosModules.common-cpu-amd-zenpower
+        ]
+        ++ [
+          self.nixosModules.common
+          self.nixosModules.de
+          ./hosts/xenomorph
+        ];
     };
-  };
-  documentation.enable = true;
-  documentation.nixos.enable = false;
-  documentation.man.enable = true;
-  documentation.info.enable = false;
-  documentation.doc.enable = false;
-
-  environment = {
-    # Eject nano and perl from the system
-    defaultPackages =
-      with pkgs;
-      lib.mkForce [
-        coreutils-full
-        # inputs.nixpkgs-unstable.packages.${platform}.neovim
-      ];
-
-    systemPackages =
-      with pkgs;
-      [
-        git
-        nix-output-monitor
-        rsync
-        sops
-        age
-        curl
-      ]
-      ++ lib.optionals isInstall [
-        # inputs.nixos-needsreboot.packages.${platform}.default
-        nvd
-        nvme-cli
-        smartmontools
-      ];
-
-    variables = {
-      EDITOR = "nvim";
-      SYSTEMD_EDITOR = "nvim";
-      VISUAL = "nvim";
-    };
-  };
-
-  nixpkgs = {
-    # You can add overlays here
-    overlays = [
-      # Add overlays your own flake exports (from overlays and pkgs dir):
-      outputs.overlays.additions
-      outputs.overlays.modifications
-      outputs.overlays.unstable-packages
-      # Add overlays exported from other flakes:
-    ];
-    # Configure your nixpkgs instance
-    config = {
-      allowUnfree = true;
-    };
-  };
-
-  nix =
-    let
-      flakeInputs = lib.filterAttrs (_: lib.isType "flake") inputs;
-    in
-    {
-      settings = {
-        flake-registry = "";
-        nix-path = config.nix.nixPath;
-        warn-dirty = false;
-        experimental-features = "nix-command flakes";
-        auto-optimise-store = true;
-      };
-      # Disable channels
-      channel.enable = false;
-      # Make flake registry and nix path match flake inputs
-      registry = lib.mapAttrs (_: flake: { inherit flake; }) flakeInputs;
-      nixPath = lib.mapAttrsToList (n: _: "${n}=flake:${n}") flakeInputs;
-    };
-
-  nixpkgs.hostPlatform = lib.mkDefault "${platform}";
-
-  programs = {
-    command-not-found.enable = false;
-    fish = {
-      enable = true;
-    };
-
-    nh = {
-      clean = {
-        enable = true;
-        extraArgs = "--keep-since 15d --keep 10";
-      };
-      enable = true;
-      flake = "/home/${username}/nix-config";
-    };
-
-    nix-index-database.comma.enable = isInstall;
-
-    nix-ld = lib.mkIf isInstall {
-      enable = true;
-      libraries = with pkgs; [
-        # Add any missing dynamic libraries for unpackaged
-        # programs here, NOT in environment.systemPackages
-      ];
-    };
-  };
-
-  services = {
-    fwupd.enable = isInstall;
-    hardware.bolt.enable = true;
-    smartd.enable = isInstall;
-  };
-
-  # https://dl.thalheim.io/
-  sops = lib.mkIf isInstall {
-    validateSopsFiles = true;
-    age = {
-      keyFile = "/var/lib/sops-nix/keys.txt";
-      generateKey = false;
-    };
-    defaultSopsFile = ../secrets/secrets.yaml;
-    secrets = {
-      ssh_key = {
-        mode = "0600";
-        path = "/root/.ssh/id_rsa";
-      };
-      ssh_pub = {
-        mode = "0644";
-        path = "/root/.ssh/id_rsa.pub";
-      };
-      # Use `make-host-keys` to enroll new host keys.
-      initrd_ssh_host_ed25519_key = {
-        mode = "0600";
-        path = "/etc/ssh/initrd_ssh_host_ed25519_key";
-        sopsFile = ../secrets/initrd.yaml;
-      };
-      initrd_ssh_host_ed25519_key_pub = {
-        mode = "0644";
-        path = "/etc/ssh/initrd_ssh_host_ed25519_key.pub";
-        sopsFile = ../secrets/initrd.yaml;
-      };
-      ssh_host_ed25519_key = {
-        mode = "0600";
-        path = "/etc/ssh/ssh_host_ed25519_key";
-        sopsFile = ../secrets/${hostname}.yaml;
-      };
-      ssh_host_ed25519_key_pub = {
-        mode = "0644";
-        path = "/etc/ssh/ssh_host_ed25519_key.pub";
-        sopsFile = ../secrets/${hostname}.yaml;
-      };
-      ssh_host_rsa_key = {
-        mode = "0600";
-        path = "/etc/ssh/ssh_host_rsa_key";
-        sopsFile = ../secrets/${hostname}.yaml;
-      };
-      ssh_host_rsa_key_pub = {
-        mode = "0644";
-        path = "/etc/ssh/ssh_host_rsa_key.pub";
-        sopsFile = ../secrets/${hostname}.yaml;
-      };
-      "xenomorph/hashed_password_file" = {
-        sopsFile = ../secrets/${hostname}.yaml;
-      };
-      "xenomorph/zfs_root_key_bin" = {
-        sopsFile = ../secrets/${hostname}.yaml;
-      };
-      "xenomorph/host_id" = {
-        sopsFile = ../secrets/${hostname}.yaml;
-      };
-    };
-  };
-
-  system = {
-    # activationScripts = {
-    #   nixos-needsreboot = lib.mkIf isInstall {
-    #     supportsDryActivation = true;
-    #     text = "${
-    #       lib.getExe inputs.nixos-needsreboot.packages.${pkgs.system}.default
-    #     } \"$systemConfig\" || true";
-    #   };
-    # };
-    nixos.label = lib.mkIf isInstall "-";
-    inherit stateVersion;
   };
 }

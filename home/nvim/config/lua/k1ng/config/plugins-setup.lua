@@ -71,7 +71,7 @@ oil.setup({
 vim.schedule(function()
   -- bufferline.nvim setup. https://github.com/akinsho/bufferline.nvim
   -- A snazzy 💅 buffer line (with tabpage integration) for Neovim built using lua.
-  require('bufferline').setup({ })
+  require('bufferline').setup({})
 
   -- render-markdown.nvim setup. https://github.com/MeanderingProgrammer/render-markdown.nvim
   -- Plugin to improve viewing Markdown files in Neovim
@@ -82,9 +82,9 @@ vim.schedule(function()
   require('git-conflict').setup({})
 
   -- inc-rename. https://github.com/smjonas/inc-rename.nvim
-  require("inc_rename").setup({ })
-  vim.keymap.set("n", "gra", function()
-    return ":IncRename " .. vim.fn.expand("<cword>")
+  require('inc_rename').setup({})
+  vim.keymap.set('n', 'gra', function()
+    return ':IncRename ' .. vim.fn.expand('<cword>')
   end, { expr = true })
 end)
 
@@ -279,6 +279,7 @@ vim.schedule(function()
       vue = { 'prettierd', 'prettier', stop_after_first = true },
       css = { 'prettierd', 'prettier', stop_after_first = true },
       go = { 'goimports', 'gofumpt' },
+      nix = { 'nix' },
       json = { 'jq' },
       templ = { 'templ' },
       svg = { 'xmlformat' },
@@ -290,6 +291,12 @@ vim.schedule(function()
     --   lsp_format = 'fallback',
     -- },
     notify_on_error = true,
+    formatters = {
+      nix = {
+        command = 'nix',
+        args = { 'fmt', '--impure', '--file', '$RELATIVE_FILEPATH' },
+      },
+    },
   })
 
   vim.api.nvim_create_user_command('Format', function(args)
@@ -482,6 +489,9 @@ vim.schedule(function()
   -- nvim-treesitter-context. https://github.com/nvim-treesitter/nvim-treesitter-context
   require('treesitter-context').setup({
     enable = true,
+    max_lines = 10,
+    min_window_height = 0,
+    multiline_threshold = 10,
   })
 end)
 -- stylua: ignore start

@@ -1,10 +1,11 @@
 {
-  pkgs-unstable,
+  pkgs,
+  inputs,
   config,
-  variables,
   theme,
   ...
-}: let
+}:
+let
   inherit (config.lib.formats.rasi) mkLiteral;
   foreground = mkLiteral theme.colors.fg;
   background = mkLiteral theme.colors.bg0;
@@ -15,10 +16,11 @@
   selected-active-background = active-background;
   separatorcolor = active-background;
   bordercolor = active-background;
-in {
+in
+{
   programs.rofi = {
     enable = true;
-    package = pkgs-unstable.rofi;
+    package = inputs.nixpkgs-unstable.legacyPackages.${pkgs.system}.rofi;
 
     theme = {
       "*" = {

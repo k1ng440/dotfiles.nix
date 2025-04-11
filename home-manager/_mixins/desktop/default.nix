@@ -33,11 +33,10 @@ in
 
   # Authrorize X11 access in Distrobox
   home.file = lib.mkIf isLinux {
-    ".distroboxrc".text = ''${pkgs.xorg.xhost}/bin/xhost +si:localuser:$USER'';
+    ".distroboxrc".text = "${pkgs.xorg.xhost}/bin/xhost +si:localuser:$USER";
   };
 
-  programs = lib.mkIf (username == "k1ng") {
-  };
+  programs = lib.mkIf (username == "k1ng") { };
 
   services.mpris-proxy.enable = isLinux;
 

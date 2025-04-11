@@ -1,16 +1,16 @@
 {
-    "name": "k1ng/php_test",
-    "type": "project",
-    "autoload": {
-        "psr-4": {
-            "K1ng\\PhpTest\\": "src/"
-        }
-    },
-    "authors": [
-        {
-            "name": "Asaduzzaman Pavel",
-            "email": "contact@iampavel.dev"
-        }
-    ],
-    "require": {}
+  "name": "k1ng/php_test",
+  "type": "project",
+  "autoload": {
+    "psr-4": {
+      "K1ng\\PhpTest\\": "src/"
+    }
+  },
+  "authors": [
+    {
+      "name": "Asaduzzaman Pavel",
+      "email": "contact@iampavel.dev"
+    }
+  ],
+  "require": {}
 }

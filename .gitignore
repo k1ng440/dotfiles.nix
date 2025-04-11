@@ -1,4 +1,12 @@
-dotfiles
+# nix
+env/
 result
-pkgs/fonts/*
-pkgs/nerd-font-patcher/*
+**/result/*
+
+# direnv
+**/.direnv
+/env
+.envrc.local
+
+# qemu
+*.qcow2

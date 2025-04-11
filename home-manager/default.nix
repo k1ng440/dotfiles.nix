@@ -63,7 +63,7 @@ in
         builtins.readFile ./_mixins/configs/yazi-keymap.toml;
       "${config.xdg.configHome}/fish/functions/help.fish".text =
         builtins.readFile ./_mixins/configs/help.fish;
-      ".hidden".text = ''snap'';
+      ".hidden".text = "snap";
     };
 
     # A Modern Unix experience
@@ -769,7 +769,12 @@ in
       settings = {
         daemon = {
           default_parallel_tasks = 1;
-          callback = "${pkgs.notify-desktop}/bin/notify-desktop \"Task {{ id }}\nCommand: {{ command }}\nPath: {{ path }}\nFinished with status '{{ result }}'\nTook: $(bc <<< \"{{end}} - {{start}}\") seconds\" --app-name=pueue";
+          callback = ''
+            ${pkgs.notify-desktop}/bin/notify-desktop "Task {{ id }}
+            Command: {{ command }}
+            Path: {{ path }}
+            Finished with status '{{ result }}'
+            Took: $(bc <<< "{{end}} - {{start}}") seconds" --app-name=pueue'';
         };
       };
     };

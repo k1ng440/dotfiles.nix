@@ -22,6 +22,18 @@ build-console:
 hms:
 	home-manager switch -b backup --extra-experimental-features "nix-command flakes repl-flake" --show-trace --flake .#$(host)
 
+run-vm:
+  nix build .#nixosConfigurations.xenomorph.config.system.build.vm
+  ./result/bin/run-xenomorph-vm
+
+clean-cows:
+  p=$(readlink result)
+  rm result
+  for i in $(nix-store --query --requisites $p); do
+    nix-store --delete $i
+  done
+
+
 nixprofiles != ls -dv /nix/var/nix/profiles/system-*-link/|tail -2
 homeprofiles != ls -dv ~/.local/state/nix/profiles/home-manager-*-link/|tail -2
 show-diff:

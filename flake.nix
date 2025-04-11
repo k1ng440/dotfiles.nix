@@ -2,189 +2,148 @@
   description = "k1ng's NixOS, nix-darwin and Home Manager Configuration";
 
   nixConfig = {
-    experimental-features = [
-      "nix-command"
-      "flakes"
+    extra-substituters = [ "https://nix-community.cachix.org" ];
+    extra-trusted-public-keys = [
+      "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
     ];
   };
 
-  outputs =
-    inputs@{
-      self,
-      nix-darwin,
-      nixpkgs,
-      flake-utils,
-      ...
-    }:
+  outputs = inputs@{ self, nixpkgs, nixpkgs-unstable, home-manager, ... }:
     let
+      stateVersion = "24.11"; # Do not change
       inherit (self) outputs;
-      # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
-      stateVersion = "24.11";
-      helper = import ./lib { inherit inputs outputs stateVersion; };
-      rawNvimPlugins = helper.filterInputsByPrefix { inherit (nixpkgs) lib; } "nvim-plugin-";
-    in
-    {
-      # home-manager build --flake $HOME/nix-config -L
-      # home-manager switch -b backup --flake $HOME/nix-config
-      # nix run nixpkgs#home-manager -- switch -b backup --flake "${HOME}/nix-config"
-      homeConfigurations = {
-        "nixos@iso-console" = helper.mkHome {
-          hostname = "iso-console";
-          username = "nixos";
-        };
-        # "nixos@iso-lomiri" = helper.mkHome {
-        #   hostname = "iso-lomiri";
-        #   username = "nixos";
-        #   desktop = "lomiri";
-        # };
-        # "nixos@iso-pantheon" = helper.mkHome {
-        #   hostname = "iso-pantheon";
-        #   username = "nixos";
-        #   desktop = "pantheon";
-        # };
-        # "nixos@iso-i3" = helper.mkHome {
-        #   hostname = "iso-i3";
-        #   username = "nixos";
-        #   desktop = "i3";
-        # };
+      inherit (nixpkgs) lib;
+      myLib = import ./nix/lib { inherit inputs outputs stateVersion; };
+    in {
+      /*
+      Needed for nixd
+      */
+      nix.nixPath = [ "nixpkgs=${inputs.nixpkgs}" ];
 
-        # Workstations
-        "k1ng@xenomorph" = helper.mkHome {
-          hostname = "phasma";
-          desktop = "hyprland";
-        };
-        "k1ng@rog-laptop" = helper.mkHome {
-          hostname = "vader";
-          desktop = "hyprland";
-        };
-      };
-
+      /**
+      NixOS Configurations
+      */
       nixosConfigurations = {
-        # .iso images
-        #  - nix build .#nixosConfigurations.{iso-console|iso-pantheon|iso-i3}.config.system.build.isoImage
-        iso-console = helper.mkNixos {
-          hostname = "iso-console";
-          username = "nixos";
-          hostId = "9a38c14e";
-        };
+        xenomorph = nixpkgs.lib.nixosSystem {
+          system = "x86_64-linux";
+          specialArgs = {
+            inherit inputs;
+            hostname = "xenomorph";
+            username = "k1ng";
+            profile = "nvidia";
+          };
 
-        # iso-lomiri = helper.mkNixos {
-        #   hostname = "iso-lomiri";
-        #   username = "nixos";
-        #   desktop = "lomiri";
-        # };
-        # iso-pantheon = helper.mkNixos {
-        #   hostname = "iso-pantheon";
-        #   username = "nixos";
-        #   desktop = "pantheon";
-        # };
-        # iso-i3 = helper.mkNixos {
-        #   hostname = "iso-i3";
-        #   username = "nixos";
-        #   desktop = "i3";
-        # };
-        # Workstations
-        #  - sudo nixos-rebuild boot --flake $HOME/nix-config
-        #  - sudo nixos-rebuild switch --flake $HOME/nix-config
-        #  - nix build .#nixosConfigurations.{hostname}.config.system.build.toplevel
-        #  - nix run github:nix-community/nixos-anywhere -- --flake '.#{hostname}' root@{ip-address}
-        xenomorph = helper.mkNixos {
-          hostname = "xenomorph";
+          modules = [
+            ./profiles/xenomorph
+          ];
+        };
+        vm = nixpkgs.lib.nixosSystem {
+          system = "x86_64-linux";
+          specialArgs = {
+            inherit inputs;
+            hostname = "xenomorph";
+            username = "k1ng";
+            profile = "vm";
+          };
+
+          modules = [ ./profiles/vm ];
+        };
+      };
+
+      /**
+       Home Manager Configurations
+      */
+      homeConfigurations = {
+        "k1ng@xenomorph" = myLib.mkHome {
           desktop = "hyprland";
-          hostId = "4f8d7f6f";
+          hostname = "xenomorph";
+          system = "x86_64-linux";
         };
       };
-
-      #nix run nix-darwin -- switch --flake ~/nix-config
-      #nix build .#darwinConfigurations.{hostname}.config.system.build.toplevel
-      darwinConfigurations = {
-        # examplehost = helper.mkDarwin {
-        #   hostname = "examplehost";
-        #   # platform = "x86_64-darwin";
-        # };
-      };
-
-      # Custom packages and modifications, exported as overlays
-      overlays = import ./overlays { inherit inputs; };
-      # Custom NixOS modules
-      nixosModules = import ./modules/nixos;
-      # Custom packages; acessible via 'nix build', 'nix shell', etc
-
-      # packages = flake-utils.lib.eachSystem (helper.supportedSystems) (
-      #   system:
-      #   let
-      #     pkgs = nixpkgs.legacyPackages.${system};
-      #     isoDotfilesLocation = builtins.toPath "/boot/dotfiles";
-      #     actualIsoDotfilesLocation = (builtins.toPath "/iso${isoDotfilesLocation}");
-      #     mntDotfilesLocation = (builtins.toPath "/mnt") + "/random";
-      #   in
-      #   {
-      #
-      #     installers = inputs.nixos-generators.nixosGenerate {
-      #       system = system;
-      #       specialArgs = {
-      #         pkgs = pkgs;
-      #       };
-      #       customFormats = {
-      #         nix-live-iso = {
-      #           imports = [
-      #             "${nixpkgs}/nixos/modules/installer/cd-dvd/installation-cd-minimal.nix"
-      #           ];
-      #
-      #           isoImage = {
-      #             squashfsCompression = "zstd -Xcompression-level 3";
-      #             contents = [
-      #               {
-      #                 source = ../..;
-      #                 target = isoDotfilesLocation;
-      #               }
-      #             ];
-      #           };
-      #
-      #           # override installation-cd-base and enable wpa and sshd start at boot
-      #           systemd.services.wpa_supplicant.wantedBy = nixpkgs.lib.mkForce [ "multi-user.target" ];
-      #
-      #           systemd.services.sshd.wantedBy = nixpkgs.lib.mkForce [ "multi-user.target" ];
-      #           users.users.root.openssh.authorizedKeys.keys = [
-      #             "ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAQEAqMh6k4NRNF4MzW/RYXlQ2FzFHkDE3rL3UuWT91ZzYK6oybFW2dXugxxHXA0a5d6jU4sToBB0zYLqCyCfb0rEJ+ukN0LIC+IJ2MVb7b7WSJyju0PeJqri1tice2quZO8C27rbYEMa1QgpUapDhEuNfFnDkXzkr0NnxOs2vwOdnGRm3VF1FRaV/0xmmJDeh8GmHdj40StH/UtNU63YvsTY1DJHb6Tw3O0hY4cvxx3z3SZv18bDDfn6EA/47Ao6BO88bT/b3qhmoQc55ESWX5siUk4/BtgEgQNuqZm8rxhRmW4NqdsWbLIwHdJCVn51DwokykP1A9x1QEAQRw5yqRy0fQ== rsa-key-20151130"
-      #           ];
-      #
-      #           formatAttr = "isoImage";
-      #           fileExtension = ".iso";
-      #         };
-      #       };
-      #
-      #       format = "nix-live-iso";
-      #     };
-      #   }
-      # );
-
-      # Formatter for .nix files, available via 'nix fmt'
-      formatter = helper.forAllSystems (system: nixpkgs.legacyPackages.${system}.nixfmt-rfc-style);
     };
 
+
+  /**
+      ***********************************
+      ***********************************
+      ************ IMPORTS **************
+      ***********************************
+      ***********************************
+    *
+  */
   inputs = {
-    nixpkgs = {
-      url = "github:nixos/nixpkgs/nixos-24.11";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-24.11";
+    nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
+    stub-flake.url = "github:k1ng440/stub-flake"; # A completely empty flake
+    home-manager = {
+      url = "github:nix-community/home-manager/release-24.11";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
-    nixpkgs-unstable = {
-      url = "github:nixos/nixpkgs/nixos-unstable";
+    hyprland.url = "github:hyprwm/Hyprland";
+
+    # flake-parts
+    flake-parts = {
+      url = "github:hercules-ci/flake-parts";
     };
+
+    # NUR
+    nur = {
+      url = "github:nix-community/NUR";
+      inputs.flake-parts.follows = "flake-parts";
+      inputs.treefmt-nix.follows = "treefmt-nix";
+    };
+
+    stylix.url = "github:danth/stylix";
+
+    # utilities
     nixos-generators = {
       url = "github:nix-community/nixos-generators";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    disko = {
-      url = "github:nix-community/disko";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    home-manager = {
-      url = "github:nix-community/home-manager";
+    treefmt-nix = {
+      url = "github:numtide/treefmt-nix";
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
-    nixos-hardware = {
-      url = "github:NixOS/nixos-hardware/master";
+    nixos-hardware.url = "github:NixOS/nixos-hardware/master";
+    sops-nix.url = "github:Mic92/sops-nix";
+    flake-utils.url = "github:numtide/flake-utils";
+    nixgl = {
+      url = "github:nix-community/nixGL";
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
+    devshell = {
+      url = "github:numtide/devshell";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    flake-registry = {
+      url = "github:NixOS/flake-registry";
+      flake = false;
+    };
+    agenix = {
+      url = "github:ryantm/agenix";
+      inputs = {
+        nixpkgs.follows = "nixpkgs-unstable";
+        darwin.follows = "stub-flake";
+        home-manager.follows = "home-manager";
+      };
+    };
+    xremap-flake = {
+      url = "github:xremap/nix-flake";
+      inputs = {
+        treefmt-nix.follows = "treefmt-nix";
+        devshell.follows = "devshell";
+        hyprland.follows = "stub-flake";
+        home-manager.follows = "stub-flake";
+      };
+    };
+    solaar = {
+      url = "https://flakehub.com/f/Svenum/Solaar-Flake/*.tar.gz";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    catppuccin = {
+      url = "https://flakehub.com/f/catppuccin/nix/*";
+    };
+
     # nixos-needsreboot = {
     #   url = "https://flakehub.com/f/thefossguy/nixos-needsreboot/*.tar.gz";
     #   inputs.nixpkgs.follows = "nixpkgs";
@@ -194,7 +153,7 @@
     #   inputs.nixpkgs.follows = "nixpkgs";
     # };
     nix-index-database = {
-      url = "github:Mic92/nix-index-database";
+      url = "github:nix-community/nix-index-database";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     vscode-server = {
@@ -205,46 +164,25 @@
       url = "github:nix-community/nix-vscode-extensions";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    catppuccin = {
-      url = "https://flakehub.com/f/catppuccin/nix/*";
-    };
-    catppuccin-vsc = {
-      url = "https://flakehub.com/f/catppuccin/vscode/*";
-      inputs.nixpkgs.follows = "nixpkgs-unstable";
-    };
-    kubectl = {
-      url = "github:LongerHV/kubectl-overlay";
-      inputs.nixpkgs.follows = "nixpkgs-unstable";
-    };
-    ghostty = {
-      url = "github:ghostty-org/ghostty";
-    };
-    nixgl = {
-      url = "github:nix-community/nixGL";
-      inputs.nixpkgs.follows = "nixpkgs-unstable";
-    };
-    treefmt-nix = {
-      url = "github:numtide/treefmt-nix";
-      inputs.nixpkgs.follows = "nixpkgs-unstable";
-    };
-    zen-browser = {
-      url = "github:0xc000022070/zen-browser-flake";
-    };
-    nix-snapd = {
-      url = "https://flakehub.com/f/io12/nix-snapd/*";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    quickemu = {
-      url = "https://flakehub.com/f/quickemu-project/quickemu/*";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    quickgui = {
-      url = "https://flakehub.com/f/quickemu-project/quickgui/*";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    sops-nix.url = "github:Mic92/sops-nix";
-    flake-utils.url = "github:numtide/flake-utils";
-    nix-flatpak.url = "https://flakehub.com/f/gmodena/nix-flatpak/*";
+    # catppuccin-vsc = {
+    #   url = "https://flakehub.com/f/catppuccin/vscode/*";
+    #   inputs.nixpkgs.follows = "nixpkgs-unstable";
+    # };
+    # kubectl = {
+    #   url = "github:LongerHV/kubectl-overlay";
+    #   inputs.nixpkgs.follows = "nixpkgs-unstable";
+    # };
+    # ghostty = {
+    #   url = "github:ghostty-org/ghostty";
+    # };
+    # zen-browser = {
+    #   url = "github:0xc000022070/zen-browser-flake";
+    # };
+    # nix-snapd = {
+    #   url = "https://flakehub.com/f/io12/nix-snapd/*";
+    #   inputs.nixpkgs.follows = "nixpkgs";
+    # };
+    # nix-flatpak.url = "https://flakehub.com/f/gmodena/nix-flatpak/*";
 
     # neovim external plugins
     nvim-plugin-vim-header = {
@@ -280,5 +218,4 @@
       flake = false;
     };
   };
-
 }

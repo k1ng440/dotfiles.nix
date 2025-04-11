@@ -91,16 +91,20 @@ opt.wildignore:append('*/.vscode/*')
 opt.wildignore:append('*/.idea/*')
 opt.wildignore:append('*/.gitignore')
 
-local lspconfigs = {}
-local lsp_dir = vim.fn.stdpath('config') .. '/lsp'
-if vim.fn.isdirectory(lsp_dir) == 1 then
-  for _, entry in ipairs(vim.fn.readdir(lsp_dir)) do
-    if vim.fn.isdirectory(lsp_dir .. '/' .. entry) == 0 and entry:sub(-4) == '.lua' then
-      table.insert(lspconfigs, (entry:gsub('%.lua$', '')))
+
+-- neovim 0.11.0 is required
+if vim.fn.has('nvim-0.11.0') == 1 then
+  local lspconfigs = {}
+  local lsp_dir = vim.fn.stdpath('config') .. '/lsp'
+  if vim.fn.isdirectory(lsp_dir) == 1 then
+    for _, entry in ipairs(vim.fn.readdir(lsp_dir)) do
+      if vim.fn.isdirectory(lsp_dir .. '/' .. entry) == 0 and entry:sub(-4) == '.lua' then
+        table.insert(lspconfigs, (entry:gsub('%.lua$', '')))
+      end
     end
   end
+  vim.lsp.enable(lspconfigs)
 end
-vim.lsp.enable(lspconfigs)
+
 
 require('k1ng.config.init')
-vim.api.nvim_set_hl(0, "@go.package", { fg = "#FFD700", bold = true })

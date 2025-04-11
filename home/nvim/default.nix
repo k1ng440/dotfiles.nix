@@ -1,22 +1,25 @@
 {
+  lib,
   pkgs,
   system,
-  pkgs-unstable,
   config,
-  variables,
-  rawNvimPlugins,
+  inputs,
   ...
-}: let
-  normalPackages = [];
-  nvimConfigDirectory = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/nix-config/nvim";
-  intelephenseLicenseFile = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/nix-config/secrets/intelephense-license.txt";
-  plugins = import ./plugins.nix {inherit pkgs rawNvimPlugins;};
-in {
+}:
+let
+  nvimConfigDirectory = config.lib.file.mkOutOfStoreSymlink "/home/k1ng/nix-config/home/nvim/config";
+  intelephenseLicenseFile = config.lib.file.mkOutOfStoreSymlink "/home/k1ng/nix-config/secrets/intelephense-license.txt";
+  plugins = import ./plugins.nix { inherit pkgs inputs; };
+in
+{
+  home.packages = [ pkgs.wl-clipboard ];
+
   programs.neovim = {
     enable = true;
     defaultEditor = true;
     viAlias = true;
     plugins = plugins;
+    package = inputs.nixpkgs-unstable.legacyPackages.${pkgs.system}.neovim-unwrapped;
     extraPackages = [
       pkgs.bash-language-server
       pkgs.shfmt
@@ -60,7 +63,7 @@ in {
   };
 
   xdg.configFile = {
-    nvim.source = config.lib.file.mkOutOfStoreSymlink "${variables.dotfilesLocation}" + (builtins.toPath "/home/nvim/config");
+    nvim.source = config.lib.file.mkOutOfStoreSymlink "/home/k1ng/nix-config" + (builtins.toPath "/home/nvim/config");
     "intelephense/license.txt".source = intelephenseLicenseFile;
   };
 }
