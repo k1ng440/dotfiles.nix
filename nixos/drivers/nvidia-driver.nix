@@ -37,6 +37,7 @@ in
       "nvidia_drm"
       "nvidia_uvm"
     ];
+
     services.xserver.videoDrivers = lib.mkForce [ "nvidia" ];
     hardware.nvidia = {
       prime.sync.enable = lib.mkForce false;
@@ -55,15 +56,6 @@ in
       WLR_NO_HARDWARE_CURSORS = "1";
       MOZ_ENABLE_WAYLAND = "1";
       NVD_BACKEND = "direct";
-    };
-
-    programs.firefox.preferences = {
-
-      "media.ffmpeg.vaapi.enabled" = true;
-      "media.rdd-ffmpeg.enabled" = true;
-      "media.av1.enabled" = true;
-      "gfx.x11-egl.force-enabled" = true;
-      "widget.dmabuf.force-enabled" = true;
     };
   };
 }

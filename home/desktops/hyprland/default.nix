@@ -2,6 +2,7 @@
   imports = [
     ./binds.nix
     ./scripts.nix
+    ./look-and-feel.nix
     # ./hyprlock.nix
     # ./wlogout.nix
   ];
@@ -171,10 +172,10 @@
         "workspace 0, title:^([Ss]potify*)$"
       ];
 
-
       exec-once = [
         "systemctl --user enable --now hyprpaper.service"
-        "waybar"
+        "nm-applet &"
+        "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
       ];
     };
   };

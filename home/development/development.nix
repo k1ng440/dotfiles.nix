@@ -1,6 +1,7 @@
 { pkgs, ... }:
 {
   home.packages = with pkgs; [
+    subversionClient
     pre-commit
     gnumake     # make
   ];
