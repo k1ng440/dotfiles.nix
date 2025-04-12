@@ -1,4 +1,0 @@
-{ ... }:
-{
-  boot.kernelParams = [ "mitigations=off" ];
-}

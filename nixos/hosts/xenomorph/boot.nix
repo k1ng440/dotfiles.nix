@@ -1,8 +1,4 @@
 { pkgs, ... }:
-let
-  PRIMARYUSBID = "PARTUUID=02a72519-01";
-  BACKUPUSBID = "UUID=b501f1b9-7714-472c-988f-3c997f146a18";
-in
 {
   # boot
   boot.kernelModules = [ "r8169" ];
@@ -19,7 +15,7 @@ in
 
   # initrd
   boot.initrd.enable = true;
-  boot.initrd.verbose = true;
+  boot.initrd.verbose = false;
   boot.initrd.kernelModules = [
     "xhci_pci"
     "ahci"

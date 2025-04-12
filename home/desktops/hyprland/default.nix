@@ -4,6 +4,7 @@
     ./scripts.nix
     ./look-and-feel.nix
     ./hypridle
+    ./electron.nix
     # ./hyprlock.nix
     # ./wlogout.nix
   ];

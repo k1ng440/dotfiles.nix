@@ -11,5 +11,6 @@
     galculator
     mission-center
     thunderbird
+    vesktop
   ];
 }

@@ -43,7 +43,7 @@ in
       prime.sync.enable = lib.mkForce false;
       open = cfg.open;
       modesetting.enable = true;
-      powerManagement.enable = false;
+      powerManagement.enable = true;
       nvidiaSettings = true;
     };
 
@@ -56,6 +56,10 @@ in
       WLR_NO_HARDWARE_CURSORS = "1";
       MOZ_ENABLE_WAYLAND = "1";
       NVD_BACKEND = "direct";
+      ELECTRON_OZONE_PLATFORM_HINT = "auto";
     };
+
+    # https://github.com/NVIDIA/open-gpu-kernel-modules/issues/472
+    boot.kernelParams = lib.mkIf cfg.open [ "nvidia.NVreg_PreserveVideoMemoryAllocations=1" ];
   };
 }

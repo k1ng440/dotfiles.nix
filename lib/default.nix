@@ -43,17 +43,7 @@ in {
     in inputs.home-manager.lib.homeManagerConfiguration {
       inherit pkgs;
       extraSpecialArgs = {
-        inherit
-          inputs
-          outputs
-          desktop
-          hostname
-          system
-          username
-          stateVersion
-          isWorkstation
-          pkgs
-          ;
+        inherit inputs outputs desktop hostname system username stateVersion isWorkstation pkgs ;
       };
       modules = [ ../home ];
     };

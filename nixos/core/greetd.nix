@@ -23,7 +23,10 @@
     vt = 2; # This prevents kernel logs from mangling greetd
     settings.default_session = {
       user = "greeter";
-      command = "${lib.getExe pkgs.greetd.tuigreet} --time --time-format '%a, %d %b %Y • %T' --asterisks --remember --cmd Hyprland";
+      command = ''
+        ${lib.getExe pkgs.greetd.tuigreet} --time --time-format '%a, %d %b %Y • %T' --asterisks --remember --cmd Hyprland \
+        --greeting "Access is restricted to authorized personal only."
+      '';
     };
   };
 

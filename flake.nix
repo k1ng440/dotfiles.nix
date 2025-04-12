@@ -2,10 +2,11 @@
   description = "k1ng's NixOS, nix-darwin and Home Manager Configuration";
 
   outputs =
-    inputs@{ self, nixpkgs, ... }:
+    inputs@{ self, nixpkgs, home-manager, ... }:
     let
       stateVersion = "24.11"; # Do not change
       inherit (self) outputs;
+
       lib = nixpkgs.lib.extend (
         self: super: {
           custom = import ./lib {
@@ -14,13 +15,13 @@
           };
         }
       );
-      forAllSystems = nixpkgs.lib.genAttrs [
+
+      system = "x86_64-linux";
+      forAllSystems = lib.genAttrs [
         "x86_64-linux"
       ];
     in
     {
-      inputs.nixpkgs.config.allowUnfree = true;
-      inputs.nixpkgs-unstable.config.allowUnfree = true;
 
       /**
         overlays
@@ -32,14 +33,13 @@
       */
       nixosConfigurations = {
         xenomorph = nixpkgs.lib.nixosSystem {
-          system = "x86_64-linux";
+          inherit system;
           specialArgs = {
-            inherit inputs;
+            inherit inputs lib;
             hostname = "xenomorph";
             username = "k1ng";
             profile = "nvidia";
           };
-
           modules = [
             ./profiles/xenomorph
           ];
@@ -49,13 +49,24 @@
       /**
         Home Manager Configurations
       */
-      home-manager.useGlobalPkgs = true;
-      home-manager.backupFileExtension = "backup";
       homeConfigurations = {
-        "k1ng@xenomorph" = lib.custom.mkHome {
-          desktop = "hyprland";
-          hostname = "xenomorph";
-          system = "x86_64-linux";
+        "k1ng@xenomorph" = home-manager.lib.homeManagerConfiguration {
+          pkgs = nixpkgs.legacyPackages.${system};
+          extraSpecialArgs = {
+            inherit inputs outputs;
+          };
+          modules = [
+            {
+              home = {
+                username = "k1ng";
+                homeDirectory = "/home/k1ng";
+                stateVersion = "24.11";
+              };
+            }
+            ./modules/common
+            ./modules/home
+            ./home
+          ];
         };
       };
 
@@ -72,7 +83,10 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixos-24.11";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
     stub-flake.url = "github:k1ng440/stub-flake"; # A completely empty flake
-    hyprland.url = "github:hyprwm/Hyprland";
+    hyprland = {
+      url = "github:hyprwm/Hyprland";
+      # inputs.nixpkgs.follows = "nixpkgs";
+    };
     hyprland-plugins = {
       url = "github:hyprwm/hyprland-plugins";
       inputs.hyprland.follows = "hyprland";

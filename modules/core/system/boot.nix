@@ -8,7 +8,7 @@ in {
 
     initrd = {
       enable = true;
-      verbose = true;
+      verbose = lib.mkDefault false;
       kernelModules = [
         "nvme"
         "xhci_pci"

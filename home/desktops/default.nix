@@ -5,6 +5,6 @@
     ./gtk
     ./qt
     ./dunst
-    # ./applications
+    ./applications
   ];
 }

@@ -16,8 +16,8 @@ in
 
   config = lib.mkIf (cfg.enable && cfg.hyprland) {
     programs.hyprland = {
-      package = inputs.hyprland.packages.${pkgs.system}.hyprland;
-      portalPackage = inputs.hyprland.packages.${pkgs.system}.xdg-desktop-portal-hyprland;
+      # package = inputs.hyprland.packages.${pkgs.system}.hyprland;
+      # portalPackage = inputs.hyprland.packages.${pkgs.system}.xdg-desktop-portal-hyprland;
       enable = true;
       withUWSM = true;
       xwayland = {
@@ -26,7 +26,6 @@ in
     };
 
     environment.systemPackages = with pkgs; [ kitty ];
-
     environment.variables = lib.mkIf (config.nixconfig.drivers.nvidia.enable) {
       XDG_SESSION_TYPE = "wayland";
     };

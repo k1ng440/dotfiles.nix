@@ -2,15 +2,10 @@
   pkgs,
   config,
   inputs,
-  outputs,
-  stateVersion,
-  username,
+  lib,
   ...
 }:
-let
-  inherit (pkgs.stdenv) isDarwin isLinux;
-in {
-
+{
   imports = [
     inputs.catppuccin.homeManagerModules.catppuccin
     inputs.sops-nix.homeManagerModules.sops
@@ -18,7 +13,8 @@ in {
     inputs.vscode-server.nixosModules.home
     inputs.hyprland.homeManagerModules.default
 
-    ../modules/home-manager
+    ../modules/common
+    ../modules/home
 
     ./development
     ./desktops
@@ -33,8 +29,6 @@ in {
   ];
 
   home = {
-    inherit username stateVersion;
-
     sessionVariables = {
       EDITOR = "nvim";
       MANPAGER = "sh -c 'col --no-backspaces --spaces | bat --language man'";
@@ -45,12 +39,6 @@ in {
       SYSTEMD_EDITOR = "nvim";
       VISUAL = "nvim";
     };
-
-    homeDirectory =
-      if isDarwin then
-        "/Users/${username}"
-      else
-        "/home/${username}";
   };
 
   catppuccin = {
@@ -91,9 +79,9 @@ in {
     }
     {
       name = "HDMI-A-1";
-      width = 4096;
+      width = 3840;
       height = 2160;
-      refreshRate = 60;
+      refreshRate = 30;
       y = -1440;
       workspace = "9";
     }
