@@ -1,7 +1,13 @@
-{ lib, pkgs, config, ... }:
+{
+  lib,
+  pkgs,
+  config,
+  ...
+}:
 let
   cfg = config.nixconfig.vm.guest-services;
-in {
+in
+{
   options.nixconfig.vm.guest-services = {
     enable = lib.mkEnableOption "Enable Virtual Machine Guest Services";
   };
@@ -12,4 +18,3 @@ in {
     services.spice-webdavd.enable = true;
   };
 }
-

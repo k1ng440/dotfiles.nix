@@ -1,4 +1,5 @@
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   # AppImage
   programs.appimage.binfmt = true;
 

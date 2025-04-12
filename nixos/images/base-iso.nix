@@ -48,7 +48,11 @@ in
     gc.automatic = true;
 
     settings = {
-      experimental-features = [ "nix-command" "flakes" "pipe-operators" ];
+      experimental-features = [
+        "nix-command"
+        "flakes"
+        "pipe-operators"
+      ];
       auto-optimise-store = true;
       substituters = [
         "https://cache.nixos.org"

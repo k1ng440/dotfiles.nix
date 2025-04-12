@@ -8,26 +8,6 @@ This project is dedicated to crafting and maintaining development environments t
 - Reproducibility: Guarantee that the same configuration yields identical environments across different machines and operating systems.
 - Cross-Platform Support: Ensure compatibility operation on various operating systems.
 
-📂 Repository Structure
-
-```
-.
-├── home
-├── nixos/hosts
-│  └── <host>
-│     ├── hardware-configuration.nix
-│     ├── home.nix
-│     └── os.nix
-├── modules
-│  ├── configs
-│  ├── services
-│  ├── core-desktop.nix
-│  └── core-server.nix
-├── lib
-├── Makefile
-└── flake.nix
-```
-
 ## Get started
 
 1. Clone the Repository:
@@ -57,9 +37,6 @@ This project is dedicated to crafting and maintaining development environments t
 
 Feel free to tailor the configurations to suit your personal preferences and project requirements. The declarative nature of Nix makes it straightforward to adjust packages, settings, and environments. For guidance on customizing Nix configurations, refer to the [NixOS Wiki](https://nixos.wiki/).
 
-## TODOs
-
-All TODOs, known issues, etc, are tracked in the [issues](https://github.com/k1ng440/dotfiles.nix/issues)
 
 ## 🤝 Contributing
 
@@ -77,13 +54,18 @@ Contributions are welcome! If you have suggestions, improvements, or encounter i
   - [Ultimate Nix Flakes Guide - Vimjoyer](https://www.youtube.com/watch?v=JCeYq72Sko0)
   - [Customize Nix Packages | Gentoo Experience on NixOS - Vimjoyer](https://www.youtube.com/watch?v=jHb7Pe7x1ZY)
   - [Nix Hour](https://www.youtube.com/results?search_query=nix+hour)
+  - [Linux Gaming Setup - Vimjoyer](https://www.youtube.com/watch?v=qlfm3MEbqYA)
+  - [Stylix - Vimjoyer](https://www.youtube.com/watch?v=ljHkWgBaQWU)
 
 - articles:
   - [Nix by example](https://medium.com/@MrJamesFisher/nix-by-example-a0063a1a4c55)
-  - [Flake-parts: writing custom flake modules](https://www.vtimofeenko.com/posts/flake-parts-writing-custom-flake-modules/#declaring-a-package)
+  - [Secret Management](https://unmovedcentre.com/posts/secrets-management)
+
 - Inspired by other's configurations:
   - [Zaney](https://gitlab.com/Zaney/zaneyos)
   - [Andrew Kvalheim](https://codeberg.org/AndrewKvalheim/configuration)
+  - [berbieche](https://github.com/berbiche/dotfiles)
+  - [EmergentMind](https://github.com/EmergentMind/nix-config)
 
 ## Search:
 

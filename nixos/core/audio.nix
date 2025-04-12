@@ -1,6 +1,13 @@
-{ config, lib, pkgs, ... }: let
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+let
   cfg = config.nixconfig.drivers.audio;
-in {
+in
+{
   options.nixconfig.drivers.audio = {
     enable = lib.mkEnableOption "Enable audio support with PipeWire";
     package = lib.mkOption {
@@ -33,7 +40,6 @@ in {
       description = "Low-latency tweaks";
     };
 
-
     yamaha-ur22c = lib.mkOption {
       type = lib.types.bool;
       default = true;
@@ -55,18 +61,14 @@ in {
       jack.enable = cfg.jackAudioSupport;
     };
 
-    /*
-    * Airplay
-    */
+    # * Airplay
     services.pipewire.extraConfig.pipewire = {
       "10-airplay" = {
-        "context.modules" = [{ name = "libpipewire-module-raop-discover"; }];
+        "context.modules" = [ { name = "libpipewire-module-raop-discover"; } ];
       };
     };
 
-    /*
-    * null-sinks
-    */
+    # * null-sinks
     services.pipewire.extraConfig.pipewire."91-null-sinks" = {
       "context.objects" = [
         {
@@ -74,53 +76,57 @@ in {
           # properyty when no other driver is currently active. JACK clients need this.
           factory = "spa-node-factory";
           args = {
-            "factory.name"     = "support.node.driver";
-            "node.name"        = "Dummy-Driver";
-            "priority.driver"  = 8000;
+            "factory.name" = "support.node.driver";
+            "node.name" = "Dummy-Driver";
+            "priority.driver" = 8000;
           };
         }
         {
           factory = "adapter";
           args = {
-            "factory.name"     = "support.null-audio-sink";
-            "node.name"        = "Microphone-Proxy";
+            "factory.name" = "support.null-audio-sink";
+            "node.name" = "Microphone-Proxy";
             "node.description" = "Microphone";
-            "media.class"      = "Audio/Source/Virtual";
-            "audio.position"   = "MONO";
+            "media.class" = "Audio/Source/Virtual";
+            "audio.position" = "MONO";
           };
         }
         {
           factory = "adapter";
           args = {
-            "factory.name"     = "support.null-audio-sink";
-            "node.name"        = "Main-Output-Proxy";
+            "factory.name" = "support.null-audio-sink";
+            "node.name" = "Main-Output-Proxy";
             "node.description" = "Main Output";
-            "media.class"      = "Audio/Sink";
-            "audio.position"   = "FL,FR";
+            "media.class" = "Audio/Sink";
+            "audio.position" = "FL,FR";
           };
         }
       ];
     };
 
-    /*
-    * Yamaha USB
-    */
+    # * Yamaha USB
     services.pipewire.wireplumber.configPackages = lib.mkIf cfg.yamaha-ur22c [
       (pkgs.writeTextDir "share/wireplumber/main.lua.d/99-alsa-lowlatency.lua" ''
-      alsa_monitor.rules = {
-        {
-          matches = {{{ "node.name", "matches", "alsa_output.usb-Yamaha*" }}};
-          apply_properties = {
-            ["audio.format"] = "S32LE",
-            ["audio.rate"] = "96000", -- for USB soundcards it should be twice your desired rate
-            ["api.alsa.period-size"] = 2, -- defaults to 1024, tweak by trial-and-error
-            -- ["api.alsa.disable-batch"] = true, -- generally, USB soundcards use the batch mode
+        alsa_monitor.rules = {
+          {
+            matches = {{{ "node.name", "matches", "alsa_output.usb-Yamaha_Corporation_Steinberg_UR22C-00.analog-stereo" }}};
+            apply_properties = {
+              ["audio.format"] = "S32LE",
+              ["audio.rate"] = "96000",
+              ["api.alsa.period-size"] = 128,
+              ["api.alsa.disable-batch"] = true,
+            },
           },
-        },
-      }
+        }
       '')
     ];
 
-    environment.systemPackages = with pkgs; [ pamixer pavucontrol alsa-utils qjackctl ];
+    environment.systemPackages = with pkgs; [
+      pamixer
+      pavucontrol
+      alsa-utils
+      qjackctl
+      carla
+    ];
   };
 }

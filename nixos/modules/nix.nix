@@ -1,9 +1,19 @@
 {
   pkgs,
   inputs,
+  outputs,
   ...
 }:
 {
+  nixpkgs = {
+    overlays = [
+      outputs.overlays.default
+    ];
+    config = {
+      allowUnfree = true;
+    };
+  };
+
   nix = {
     gc.automatic = true;
 

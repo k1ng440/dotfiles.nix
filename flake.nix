@@ -1,27 +1,34 @@
 {
   description = "k1ng's NixOS, nix-darwin and Home Manager Configuration";
 
-  nixConfig = {
-    extra-substituters = [ "https://nix-community.cachix.org" ];
-    extra-trusted-public-keys = [
-      "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
-    ];
-  };
-
-  outputs = inputs@{ self, nixpkgs, nixpkgs-unstable, home-manager, ... }:
+  outputs =
+    inputs@{ self, nixpkgs, ... }:
     let
       stateVersion = "24.11"; # Do not change
       inherit (self) outputs;
-      inherit (nixpkgs) lib;
-      myLib = import ./nix/lib { inherit inputs outputs stateVersion; };
-    in {
-      /*
-      Needed for nixd
-      */
-      nix.nixPath = [ "nixpkgs=${inputs.nixpkgs}" ];
+      lib = nixpkgs.lib.extend (
+        self: super: {
+          custom = import ./lib {
+            inherit inputs stateVersion outputs;
+            inherit (nixpkgs) lib;
+          };
+        }
+      );
+      forAllSystems = nixpkgs.lib.genAttrs [
+        "x86_64-linux"
+      ];
+    in
+    {
+      inputs.nixpkgs.config.allowUnfree = true;
+      inputs.nixpkgs-unstable.config.allowUnfree = true;
 
       /**
-      NixOS Configurations
+        overlays
+      */
+      overlays = import ./overlays { inherit inputs; };
+
+      /**
+        NixOS Configurations *
       */
       nixosConfigurations = {
         xenomorph = nixpkgs.lib.nixosSystem {
@@ -37,72 +44,53 @@
             ./profiles/xenomorph
           ];
         };
-        vm = nixpkgs.lib.nixosSystem {
-          system = "x86_64-linux";
-          specialArgs = {
-            inherit inputs;
-            hostname = "xenomorph";
-            username = "k1ng";
-            profile = "vm";
-          };
-
-          modules = [ ./profiles/vm ];
-        };
       };
 
       /**
-       Home Manager Configurations
+        Home Manager Configurations
       */
+      home-manager.useGlobalPkgs = true;
+      home-manager.backupFileExtension = "backup";
       homeConfigurations = {
-        "k1ng@xenomorph" = myLib.mkHome {
+        "k1ng@xenomorph" = lib.custom.mkHome {
           desktop = "hyprland";
           hostname = "xenomorph";
           system = "x86_64-linux";
         };
       };
+
+      /**
+        Formatter
+      */
+      formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.nixfmt-rfc-style);
     };
 
-
   /**
-      ***********************************
-      ***********************************
-      ************ IMPORTS **************
-      ***********************************
-      ***********************************
-    *
+    IMPORTS
   */
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-24.11";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
     stub-flake.url = "github:k1ng440/stub-flake"; # A completely empty flake
+    hyprland.url = "github:hyprwm/Hyprland";
+    hyprland-plugins = {
+      url = "github:hyprwm/hyprland-plugins";
+      inputs.hyprland.follows = "hyprland";
+    };
     home-manager = {
       url = "github:nix-community/home-manager/release-24.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    hyprland.url = "github:hyprwm/Hyprland";
+    treefmt-nix.url = "github:numtide/treefmt-nix";
 
-    # flake-parts
-    flake-parts = {
-      url = "github:hercules-ci/flake-parts";
-    };
+    # Theme
+    stylix.url = "github:danth/stylix/release-24.11";
+    rose-pine-hyprcursor.url = "github:ndom91/rose-pine-hyprcursor";
+    catppuccin.url = "https://flakehub.com/f/catppuccin/nix/*";
 
-    # NUR
-    nur = {
-      url = "github:nix-community/NUR";
-      inputs.flake-parts.follows = "flake-parts";
-      inputs.treefmt-nix.follows = "treefmt-nix";
-    };
-
-    stylix.url = "github:danth/stylix";
-
-    # utilities
-    nixos-generators = {
-      url = "github:nix-community/nixos-generators";
+    nixvirt = {
+      url = "https://flakehub.com/f/AshleyYakeley/NixVirt/*.tar.gz";
       inputs.nixpkgs.follows = "nixpkgs";
-    };
-    treefmt-nix = {
-      url = "github:numtide/treefmt-nix";
-      inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
     sops-nix.url = "github:Mic92/sops-nix";
@@ -130,7 +118,6 @@
     xremap-flake = {
       url = "github:xremap/nix-flake";
       inputs = {
-        treefmt-nix.follows = "treefmt-nix";
         devshell.follows = "devshell";
         hyprland.follows = "stub-flake";
         home-manager.follows = "stub-flake";
@@ -140,18 +127,6 @@
       url = "https://flakehub.com/f/Svenum/Solaar-Flake/*.tar.gz";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    catppuccin = {
-      url = "https://flakehub.com/f/catppuccin/nix/*";
-    };
-
-    # nixos-needsreboot = {
-    #   url = "https://flakehub.com/f/thefossguy/nixos-needsreboot/*.tar.gz";
-    #   inputs.nixpkgs.follows = "nixpkgs";
-    # };
-    # nix-darwin = {
-    #   url = "github:LnL7/nix-darwin/nix-darwin-24.11";
-    #   inputs.nixpkgs.follows = "nixpkgs";
-    # };
     nix-index-database = {
       url = "github:nix-community/nix-index-database";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -164,25 +139,6 @@
       url = "github:nix-community/nix-vscode-extensions";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    # catppuccin-vsc = {
-    #   url = "https://flakehub.com/f/catppuccin/vscode/*";
-    #   inputs.nixpkgs.follows = "nixpkgs-unstable";
-    # };
-    # kubectl = {
-    #   url = "github:LongerHV/kubectl-overlay";
-    #   inputs.nixpkgs.follows = "nixpkgs-unstable";
-    # };
-    # ghostty = {
-    #   url = "github:ghostty-org/ghostty";
-    # };
-    # zen-browser = {
-    #   url = "github:0xc000022070/zen-browser-flake";
-    # };
-    # nix-snapd = {
-    #   url = "https://flakehub.com/f/io12/nix-snapd/*";
-    #   inputs.nixpkgs.follows = "nixpkgs";
-    # };
-    # nix-flatpak.url = "https://flakehub.com/f/gmodena/nix-flatpak/*";
 
     # neovim external plugins
     nvim-plugin-vim-header = {
@@ -216,6 +172,13 @@
     nvim-plugin-inc-rename = {
       url = "github:smjonas/inc-rename.nvim";
       flake = false;
+    };
+
+    # Personal Repositories
+    # Authenticate via ssh and use shallow clone
+    nix-secrets = {
+      url = "git+ssh://git@gitlab.com/k1ng4401/nix-secrets.git?ref=main&shallow=1";
+      inputs = { };
     };
   };
 }

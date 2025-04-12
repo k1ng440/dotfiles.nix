@@ -5,13 +5,13 @@
 }:
 let
   fromGitHub = import ../functions/fromGitHub.nix;
-  nvimConfigDirectory = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/home-manager/nvim";
-  intelephenseLicenseFile = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/home-manager/secrets/intelephense-license.txt";
+  nvimConfigDirectory = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/nix-config/nvim";
+  # intelephenseLicenseFile = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.nix-config/secrets/intelephense-license.txt";
 in
 {
   xdg.configFile = {
     "nvim".source = nvimConfigDirectory;
-    "intelephense/license.txt".source = intelephenseLicenseFile;
+    # "intelephense/license.txt".source = intelephenseLicenseFile;
   };
 
   programs.neovim = {

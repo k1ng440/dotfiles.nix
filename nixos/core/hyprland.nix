@@ -1,7 +1,14 @@
-{lib, inputs, pkgs, config, ...}:
+{
+  lib,
+  inputs,
+  pkgs,
+  config,
+  ...
+}:
 let
   cfg = config.nixconfig.desktop-environment;
-in {
+in
+{
   options.nixconfig.desktop-environment = {
     enable = lib.mkEnableOption "Enable Desktop Enviroment";
     hyprland = lib.mkEnableOption "Enable Hyprland Enviroment";

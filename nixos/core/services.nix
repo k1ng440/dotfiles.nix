@@ -1,4 +1,5 @@
-{profile, ...}: {
+{ profile, ... }:
+{
   # Services to start
   services = {
     libinput.enable = true; # Input Handling
@@ -22,4 +23,3 @@
     };
   };
 }
-

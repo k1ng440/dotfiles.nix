@@ -1,6 +1,13 @@
-{inputs, pkgs, hostname, ...}: let
+{
+  inputs,
+  pkgs,
+  hostname,
+  ...
+}:
+let
   inherit (import ../../hosts/${hostname}/variables.nix) consoleKeyMap;
-in {
+in
+{
   nix = {
     # gc = {
     #   persistent = true;
@@ -11,7 +18,11 @@ in {
     settings = {
       download-buffer-size = 250000000;
       auto-optimise-store = true;
-      experimental-features = [ "nix-command" "flakes" "pipe-operators" ];
+      experimental-features = [
+        "nix-command"
+        "flakes"
+        "pipe-operators"
+      ];
 
       /*
         * substituter's priority can be set by adding query parameter: ?priority=xxx
@@ -31,7 +42,7 @@ in {
       ];
     };
     extraOptions = ''
-        flake-registry = ${inputs.flake-registry}/flake-registry.json
+      flake-registry = ${inputs.flake-registry}/flake-registry.json
     '';
     nixPath = [ "nixpkgs=${pkgs.path}" ];
   };

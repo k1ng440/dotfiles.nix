@@ -1,4 +1,5 @@
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   # Only enable either docker or podman -- Not both
   virtualisation = {
     libvirtd.enable = false;
@@ -12,4 +13,3 @@
     # virt-viewer # View Virtual Machines
   ];
 }
-

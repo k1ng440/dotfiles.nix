@@ -1,4 +1,5 @@
-{ pkgs, inputs, ... }: {
+{ pkgs, inputs, ... }:
+{
   programs = {
     firefox.enable = false; # Firefox is not installed by default
     dconf.enable = true;
@@ -25,7 +26,7 @@
     file-roller # Archive Manager
     gedit # Simple Graphical Text Editor
     gimp # Great Photo Editor
-    glxinfo  #needed for inxi diag util
+    glxinfo # needed for inxi diag util
     htop # Simple Terminal Based System Monitor
     hyprpicker # Color Picker
     qimgv # For Image Viewing
@@ -37,7 +38,7 @@
     lshw # Detailed Hardware Information
     mpv # Incredible Video Player
     ncdu # Disk Usage Analyzer With Ncurses Interface
-    nwg-displays  #configure monitor configs via GUI
+    nwg-displays # configure monitor configs via GUI
     pavucontrol # For Editing Audio Levels & Devices
     pciutils # Collection Of Tools For Inspecting PCI Devices
     picard # For Changing Music Metadata & Getting Cover Art
@@ -50,7 +51,6 @@
     usbutils # Good Tools For USB Devices
     v4l-utils # Used For Things Like OBS Virtual Camera
     wget # Tool For Fetching Files With Links
-    yazi #TUI File Manager
+    yazi # TUI File Manager
   ];
 }
-

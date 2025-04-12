@@ -1,4 +1,11 @@
-{lib, hostname, username, inputs, ...}: {
+{
+  lib,
+  hostname,
+  username,
+  inputs,
+  ...
+}:
+{
   imports = [
     inputs.nixos-hardware.nixosModules.common-cpu-amd-zenpower
 
@@ -7,7 +14,6 @@
     ../../nixos/drivers
     ./users.nix
   ];
-
 
   nixconfig.desktop-environment.enable = true;
   nixconfig.desktop-environment.hyprland = true;

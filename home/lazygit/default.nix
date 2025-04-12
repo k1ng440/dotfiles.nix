@@ -11,6 +11,7 @@
 
   xdg.configFile.lazygit = {
     source =
-      config.lib.file.mkOutOfStoreSymlink "/home/k1ng/nix-config" + (builtins.toPath "/home/lazygit/config");
+      config.lib.file.mkOutOfStoreSymlink "/home/k1ng/nix-config"
+      + (builtins.toPath "/home/lazygit/config");
   };
 }

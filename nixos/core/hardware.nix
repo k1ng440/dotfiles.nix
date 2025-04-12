@@ -19,4 +19,3 @@
 
   local.hardware-clock.enable = false;
 }
-

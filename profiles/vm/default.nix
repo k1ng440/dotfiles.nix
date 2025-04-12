@@ -1,4 +1,5 @@
-{inputs, hostname, ...}: {
+{ inputs, hostname, ... }:
+{
   imports = [
     ../../hosts/${hostname}
     ../../nixos/drivers

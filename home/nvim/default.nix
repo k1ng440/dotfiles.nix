@@ -63,7 +63,8 @@ in
   };
 
   xdg.configFile = {
-    nvim.source = config.lib.file.mkOutOfStoreSymlink "/home/k1ng/nix-config" + (builtins.toPath "/home/nvim/config");
+    nvim.source =
+      config.lib.file.mkOutOfStoreSymlink "/home/k1ng/nix-config" + (builtins.toPath "/home/nvim/config");
     "intelephense/license.txt".source = intelephenseLicenseFile;
   };
 }

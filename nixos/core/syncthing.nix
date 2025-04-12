@@ -1,4 +1,5 @@
-{username, ...}: {
+{ username, ... }:
+{
   services.syncthing = {
     enable = false;
     user = "${username}";
