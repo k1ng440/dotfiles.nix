@@ -26,8 +26,5 @@ in
     };
 
     environment.systemPackages = with pkgs; [ kitty ];
-    environment.variables = lib.mkIf (config.nixconfig.drivers.nvidia.enable) {
-      XDG_SESSION_TYPE = "wayland";
-    };
   };
 }

@@ -52,11 +52,7 @@ in
       __GLX_VENDOR_LIBRARY_NAME = "nvidia";
       MOZ_DISABLE_RDD_SANDBOX = "1";
       LIBVA_DRIVER_NAME = "nvidia";
-      NIXOS_OZONE_WL = "1";
-      WLR_NO_HARDWARE_CURSORS = "1";
-      MOZ_ENABLE_WAYLAND = "1";
       NVD_BACKEND = "direct";
-      ELECTRON_OZONE_PLATFORM_HINT = "auto";
     };
 
     # https://github.com/NVIDIA/open-gpu-kernel-modules/issues/472

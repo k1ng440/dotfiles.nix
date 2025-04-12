@@ -22,6 +22,6 @@
   # Enable Drivers
   nixconfig.drivers.audio.enable = true;
   nixconfig.drivers.nvidia.enable = true;
-  nixconfig.drivers.nvidia.open = false;
+  nixconfig.drivers.nvidia.open = true;
   nixconfig.vm.guest-services.enable = false;
 }
