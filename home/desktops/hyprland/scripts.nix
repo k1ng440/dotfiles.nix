@@ -79,10 +79,24 @@ let
       fi
     '';
   };
+
+  hyprlandExecOnce = pkgs.writeShellApplication {
+    name = "hyprlandExecOnce";
+    text = ''
+      #!/bin/bash
+      hyprctl setcursor Bibata-Modern-Ice 22
+      ${lib.getExe pkgs.dunst} &
+      ${lib.getExe pkgs.waybar} &
+      ${lib.getExe pkgs.hypridle} &
+      ${lib.getExe pkgs.hyprpolkitagent} &
+      dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP
+    '';
+    };
 in
 {
   home.packages = [
     toggleMonitors
     toggleMonitorsNonPrimary
+    hyprlandExecOnce
   ];
 }

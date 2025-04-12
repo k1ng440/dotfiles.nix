@@ -3,9 +3,12 @@
     ./binds.nix
     ./scripts.nix
     ./look-and-feel.nix
+    ./hypridle
     # ./hyprlock.nix
     # ./wlogout.nix
   ];
+
+  home.packages = [ pkgs.wlogout pkgs.hyprpolkitagent ];
 
   wayland.windowManager.hyprland = {
     enable = true;
@@ -14,17 +17,10 @@
     systemd = {
       enable = true;
       variables = [ "--all" ]; # fix for https://wiki.hyprland.org/Nix/Hyprland-on-Home-Manager/#programs-dont-work-in-systemd-services-but-do-on-the-terminal
-      extraCommands = lib.mkBefore [
-        "systemctl --user stop graphical-session.target"
-        "systemctl --user enable hyprland-session.target"
-        "systemctl --user start hyprland-session.target"
-      ];
     };
 
     plugins = [
-      # inputs.hyprland-plugins.packages.${pkgs.system}.hyprexpo
-      # inputs.hyprland-plugins.packages.${pkgs.system}.hyprbars
-      # inputs.hyprland-plugins.packages.${pkgs.stdenv.hostPlatform.system}.hyprbars
+      # inputs.hyprland-plugins.packages.${pkgs.system}.hyprpaper
     ];
 
     settings = {
@@ -173,9 +169,7 @@
       ];
 
       exec-once = [
-        "systemctl --user enable --now hyprpaper.service"
-        "nm-applet &"
-        "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
+        "hyprlandExecOnce"
       ];
     };
   };

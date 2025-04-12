@@ -1,14 +1,17 @@
 #NOTE: Actions prepended with `hy3;` are specific to the hy3 hyprland plugin
-{ config, lib, pkgs, ... }: {
+{ config, lib, pkgs, ... }:
+let
+  mainMod = "SUPER";
+in {
   wayland.windowManager.hyprland.settings = {
     # Reference of supported bind flags: https://wiki.hyprland.org/Configuring/Binds/#bind-flags
 
     # Mouse Binds
     bindm = [
       # hold alt + leftlclick  to move/drag active window
-      "ALT,mouse:272,movewindow"
+      "${mainMod}, mouse:272, movewindow"
       # hold alt + rightclick to resize active window
-      "ALT,mouse:273,resizewindow"
+      "${mainMod}, mouse:273, resizewindow"
     ];
 
     # Non-consuming Binds
@@ -42,7 +45,6 @@
     #
     bind =
       let
-        mainMod = "SUPER";
         workspaces = [ "0" "1" "2" "3" "4" "5" "6" "7" "8" "9" "F1" "F2" "F3" "F4" "F5" "F6" "F7" "F8" "F9" "F10" "F11" "F12" ];
         # Map keys (arrows and hjkl) to hyprland directions (l, r, u, d)
         directions = rec {
@@ -58,13 +60,14 @@
         wpctl = lib.getExe' pkgs.wireplumber "wpctl";
         terminal = "kitty";
         fileManager = "thunar";
+        hyprlock = lib.getExe' pkgs.hyprlock "hyprlock";
+        wlogout = lib.getExe' pkgs.wlogout "wlogout";
       in
         lib.flatten [
           "ALT, space, exec, rofi -show drun"             # App launcher
           "${mainMod}, space, exec, rofi -show drun"      # App launcher (alternate)
           "${mainMod}, R, exec, rofi -show drun"          # App launcher (quick)
           "SHIFT_ALT, space, exec, rofi -show run"        # Run command
-          "${mainMod}, S, exec, rofi -show ssh"           # SSH launcher
           "ALT, TAB, exec, rofi -show window"             # Window switcher
 
           # Mute Toggle
@@ -93,7 +96,7 @@
           # "${mainMod}, V, hy3:makegroup,v"           # Make a vertical split
           # "SHIFTALT, V, hy3:makegroup,h"             # Make a horizontal split
           # "${mainMod}, X, hy3:changegroup,opposite"  # Toggle btwn splits if untabbed
-          "${mainMod}, S, togglesplit"               # Toggle split
+          "${mainMod} ALT, S, togglesplit"               # Toggle split
 
           # Workspaces
           (map (n: "${mainMod}, ${n}, workspace, name:${n}") workspaces)
@@ -109,19 +112,19 @@
           "${mainMod}, mouse_up, workspace, e-1"
 
           # Move focus from active window to window in specified direction
-          # (lib.mapAttrsToList (key: direction: "${mainMod}, ${key}, hy3:movefocus,${direction},warp") directions)
+          (lib.mapAttrsToList (key: direction: "${mainMod}, ${key}, movefocus,${direction},warp") directions)
 
           # Move windows
-          # (lib.mapAttrsToList (key: direction: "SUPER SHIFT, ${key}, hy3:movewindow,${direction}") directions)
+          (lib.mapAttrsToList (key: direction: "SUPER SHIFT, ${key}, movewindow,${direction}") directions)
 
           # Move workspace to monitor in specified direction
           (lib.mapAttrsToList (
             key: direction: "CTRLSHIFT, ${key}, movecurrentworkspacetomonitor,${direction}"
           ) directions)
 
-          "SHIFTALT, R, exec, hyprctl reload"  # reload the configuration file
-          "SUPER, L, exec, hyprlock"           # lock the wm
-          "SUPER, E, exec, wlogout"            # lock the wm
+          "SHIFTALT, R, exec, hyprctl reload"
+          "SUPER, L, exec, ${wpctl} set-mute @DEFAULT_AUDIO_SINK@ 0 && ${hyprlock}"
+          "SUPER, E, exec, ${wlogout}"
 
           # Application shortcuts
           "${mainMod}, Q, exec, ${terminal}" # Terminal

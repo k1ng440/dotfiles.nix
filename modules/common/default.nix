@@ -1,0 +1,5 @@
+{
+  imorts = [
+    ./host-spec.nix
+  ];
+}
