@@ -1,10 +1,4 @@
-{
-  pkgs,
-  config,
-  inputs,
-  lib,
-  ...
-}:
+{ inputs, ... }:
 {
   imports = [
     inputs.catppuccin.homeManagerModules.catppuccin
@@ -41,22 +35,12 @@
     };
   };
 
-  catppuccin = {
-    accent = "blue";
-    flavor = "mocha";
-    bat.enable = config.programs.bat.enable;
-    bottom.enable = config.programs.bottom.enable;
-    btop.enable = config.programs.btop.enable;
-    cava.enable = config.programs.cava.enable;
-    fish.enable = config.programs.fish.enable;
-    fzf.enable = config.programs.fzf.enable;
-    starship.enable = config.programs.starship.enable;
-    yazi.enable = config.programs.yazi.enable;
-  };
-
   fonts.fontconfig.enable = true;
   news.display = "silent";
 
+  hostSpec = {
+    isAutoStyled = true;
+  };
 
   # See modules/home-manager/monitors.nix
   monitors = [
@@ -79,11 +63,12 @@
     }
     {
       name = "HDMI-A-1";
-      width = 3840;
-      height = 2160;
+      width = 1920;
+      height = 1080;
       refreshRate = 30;
-      y = -1440;
-      workspace = "9";
+      y = -1080;
+      vrr = 0;
+      workspace = "6";
     }
   ];
 

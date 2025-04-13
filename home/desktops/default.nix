@@ -1,10 +1,9 @@
 {...}: {
   imports = [
-    ./hyprland
-    ./waybar
-    ./gtk
-    ./qt
-    ./dunst
+    # ./hyprland
+    # ./waybar
+    # ./dunst
     ./applications
+    # ./hyprpaper
   ];
 }

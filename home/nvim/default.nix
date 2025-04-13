@@ -1,11 +1,4 @@
-{
-  lib,
-  pkgs,
-  system,
-  config,
-  inputs,
-  ...
-}:
+{ pkgs, config, inputs, ... }:
 let
   nvimConfigDirectory = config.lib.file.mkOutOfStoreSymlink "/home/k1ng/nix-config/home/nvim/config";
   intelephenseLicenseFile = config.lib.file.mkOutOfStoreSymlink "/home/k1ng/nix-config/secrets/intelephense-license.txt";
@@ -62,9 +55,6 @@ in
     ];
   };
 
-  xdg.configFile = {
-    nvim.source =
-      config.lib.file.mkOutOfStoreSymlink "/home/k1ng/nix-config" + (builtins.toPath "/home/nvim/config");
-    "intelephense/license.txt".source = intelephenseLicenseFile;
-  };
+  xdg.configFile."nvim".source = nvimConfigDirectory;
+  xdg.configFile."intelephense/license.txt".source = intelephenseLicenseFile;
 }

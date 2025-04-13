@@ -8,7 +8,6 @@
     inputs.nixpkgs-unstable.legacyPackages.${pkgs.system}.neovim
     pkgs.vim
     pkgs.firefox
-    pkgs.rofi
   ];
 
   users.groups.k1ng = {

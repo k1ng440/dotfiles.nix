@@ -21,12 +21,7 @@
         "x86_64-linux"
       ];
     in
-    {
-
-      /**
-        overlays
-      */
-      overlays = import ./overlays { inherit inputs; };
+      {
 
       /**
         NixOS Configurations *
@@ -71,14 +66,14 @@
       };
 
       /**
-        Formatter
-      */
+Formatter
+*/
       formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.nixfmt-rfc-style);
     };
 
   /**
-    IMPORTS
-  */
+IMPORTS
+*/
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-24.11";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
@@ -120,14 +115,6 @@
     flake-registry = {
       url = "github:NixOS/flake-registry";
       flake = false;
-    };
-    agenix = {
-      url = "github:ryantm/agenix";
-      inputs = {
-        nixpkgs.follows = "nixpkgs-unstable";
-        darwin.follows = "stub-flake";
-        home-manager.follows = "home-manager";
-      };
     };
     xremap-flake = {
       url = "github:xremap/nix-flake";

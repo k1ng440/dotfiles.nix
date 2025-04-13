@@ -17,7 +17,7 @@
     shell = pkgs.bashInteractive;
   };
 
-  boot.kernelParams = [ "console=tty1" ];
+  boot.kernelParams = [ "console=tty1" "quiet" ];
   services.greetd = {
     enable = true;
     vt = 2; # This prevents kernel logs from mangling greetd

@@ -84,9 +84,9 @@ let
     name = "hyprlandExecOnce";
     text = ''
       #!/bin/bash
+      systemctl --user start hyprpolkitagent
       hyprctl setcursor Bibata-Modern-Ice 22
       ${lib.getExe pkgs.dunst} &
-      ${lib.getExe pkgs.waybar} &
       ${lib.getExe pkgs.hypridle} &
       ${lib.getExe pkgs.hyprpolkitagent} &
       dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP

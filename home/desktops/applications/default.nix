@@ -11,6 +11,7 @@
     galculator
     mission-center
     thunderbird
-    vesktop
+    discord
+    wofi
   ];
 }

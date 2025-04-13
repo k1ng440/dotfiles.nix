@@ -1,6 +1,6 @@
-{pkgs, ...}: {
+{pkgs, lib, ...}: {
   programs.starship = {
-    enable = false;
+    enable = lib.mkDefault true;
     package = pkgs.starship;
   };
 }

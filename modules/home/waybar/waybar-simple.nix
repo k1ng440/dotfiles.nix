@@ -1,13 +1,9 @@
 {
   pkgs,
   lib,
-  host,
   config,
   ...
-}: let
-  inherit (import ../../../hosts/${host}/variables.nix) clock24h;
-in
-  with lib; {
+}: {
     # Configure & Theme Waybar
     programs.waybar = {
       enable = true;
@@ -52,10 +48,7 @@ in
             on-scroll-down = "hyprctl dispatch workspace e-1";
           };
           "clock" = {
-            format =
-              if clock24h == true
-              then '' {:L%H:%M}''
-              else '' {:L%I:%M %p}'';
+            format = '' {:L%I:%M %p}'';
             tooltip = true;
             tooltip-format = "<big>{:%A, %d.%B %Y }</big>\n<tt><small>{calendar}</small></tt>";
           };
@@ -206,7 +199,7 @@ in
           };
         }
       ];
-      style = concatStrings [
+      style = lib.concatStrings [
         ''
           * {
             font-family: JetBrainsMono Nerd Font Mono;

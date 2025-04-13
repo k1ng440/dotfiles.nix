@@ -1,14 +1,7 @@
-{
-  pkgs,
-  lib,
-  host,
-  config,
-  ...
-}: let
+{ pkgs, lib, config, ... }:
+let
   betterTransition = "all 0.3s cubic-bezier(.55,-0.68,.48,1.682)";
-  inherit (import ../../../hosts/${host}/variables.nix) clock24h;
-in
-  with lib; {
+in {
     # Configure & Theme Waybar
     programs.waybar = {
       enable = true;
@@ -46,10 +39,7 @@ in
             on-scroll-down = "hyprctl dispatch workspace e-1";
           };
           "clock" = {
-            format =
-              if clock24h == true
-              then '' {:L%H:%M}''
-              else '' {:L%I:%M %p}'';
+            format = ''  {:L%I:%M %p}'';
             tooltip = true;
             tooltip-format = "<big>{:%A, %d.%B %Y }</big>\n<tt><small>{calendar}</small></tt>";
           };
@@ -76,15 +66,15 @@ in
           };
           "network" = {
             format-icons = [
-              "󰤯"
-              "󰤟"
-              "󰤢"
-              "󰤥"
-              "󰤨"
+              "󰤯 "
+              "󰤟 "
+              "󰤢 "
+              "󰤥 "
+              "󰤨 "
             ];
             format-ethernet = " {bandwidthDownOctets}";
             format-wifi = "{icon} {signalStrength}%";
-            format-disconnected = "󰤮";
+            format-disconnected = "󰤮 ";
             tooltip = false;
           };
           "tray" = {
@@ -96,43 +86,43 @@ in
             format-bluetooth-muted = " {icon} {format_source}";
             format-muted = " {format_source}";
             format-source = " {volume}%";
-            format-source-muted = "";
+            format-source-muted = " ";
             format-icons = {
-              headphone = "";
-              hands-free = "";
-              headset = "";
-              phone = "";
-              portable = "";
-              car = "";
+              headphone = " ";
+              hands-free = " ";
+              headset = " ";
+              phone = " ";
+              portable = " ";
+              car = " ";
               default = [
-                ""
-                ""
-                ""
+                " "
+                " "
+                " "
               ];
             };
             on-click = "sleep 0.1 && pavucontrol";
           };
           "custom/exit" = {
             tooltip = false;
-            format = "";
+            format = " ";
             on-click = "sleep 0.1 && wlogout";
           };
           "custom/startmenu" = {
             tooltip = false;
-            format = "";
+            format = " ";
             # exec = "rofi -show drun";
             on-click = "sleep 0.1 && rofi-launcher";
           };
           "custom/hyprbindings" = {
             tooltip = false;
-            format = "󱕴";
+            format = "󱕴 ";
             on-click = "sleep 0.1 && list-keybinds";
           };
           "idle_inhibitor" = {
             format = "{icon}";
             format-icons = {
-              activated = "";
-              deactivated = "";
+              activated = " ";
+              deactivated = " ";
             };
             tooltip = "true";
           };
@@ -141,13 +131,13 @@ in
             format = "{icon} {}";
             format-icons = {
               notification = "<span foreground='red'><sup></sup></span>";
-              none = "";
+              none = " ";
               dnd-notification = "<span foreground='red'><sup></sup></span>";
-              dnd-none = "";
+              dnd-none = " ";
               inhibited-notification = "<span foreground='red'><sup></sup></span>";
-              inhibited-none = "";
+              inhibited-none = " ";
               dnd-inhibited-notification = "<span foreground='red'><sup></sup></span>";
-              dnd-inhibited-none = "";
+              dnd-inhibited-none = " ";
             };
             return-type = "json";
             exec-if = "which swaync-client";
@@ -164,23 +154,23 @@ in
             format-charging = "󰂄 {capacity}%";
             format-plugged = "󱘖 {capacity}%";
             format-icons = [
-              "󰁺"
-              "󰁻"
-              "󰁼"
-              "󰁽"
-              "󰁾"
-              "󰁿"
-              "󰂀"
-              "󰂁"
-              "󰂂"
-              "󰁹"
+              "󰁺 "
+              "󰁻 "
+              "󰁼 "
+              "󰁽 "
+              "󰁾 "
+              "󰁿 "
+              "󰂀 "
+              "󰂁 "
+              "󰂂 "
+              "󰁹 "
             ];
             on-click = "";
             tooltip = false;
           };
         }
       ];
-      style = concatStrings [
+      style = lib.concatStrings [
         ''
           * {
             font-family: JetBrainsMono Nerd Font Mono;

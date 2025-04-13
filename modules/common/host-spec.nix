@@ -103,6 +103,11 @@
       default = false;
       description = "Used to indicate a host that wants auto styling like stylix";
     };
+    stylixImage = lib.mkOption {
+      type = lib.types.path;
+      default = ../../assets/wallpapers/wallpaper_3862_3440x1440.jpg;
+      description = "Used for image based color scheme";
+    };
     useWindowManager = lib.mkOption {
       type = lib.types.bool;
       default = true;

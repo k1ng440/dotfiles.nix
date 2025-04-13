@@ -9,7 +9,7 @@
     # ./wlogout.nix
   ];
 
-  home.packages = [ pkgs.wlogout pkgs.hyprpolkitagent ];
+  home.packages = [ pkgs.wlogout pkgs.hyprpolkitagent pkgs.grim (pkgs.flameshot.override { enableWlrSupport = true; }) ];
 
   wayland.windowManager.hyprland = {
     enable = true;
@@ -132,6 +132,7 @@
         "float, class:^(galculator)$"
         "float, class:^(waypaper)$"
 
+
         # Always opaque
         "opaque, class:^([Gg]imp)$"
         "opaque, class:^([Ff]lameshot)$"
@@ -152,6 +153,7 @@
         "immediate, class:^([Ss]team_app_*)$"
         "workspace 7, class:^([Ss]team_app_*)$"
         "monitor 0, class:^([Ss]team_app_*)$"
+        "float, class:^(steam)$ title:^(Friends List)$"
 
         # Workspace Assignments
         "workspace 8, class:^(virt-manager)$"

@@ -35,6 +35,7 @@
           "clock"
         ];
         "hyprland/window" = {
+          separate-outputs = true;
           format = "{}";
         };
         "wlr/workspaces" = {
@@ -48,18 +49,23 @@
         };
         cpu = {
           interval = 10;
-          format = "󰻠 {}%";
-          max-length = 10;
-          on-click = "";
+          format = "{icon0} {icon1} {icon2} {icon3}";
+          format-icons = ["▁" "▂" "▃" "▄" "▅" "▆" "▇" "█"];
         };
+        # cpu = {
+        #   interval = 10;
+        #   format = "<span font='24px' >󰻠 </span>{}%";
+        #   max-length = 10;
+        #   on-click = "";
+        # };
         memory = {
           interval = 30;
-          format = "  {}%";
-          format-alt = " {used:0.1f}G";
+          format = " <span font='24px' > </span>{}%";
+          format-alt = "<span font='24px' ></span> <span>{used:0.1f}G</span>";
           max-length = 10;
         };
         backlight = {
-          format = "󰖨 {}";
+          format = "<span font='24px' >󰖨</span {}";
           device = "acpi_video0";
         };
         "custom/weather" = {
@@ -74,11 +80,11 @@
           spacing = 10;
         };
         network = {
-          format = "󰖩 {essid}";
-          format-disconnected = "󰖪 disconnected";
+          format = "<span font='24px' >󰖩</span {essid}";
+          format-disconnected = "<span font='24px' >󰖪</span disconnected";
         };
         clock = {
-          format = " {:%I:%M %p   %m/%d} ";
+          format = "<span font='24px' ></span {:%I:%M %p  <span font='24px' ></span> %m/%d} ";
           tooltip-format = ''
             <big>{:%Y %B}</big>
             <tt><small>{calendar}</small></tt>'';
@@ -86,22 +92,22 @@
         pulseaudio = {
           format = "{icon} {volume}%";
           tooltip = false;
-          format-muted = " Muted";
+          format-muted = "<span font='24px' ></span> Muted";
           on-click = "pamixer -t";
           on-scroll-up = "pamixer -i 5";
           on-scroll-down = "pamixer -d 5";
           scroll-step = 5;
           format-icons = {
-            headphone = "";
-            hands-free = "";
-            headset = "";
-            phone = "";
-            portable = "";
-            car = "";
+            headphone = "<span font='24px' ></span>";
+            hands-free = "<span font='24px' ></span>";
+            headset = "<span font='24px' ></span>";
+            phone = "<span font='24px' ></span>";
+            portable = "<span font='24px' ></span>";
+            car = "<span font='24px' ></span>";
             default = [
-              ""
-              ""
-              ""
+              "<span font='24px' ></span>"
+              "<span font='24px' ></span>"
+              "<span font='24px' ></span>"
             ];
           };
         };

@@ -3,12 +3,12 @@
     enable = true;
     package = pkgs.kitty;
     settings = {
-      font_size = 12;
+      font_size = 14;
       wheel_scroll_min_lines = 1;
       window_padding_width = 4;
-      confirm_os_window_close = 0;
+      confirm_os_window_close = 1;
       scrollback_lines = 10000;
-      enable_audio_bell = false;
+      enable_audio_bell = true;
       mouse_hide_wait = 60;
       cursor_trail = 1;
       tab_fade = 1;
@@ -25,6 +25,8 @@
       # Clipboard
       map ctrl+shift+v        paste_from_selection
       map shift+insert        paste_from_selection
+      map ctrl+shift+c        copy_to_clipboard
+      map ctrl+insert         copy_to_clipboard
 
       # Scrolling
       map ctrl+shift+up        scroll_line_up
@@ -39,7 +41,6 @@
 
       # Window management
       map alt+n               new_window_with_cwd       #open in current dir
-      #map alt+n              new_os_window             #opens term in $HOME
       map alt+w               close_window
       map ctrl+shift+enter    launch --location=hsplit
       map ctrl+shift+s        launch --location=vsplit

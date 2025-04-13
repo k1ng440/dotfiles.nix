@@ -56,6 +56,6 @@ in
     };
 
     # https://github.com/NVIDIA/open-gpu-kernel-modules/issues/472
-    boot.kernelParams = lib.mkIf cfg.open [ "nvidia.NVreg_PreserveVideoMemoryAllocations=1" ];
+    boot.kernelParams = lib.mkIf cfg.open [ "nvidia.NVreg_PreserveVideoMemoryAllocations=1" "quiet" ];
   };
 }
