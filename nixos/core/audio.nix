@@ -123,10 +123,12 @@ in
 
     environment.systemPackages = with pkgs; [
       pamixer
-      pavucontrol
+      pwvucontrol
       alsa-utils
       qjackctl
       carla
     ];
+
+    services.playerctld.enable = true;
   };
 }

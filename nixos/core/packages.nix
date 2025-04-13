@@ -39,7 +39,7 @@
     mpv # Incredible Video Player
     ncdu # Disk Usage Analyzer With Ncurses Interface
     nwg-displays # configure monitor configs via GUI
-    pavucontrol # For Editing Audio Levels & Devices
+    pwvucontrol # For Editing Audio Levels & Devices
     pciutils # Collection Of Tools For Inspecting PCI Devices
     picard # For Changing Music Metadata & Getting Cover Art
     pkg-config # Wrapper Script For Allowing Packages To Get Info On Others

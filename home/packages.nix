@@ -43,5 +43,8 @@
     age   # modern and secure file encryption tool
     sops  # Simple and flexible tool for managing secrets
     ssh-to-age # Convert SSH Ed25519 keys to age keys
+
+    spotify
+    spicetify-cli # Spotify cli
   ];
 }

@@ -24,7 +24,7 @@
         "tag +settings, class:^([Rr]ofi)$"
         "tag +settings, class:^(file-roller|org.gnome.FileRoller)$"
         "tag +settings, class:^(nm-applet|nm-connection-editor|blueman-manager)$"
-        "tag +settings, class:^(pavucontrol|org.pulseaudio.pavucontrol|com.saivert.pwvucontrol)$"
+        "tag +settings, class:^(pavucontrol|org.pulseaudio.pavucontrol)$"
         "tag +settings, class:^(nwg-look|qt5ct|qt6ct|[Yy]ad)$"
         "tag +settings, class:(xdg-desktop-portal-gtk)"
         "tag +settings, class:(.blueman-manager-wrapped)"
@@ -32,7 +32,7 @@
         "move 72% 7%,title:^(Picture-in-Picture)$"
         "center, class:^([Ff]erdium)$"
          "float, class:^([Ww]aypaper)$"
-        "center, class:^(pavucontrol|org.pulseaudio.pavucontrol|com.saivert.pwvucontrol)$"
+        "center, class:^(pavucontrol|org.pulseaudio.pavucontrol)$"
         "center, class:([Tt]hunar), title:negative:(.*[Tt]hunar.*)"
         "center, title:^(Authentication Required)$"
         "idleinhibit fullscreen, class:^(*)$"
@@ -67,26 +67,12 @@
         "keepaspectratio, title:^(Picture-in-Picture)$"
         "noblur, tag:games*"
         "fullscreen, tag:games*"
-      ];
-
-      # env = [
-      #   "NIXOS_OZONE_WL, 1"
-      #   "NIXPKGS_ALLOW_UNFREE, 1"
-      #   "XDG_CURRENT_DESKTOP, Hyprland"
-      #   "XDG_SESSION_TYPE, wayland"
-      #   "XDG_SESSION_DESKTOP, Hyprland"
-      #   "GDK_BACKEND, wayland, x11"
-      #   "CLUTTER_BACKEND, wayland"
-      #   "QT_QPA_PLATFORM=wayland;xcb"
-      #   "QT_WAYLAND_DISABLE_WINDOWDECORATION, 1"
-      #   "QT_AUTO_SCREEN_SCALE_FACTOR, 1"
-      #   "SDL_VIDEODRIVER, x11"
-      #   "MOZ_ENABLE_WAYLAND, 1"
-      #   "AQ_DRM_DEVICES,/dev/dri/card0:/dev/dri/card1"
-      #   "GDK_SCALE,1"
-      #   "QT_SCALE_FACTOR,1"
-      #   "EDITOR,nvim"
-      # ];
+      ]
+        ++ [
+          "float, class:com.saivert.pwvucontrol"
+          "size 1401 492, class:com.saivert.pwvucontrol"
+          "move 6 40, class:com.saivert.pwvucontrol"
+        ];
     };
   };
 }

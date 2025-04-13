@@ -12,6 +12,7 @@
     ../../hosts/${hostname}
     ../../nixos/core
     ../../nixos/drivers
+    ../../modules/core/ai
     ./users.nix
   ];
 

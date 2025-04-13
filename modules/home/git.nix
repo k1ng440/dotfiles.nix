@@ -6,5 +6,5 @@ in {
   programs.git = {
     inherit userName userEmail;
     enable = true;
-  }
+  };
 }

@@ -1,12 +1,6 @@
-{
-  pkgs,
-  lib,
-  host,
-  config,
-  ...
-}: let
+{ pkgs, lib, config, ... }:
+let
   betterTransition = "all 0.3s cubic-bezier(.55,-0.68,.48,1.682)";
-  inherit (import ../../../hosts/${host}/variables.nix) clock24h;
 in
   with lib; {
     # Configure & Theme Waybar
@@ -17,7 +11,6 @@ in
         {
           layer = "top";
           position = "top";
-          modules-center = ["hyprland/workspaces"];
           modules-left = [
             "custom/startmenu"
             "hyprland/window"
@@ -26,7 +19,11 @@ in
             "memory"
             "idle_inhibitor"
           ];
+
+          modules-center = ["hyprland/workspaces"];
+
           modules-right = [
+            "mpris"
             "custom/hyprbindings"
             "custom/notification"
             "custom/exit"
@@ -46,12 +43,9 @@ in
             on-scroll-down = "hyprctl dispatch workspace e-1";
           };
           "clock" = {
-            format =
-              if clock24h == true
-              then '' {:L%H:%M}''
-              else '' {:L%I:%M %p}'';
+            format = '' {:L%I:%M %p}'';
+            tooltip-format = "<big>{:%A, %d.%B %Y }</big><br><tt><small>{calendar}</small></tt>";
             tooltip = true;
-            tooltip-format = "<big>{:%A, %d.%B %Y }</big>\n<tt><small>{calendar}</small></tt>";
           };
           "hyprland/window" = {
             max-length = 22;
@@ -110,7 +104,16 @@ in
                 ""
               ];
             };
-            on-click = "sleep 0.1 && pavucontrol";
+            on-click = "sleep 0.1 && pwvucontrol-toggle";
+          };
+          mpris = {
+            format = "{status_icon} {artist} - {title}";
+            title-len = 40;
+            ignored-players = [ "firefox" ];
+            status-icons = {
+              playing = "";
+              paused = "";
+            };
           };
           "custom/exit" = {
             tooltip = false;
@@ -119,10 +122,9 @@ in
           };
           "custom/startmenu" = {
             tooltip = false;
-            format = "";
-            # exec = "rofi -show drun";
-            #on-click = "sleep 0.1 && rofi-launcher";
-            on-click = "sleep 0.1 && nwg-drawer -mb 200 -mt 200 -mr 200 -ml 200";
+            format = "  ";
+            on-click = "sleep 0.1 && rofi-launcher";
+            # on-click = "sleep 0.1 && nwg-drawer -mb 200 -mt 200 -mr 200 -ml 200";
           };
           "custom/hyprbindings" = {
             tooltip = false;
@@ -184,7 +186,7 @@ in
       style = concatStrings [
         ''
           * {
-            font-family: JetBrainsMono Nerd Font Mono;
+            font-family: "JetBrainsMonoNL Nerd Font Propo";
             font-size: 18px;
             border-radius: 0px;
             border: none;
@@ -247,7 +249,7 @@ in
             border-radius: 8px 8px 8px 8px;
           }
           #idle_inhibitor {
-          font-size: 28px;
+            font-size: 28px;
           }
           #custom-startmenu {
             color: #${config.lib.stylix.colors.base0B};
@@ -258,7 +260,7 @@ in
             border-radius: 16px 16px 16px 16px;
           }
           #custom-hyprbindings, #network, #battery,
-          #custom-notification, #tray, #custom-exit {
+          #custom-notification, #tray, #custom-exit, #mpris {
             /* font-weight: bold; */
             font-size: 20px;
             background: #${config.lib.stylix.colors.base00};

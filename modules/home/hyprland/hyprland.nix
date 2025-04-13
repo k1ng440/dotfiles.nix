@@ -28,7 +28,7 @@
     };
     settings = {
       env = [
-        "QP_QPA_PLATFORM,wayland;xcb"
+        # "QP_QPA_PLATFORM,wayland;xcb"
         # "HYPRCURSOR_THEME,rose-pine-hyprcursor"
       ];
 
@@ -47,39 +47,47 @@
         ) (config.monitors)
       );
 
-      workspace = (
-        let
-          workspaceIDs = lib.flatten [
-            (lib.range 0 9) # workspaces 0 through 9
-            "special" # add the special/scratchpad ws
-          ];
-        in
-          # workspace structure to build "[workspace], monitor:[name], default:[bool], persistent:[bool]"
-          map (
-            ws:
-            lib.concatMapStrings (
-              m:
-              if toString ws == m.workspace then
-                "${toString ws}, monitor:${m.name}, default:true, persistent:true"
-              else
-                if (ws == 1 || ws == "special") && m.primary == true then
-                "${toString ws}, monitor:${m.name}, default:true, persistent:true"
-              else
-                ""
-            ) config.monitors
-          ) workspaceIDs
+     # Workspace bindings
+      workspace = lib.flatten (
+        map (m:
+          map (w:
+            "${w.name},monitor:${m.name}${lib.optionalString w.persistent ",persistent:true"}${lib.optionalString w.default ",default:true"}${lib.optionalString (w.layout != null) ",layout:${w.layout}"}"
+          ) (m.workspace or [])
+        ) (config.monitors)
       );
+
+      # workspace = (
+      #   let
+      #     workspaceIDs = lib.flatten [
+      #       (lib.range 0 9) # workspaces 0 through 9
+      #       "special" # add the special/scratchpad ws
+      #     ];
+      #   in
+      #     # workspace structure to build "[workspace], monitor:[name], default:[bool], persistent:[bool]"
+      #     map (
+      #       ws:
+      #       lib.concatMapStrings (
+      #         m:
+      #         if toString ws == m.workspace then
+      #           "${toString ws}, monitor:${m.name}, default:true, persistent:true"
+      #         else
+      #           if (ws == 1 || ws == "special") && m.primary == true then
+      #           "${toString ws}, monitor:${m.name}, default:true, persistent:true"
+      #         else
+      #           ""
+      #       ) config.monitors
+      #     ) workspaceIDs
+      # );
 
       exec-once = [
         "dbus-update-activation-environment --all --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
         "systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
         "systemctl --user start hyprpolkitagent"
         "killall -q swww;sleep .5 && swww init"
-        "killall -q waybar;sleep .5 && waybar"
         "killall -q swaync;sleep .5 && swaync"
         "nm-applet --indicator"
         "pypr &"
-        "sleep 1.5 && swww img ${config.hostSpec.stylixImage}"
+        # "sleep 1.5 && swww img ${config.hostSpec.stylixImage}"
         "sleep 1 && wallsetter"
       ];
 

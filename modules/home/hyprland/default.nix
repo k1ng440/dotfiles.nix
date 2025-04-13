@@ -1,6 +1,6 @@
 {...}: {
   imports = [
-    ./animations-dynamic.nix
+    ./animations-end4.nix
     ./binds.nix
     ./hypridle.nix
     ./hyprland.nix

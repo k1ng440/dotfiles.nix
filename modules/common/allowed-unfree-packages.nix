@@ -1,4 +1,8 @@
 {lib, ...}: {
+  nixpkgs-unstable.config = {
+    allowUnfree = true;
+  };
+  nixpkgs.config.cudaSupport = true;
   nixpkgs.config.allowUnfreePredicate = pkg:
     builtins.elem (lib.getName pkg) [
       "google-chrome"
@@ -9,5 +13,7 @@
       "slack"
       "zoom"
       "discord"
+      "spotify"
+      "cuda_cudart"
     ];
 }

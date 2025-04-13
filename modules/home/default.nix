@@ -21,7 +21,7 @@
     ./rofi
     ./wlogout
     ./hyprland
-    ./waybar/waybar-simple.nix # @@@ make this configurabable.
+    ./waybar/waybar-ddubs.nix # @@@ make this configurabable.
     ./swaync.nix
     ./fastfetch
     ./scripts

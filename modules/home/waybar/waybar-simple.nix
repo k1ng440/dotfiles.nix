@@ -83,7 +83,7 @@
             ];
             format-ethernet = " {bandwidthDownOctets}";
             format-wifi = "{icon} {signalStrength}%";
-            format-disconnected = "󰤮";
+            format-disconnected = "󰤮 ";
             tooltip = false;
           };
           "tray" = {
@@ -97,40 +97,40 @@
             format-source = " {volume}%";
             format-source-muted = "";
             format-icons = {
-              headphone = "";
-              hands-free = "";
-              headset = "";
-              phone = "";
-              portable = "";
-              car = "";
+              headphone = " ";
+              hands-free = " ";
+              headset = " ";
+              phone = " ";
+              portable = " ";
+              car = " ";
               default = [
-                ""
-                ""
-                ""
+                " "
+                " "
+                " "
               ];
             };
-            on-click = "sleep 0.1 && pavucontrol";
+            on-click = "sleep 0.1 && pwvucontrol-toggle";
           };
           "custom/exit" = {
             tooltip = false;
-            format = "";
+            format = " ";
             on-click = "sleep 0.1 && wlogout";
           };
           "custom/startmenu" = {
             tooltip = false;
-            format = "";
+            format = " ";
             on-click = "sleep 0.1 && rofi-launcher";
           };
           "custom/hyprbindings" = {
             tooltip = false;
-            format = "󱕴";
+            format = "󱕴 ";
             on-click = "sleep 0.1 && list-keybinds";
           };
           "idle_inhibitor" = {
             format = "{icon}";
             format-icons = {
-              activated = "";
-              deactivated = "";
+              activated = " ";
+              deactivated = " ";
             };
             tooltip = "true";
           };
@@ -139,13 +139,13 @@
             format = "{icon} {}";
             format-icons = {
               notification = "<span foreground='red'><sup></sup></span>";
-              none = "";
+              none = " ";
               dnd-notification = "<span foreground='red'><sup></sup></span>";
-              dnd-none = "";
+              dnd-none = " ";
               inhibited-notification = "<span foreground='red'><sup></sup></span>";
-              inhibited-none = "";
+              inhibited-none = " ";
               dnd-inhibited-notification = "<span foreground='red'><sup></sup></span>";
-              dnd-inhibited-none = "";
+              dnd-inhibited-none = " ";
             };
             return-type = "json";
             exec-if = "which swaync-client";
@@ -162,16 +162,16 @@
             format-charging = "󰂄 {capacity}%";
             format-plugged = "󱘖 {capacity}%";
             format-icons = [
-              "󰁺"
-              "󰁻"
-              "󰁼"
-              "󰁽"
-              "󰁾"
-              "󰁿"
-              "󰂀"
-              "󰂁"
-              "󰂂"
-              "󰁹"
+              "󰁺 "
+              "󰁻 "
+              "󰁼 "
+              "󰁽 "
+              "󰁾 "
+              "󰁿 "
+              "󰂀 "
+              "󰂁 "
+              "󰂂 "
+              "󰁹 "
             ];
             on-click = "";
             tooltip = false;
@@ -202,8 +202,8 @@
       style = lib.concatStrings [
         ''
           * {
-            font-family: JetBrainsMono Nerd Font Mono;
-            font-size: 14px;
+            font-family: "JetBrainsMonoNL Nerd Font Propo";
+            font-size: 16px;
             border-radius: 0px;
             border: none;
             min-height: 0px;
@@ -278,7 +278,7 @@
             background: #${config.lib.stylix.colors.base0F};
           }
           #custom-arrow4 {
-            font-size: 24px;
+            font-size: 22px;
             color: #${config.lib.stylix.colors.base0F};
             background: transparent;
           }

@@ -40,6 +40,8 @@
 
   hostSpec = {
     isAutoStyled = true;
+    email = "contact@iampavel.dev";
+    userFullName = "Asaduzzaman Pavel";
   };
 
   # See modules/home-manager/monitors.nix

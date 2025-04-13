@@ -27,10 +27,10 @@ in {
     # Repeat Binds
     binde = [
       # Resize active window 5 pixels in direction
-      "CTRL SUPER SHIFT,h,resizeactive,-5 0"
-      "CTRL SUPER SHIFT,j,resizeactive,0 5"
-      "CTRL SUPER SHIFT,k,resizeactive,0 -5"
-      "CTRL SUPER SHIFT,l,resizeactive,5 0"
+      "CTRL SUPER SHIFT, h, resizeactive,-5 0"
+      "CTRL SUPER SHIFT, j, resizeactive,0 5"
+      "CTRL SUPER SHIFT, k, resizeactive,0 -5"
+      "CTRL SUPER SHIFT, l, resizeactive,5 0"
 
       # Volume
       ", XF86AudioRaiseVolume, exec, ${wpctl} set-mute @DEFAULT_AUDIO_SINK@ 0 && ${wpctl} set-volume -l 1.4 @DEFAULT_AUDIO_SINK@ 5%+"
@@ -92,6 +92,7 @@ in {
       ++ [
         "${mod}, Q, exec, ${terminal}" # Terminal
         "${mod}, E, exec, ${fileManager}"
+        ", Print, exec, screenshootin"
       ]
       ;
   };

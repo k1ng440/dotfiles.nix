@@ -2,7 +2,7 @@
   description = "k1ng's NixOS, nix-darwin and Home Manager Configuration";
 
   outputs =
-    inputs@{ self, nixpkgs, home-manager, ... }:
+    inputs@{ self, nixpkgs, nixpkgs-unstable, home-manager, ... }:
     let
       stateVersion = "24.11"; # Do not change
       inherit (self) outputs;
@@ -17,9 +17,31 @@
       );
 
       system = "x86_64-linux";
-      forAllSystems = lib.genAttrs [
+      systems = [
+        "aarch64-linux"
+        "i686-linux"
         "x86_64-linux"
+        "aarch64-darwin"
+        "x86_64-darwin"
       ];
+
+      pkgs = {
+        x86_64-linux = rec {
+          system = "x86_64-linux";
+          stable = nixpkgs.legacyPackages.${system}.extend (final: prev: {
+            config = prev.config // {
+              allowUnfree = true;
+            };
+          });
+          unstable = nixpkgs-unstable.legacyPackages.${system}.extend (final: prev: {
+            config = prev.config // {
+              allowUnfree = true;
+            };
+          });
+        };
+      };
+
+      forAllSystems = lib.genAttrs systems;
     in
       {
 
@@ -28,14 +50,24 @@
       */
       nixosConfigurations = {
         xenomorph = nixpkgs.lib.nixosSystem {
-          inherit system;
           specialArgs = {
             inherit inputs lib;
+            unstable = pkgs.x86_64-linux.unstable;
+            stable = pkgs.x86_64-linux.stable;
             hostname = "xenomorph";
             username = "k1ng";
             profile = "nvidia";
           };
           modules = [
+            # inputs.home-manager.nixosModules.home-manager
+            # {
+            #   home-manager.useGlobalPkgs = true;
+            #   home-manager.useUserPackages = true;
+            #   home-manager.users.k1ng = import ../home;
+            #   home-manager.extraSpecialArgs = {
+            #     inherit inputs;
+            #   };
+            # }
             ./profiles/xenomorph
           ];
         };
@@ -46,7 +78,7 @@
       */
       homeConfigurations = {
         "k1ng@xenomorph" = home-manager.lib.homeManagerConfiguration {
-          pkgs = nixpkgs.legacyPackages.${system};
+          pkgs = pkgs.x86_64-linux.stable;
           extraSpecialArgs = {
             inherit inputs outputs;
           };
@@ -58,16 +90,14 @@
                 stateVersion = "24.11";
               };
             }
-            ./modules/common
-            ./modules/home
             ./home
           ];
         };
       };
 
       /**
-Formatter
-*/
+        Formatter
+      */
       formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.nixfmt-rfc-style);
     };
 
