@@ -1,9 +1,8 @@
-{lib, ...}: {
-  nixpkgs-unstable.config = {
-    allowUnfree = true;
-  };
+{ lib, ... }:
+{
   nixpkgs.config.cudaSupport = true;
-  nixpkgs.config.allowUnfreePredicate = pkg:
+  nixpkgs.config.allowUnfreePredicate =
+    pkg:
     builtins.elem (lib.getName pkg) [
       "google-chrome"
       "obsidian"

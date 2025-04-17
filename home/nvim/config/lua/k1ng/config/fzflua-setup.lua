@@ -108,5 +108,3 @@ vim.schedule(function()
   -- stylua: ignore
   map({ 'n', 'v', 'i' }, '<C-x><C-f>', fzf.complete_path, { silent = true, desc = 'Fuzzy complete path' })
 end)
-
-

@@ -4,4 +4,3 @@
     gh.enable = true;
   };
 }
-

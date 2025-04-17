@@ -1,4 +1,4 @@
-{pkgs}:
+{ pkgs }:
 pkgs.writeShellScriptBin "web-search" ''
   # check if rofi is already running
   if pidof rofi > /dev/null; then
@@ -45,4 +45,3 @@ pkgs.writeShellScriptBin "web-search" ''
 
    exit 0
 ''
-

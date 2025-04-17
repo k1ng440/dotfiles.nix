@@ -1,4 +1,11 @@
-{inputs, config, pkgs, lib, ...}: {
+{
+  # inputs,
+  # config,
+  # pkgs,
+  # lib,
+  ...
+}:
+{
   # disabledModules = [
   #   "${inputs.stylix}/modules/neovim/hm.nix"
   #   "${inputs.stylix}/modules/lazygit/hm.nix"

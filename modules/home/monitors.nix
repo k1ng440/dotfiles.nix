@@ -50,39 +50,46 @@
             default = true;
           };
           workspaces = lib.mkOption {
-            type = lib.types.nullOr (lib.types.listOf (lib.types.submodule {
-              options = {
-                name = lib.mkOption {
-                  type = lib.types.str;
-                  description = "The name or ID of the workspace (e.g., '1', 'main', 'web').";
-                  example = "1";
-                };
-                persistent = lib.mkOption {
-                  type = lib.types.bool;
-                  description = "Whether the workspace persists even when empty.";
-                  default = false;
-                  example = true;
-                };
-                default = lib.mkOption {
-                  type = lib.types.bool;
-                  description = "Whether this workspace is the default one for the monitor.";
-                  default = false;
-                  example = true;
-                };
-                layout = lib.mkOption {
-                  type = lib.types.nullOr lib.types.str;
-                  description = "The layout for this workspace (e.g., 'dwindle', 'master').";
-                  default = null;
-                  example = "dwindle";
-                };
-                onStart = lib.mkOption {
-                  type = lib.types.listOf lib.types.str;
-                  description = "Commands to run when the workspace is created.";
-                  default = null;
-                  example = ["firefox" "kitty"];
-                };
-              };
-            }));
+            type = lib.types.nullOr (
+              lib.types.listOf (
+                lib.types.submodule {
+                  options = {
+                    name = lib.mkOption {
+                      type = lib.types.str;
+                      description = "The name or ID of the workspace (e.g., '1', 'main', 'web').";
+                      example = "1";
+                    };
+                    persistent = lib.mkOption {
+                      type = lib.types.bool;
+                      description = "Whether the workspace persists even when empty.";
+                      default = false;
+                      example = true;
+                    };
+                    default = lib.mkOption {
+                      type = lib.types.bool;
+                      description = "Whether this workspace is the default one for the monitor.";
+                      default = false;
+                      example = true;
+                    };
+                    layout = lib.mkOption {
+                      type = lib.types.nullOr lib.types.str;
+                      description = "The layout for this workspace (e.g., 'dwindle', 'master').";
+                      default = null;
+                      example = "dwindle";
+                    };
+                    onStart = lib.mkOption {
+                      type = lib.types.listOf lib.types.str;
+                      description = "Commands to run when the workspace is created.";
+                      default = null;
+                      example = [
+                        "firefox"
+                        "kitty"
+                      ];
+                    };
+                  };
+                }
+              )
+            );
             description = ''
               Defines a list of workspaces that should be configured for this monitor.
               Each workspace can specify its name, persistence, default status, and layout.
@@ -109,9 +116,11 @@
         message = "Exactly one monitor must be set to primary.";
       }
       {
-        assertion = let
-          workspaceNames = lib.concatMap (m: map (w: w.name) (m.workspaces or [])) config.monitors;
-        in lib.length (lib.unique workspaceNames) == lib.length workspaceNames || true;
+        assertion =
+          let
+            workspaceNames = lib.concatMap (m: map (w: w.name) (m.workspaces or [ ])) config.monitors;
+          in
+          lib.length (lib.unique workspaceNames) == lib.length workspaceNames || true;
         message = "Duplicate workspace names detected.";
       }
     ];

@@ -49,43 +49,42 @@ in
       # memory reports. In the Main Process section, scroll down to Other Measurements.
       # There you will find the installed (active) extensions with their names and their ids
       # displayed as baseURL=moz-extension://[random-ids].
-      ExtensionSettings =
-        (
-          let
-            extension = shortId: uuid: {
-              name = uuid;
-              value = {
-                install_url = "https://addons.mozilla.org/en-US/firefox/downloads/latest/${shortId}/latest.xpi";
-                installation_mode = "normal_installed";
-              };
+      ExtensionSettings = (
+        let
+          extension = shortId: uuid: {
+            name = uuid;
+            value = {
+              install_url = "https://addons.mozilla.org/en-US/firefox/downloads/latest/${shortId}/latest.xpi";
+              installation_mode = "normal_installed";
             };
-          in
-          builtins.listToAttrs [
-            # Privacy / Security
-            (extension "ublock-origin" "uBlock0@raymondhill.net")
-            (extension "ignore-cookies" "jid1-KKzOGWgsW3Ao4Q@jetpack") # failed # Ignore cookie setting pop-ups
-            (extension "bitwarden-password-manager" "{446900e4-71c2-419f-a6a7-df9c091e268b}")
-            (extension "privacy-badger17" "jid1-MnnxcxisBPnSXQ@jetpack")
-            (extension "cookie-autodelete" "CookieAutoDelete@kennydo.com")
-            (extension "facebook-container" "@contain-facebook")
-            (extension "duckduckgo-for-firefox" "jid1-ZAdIEUB7XOzOJw@jetpack")
+          };
+        in
+        builtins.listToAttrs [
+          # Privacy / Security
+          (extension "ublock-origin" "uBlock0@raymondhill.net")
+          (extension "ignore-cookies" "jid1-KKzOGWgsW3Ao4Q@jetpack") # failed # Ignore cookie setting pop-ups
+          (extension "bitwarden-password-manager" "{446900e4-71c2-419f-a6a7-df9c091e268b}")
+          (extension "privacy-badger17" "jid1-MnnxcxisBPnSXQ@jetpack")
+          (extension "cookie-autodelete" "CookieAutoDelete@kennydo.com")
+          (extension "facebook-container" "@contain-facebook")
+          (extension "duckduckgo-for-firefox" "jid1-ZAdIEUB7XOzOJw@jetpack")
 
-            # Website Related
-            (extension "return-youtube-dislikes" "{762f9885-5a13-4abd-9c77-433dcd38b8fd}") # Youtube
-            (extension "betterttv" "firefox@betterttv.net") # Youtube & Twitch
+          # Website Related
+          (extension "return-youtube-dislikes" "{762f9885-5a13-4abd-9c77-433dcd38b8fd}") # Youtube
+          (extension "betterttv" "firefox@betterttv.net") # Youtube & Twitch
 
-            # Translate
-            (extension "simple-translate" "simple-translate@sienori")
+          # Translate
+          (extension "simple-translate" "simple-translate@sienori")
 
-            # Layout / Themeing
-            (extension "tree-style-tab" "treestyletab@piro.sakura.ne.jp")
-            (extension "darkreader" "addon@darkreader.org")
+          # Layout / Themeing
+          (extension "tree-style-tab" "treestyletab@piro.sakura.ne.jp")
+          (extension "darkreader" "addon@darkreader.org")
 
-            # Misc
-            (extension "auto-tab-discard" "{c2c003ee-bd69-42a2-b0e9-6f34222cb046}")
-            (extension "reddit-enhancement-suite" "jid1-xUfzOsOFlzSOXg@jetpack")
-          ]
-        );
+          # Misc
+          (extension "auto-tab-discard" "{c2c003ee-bd69-42a2-b0e9-6f34222cb046}")
+          (extension "reddit-enhancement-suite" "jid1-xUfzOsOFlzSOXg@jetpack")
+        ]
+      );
     };
 
     profiles.main = {

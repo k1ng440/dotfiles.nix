@@ -1,4 +1,10 @@
-{inputs, pkgs, config, ...}: {
+{
+  inputs,
+  pkgs,
+  config,
+  ...
+}:
+{
   imports = [
     # inputs.stylix.nixosModules.stylix @@@@
     inputs.stylix.homeManagerModules.stylix
@@ -34,7 +40,7 @@
     };
     fonts = {
       monospace = {
-        package = pkgs.nerdfonts.override {fonts = ["JetBrainsMono"];};
+        package = pkgs.nerdfonts.override { fonts = [ "JetBrainsMono" ]; };
         name = "JetBrains Mono";
       };
       sansSerif = {

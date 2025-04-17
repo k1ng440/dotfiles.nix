@@ -20,4 +20,3 @@ pkgs.writeShellScriptBin "wallsetter" ''
   	sleep $TIMEOUT
   done
 ''
-

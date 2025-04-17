@@ -1,4 +1,5 @@
-{...}: {
+{ ... }:
+{
   services.hypridle = {
     enable = true;
     settings = {
@@ -6,12 +7,14 @@
         lock_cmd = "hyprlock";
         before_sleep_cmd = "loginctl lock-session";
         after_sleep_cmd = "hyprctl dispatch dpms on";
+        ignore_dbus_inhibit = false;
+        ignore_systemd_inhibit = false;
       };
 
       /*
-      - Lock screen after 5 minutes without turning off the screen.
-      - Turn off the screen after 7 minutes and turn on when activity is detected.
-      - Suspend the system after 10 minutes to save power.
+        - Lock screen after 5 minutes without turning off the screen.
+        - Turn off the screen after 7 minutes and turn on when activity is detected.
+        - Suspend the system after 10 minutes to save power.
       */
 
       listener = [

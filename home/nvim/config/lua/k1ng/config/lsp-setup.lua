@@ -30,11 +30,11 @@ vim.schedule(function()
       format = diagnostic_format,
       severity = vim.diagnostic.severity.INFO,
     },
-    -- virtual_text = {
-    --   severity = { min = vim.diagnostic.severity.WARN },
-    --   spacing = 4,
-    --   format = diagnostic_format,
-    -- },
+    virtual_text = {
+      severity = { min = vim.diagnostic.severity.INFO },
+      spacing = 4,
+      format = diagnostic_format,
+    },
     float = {
       source = false,
       header = 'Diagnostics:',

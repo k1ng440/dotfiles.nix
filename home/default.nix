@@ -40,6 +40,7 @@
 
   hostSpec = {
     isAutoStyled = true;
+    stylixImage = ../assets/wallpapers/cyberpunk-1.jpg;
     email = "contact@iampavel.dev";
     userFullName = "Asaduzzaman Pavel";
   };
@@ -52,8 +53,28 @@
       height = 1440;
       refreshRate = 100;
       x = -3440;
-      workspace = "5";
+      y = 0;
       vrr = 1;
+      workspaces = [
+        {
+          name = "5";
+          persistent = true;
+          default = true;
+          layout = "master";
+        }
+        {
+          name = "6";
+          persistent = true;
+          default = false;
+          layout = "master";
+        }
+        {
+          name = "7";
+          persistent = true;
+          default = false;
+          layout = "master";
+        }
+      ];
     }
     {
       name = "DP-1";
@@ -62,17 +83,60 @@
       refreshRate = 120;
       vrr = 1;
       primary = true;
+      workspaces = [
+        {
+          name = "1";
+          persistent = true;
+          default = true;
+          layout = "master";
+          onStart = [ ];
+        }
+        {
+          name = "2";
+          persistent = true;
+          default = false;
+          layout = "master";
+          onStart = [
+            "thunderbird"
+            "spotify"
+          ];
+        }
+        {
+          name = "3";
+          persistent = true;
+          default = false;
+          layout = "master";
+          onStart = [ "discord" ];
+        }
+        {
+          name = "4";
+          persistent = true;
+          default = false;
+          layout = "master";
+        }
+      ];
     }
     {
       name = "HDMI-A-1";
       width = 1920;
       height = 1080;
-      refreshRate = 30;
-      y = -1080;
+      refreshRate = 60;
+      x = 0;
+      y = -1100;
       vrr = 0;
-      workspace = "6";
+      workspaces = [
+        {
+          name = "8";
+          persistent = true;
+          default = true;
+          layout = "master";
+          onStart = [ ];
+        }
+      ];
     }
   ];
+
+  xdg.configFile."mimeapps.list".force = true;
 
   # sops = {
   #   age = {

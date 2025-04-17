@@ -25,5 +25,6 @@
     ./swaync.nix
     ./fastfetch
     ./scripts
+    ./mime.nix
   ];
 }

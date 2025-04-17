@@ -1,4 +1,4 @@
-{pkgs}:
+{ pkgs }:
 pkgs.writeShellScriptBin "pwvucontrol-toggle" ''
   # check if pwvucontrol is already running
   if pidof pwvucontrol > /dev/null; then
@@ -8,4 +8,3 @@ pkgs.writeShellScriptBin "pwvucontrol-toggle" ''
 
   pwvucontrol
 ''
-

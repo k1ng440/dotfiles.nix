@@ -1,4 +1,19 @@
-{ lib, config, pkgs, ...}: {
+{
+  lib,
+  config,
+  pkgs,
+  ...
+}:
+let
+  formatWorkspace =
+    m: w:
+    "${w.name}, monitor:${m.name}"
+    + lib.optionalString w.persistent ", persistent:true"
+    + lib.optionalString w.default ", default:true"
+    + lib.optionalString (w.layout != null) ", layout:${w.layout}";
+
+in
+{
   home.packages = with pkgs; [
     swww
     grim
@@ -7,6 +22,8 @@
     swappy
     ydotool
     hyprpolkitagent
+    cliphist
+    hyprsunset
   ];
 
   systemd.user.targets.hyprland-session.Unit.Wants = [
@@ -24,37 +41,30 @@
     systemd = {
       enable = true;
       enableXdgAutostart = true;
-      variables = ["--all"];
+      variables = [ "--all" ];
     };
     settings = {
       env = [
-        # "QP_QPA_PLATFORM,wayland;xcb"
-        # "HYPRCURSOR_THEME,rose-pine-hyprcursor"
+        "QP_QPA_PLATFORM,wayland;xcb"
       ];
 
       monitor = (
         map (
           m:
           "${m.name},${
-          if m.enabled then
-            "${toString m.width}x${toString m.height}@${toString m.refreshRate}"
-            + ",${toString m.x}x${toString m.y},1"
-            + ",transform,${toString m.transform}"
-            + ",vrr,${toString m.vrr}"
-          else
-            "disable"
-        }"
+            if m.enabled then
+              "${toString m.width}x${toString m.height}@${toString m.refreshRate}"
+              + ",${toString m.x}x${toString m.y},1"
+              + ",transform,${toString m.transform}"
+              + ",vrr,${toString m.vrr}"
+            else
+              "disable"
+          }"
         ) (config.monitors)
       );
 
-     # Workspace bindings
-      workspace = lib.flatten (
-        map (m:
-          map (w:
-            "${w.name},monitor:${m.name}${lib.optionalString w.persistent ",persistent:true"}${lib.optionalString w.default ",default:true"}${lib.optionalString (w.layout != null) ",layout:${w.layout}"}"
-          ) (m.workspace or [])
-        ) (config.monitors)
-      );
+      # Workspace
+      workspace = lib.flatten (map (m: map (w: formatWorkspace m w) m.workspaces) config.monitors);
 
       # workspace = (
       #   let
@@ -85,10 +95,12 @@
         "systemctl --user start hyprpolkitagent"
         "killall -q swww;sleep .5 && swww init"
         "killall -q swaync;sleep .5 && swaync"
+        "killall -q waybar;sleep .5 && waybar"
         "nm-applet --indicator"
         "pypr &"
-        # "sleep 1.5 && swww img ${config.hostSpec.stylixImage}"
         "sleep 1 && wallsetter"
+        "wl-paste --type text --watch cliphist store"
+        "wl-paste --type image --watch cliphist store"
       ];
 
       input = {
@@ -120,10 +132,12 @@
         gaps_out = 8;
         border_size = 2;
         resize_on_border = true;
-        "col.active_border" = "rgb(${config.lib.stylix.colors.base08}) rgb(${config.lib.stylix.colors.base0C}) 45deg";
+        "col.active_border" =
+          "rgb(${config.lib.stylix.colors.base08}) rgb(${config.lib.stylix.colors.base0C}) 45deg";
         "col.inactive_border" = "rgb(${config.lib.stylix.colors.base01})";
       };
 
+      # https://wiki.hyprland.org/Configuring/Variables/#misc
       misc = {
         layers_hog_keyboard_focus = true;
         initial_workspace_tracking = 0;
@@ -132,10 +146,15 @@
         disable_hyprland_logo = true;
         disable_splash_rendering = true;
         enable_swallow = false;
-        vfr = true;   # Variable Frame Rate
-        vrr = 2;   #Variable Refresh Rate  Might need to set to 0 for NVIDIA/AQ_DRM_DEVICES
-        # Screen flashing to black momentarily or going black when app is fullscreen
-        # Try setting vrr to 0
+        focus_on_activate = true;
+        vfr = true;
+        vrr = 0;
+      };
+
+      master = {
+        new_status = "master";
+        new_on_top = 1;
+        mfact = 0.5;
       };
 
       dwindle = {
@@ -172,12 +191,6 @@
         explicit_sync = 1; # Change to 1 to disable
         explicit_sync_kms = 1;
         direct_scanout = 0;
-      };
-
-      master = {
-        new_status = "master";
-        new_on_top = 1;
-        mfact = 0.5;
       };
     };
   };

@@ -1,6 +1,10 @@
-# This might be useful to adopt some keybinds. https://wiki.garudalinux.org/en/hyprland-cheatsheet
-
-{ config, lib, pkgs, ... }:
+# Keybinds for Hyprland
+# Ref: https://wiki.garudalinux.org/en/hyprland-cheatsheet
+{
+  lib,
+  pkgs,
+  ...
+}:
 let
   mod = "SUPER";
   wpctl = lib.getExe' pkgs.wireplumber "wpctl";
@@ -14,8 +18,18 @@ let
     (map toString (lib.range 1 9))
     (map (i: "F" + toString i) (lib.range 1 12))
   ];
-  directions = rec { left = "l"; right = "r"; up = "k"; down = "j"; h = left; l = right; k = up; j = down; };
-in {
+  directions = rec {
+    left = "l";
+    right = "r";
+    up = "k";
+    down = "j";
+    h = left;
+    l = right;
+    k = up;
+    j = down;
+  };
+in
+{
   # Reference of supported bind flags: https://wiki.hyprland.org/Configuring/Binds/#bind-flags
   wayland.windowManager.hyprland.settings = {
     # Mouse Binds
@@ -41,33 +55,46 @@ in {
       ", XF86MonBrightnessDown, exec, ${brightnessctl} s 10%-"
     ];
 
-    bind = [
-      # Mute Toggle
-      ", XF86AudioMute, exec, ${wpctl} set-mute @DEFAULT_AUDIO_SINK@ toggle"
-      ", XF86AudioMute, exec, ${wpctl} set-source-mute @DEFAULT_SOURCE@ toggle"
-      # Media Control
-      ", XF86AudioPlay, exec, '${playerctl} --ignore-player=firefox,chromium,brave play-pause'"
-      ", XF86AudioNext, exec, '${playerctl} --ignore-player=firefox,chromium,brave next'"
-      ", XF86AudioPrev, exec, '${playerctl} --ignore-player=firefox,chromium,brave previous'"
-    ] ++ [
-        "${mod}, , exec, rofi -show drun"           # App launcher
-        "${mod}, space, exec, rofi -show drun"      # App launcher
-        "${mod}, R, exec, rofi -show drun"          # App launcher
+    bindel = [
+      ", XF86MonBrightnessDown, exec, hyprctl hyprsunset gamma -10"
+      ", XF86MonBrightnessUp, exec, hyprctl hyprsunset gamma +10"
+    ];
+
+    bind =
+      lib.flatten [
+        # Mute Toggle
+        ", XF86AudioMute, exec, ${wpctl} set-mute @DEFAULT_AUDIO_SINK@ toggle"
+        ", XF86AudioMute, exec, ${wpctl} set-source-mute @DEFAULT_SOURCE@ toggle"
+        # Media Control
+        ", XF86AudioPlay, exec, '${playerctl} --ignore-player=firefox,chromium,brave play-pause'"
+        ", XF86AudioNext, exec, '${playerctl} --ignore-player=firefox,chromium,brave next'"
+        ", XF86AudioPrev, exec, '${playerctl} --ignore-player=firefox,chromium,brave previous'"
+      ]
+      ++ [
+        "${mod}, , exec, rofi -show drun" # App launcher
+        "${mod}, space, exec, rofi -show drun" # App launcher
+        "${mod}, R, exec, rofi -show drun" # App launcher
         # TODO:  Window switcher
+
+        # Circle Window
+        "ALT, Tab, cyclenext"
 
         # Full Screen
         "${mod}, F, fullscreenstate,2 -1" # `internal client`, where `internal` and `client` can be -1 - current, 0 - none, 1 - maximize, 2 - fullscreen, 3 - maximize and fullscreen
 
         # Float
-        "${mod} SHIFT, F, togglefloating"   # Float toggle
-        "${mod} SHIFT, P, pin, active"      # pins a floating window (i.e. show it on all workspaces)
+        "${mod} SHIFT, F, togglefloating" # Float toggle
+        "${mod} SHIFT, P, pin, active" # pins a floating window (i.e. show it on all workspaces)
 
         # Split
-        "${mod} ALT, S, togglesplit"  # Toggle split
+        "${mod} ALT, S, togglesplit" # Toggle split
 
         # Kill active / focus window
         "${mod} SHIFT, Q, killactive"
         "${mod}, C, killactive"
+
+        # Clipboard
+        "${mod}, V, exec, cliphist list | rofi -dmenu | cliphist decode | wl-copy"
       ]
       # Move focus from active window to window in specified direction (UP/k, Down/j, Left/h, Right/l)
       ++ (lib.mapAttrsToList (key: direction: "${mod}, ${key}, movefocus,${direction}") directions)
@@ -84,16 +111,15 @@ in {
       ]
       # Lock screen / Logout / Reload
       ++ [
-        "SUPER, L, exec, ${wpctl} set-mute @DEFAULT_AUDIO_SINK@ 0 && ${hyprlock}"
-        "SUPER SHIFT, E, exec, ${wlogout}"
-        "SUPER SHIFT, R, exec, reload"
+        "${mod} SHIFT, L, exec, ${wpctl} set-mute @DEFAULT_AUDIO_SINK@ 0 && ${hyprlock}"
+        "${mod} SHIFT, E, exec, ${wlogout}"
+        "${mod} ALT, R, exec, reload"
       ]
       # Applications
       ++ [
         "${mod}, Q, exec, ${terminal}" # Terminal
         "${mod}, E, exec, ${fileManager}"
-        ", Print, exec, screenshootin"
-      ]
-      ;
+        ", Print, exec, screenshootin" # Print Screen
+      ];
   };
 }

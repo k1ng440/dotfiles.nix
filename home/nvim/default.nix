@@ -1,4 +1,9 @@
-{ pkgs, config, inputs, ... }:
+{
+  pkgs,
+  config,
+  inputs,
+  ...
+}:
 let
   nvimConfigDirectory = config.lib.file.mkOutOfStoreSymlink "/home/k1ng/nix-config/home/nvim/config";
   intelephenseLicenseFile = config.lib.file.mkOutOfStoreSymlink "/home/k1ng/nix-config/secrets/intelephense-license.txt";

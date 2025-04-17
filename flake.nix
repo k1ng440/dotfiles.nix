@@ -2,76 +2,109 @@
   description = "k1ng's NixOS, nix-darwin and Home Manager Configuration";
 
   outputs =
-    inputs@{ self, nixpkgs, nixpkgs-unstable, home-manager, ... }:
+    inputs@{
+      self,
+      nixpkgs,
+      nixpkgs-unstable,
+      home-manager,
+      ...
+    }:
     let
-      stateVersion = "24.11"; # Do not change
       inherit (self) outputs;
+      lib = nixpkgs.lib;
 
-      lib = nixpkgs.lib.extend (
-        self: super: {
-          custom = import ./lib {
-            inherit inputs stateVersion outputs;
-            inherit (nixpkgs) lib;
+      mkHost = host: isNixOS: {
+        ${host} =
+          let
+            systemFunc = if isNixOS then lib.nixosSystem else builtins.throw "Unsupported System";
+          in
+          systemFunc {
+            specialArgs = {
+              lib = nixpkgs.lib.extend (self: super: { custom = import ./lib { inherit (nixpkgs) lib; }; });
+              inherit inputs outputs isNixOS;
+              isDarwin = !isNixOS;
+            };
+
+            modules = [
+              ./hosts/${if isNixOS then "nixos" else "darwin"}/${host}
+            ];
           };
-        }
-      );
+      };
+      # Invoke mkHost for each host config that is declared for either nixos or darwin
+      mkHostConfigs =
+        hosts: isDarwin: lib.foldl (acc: set: acc // set) { } (lib.map (host: mkHost host isDarwin) hosts);
+      # Return the hosts declared in the given directory
+      readHosts = folder: lib.attrNames (builtins.readDir ./hosts/${folder});
 
-      system = "x86_64-linux";
-      systems = [
+      pkgs = {
+        x86_64-linux = rec {
+          system = "x86_64-linux";
+          stable = import nixpkgs {
+            inherit system;
+            config.allowUnfree = true;
+          };
+          unstable = import nixpkgs-unstable {
+            inherit system;
+            config.allowUnfree = true;
+          };
+        };
+      };
+
+      forAllSystems = nixpkgs.lib.genAttrs [
         "aarch64-linux"
         "i686-linux"
         "x86_64-linux"
         "aarch64-darwin"
         "x86_64-darwin"
       ];
-
-      pkgs = {
-        x86_64-linux = rec {
-          system = "x86_64-linux";
-          stable = nixpkgs.legacyPackages.${system}.extend (final: prev: {
-            config = prev.config // {
-              allowUnfree = true;
-            };
-          });
-          unstable = nixpkgs-unstable.legacyPackages.${system}.extend (final: prev: {
-            config = prev.config // {
-              allowUnfree = true;
-            };
-          });
-        };
-      };
-
-      forAllSystems = lib.genAttrs systems;
     in
-      {
+    {
+      overlays = import ./overlays { inherit inputs; };
+      nixosConfigurations = mkHostConfigs (readHosts "nixos") true;
 
-      /**
-        NixOS Configurations *
-      */
-      nixosConfigurations = {
-        xenomorph = nixpkgs.lib.nixosSystem {
-          specialArgs = {
-            inherit inputs lib;
-            unstable = pkgs.x86_64-linux.unstable;
-            stable = pkgs.x86_64-linux.stable;
-            hostname = "xenomorph";
-            username = "k1ng";
-            profile = "nvidia";
-          };
-          modules = [
-            # inputs.home-manager.nixosModules.home-manager
-            # {
-            #   home-manager.useGlobalPkgs = true;
-            #   home-manager.useUserPackages = true;
-            #   home-manager.users.k1ng = import ../home;
-            #   home-manager.extraSpecialArgs = {
-            #     inherit inputs;
-            #   };
-            # }
-            ./profiles/xenomorph
-          ];
-        };
-      };
+      checks = forAllSystems (
+        system:
+        let
+          pkgs = nixpkgs.legacyPackages.${system};
+        in
+        import ./checks.nix { inherit inputs system pkgs; }
+      );
+      formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.nixfmt-rfc-style);
+      devShells = forAllSystems (
+        system:
+        import ./shell.nix {
+          pkgs = nixpkgs.legacyPackages.${system};
+          checks = self.checks.${system};
+        }
+      );
+
+      # /**
+      #   NixOS Configurations *
+      # */
+      # nixosConfigurations = {
+      #   xenomorph = nixpkgs.lib.nixosSystem {
+      #     specialArgs = {
+      #       inherit inputs lib;
+      #       unstable = pkgs.x86_64-linux.unstable;
+      #       stable = pkgs.x86_64-linux.stable;
+      #       hostname = "xenomorph";
+      #       username = "k1ng";
+      #       profile = "nvidia";
+      #     };
+      #     modules = [
+      #       # inputs.home-manager.nixosModules.home-manager
+      #       # {
+      #       #   home-manager.useGlobalPkgs = true;
+      #       #   home-manager.useUserPackages = true;
+      #       #   home-manager.users.k1ng = import ../home;
+      #       #   home-manager.extraSpecialArgs = {
+      #       #     inherit inputs;
+      #       #   };
+      #       # }
+      #       ./profiles/xenomorph
+      #     ];
+      #   };
+      # };
 
       /**
         Home Manager Configurations
@@ -95,15 +128,11 @@
         };
       };
 
-      /**
-        Formatter
-      */
-      formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.nixfmt-rfc-style);
     };
 
   /**
-IMPORTS
-*/
+    IMPORTS
+  */
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-24.11";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
@@ -120,9 +149,11 @@ IMPORTS
       url = "github:nix-community/home-manager/release-24.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    pre-commit-hooks = {
+      url = "github:cachix/git-hooks.nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     treefmt-nix.url = "github:numtide/treefmt-nix";
-
-    # Theme
     stylix.url = "github:danth/stylix/release-24.11";
     rose-pine-hyprcursor.url = "github:ndom91/rose-pine-hyprcursor";
     catppuccin.url = "https://flakehub.com/f/catppuccin/nix/*";

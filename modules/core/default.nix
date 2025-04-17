@@ -1,19 +1,20 @@
-# modules/core/default.nix
-# ==============================================================================
-# Core System Configuration
-# ==============================================================================
-# This configuration manages the import of all core system modules including:
-# - System core and hardware management
-# - Desktop environment and multimedia support
-# - Network and security configurations
-# - User environment and services
-{ inputs, nixpkgs, self, lib, ... }: {
+{ inputs, ... }:
+{
   imports = [
-    # =============================================================================
-    # System Foundation
-    # =============================================================================
-
+    ./boot.nix
+    ./greetd.nix
+    ./hardware.nix
+    ./networking.nix
+    ./packages.nix
+    ./printing.nix
+    ./security.nix
+    ./services.nix
+    ./hardware.nix
+    ./system.nix
+    ./xdg-portal.nix
+    ./applications.nix
+    ./mime.nix
+    ./udev.nix
+    inputs.stylix.nixosModules.stylix
   ];
-
-
 }

@@ -1,4 +1,5 @@
-{...}: {
+{ ... }:
+{
   home.file.".config/rofi/config-long.rasi".text = ''
     @import "~/.config/rofi/config.rasi"
     window {
@@ -7,7 +8,7 @@
     }
     mainbox {
       orientation: vertical;
-      children: [ "inputbar", "listbox" ];
+      children: [ "listbox" ];
     }
     inputbar {
       padding: 75px 40px;

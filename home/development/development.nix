@@ -3,7 +3,7 @@
   home.packages = with pkgs; [
     subversionClient
     pre-commit
-    gnumake     # make
+    gnumake # make
   ];
 
   programs.direnv = {

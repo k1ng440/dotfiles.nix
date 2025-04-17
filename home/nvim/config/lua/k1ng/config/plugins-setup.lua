@@ -35,7 +35,7 @@ oil.setup({
     ['<C-p>'] = 'actions.preview',
     ['<C-c>'] = 'actions.close',
     ['<C-l>'] = false,
-    ['<C-L>'] = 'actions.refresh',
+    ['<C-r>'] = 'actions.refresh',
     ['-'] = 'actions.parent',
     ['_'] = 'actions.open_cwd',
     ['`'] = 'actions.cd',
@@ -108,6 +108,7 @@ vim.schedule(function()
     kotlin = { 'kdoc' },
     ruby = { 'rdoc' },
     sh = { 'shelldoc' },
+    nix = { 'nixfmt' },
   }
 
   for ft, snips in pairs(extends) do

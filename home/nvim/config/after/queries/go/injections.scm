@@ -9,4 +9,3 @@
  )
  (#match? @comment "^/\\*\\s*sql\\s*\\*/$")
  (#set! @injection.content @comment 0))
-

@@ -64,5 +64,6 @@ with unstable.vimPlugins;
   tokyonight-nvim
   vim-speeddating
   vim-abolish
+  avante-nvim
 ]
 ++ pluginPackages

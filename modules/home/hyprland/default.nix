@@ -1,4 +1,5 @@
-{...}: {
+{ ... }:
+{
   imports = [
     ./animations-end4.nix
     ./binds.nix

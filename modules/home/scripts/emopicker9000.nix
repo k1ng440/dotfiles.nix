@@ -1,4 +1,4 @@
-{pkgs}:
+{ pkgs }:
 pkgs.writeShellScriptBin "emopicker9000" ''
   # check if rofi is already running
   if pidof rofi > /dev/null; then

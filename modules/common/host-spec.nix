@@ -1,5 +1,10 @@
 # Specifications For Differentiating Hosts
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 {
   options.hostSpec = {
     # Data variables that don't dictate configuration settings
@@ -7,7 +12,7 @@
       type = lib.types.str;
       description = "The username of the host";
     };
-    hostName = lib.mkOption {
+    hostname = lib.mkOption {
       type = lib.types.str;
       description = "The hostname of the host";
     };
@@ -49,7 +54,7 @@
         let
           user = config.hostSpec.username;
         in
-          if pkgs.stdenv.isLinux then "/home/${user}" else "/Users/${user}";
+        if pkgs.stdenv.isLinux then "/home/${user}" else "/Users/${user}";
     };
     persistFolder = lib.mkOption {
       type = lib.types.str;
@@ -88,9 +93,9 @@
       default = false;
       description = "Used to indicate a host that is darwin";
     };
-    isPhysicalMachine = lib.mkOption {
+    isVirtualMachine = lib.mkOption {
       type = lib.types.bool;
-      default = true;
+      default = false;
       description = "Used to indicate if the host is a physical machine or virtual machine";
     };
     useYubikey = lib.mkOption {
@@ -137,7 +142,7 @@
         isImpermanent =
           config ? "system" && config.system ? "impermanence" && config.system.impermanence.enable;
       in
-        [
+      [
         {
           assertion =
             !config.hostSpec.isWork || (config.hostSpec.isWork && !builtins.isNull config.hostSpec.work);
