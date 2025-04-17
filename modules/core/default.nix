@@ -6,7 +6,6 @@
     ./hardware.nix
     ./networking.nix
     ./packages.nix
-    ./printing.nix
     ./security.nix
     ./services.nix
     ./hardware.nix

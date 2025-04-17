@@ -25,6 +25,7 @@
 
   services.xserver.videoDrivers = lib.mkForce [ "nvidia" ];
   hardware.nvidia = {
+    open = true;
     prime.sync.enable = lib.mkForce false;
     modesetting.enable = true;
     powerManagement.enable = true;
