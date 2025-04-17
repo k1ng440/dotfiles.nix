@@ -1,4 +1,4 @@
-{ inputs, ... }:
+{ inputs, lib, config, ... }:
 {
   imports = [
     inputs.catppuccin.homeManagerModules.catppuccin
@@ -7,8 +7,8 @@
     inputs.vscode-server.nixosModules.home
     inputs.hyprland.homeManagerModules.default
 
-    ../modules/common
-    ../modules/home
+    ../../modules/common
+    ../../modules/home
 
     ./development
     ./desktops
@@ -23,7 +23,15 @@
   ];
 
   home = {
+    username = lib.mkDefault config.hostSpec.username;
+    homeDirectory = lib.mkDefault config.hostSpec.home;
+    stateVersion = lib.mkDefault "24.11";
+    sessionPath = [
+      "$HOME/.local/bin"
+    ];
     sessionVariables = {
+      FLAKE = "$HOME/src/nix/nix-config";
+      SHELL = "bash";
       EDITOR = "nvim";
       MANPAGER = "sh -c 'col --no-backspaces --spaces | bat --language man'";
       MANROFFOPT = "-c";
@@ -40,7 +48,7 @@
 
   hostSpec = {
     isAutoStyled = true;
-    stylixImage = ../assets/wallpapers/cyberpunk-1.jpg;
+    stylixImage = ../../assets/wallpapers/cyberpunk-1.jpg;
     email = "contact@iampavel.dev";
     userFullName = "Asaduzzaman Pavel";
   };

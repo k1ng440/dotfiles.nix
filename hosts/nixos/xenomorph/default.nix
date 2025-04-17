@@ -19,7 +19,7 @@
 
     inputs.nixos-hardware.nixosModules.common-cpu-amd-zenpower
     ./hardware-configuration.nix
-    ./configuratioons.nix
+    ./configurations.nix
     ./host-packages.nix
     ./users.nix
   ];

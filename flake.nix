@@ -109,24 +109,24 @@
       /**
         Home Manager Configurations
       */
-      homeConfigurations = {
-        "k1ng@xenomorph" = home-manager.lib.homeManagerConfiguration {
-          pkgs = pkgs.x86_64-linux.stable;
-          extraSpecialArgs = {
-            inherit inputs outputs;
-          };
-          modules = [
-            {
-              home = {
-                username = "k1ng";
-                homeDirectory = "/home/k1ng";
-                stateVersion = "24.11";
-              };
-            }
-            ./home
-          ];
-        };
-      };
+      # homeConfigurations = {
+      #   "k1ng@xenomorph" = home-manager.lib.homeManagerConfiguration {
+      #     pkgs = pkgs.x86_64-linux.stable;
+      #     extraSpecialArgs = {
+      #       inherit inputs outputs;
+      #     };
+      #     modules = [
+      #       {
+      #         home = {
+      #           username = "k1ng";
+      #           homeDirectory = "/home/k1ng";
+      #           stateVersion = "24.11";
+      #         };
+      #       }
+      #       ./home
+      #     ];
+      #   };
+      # };
 
     };
 
