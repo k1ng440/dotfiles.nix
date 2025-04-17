@@ -14,6 +14,5 @@
     ./applications.nix
     ./mime.nix
     ./udev.nix
-    inputs.stylix.nixosModules.stylix
   ];
 }

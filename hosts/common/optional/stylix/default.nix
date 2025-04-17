@@ -5,11 +5,6 @@
   ...
 }:
 {
-  imports = [
-    # inputs.stylix.nixosModules.stylix @@@@
-    inputs.stylix.homeManagerModules.stylix
-  ];
-
   stylix = {
     enable = config.hostSpec.isAutoStyled;
     image = config.hostSpec.stylixImage;
@@ -60,3 +55,4 @@
     };
   };
 }
+

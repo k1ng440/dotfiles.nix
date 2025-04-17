@@ -1,10 +1,10 @@
 {
-  unstable,
+  pkgs,
   ...
 }:
 {
   services.ollama = {
-    package = unstable.ollama-cuda;
+    package = pkgs.unstable.ollama-cuda;
     enable = true;
     acceleration = "cuda";
     environmentVariables = {

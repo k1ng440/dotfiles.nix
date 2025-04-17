@@ -6,12 +6,21 @@ in {
   imports = lib.flatten [
     inputs.home-manager.${platformModules}.home-manager
     inputs.sops-nix.${platformModules}.sops
+    inputs.stylix.${platformModules}.stylix
 
     (map lib.custom.relativeToRoot [
+      "modules/common"
+      "modules/hosts/common"
+      "modules/hosts/${platform}"
+
+      "hosts/common/core/${platform}.nix"
       "hosts/common/core/sops.nix"
       "hosts/common/core/ssh.nix"
       "hosts/common/core/i18n.nix"
       "hosts/common/core/time.nix"
+
+      "hosts/common/users/primary"
+      "hosts/common/users/primary/${platform}.nix"
     ])
   ];
 
@@ -27,7 +36,7 @@ in {
     ;
   };
 
-  networking.hostName = config.hostSpec.hostName;
+  networking.hostName = config.hostSpec.hostname;
 
   # Configure Home manager
   home-manager.useGlobalPkgs = true;
@@ -88,8 +97,6 @@ in {
         "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
         "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
       ];
-
-
     };
   };
 }
