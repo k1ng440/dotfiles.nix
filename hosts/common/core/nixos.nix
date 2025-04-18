@@ -1,4 +1,5 @@
-{ config, ... }: {
+{ config, ... }:
+{
   # Database for aiding terminal-based programs
   environment.enableAllTerminfo = true;
   # Enable firmware with a license allowing redistribution

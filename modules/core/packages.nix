@@ -6,13 +6,7 @@
     fuse.userAllowOther = true;
     mtr.enable = true;
     adb.enable = true;
-    gnupg.agent = {
-      enable = true;
-      enableSSHSupport = true;
-    };
   };
-
-  nixpkgs.config.allowUnfree = true;
 
   environment.systemPackages = with pkgs; [
     appimage-run # Needed For AppImage Support

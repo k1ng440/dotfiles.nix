@@ -1,8 +1,16 @@
-{ lib, inputs, outputs, isNixOS, config, ... }:
+{
+  lib,
+  inputs,
+  outputs,
+  isNixOS,
+  config,
+  ...
+}:
 let
   platform = if isNixOS then "nixos" else "darwin";
   platformModules = "${platform}Modules";
-in {
+in
+{
   imports = lib.flatten [
     inputs.home-manager.${platformModules}.home-manager
     inputs.sops-nix.${platformModules}.sops
@@ -29,11 +37,11 @@ in {
     username = "k1ng";
     handle = "k1ng440";
     inherit (inputs.nix-secrets)
-    domain
-    email
-    userFullName
-    networking
-    ;
+      domain
+      email
+      userFullName
+      networking
+      ;
   };
 
   networking.hostName = config.hostSpec.hostname;

@@ -15,11 +15,18 @@ let
   ) config.sops.secrets."passwords/${hostSpec.username}".path;
 in
 {
+
+  users.groups.k1ng = {
+    gid = 1000;
+  };
+
   users.mutableUsers = false; # Only allow declarative credentials; Required for password to be set via sops during system activation!
   users.users.${hostSpec.username} = {
     home = "/home/${hostSpec.username}";
     isNormalUser = true;
     hashedPasswordFile = sopsHashedPasswordFile; # Blank if sops is not working.
+    group = "k1ng";
+    createHome = true;
 
     extraGroups = lib.flatten [
       "wheel"

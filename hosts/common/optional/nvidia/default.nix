@@ -5,8 +5,9 @@
 }:
 {
   environment.systemPackages = with pkgs; [
-    vdpauinfo # sudo vainfo
-    libva-utils # sudo vainfo
+    vdpauinfo
+    libva-utils
+    nvtopPackages.nvidia
   ];
 
   hardware.graphics = {

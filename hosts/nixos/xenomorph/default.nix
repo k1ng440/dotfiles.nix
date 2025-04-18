@@ -2,6 +2,7 @@
 {
   imports = lib.flatten [
     (map lib.custom.relativeToRoot [
+      "modules/core"
       "hosts/common/core"
       "hosts/common/optional/nvidia"
       "hosts/common/optional/audio"
@@ -21,7 +22,6 @@
     ./hardware-configuration.nix
     ./configurations.nix
     ./host-packages.nix
-    ./users.nix
   ];
 
   hostSpec = {
