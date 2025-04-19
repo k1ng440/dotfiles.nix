@@ -16,7 +16,6 @@
     ./swappy.nix
     ./virtmanager.nix
     ./zoxide.nix
-    ./stylix.nix
     ./rofi
     ./wlogout
     ./hyprland

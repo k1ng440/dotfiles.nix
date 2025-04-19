@@ -51,13 +51,6 @@
   fonts.fontconfig.enable = true;
   news.display = "silent";
 
-  # hostSpec = {
-  #   isAutoStyled = true;
-  #   stylixImage = ../../assets/wallpapers/cyberpunk-1.jpg;
-  #   email = "contact@iampavel.dev";
-  #   userFullName = "Asaduzzaman Pavel";
-  # };
-
   # See modules/home-manager/monitors.nix
   monitors = [
     {
