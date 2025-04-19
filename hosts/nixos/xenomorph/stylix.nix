@@ -27,13 +27,5 @@
       name = "Bibata-Modern-Ice";
       size = 24;
     };
-
-    targets = {
-      plymouth.enable = false;
-    };
   };
-
-  disabledModules = [
-    "${inputs.stylix}/modules/polymouth/nixos.nix"
-  ];
 }

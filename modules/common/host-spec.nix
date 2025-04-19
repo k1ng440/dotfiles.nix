@@ -17,7 +17,7 @@
       description = "The hostname of the host";
     };
     email = lib.mkOption {
-      type = lib.types.str;
+      type = lib.types.attrsOf lib.types.str;
       description = "The email of the user";
     };
     work = lib.mkOption {
@@ -34,6 +34,16 @@
       type = lib.types.bool;
       default = false;
       description = "Used to indicate if a host has wifi";
+    };
+    enableMsmtp = lib.mkOption {
+      type = lib.types.bool;
+      default = true;
+      description = "Used to indicate a host that uses msmtp for sending emails";
+    };
+    msmtp = lib.mkOption {
+      default = { };
+      type = lib.types.attrsOf lib.types.anything;
+      description = "An attribute set of msmtp information";
     };
     domain = lib.mkOption {
       type = lib.types.str;

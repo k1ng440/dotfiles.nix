@@ -1,16 +1,22 @@
-# dotfiles.nix
+> [!CAUTION]
+> These dotfiles are heavily tailored to my needs and will likely not work out
+> of the box on your machine. Installing them without inspecting them first is
+> likely to almost fully **wipe your computer**.
 
-This project is dedicated to crafting and maintaining development environments that are declarative, reproducible, and cross-platform. By leveraging the power of Nix
+This is my personal NixOS configuration for my machines. You can find them under
+the [hosts](hosts) folder.
+
+You should really not be trying to install them, but you are free to take
+inspiration from them. Some small parts are not included and are in a separate
+private repository. This includes my secrets (although encrypted with
+[sops-nix](https://github.com/Mic92/sops-nix)) and some slightly sensitive data
+not worth encrypting.
 
 ## Goals
 
 - Declarative Configurations: Define development environment in a clear and structured manner.
 - Reproducibility: Guarantee that the same configuration yields identical environments across different machines and operating systems.
 - Cross-Platform Support: Ensure compatibility operation on various operating systems.
-
-## 🔧 Customization
-
-Feel free to tailor the configurations to suit your personal preferences and project requirements. The declarative nature of Nix makes it straightforward to adjust packages, settings, and environments. For guidance on customizing Nix configurations, refer to the [NixOS Wiki](https://wiki.nixos.org/).
 
 ## Reference
 

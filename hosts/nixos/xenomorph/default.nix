@@ -13,9 +13,9 @@
       "hosts/common/optional/virtualisation"
       "hosts/common/optional/gaming"
       "hosts/common/optional/ai"
-      # "hosts/common/optional/stylix"
       "hosts/common/optional/applications.nix"
       "hosts/common/optional/printing.nix"
+      "hosts/common/optional/plymouth.nix"
     ])
 
     inputs.nixos-hardware.nixosModules.common-cpu-amd-zenpower

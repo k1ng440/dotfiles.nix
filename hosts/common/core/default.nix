@@ -1,5 +1,6 @@
 {
   lib,
+  pkgs,
   inputs,
   outputs,
   isNixOS,
@@ -41,8 +42,16 @@ in
       email
       userFullName
       networking
+      msmtp
       ;
   };
+
+  environment.systemPackages = [
+    pkgs.just
+    pkgs.rsync
+    pkgs.openssh
+  ];
+
 
   networking.hostName = config.hostSpec.hostname;
 
@@ -61,12 +70,7 @@ in
   };
 
   nix = {
-    # This will add each flake input as a registry
-    # To make nix3 commands consistent with your flake
     registry = lib.mapAttrs (_: value: { flake = value; }) inputs;
-
-    # This will add your inputs to the system's legacy channels
-    # Making legacy nix commands consistent as well, awesome!
     nixPath = lib.mapAttrsToList (key: value: "${key}=${value.to.path}") config.nix.registry;
 
     settings = {
@@ -77,7 +81,6 @@ in
       max-free = 1000000000; # 1GB
 
       trusted-users = [ "@wheel" ];
-      # Deduplicate and optimize nix store
       auto-optimise-store = true;
       warn-dirty = false;
 

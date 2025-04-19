@@ -1,33 +1,11 @@
-{
-  lib,
-  pkgs,
-  config,
-  ...
-}:
-let
-  theme = "hexagon_dots";
-in
+{ ... }:
 {
   boot = {
     loader.efi.canTouchEfiVariables = true;
     loader.systemd-boot.enable = true;
 
-    plymouth = lib.mkIf (!config.hostSpec.isMinimal) {
-      inherit theme;
-      enable = true;
-      themePackages = with pkgs; [
-        # By default we would install all themes
-        (adi1090x-plymouth-themes.override {
-          selected_themes = [ theme ];
-        })
-      ];
-    };
-
-    # Enable "Silent boot"
-    consoleLogLevel = 3;
     initrd.verbose = false;
     kernelParams = [
-      "quiet"
       "splash"
       "boot.shell_on_fail"
       "udev.log_priority=3"

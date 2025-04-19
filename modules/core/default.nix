@@ -14,5 +14,6 @@
     ./applications.nix
     ./mime.nix
     ./udev.nix
+    ./msmtp.nix
   ];
 }

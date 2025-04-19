@@ -11,10 +11,6 @@ let
 in
 {
   programs.fish.enable = true;
-  environment.systemPackages = [
-    pkgs.just
-    pkgs.rsync
-  ];
   users.users.${hostSpec.username} = {
     name = lib.trace hostSpec.username hostSpec.username;
     shell = pkgs.fish; # default shell
