@@ -16,7 +16,7 @@ in
     pkgs.rsync
   ];
   users.users.${hostSpec.username} = {
-    name = hostSpec.username;
+    name = lib.trace hostSpec.username hostSpec.username;
     shell = pkgs.fish; # default shell
 
     # These get placed into /etc/ssh/authorized_keys.d/<name> on nixos
@@ -37,12 +37,13 @@ in
 }
 # Import the user's personal/home configurations, unless the environment is minimal
 // lib.optionalAttrs (inputs ? "home-manager") {
-  home-manager.backupFileExtension = "bk";
   home-manager = {
+    backupFileExtension = "bk";
     extraSpecialArgs = {
       inherit pkgs inputs;
       hostSpec = config.hostSpec;
     };
+
     users.${hostSpec.username}.imports = lib.flatten (
       lib.optional (!hostSpec.isMinimal) [
         (

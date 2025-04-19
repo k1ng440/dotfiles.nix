@@ -2,6 +2,7 @@
   lib,
   config,
   pkgs,
+  inputs,
   ...
 }:
 let
@@ -34,6 +35,10 @@ in
     ".face.icon".source = ./face.jpg;
     ".config/face.jpg".source = ./face.jpg;
   };
+
+  disabledModules = [
+    "${inputs.stylix}/modules/hyprland/hm.nix"
+  ];
 
   wayland.windowManager.hyprland = {
     enable = true;

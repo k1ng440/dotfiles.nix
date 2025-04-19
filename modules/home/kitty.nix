@@ -1,9 +1,15 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 {
+
+  # home.packages = pkgs.nerdfonts.override {fonts = ["Symbols"];};
+
   programs.kitty = {
     enable = true;
     package = pkgs.kitty;
+    # font.package = pkgs.fira-code;
+    shellIntegration.enableFishIntegration = true;
     settings = {
+
       font_size = 14;
       wheel_scroll_min_lines = 1;
       window_padding_width = 4;
@@ -20,9 +26,10 @@
       tab_bar_style = "powerline";
       #tab_bar_style = "fade";
       enabled_layouts = "splits";
+      font_features = "FiraCode-Regular +ss01 +ss02 +ss03 +ss04 +ss05 +ss07 +ss08 +zero +onum";
+      # symbol_map = "U+e700-U+e7c5 Symbols Nerd Font";
     };
     extraConfig = ''
-
       # Clipboard
       map ctrl+shift+v        paste_from_selection
       map shift+insert        paste_from_selection

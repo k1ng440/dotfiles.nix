@@ -13,7 +13,7 @@
       "hosts/common/optional/virtualisation"
       "hosts/common/optional/gaming"
       "hosts/common/optional/ai"
-      "hosts/common/optional/stylix"
+      # "hosts/common/optional/stylix"
       "hosts/common/optional/applications.nix"
       "hosts/common/optional/printing.nix"
     ])
@@ -22,6 +22,7 @@
     ./hardware-configuration.nix
     ./configurations.nix
     ./host-packages.nix
+    ./stylix.nix
   ];
 
   hostSpec = {

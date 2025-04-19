@@ -2,11 +2,11 @@
   inputs,
   lib,
   config,
+  hostSpec,
   ...
 }:
 {
   imports = [
-    inputs.catppuccin.homeManagerModules.catppuccin
     inputs.sops-nix.homeManagerModules.sops
     inputs.nix-index-database.hmModules.nix-index
     inputs.vscode-server.nixosModules.home
@@ -28,8 +28,8 @@
   ];
 
   home = {
-    username = lib.mkDefault config.hostSpec.username;
-    homeDirectory = lib.mkDefault config.hostSpec.home;
+    username = lib.mkDefault hostSpec.username;
+    homeDirectory = lib.mkDefault hostSpec.home;
     stateVersion = lib.mkDefault "24.11";
     sessionPath = [
       "$HOME/.local/bin"
@@ -51,12 +51,12 @@
   fonts.fontconfig.enable = true;
   news.display = "silent";
 
-  hostSpec = {
-    isAutoStyled = true;
-    stylixImage = ../../assets/wallpapers/cyberpunk-1.jpg;
-    email = "contact@iampavel.dev";
-    userFullName = "Asaduzzaman Pavel";
-  };
+  # hostSpec = {
+  #   isAutoStyled = true;
+  #   stylixImage = ../../assets/wallpapers/cyberpunk-1.jpg;
+  #   email = "contact@iampavel.dev";
+  #   userFullName = "Asaduzzaman Pavel";
+  # };
 
   # See modules/home-manager/monitors.nix
   monitors = [
@@ -150,16 +150,4 @@
   ];
 
   xdg.configFile."mimeapps.list".force = true;
-
-  # sops = {
-  #   age = {
-  #     keyFile = "${config.home.homeDirectory}/.config/sops/age/keys.txt";
-  #     generateKey = false;
-  #   };
-  #   defaultSopsFile = ../secrets/secrets.yaml;
-  #   secrets = {
-  #     asciinema.path = "${config.home.homeDirectory}/.config/asciinema/config";
-  #     "keys/atuin".path = "${config.home.homeDirectory}/.local/share/atuin/key";
-  #   };
-  # };
 }

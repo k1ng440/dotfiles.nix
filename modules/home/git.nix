@@ -1,11 +1,8 @@
-{ config, ... }:
-let
-  userName = config.hostSpec.userFullName;
-  userEmail = config.hostSpec.email;
-in
+{ hostSpec, ... }:
 {
   programs.git = {
-    inherit userName userEmail;
+    # userName = hostSpec.userFullName;
+    # userEmail = hostSpec.email.work;
     enable = true;
   };
 }

@@ -36,20 +36,6 @@
       # Return the hosts declared in the given directory
       readHosts = folder: lib.attrNames (builtins.readDir ./hosts/${folder});
 
-      pkgs = {
-        x86_64-linux = rec {
-          system = "x86_64-linux";
-          stable = import nixpkgs {
-            inherit system;
-            config.allowUnfree = true;
-          };
-          unstable = import nixpkgs-unstable {
-            inherit system;
-            config.allowUnfree = true;
-          };
-        };
-      };
-
       forAllSystems = nixpkgs.lib.genAttrs [
         "aarch64-linux"
         "i686-linux"
