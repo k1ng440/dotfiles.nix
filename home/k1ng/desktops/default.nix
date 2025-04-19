@@ -1,10 +1,7 @@
 { ... }:
 {
   imports = [
-    # ./hyprland
-    # ./waybar
-    # ./dunst
     ./applications
-    # ./hyprpaper
+    ./stylix.nix
   ];
 }

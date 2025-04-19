@@ -24,6 +24,7 @@
     ./fastfetch
     ./scripts
     ./mime.nix
+    ./user-directories.nix
   ];
 
   disabledModules = [

@@ -143,4 +143,9 @@
   ];
 
   xdg.configFile."mimeapps.list".force = true;
+
+  gtk.gtk3.bookmarks = [
+    "file:///full/path/to/dir"
+    "file:///full/path/to/dir"
+  ];
 }

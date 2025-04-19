@@ -111,7 +111,7 @@ in
       ]
       # Lock screen / Logout / Reload
       ++ [
-        "${mod} SHIFT, L, exec, ${wpctl} set-mute @DEFAULT_AUDIO_SINK@ 0 && ${hyprlock}"
+        "${mod} ALT, L, exec, ${wpctl} set-mute @DEFAULT_AUDIO_SINK@ 0 && ${hyprlock}"
         "${mod} SHIFT, E, exec, ${wlogout}"
         "${mod} ALT, R, exec, reload"
       ]

@@ -9,10 +9,6 @@
         package = pkgs.fira-code;
         name = "FiraCode";
       };
-      # monospace = {
-      #   package = pkgs.nerdfonts.override {fonts = ["FiraCode"];};
-      #   name = "FiraCode Nerd Font Mono";
-      # };
       serif = {
         package = pkgs.dejavu_fonts;
         name = "DejaVu Serif";
@@ -31,9 +27,11 @@
       name = "Bibata-Modern-Ice";
       size = 24;
     };
-  };
 
-  stylix.targets.plymouth.enable = false;
+    targets = {
+      plymouth.enable = false;
+    };
+  };
 
   disabledModules = [
     "${inputs.stylix}/modules/polymouth/nixos.nix"
