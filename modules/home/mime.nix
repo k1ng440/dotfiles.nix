@@ -2,7 +2,7 @@
 {
   xdg.mime.enable = true;
   xdg.mimeApps.defaultApplications = {
-    "image/*" = [ "swappy.desktop" ];
+    "image/" = [ "swappy.desktop" ];
     "video/*" = [ "mpv.desktop" ];
   };
 }

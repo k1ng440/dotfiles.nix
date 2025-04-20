@@ -1,7 +1,6 @@
 {
   inputs,
   lib,
-  config,
   hostSpec,
   ...
 }:
@@ -20,7 +19,6 @@
     ./nvim
     ./lazygit
     ./browsers
-    ./git.nix
     ./packages.nix
     ./ghostty.nix
     ./fzf.nix

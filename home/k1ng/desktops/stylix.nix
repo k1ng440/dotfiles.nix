@@ -1,4 +1,5 @@
-{ pkgs, ... }: {
+{ pkgs, ... }:
+{
   stylix.iconTheme = {
     enable = true;
     package = pkgs.gruvbox-plus-icons;

@@ -1,4 +1,4 @@
-{ inputs, ... }:
+{ ... }:
 {
   imports = [
     ./boot.nix
@@ -14,6 +14,5 @@
     ./applications.nix
     ./mime.nix
     ./udev.nix
-    ./msmtp.nix
   ];
 }

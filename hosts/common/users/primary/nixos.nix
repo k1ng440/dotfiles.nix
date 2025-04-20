@@ -7,7 +7,8 @@
 }:
 let
   hostSpec = config.hostSpec;
-  ifTheyExist = groups: builtins.filter (group: builtins.hasAttr group config.users.groups) groups;
+  exisitngGroupOnly =
+    groups: builtins.filter (group: builtins.hasAttr group config.users.groups) groups;
 
   # Decrypt password to /run/secrets-for-users/ so it can be used to create the user
   sopsHashedPasswordFile = lib.optionalString (
@@ -30,7 +31,7 @@ in
 
     extraGroups = lib.flatten [
       "wheel"
-      (ifTheyExist [
+      (exisitngGroupOnly [
         "audio"
         "video"
         "docker"
@@ -38,6 +39,8 @@ in
         "networkmanager"
         "scanner" # for print/scan"
         "lp" # for print/scan"
+        "adbusers" # for Android
+        "kvm"
       ])
     ];
   };

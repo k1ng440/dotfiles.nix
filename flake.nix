@@ -63,57 +63,6 @@
           checks = self.checks.${system};
         }
       );
-
-      # /**
-      #   NixOS Configurations *
-      # */
-      # nixosConfigurations = {
-      #   xenomorph = nixpkgs.lib.nixosSystem {
-      #     specialArgs = {
-      #       inherit inputs lib;
-      #       unstable = pkgs.x86_64-linux.unstable;
-      #       stable = pkgs.x86_64-linux.stable;
-      #       hostname = "xenomorph";
-      #       username = "k1ng";
-      #       profile = "nvidia";
-      #     };
-      #     modules = [
-      #       # inputs.home-manager.nixosModules.home-manager
-      #       # {
-      #       #   home-manager.useGlobalPkgs = true;
-      #       #   home-manager.useUserPackages = true;
-      #       #   home-manager.users.k1ng = import ../home;
-      #       #   home-manager.extraSpecialArgs = {
-      #       #     inherit inputs;
-      #       #   };
-      #       # }
-      #       ./profiles/xenomorph
-      #     ];
-      #   };
-      # };
-
-      /**
-        Home Manager Configurations
-      */
-      # homeConfigurations = {
-      #   "k1ng@xenomorph" = home-manager.lib.homeManagerConfiguration {
-      #     pkgs = pkgs.x86_64-linux.stable;
-      #     extraSpecialArgs = {
-      #       inherit inputs outputs;
-      #     };
-      #     modules = [
-      #       {
-      #         home = {
-      #           username = "k1ng";
-      #           homeDirectory = "/home/k1ng";
-      #           stateVersion = "24.11";
-      #         };
-      #       }
-      #       ./home
-      #     ];
-      #   };
-      # };
-
     };
 
   /**
@@ -141,36 +90,20 @@
     };
     treefmt-nix.url = "github:numtide/treefmt-nix";
     stylix.url = "github:danth/stylix/release-24.11";
-    rose-pine-hyprcursor.url = "github:ndom91/rose-pine-hyprcursor";
-    catppuccin.url = "https://flakehub.com/f/catppuccin/nix/*";
-
     nixvirt = {
       url = "https://flakehub.com/f/AshleyYakeley/NixVirt/*.tar.gz";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
     sops-nix.url = "github:Mic92/sops-nix";
-    flake-utils.url = "github:numtide/flake-utils";
     nixgl = {
       url = "github:nix-community/nixGL";
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
-    devshell = {
-      url = "github:numtide/devshell";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    flake-registry = {
-      url = "github:NixOS/flake-registry";
-      flake = false;
-    };
-    xremap-flake = {
-      url = "github:xremap/nix-flake";
-      inputs = {
-        devshell.follows = "devshell";
-        hyprland.follows = "stub-flake";
-        home-manager.follows = "stub-flake";
-      };
-    };
+    # devshell = {
+    #   url = "github:numtide/devshell";
+    #   inputs.nixpkgs.follows = "nixpkgs";
+    # };
     solaar = {
       url = "https://flakehub.com/f/Svenum/Solaar-Flake/*.tar.gz";
       inputs.nixpkgs.follows = "nixpkgs";

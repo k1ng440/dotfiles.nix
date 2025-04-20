@@ -2,6 +2,7 @@
 {
   imports = lib.flatten [
     (map lib.custom.relativeToRoot [
+      "modules/hosts/nixos"
       "modules/core"
       "hosts/common/core"
       "hosts/common/optional/nvidia"
@@ -30,5 +31,10 @@
     isVirtualMachine = false;
     hostname = "xenomorph";
     username = "k1ng";
+  };
+
+  hostConfig = {
+    msmtp.enable = true;
+    android-studio.enable = true;
   };
 }

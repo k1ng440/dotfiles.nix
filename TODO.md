@@ -1,20 +1,20 @@
 # TODO
 - [ ] Clean up the mess.
-- [ ] Secret Manager
+- [x] Secret Manager
   - [x] Research secret manager
     - [x] [sops-nix](https://github.com/Mic92/sops-nix)
-  - [ ] Configure
-    - [ ] Host Machine SSH
-    - [ ] User password
+  - [x] Configure
+    - [x] Host Machine SSH
+    - [x] User password
 - [ ] Home manager configuration
   - [x] Wayland
 - [ ]  Setup and configure [UPSMON]
 - [ ] Hardware Acceleration Nvidia
-  - [ ] Install and configure [nvidia-vaapi-driver](https://github.com/elFarto/nvidia-vaapi-driver)
-  - [x] Configure Firefox and test
+  - [x] Install and configure [nvidia-vaapi-driver](https://github.com/elFarto/nvidia-vaapi-driver)
+  - [ ] Configure Firefox and test
   - [ ] Configure ffmpeg and test
-- [ ] Screenshot (flameshot maybe?)
-- [ ] Install and configure screensaver / lock screen
+- [x] Screenshot (flameshot maybe?)
+- [x] Install and configure screensaver / lock screen
 
 
 # Neovim TODO

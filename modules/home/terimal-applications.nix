@@ -1,5 +1,38 @@
-{ config, ... }:
+{ config, pkgs, ... }:
 {
+  programs.bat = {
+    enable = true;
+    config = {
+      pager = "less -FR";
+    };
+    extraPackages = with pkgs.bat-extras; [
+      batman
+      batpipe
+      batgrep
+    ];
+  };
+
+  programs.btop = {
+    enable = true;
+    package = pkgs.btop.override {
+      rocmSupport = true;
+      cudaSupport = true;
+    };
+    settings = {
+      vim_keys = true;
+      rounded_corners = true;
+      proc_tree = true;
+      show_gpu_info = "on";
+      show_uptime = true;
+      show_coretemp = true;
+      cpu_sensor = "auto";
+      show_disks = true;
+      only_physical = true;
+      io_mode = true;
+      io_graph_combined = false;
+    };
+  };
+
   programs.htop = {
     enable = true;
     settings =
@@ -43,5 +76,14 @@
           (text "Systemd")
         ]
       );
+  };
+
+  programs.zoxide = {
+    enable = true;
+    enableZshIntegration = true;
+    enableBashIntegration = true;
+    options = [
+      "--cmd cd"
+    ];
   };
 }

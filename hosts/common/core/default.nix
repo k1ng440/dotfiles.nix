@@ -52,7 +52,6 @@ in
     pkgs.openssh
   ];
 
-
   networking.hostName = config.hostSpec.hostname;
 
   # Configure Home manager

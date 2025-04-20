@@ -1,10 +1,23 @@
-{ config, inputs, lib, ... }:
+{
+  config,
+  inputs,
+  lib,
+  ...
+}:
 let
   sopsFolder = (builtins.toString inputs.nix-secrets) + "/sops";
   msmtpCfg = config.hostSpec.msmtp;
 in
 {
-  config = lib.mkIf config.hostSpec.enableMsmtp {
+  options.hostConfig.msmtp = {
+    enable = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      description = "Enable msmtp";
+    };
+  };
+
+  config = lib.mkIf config.hostConfig.msmtp.enable {
     sops.secrets = {
       "passwords/msmtp" = {
         sopsFile = "${sopsFolder}/shared.yaml";
@@ -26,6 +39,20 @@ in
         tls_starttls = msmtpCfg.tls;
         from = config.hostSpec.email.notifier;
         logfile = "~/.msmtp.log";
+      };
+    };
+
+    programs.msmtp.defaults = {
+      aliases = "/etc/aliases";
+    };
+
+    environment.etc = {
+      "aliases" = {
+        text = ''
+          root: ${config.hostSpec.email.notifier}
+          ${config.hostSpec.username}: ${config.hostSpec.email.user}
+        '';
+        mode = "0644";
       };
     };
   };

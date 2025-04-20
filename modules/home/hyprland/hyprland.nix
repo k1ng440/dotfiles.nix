@@ -132,8 +132,8 @@ in
 
       general = {
         "$modifier" = "SUPER";
-        layout = "dwindle";
-        gaps_in = 6;
+        layout = "master";
+        gaps_in = 4;
         gaps_out = 8;
         border_size = 2;
         resize_on_border = true;
