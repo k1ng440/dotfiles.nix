@@ -32,4 +32,10 @@
       size = 24;
     };
   };
+
+  qt = {
+    enable = true;
+    platformTheme = "lxqt";
+    style = "adwaita-dark";
+  };
 }

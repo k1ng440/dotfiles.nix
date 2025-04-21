@@ -42,4 +42,24 @@
     EGL_PLATFORM = "wayland";
     MOZ_DRM_DEVICE = "/dev/dri/renderD128";
   };
+
+  # Hack for memory leak fix.
+  # https://github.com/NVIDIA/egl-wayland/issues/126#issuecomment-2379945259
+  environment.etc."nvidia/nvidia-application-profiles-rc.d/50-limit-free-buffer-pool-in-wayland-compositors.txt".text =
+    ''
+      {
+        "pattern": {
+          "feature": "procname",
+          "matches": "Hyprland"
+        },
+        "profile": "Limit Free Buffer Pool On Wayland Compositors"
+      },
+      {
+        "pattern": {
+          "feature": "procname",
+          "matches": "gnome-shell"
+        },
+        "profile": "Limit Free Buffer Pool On Wayland Compositors"
+      }
+    '';
 }

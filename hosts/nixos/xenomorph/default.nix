@@ -17,6 +17,8 @@
       "hosts/common/optional/applications.nix"
       "hosts/common/optional/printing.nix"
       "hosts/common/optional/plymouth.nix"
+      "hosts/common/optional/services/openrgb.nix"
+      "hosts/common/optional/services/openssh.nix"
     ])
 
     inputs.nixos-hardware.nixosModules.common-cpu-amd-zenpower
@@ -35,6 +37,6 @@
 
   hostConfig = {
     msmtp.enable = true;
-    android-studio.enable = true;
+    android-studio.enable = false;
   };
 }
