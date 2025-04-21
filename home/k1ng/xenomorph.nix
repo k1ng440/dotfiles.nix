@@ -20,7 +20,6 @@
     ./lazygit
     ./browsers
     ./packages.nix
-    ./ghostty.nix
     ./fzf.nix
     ./fish.nix
   ];

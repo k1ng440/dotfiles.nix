@@ -12,7 +12,6 @@
     ./system.nix
     ./xdg-portal.nix
     ./applications.nix
-    ./mime.nix
     ./udev.nix
   ];
 }

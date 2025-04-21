@@ -1,6 +1,20 @@
-{ pkgs, ... }:
 {
-  atuin = {
+  inputs,
+  config,
+  pkgs,
+  ...
+}:
+let
+  sopsFolder = (builtins.toString inputs.nix-secrets) + "/sops";
+in
+{
+  sops.secrets = {
+    "keys/atuin" = {
+      sopsFile = "${sopsFolder}/shared.yaml";
+    };
+  };
+
+  programs.atuin = {
     enable = true;
     enableBashIntegration = true;
     enableFishIntegration = true;
@@ -10,7 +24,7 @@
     settings = {
       auto_sync = true;
       dialect = "uk";
-      # key_path = config.sops.secrets.atuin_key.path;
+      key_path = config.sops.secrets."keys/atuin".path;
       show_preview = true;
       style = "compact";
       sync_frequency = "1h";
