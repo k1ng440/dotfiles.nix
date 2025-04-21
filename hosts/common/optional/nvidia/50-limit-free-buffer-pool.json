@@ -1,0 +1,32 @@
+{
+  "rules": [
+    {
+      "pattern": {
+        "feature": "procname",
+        "matches": ".Hyprland-wrapped"
+      },
+      "profile": "No VidMem Reuse"
+    },
+    {
+      "pattern": {
+        "feature": "procname",
+        "matches": "electron"
+      },
+      "profile": "No VidMem Reuse"
+    },
+    {
+      "pattern": {
+        "feature": "procname",
+        "matches": ".librewolf-wrapped"
+      },
+      "profile": "No VidMem Reuse"
+    },
+    {
+      "pattern": {
+        "feature": "procname",
+        "matches": "librewolf"
+      },
+      "profile": "No VidMem Reuse"
+    }
+  ]
+}
