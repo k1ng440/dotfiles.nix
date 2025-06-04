@@ -77,6 +77,12 @@
                       default = null;
                       example = "dwindle";
                     };
+                    layout_orientation = lib.mkOption {
+                      type = lib.types.nullOr lib.types.str;
+                      description = "Default placement of the master area, can be left, right, top, bottom or center";
+                      default = null;
+                      example = "left";
+                    };
                     onStart = lib.mkOption {
                       type = lib.types.listOf lib.types.str;
                       description = "Commands to run when the workspace is created.";

@@ -11,8 +11,8 @@ let
     "${w.name}, monitor:${m.name}"
     + lib.optionalString w.persistent ", persistent:true"
     + lib.optionalString w.default ", default:true"
-    + lib.optionalString (w.layout != null) ", layout:${w.layout}";
-
+    + lib.optionalString (w.layout != null) ", layout:${w.layout}"
+    + lib.optionalString (w.layout_orientation != null) ", orientation:${w.layout_orientation}";
 in
 {
   home.packages = with pkgs; [

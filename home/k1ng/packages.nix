@@ -48,5 +48,8 @@
     spicetify-cli # Spotify cli
 
     yubikey-manager
+    pkgs.unstable.plex-desktop
+
+    libreoffice # office
   ];
 }

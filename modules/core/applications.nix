@@ -6,10 +6,8 @@
 }:
 {
   config = lib.mkIf (!config.hostSpec.isMinimal) {
-    # AppImage
     programs.appimage.binfmt = true;
-
-    # Flatpak
+    programs.nix-ld.enable = true;
     services.flatpak.enable = true;
     systemd.services.flatpak-repo = {
       wantedBy = [ "multi-user.target" ];

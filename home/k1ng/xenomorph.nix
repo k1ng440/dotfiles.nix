@@ -64,18 +64,21 @@
           persistent = true;
           default = true;
           layout = "master";
+          layout_orientation = "left";
         }
         {
           name = "6";
           persistent = true;
           default = false;
           layout = "master";
+          layout_orientation = "left";
         }
         {
           name = "7";
           persistent = true;
           default = false;
           layout = "master";
+          layout_orientation = "left";
         }
       ];
     }
