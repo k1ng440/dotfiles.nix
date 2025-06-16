@@ -15,6 +15,8 @@
     libxkbcommon
     libdecor
     libGL
+    inotify-tools
+    system-config-printer
   ];
 
   environment.shells = with pkgs; [

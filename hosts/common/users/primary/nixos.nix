@@ -41,6 +41,7 @@ in
         "lp" # for print/scan"
         "adbusers" # for Android
         "kvm"
+        "libvirtd"
       ])
     ];
   };

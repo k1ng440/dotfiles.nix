@@ -14,7 +14,6 @@
     mysql-client
     openstackclient
     swiftclient
-    teleport.client
     # terraform
     tilt
     kubernetes-polaris

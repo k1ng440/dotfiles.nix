@@ -45,11 +45,13 @@
     ssh-to-age # Convert SSH Ed25519 keys to age keys
 
     spotify
-    spicetify-cli # Spotify cli
 
     yubikey-manager
     pkgs.unstable.plex-desktop
 
     libreoffice # office
+
+    obs-studio
+    foot
   ];
 }

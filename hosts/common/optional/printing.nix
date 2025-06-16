@@ -9,9 +9,19 @@
     avahi = {
       enable = true;
       nssmdns4 = true;
+      openFirewall = true;
+      publish = {
+        enable = true;
+        userServices = true;
+      };
     };
     printing = {
       enable = true;
+      listenAddresses = [ "*:631" ];
+      allowFrom = [ "all" ];
+      browsing = true;
+      defaultShared = true;
+      openFirewall = true;
     };
   };
 
@@ -37,6 +47,10 @@
           location = "home";
           name = "Brother_DCP-T510W";
           model = "everywhere";
+          ppdOptions = {
+            PageSize = "A4";
+            OutputOrder = "Reverse";
+          };
         }
       ];
     };
