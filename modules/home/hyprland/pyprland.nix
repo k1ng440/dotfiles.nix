@@ -6,8 +6,15 @@
     [pyprland]
     plugins = [
       "scratchpads",
+      "expose",
+      "fetch_client_menu",
+      "lost_windows",
+      "magnify",
+      "scratchpads",
+      "shift_monitors",
+      "toggle_special",
+      "workspaces_follow_focus",
     ]
-
     [scratchpads.term]
     animation = "fromTop"
     command = "kitty --class kitty-dropterm"

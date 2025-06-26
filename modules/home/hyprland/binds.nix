@@ -40,6 +40,10 @@ in
 
     # Repeat Binds
     binde = [
+      # Zoom
+      "${mod}, Z, exec, pypr zoom ++0.5"
+      "${mod} SHIFT, Z, exec, pypr zoom"
+
       # Resize active window 5 pixels in direction
       "CTRL SUPER SHIFT, h, resizeactive,-5 0"
       "CTRL SUPER SHIFT, j, resizeactive,0 5"
@@ -70,10 +74,11 @@ in
         ", XF86AudioNext, exec, '${playerctl} --ignore-player=firefox,chromium,brave next'"
         ", XF86AudioPrev, exec, '${playerctl} --ignore-player=firefox,chromium,brave previous'"
       ]
-      ++ [
+      ++ lib.flatten [
         "${mod}, , exec, rofi -show drun" # App launcher
         "${mod}, space, exec, rofi -show drun" # App launcher
         "${mod}, R, exec, rofi -show drun" # App launcher
+
         # TODO:  Window switcher
 
         # Circle Window

@@ -25,6 +25,8 @@ in
     hyprpolkitagent
     cliphist
     hyprsunset
+    hyprshot
+    xdg-terminal-exec
   ];
 
   systemd.user.targets.hyprland-session.Unit.Wants = [
