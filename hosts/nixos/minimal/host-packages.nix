@@ -8,19 +8,9 @@
     home-manager
     tree
     inetutils
-    ledger-udev-rules # Ledger Hardwawre
     SDL2 # SDL2 compatibility layer
-    wayland
-    wayland-protocols
-    libxkbcommon
     libdecor
     libGL
-    inotify-tools
-    system-config-printer
-    mimalloc # general-purpose memory allocator
-
-    rclone
-    ffmpeg-full
   ];
 
   environment.shells = with pkgs; [

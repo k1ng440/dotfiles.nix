@@ -30,7 +30,7 @@
   ];
 
   hardware.nvidia = {
-    open = true;
+    open = false;
     prime.sync.enable = lib.mkForce false;
     modesetting.enable = true;
     powerManagement.enable = true;

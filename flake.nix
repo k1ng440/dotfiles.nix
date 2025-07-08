@@ -5,8 +5,6 @@
     inputs@{
       self,
       nixpkgs,
-      nixpkgs-unstable,
-      home-manager,
       ...
     }:
     let
@@ -90,10 +88,6 @@
     };
     treefmt-nix.url = "github:numtide/treefmt-nix";
     stylix.url = "github:danth/stylix/release-24.11";
-    nixvirt = {
-      url = "https://flakehub.com/f/AshleyYakeley/NixVirt/*.tar.gz";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
     sops-nix.url = "github:Mic92/sops-nix";
     nixgl = {
@@ -153,6 +147,9 @@
     nvim-plugin-inc-rename = {
       url = "github:smjonas/inc-rename.nvim";
       flake = false;
+    };
+    nixos-needsreboot = {
+      url = "github:thefossguy/nixos-needsreboot";
     };
 
     # Personal Repositories

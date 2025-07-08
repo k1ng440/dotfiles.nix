@@ -4,7 +4,7 @@
 > likely to almost fully **wipe your computer**.
 
 This is my personal NixOS configuration for my machines. You can find them under
-the [hosts](hosts) folder.
+the [hosts](hosts) directory.
 
 You should really not be trying to install them, but you are free to take
 inspiration from them. Some small parts are not included and are in a separate
@@ -20,7 +20,7 @@ not worth encrypting.
 
 ## Reference
 
-- [NixOS Wiki](https://nixos.wiki/wiki/Main_Page).
+- [NixOS Wiki](https://wiki.nixos.org).
 - [Manual](https://nixos.org/manual/nixos/stable/index.html)
 
 - Videos / Tutorials:

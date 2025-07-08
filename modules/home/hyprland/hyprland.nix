@@ -27,7 +27,25 @@ in
     hyprsunset
     hyprshot
     xdg-terminal-exec
+    xdg-utils
   ];
+
+  systemd.user.services.swww-daemon = {
+    Unit = {
+      Description = "swww wallpaper daemon";
+      PartOf = [ "hyprland-session.target" ];
+      After = [ "hyprland-session.target" ];
+    };
+    Service = {
+      Environment = "WAYLAND_DISPLAY=wayland-1 XDG_CURRENT_DESKTOP=Hyprland";
+      ExecStart = "${pkgs.swww}/bin/swww-daemon";
+      Restart = "always";
+      RestartSec = 5;
+    };
+    Install = {
+      WantedBy = [ "hyprland-session.target" ];
+    };
+  };
 
   systemd.user.targets.hyprland-session.Unit.Wants = [
     "xdg-desktop-autostart.target"
@@ -100,14 +118,12 @@ in
         "dbus-update-activation-environment --all --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
         "systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
         "systemctl --user start hyprpolkitagent"
-        "killall -q swww;sleep .5 && swww init"
-        "killall -q swaync;sleep .5 && swaync"
         "killall -q waybar;sleep .5 && waybar"
         "nm-applet --indicator"
         "pypr &"
-        "sleep 1 && wallsetter"
-        "wl-paste --type text --watch cliphist store"
-        "wl-paste --type image --watch cliphist store"
+        "sleep 2 && wallsetter"
+        "sleep 2 && wl-paste --type text --watch cliphist store"
+        "sleep 2 && wl-paste --type image --watch cliphist store"
       ];
 
       input = {

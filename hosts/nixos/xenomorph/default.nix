@@ -17,6 +17,7 @@
       "hosts/common/optional/applications.nix"
       "hosts/common/optional/printing.nix"
       "hosts/common/optional/plymouth.nix"
+      "hosts/common/optional/localsend.nix"
     ])
 
     inputs.nixos-hardware.nixosModules.common-cpu-amd-zenpower
@@ -40,4 +41,15 @@
 
   # Firewall
   networking.firewall.allowedUDPPorts = [ 34197 ]; # Factorio
+
+  boot.kernelParams = [
+    "hugepagesz=1G"
+    "hugepages=8"
+  ];
+
+  boot.kernel.sysctl = {
+    "vm.nr_hugepages" = 8;
+    "vm.hugetlb_shm_group" = 0;
+    "vm.transparent_hugepage.enabled" = "never";
+  };
 }

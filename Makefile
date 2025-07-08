@@ -1,5 +1,6 @@
-host != cat /etc/hostname
-host ?= rog-beast
+.SILENT: show-diff clean-cows
+
+host ?= $(cat /etc/hostname 2>/dev/null || echo xenomorph)
 
 repl:
 	nix --extra-experimental-features "nix-command flakes repl-flake" --show-trace repl
@@ -16,29 +17,33 @@ update:
 rebuild:
 	sudo nixos-rebuild switch --show-trace --flake .#$(host)
 
-build-console:
-	nix build --extra-experimental-features "nix-command flakes" --show-trace --option eval-cache false .#nixosConfigurations.iso-console.config.system.build.isoImage
-
 hms:
 	home-manager switch -b backup --extra-experimental-features "nix-command flakes repl-flake" --show-trace --flake .#$(host)
 
 run-vm:
-  nix build .#nixosConfigurations.xenomorph.config.system.build.vm
-  ./result/bin/run-xenomorph-vm
+	nix build .#nixosConfigurations.${host}.config.system.build.vm
+	./result/bin/run-${host}-vm
+
+build-iso:
+	nix build .#nixosConfigurations.isoimage.config.system.build.isoImage
 
 clean-cows:
-  p=$(readlink result)
-  rm result
-  for i in $(nix-store --query --requisites $p); do
-    nix-store --delete $i
-  done
+	p=$(readlink result)
+	rm result
+	for i in $(nix-store --query --requisites $p); do
+	nix-store --delete $i
+	done
 
-
-nixprofiles != ls -dv /nix/var/nix/profiles/system-*-link/|tail -2
-homeprofiles != ls -dv ~/.local/state/nix/profiles/home-manager-*-link/|tail -2
-show-diff:
-	# ======== System diff ======== ";
-	nix store diff-closures $(nixprofiles);
-
-	# ======== home-manager diff ======== ";
-	nix store diff-closures $(homeprofiles)
+diff:
+	if ls /nix/var/nix/profiles/system-*-link >/dev/null 2>&1; then \
+	echo "======== System diff ========"; \
+	nix store diff-closures $$(ls -dv /nix/var/nix/profiles/system-*-link | tail -2); \
+	else \
+	echo "No system profiles found"; \
+	fi
+	if ls ~/.local/state/nix/profiles/home-manager-*-link >/dev/null 2>&1; then \
+	echo "======== home-manager diff ========"; \
+	nix store diff-closures $$(ls -dv ~/.local/state/nix/profiles/home-manager-*-link | tail -2); \
+	else \
+	echo "No home-manager profiles found"; \
+	fi
