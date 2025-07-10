@@ -21,8 +21,8 @@ let
   directions = rec {
     left = "l";
     right = "r";
-    up = "k";
-    down = "j";
+    up = "u";
+    down = "d";
     h = left;
     l = right;
     k = up;
@@ -75,21 +75,18 @@ in
         ", XF86AudioPrev, exec, '${playerctl} --ignore-player=firefox,chromium,brave previous'"
       ]
       ++ lib.flatten [
-        "${mod}, , exec, rofi -show drun" # App launcher
         "${mod}, space, exec, rofi -show drun" # App launcher
         "${mod}, R, exec, rofi -show drun" # App launcher
-
-        # TODO:  Window switcher
 
         # Circle Window
         "ALT, Tab, cyclenext"
 
         # Full Screen
-        "${mod}, F, fullscreenstate,2 -1" # `internal client`, where `internal` and `client` can be -1 - current, 0 - none, 1 - maximize, 2 - fullscreen, 3 - maximize and fullscreen
+        "${mod} SHIFT, F, fullscreenstate,2 -1" # `internal client`, where `internal` and `client` can be -1 - current, 0 - none, 1 - maximize, 2 - fullscreen, 3 - maximize and fullscreen
 
         # Float
-        "${mod} SHIFT, F, togglefloating" # Float toggle
-        "${mod} SHIFT, P, pin, active" # pins a floating window (i.e. show it on all workspaces)
+        "${mod}, F, togglefloating" # Float toggle
+        "${mod}, P, pin, active" # pins a floating window (i.e. show it on all workspaces)
 
         # Split
         "${mod} ALT, S, togglesplit" # Toggle split
@@ -99,7 +96,10 @@ in
         "${mod}, C, killactive"
 
         # Clipboard
-        "${mod}, V, exec, cliphist list | rofi -dmenu | cliphist decode | wl-copy"
+        "${mod}, V, exec, cliphist list | wofi -dmenu | cliphist decode | wl-copy && wl-paste --no-newline | xargs -I {} wtype {}"
+
+        # Toggle between dwindle and master layout
+        "${mod} SHIFT, apostrophe, exec, hyprctl keyword general:layout \"$(hyprctl getoption general:layout | grep -q 'dwindle' && echo 'master' || echo 'dwindle')\""
       ]
       # Move focus from active window to window in specified direction (UP/k, Down/j, Left/h, Right/l)
       ++ (lib.mapAttrsToList (key: direction: "${mod}, ${key}, movefocus,${direction}") directions)

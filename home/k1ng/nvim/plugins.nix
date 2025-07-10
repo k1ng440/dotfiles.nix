@@ -2,22 +2,17 @@
 
 let
   unstable = inputs.nixpkgs-unstable.legacyPackages.${pkgs.system};
-  filteredInputNames =
-    inputs
-    |> builtins.attrNames
-    |> builtins.filter (name: builtins.match "^nvim-plugin-.*" name != null);
-  pluginPackages =
-    filteredInputNames
-    |> builtins.map (
-      name:
-      unstable.vimUtils.buildVimPlugin {
-        name = name;
-        src = inputs.${name};
-        version = inputs.${name}.locked.rev or "0.0.0";
-      }
-    );
-
-  # Merge nvim-treesitter parsers together to reduce vim.api.nvim_list_runtime_paths()
+  filteredInputNames = builtins.filter (name: builtins.match "^nvim-plugin-.*" name != null) (
+    builtins.attrNames inputs
+  );
+  pluginPackages = builtins.map (
+    name:
+    unstable.vimUtils.buildVimPlugin {
+      name = name;
+      src = inputs.${name};
+      version = inputs.${name}.locked.rev or "0.0.0";
+    }
+  ) filteredInputNames;
   nvim-treesitter-grammars = unstable.symlinkJoin {
     name = "nvim-treesitter-grammars";
     paths = pkgs.vimPlugins.nvim-treesitter.withAllGrammars.dependencies;
@@ -64,6 +59,7 @@ with unstable.vimPlugins;
   tokyonight-nvim
   vim-speeddating
   vim-abolish
+  vim-surround
   avante-nvim
 ]
 ++ pluginPackages

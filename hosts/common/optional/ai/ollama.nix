@@ -17,7 +17,7 @@
   };
 
   services.open-webui = {
-    enable = true;
+    enable = false;
     port = 11111;
     package = pkgs.unstable.open-webui;
     environment = {

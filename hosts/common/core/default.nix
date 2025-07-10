@@ -19,7 +19,6 @@ in
 
     (map lib.custom.relativeToRoot [
       "modules/common"
-      "modules/hosts/common"
       "modules/hosts/${platform}"
 
       "hosts/common/core/${platform}.nix"
@@ -57,6 +56,9 @@ in
   # Configure Home manager
   home-manager.useGlobalPkgs = true;
   home-manager.backupFileExtension = "bk";
+  home-manager.extraSpecialArgs = {
+    hostSpec = config.hostSpec;
+  };
 
   # Overlays
   nixpkgs = {
@@ -72,6 +74,10 @@ in
     registry = lib.mapAttrs (_: value: { flake = value; }) inputs;
     nixPath = lib.mapAttrsToList (key: value: "${key}=${value.to.path}") config.nix.registry;
 
+    # Optimize storage and automatic scheduled GC running
+    settings.auto-optimise-store = true;
+    optimise.automatic = true;
+
     settings = {
       # See https://jackson.dev/post/nix-reasonable-defaults/
       connect-timeout = 5;
@@ -80,9 +86,7 @@ in
       max-free = 1000000000; # 1GB
 
       trusted-users = [ "@wheel" ];
-      auto-optimise-store = true;
       warn-dirty = false;
-
       allow-import-from-derivation = true;
 
       experimental-features = [

@@ -37,6 +37,9 @@ in
       "passwords/msmtp" = {
         sopsFile = "${sopsFolder}/shared.yaml";
       };
+      "keys/u2f_keys" = {
+        sopsFile = "${sopsFolder}/shared.yaml";
+      };
     }
   ];
 

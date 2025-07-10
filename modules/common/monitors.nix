@@ -13,7 +13,7 @@
             type = lib.types.bool;
             default = false;
           };
-          noBar = lib.mkOption {
+          no_bar = lib.mkOption {
             type = lib.types.bool;
             default = false;
           };
@@ -25,7 +25,7 @@
             type = lib.types.int;
             example = 1080;
           };
-          refreshRate = lib.mkOption {
+          refresh_rate = lib.mkOption {
             type = lib.types.int;
             default = 60;
           };
@@ -83,8 +83,14 @@
                       default = null;
                       example = "left";
                     };
-                    onStart = lib.mkOption {
-                      type = lib.types.listOf lib.types.str;
+                    on_created_empty = lib.mkOption {
+                      type = lib.types.nullOr lib.types.str;
+                      description = "A command to be executed once a workspace is created empty (i.e. not created by moving a window to it)";
+                      default = null;
+                      example = "firefox";
+                    };
+                    on_start = lib.mkOption {
+                      type = lib.types.nullOr (lib.types.listOf lib.types.str);
                       description = "Commands to run when the workspace is created.";
                       default = null;
                       example = [

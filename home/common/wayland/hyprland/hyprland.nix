@@ -12,49 +12,37 @@ let
     + lib.optionalString w.persistent ", persistent:true"
     + lib.optionalString w.default ", default:true"
     + lib.optionalString (w.layout != null) ", layout:${w.layout}"
-    + lib.optionalString (w.layout_orientation != null) ", orientation:${w.layout_orientation}";
+    + lib.optionalString (w.layout_orientation != null) ", orientation:${w.layout_orientation}"
+    + lib.optionalString (w.on_created_empty != null) ", on-created-empty:${w.on_created_empty}";
+
+  onStartPrograms = lib.flatten (
+    map (
+      m:
+      map (
+        ws:
+        lib.optionals ((ws.on_start or null) != null) (
+          map (cmd: "[workspace ${ws.name} silent] ${cmd}") ws.on_start
+        )
+      ) (m.workspaces or [ ])
+    ) config.monitors
+  );
 in
 {
-  home.packages = with pkgs; [
-    swww
-    grim
-    slurp
-    wl-clipboard
-    swappy
-    ydotool
-    hyprpolkitagent
-    cliphist
-    hyprsunset
-    hyprshot
-    xdg-terminal-exec
-    xdg-utils
+
+  imports = [
+    ../common/packages.nix
   ];
 
-  systemd.user.services.swww-daemon = {
-    Unit = {
-      Description = "swww wallpaper daemon";
-      PartOf = [ "hyprland-session.target" ];
-      After = [ "hyprland-session.target" ];
-    };
-    Service = {
-      Environment = "WAYLAND_DISPLAY=wayland-1 XDG_CURRENT_DESKTOP=Hyprland";
-      ExecStart = "${pkgs.swww}/bin/swww-daemon";
-      Restart = "always";
-      RestartSec = 5;
-    };
-    Install = {
-      WantedBy = [ "hyprland-session.target" ];
-    };
-  };
+  home.packages = with pkgs; [
+    ydotool
+    hyprpolkitagent
+    hyprsunset
+    hyprshot
+  ];
 
   systemd.user.targets.hyprland-session.Unit.Wants = [
     "xdg-desktop-autostart.target"
   ];
-
-  home.file = {
-    ".face.icon".source = ./face.jpg;
-    ".config/face.jpg".source = ./face.jpg;
-  };
 
   disabledModules = [
     "${inputs.stylix}/modules/hyprland/hm.nix"
@@ -62,7 +50,9 @@ in
 
   wayland.windowManager.hyprland = {
     enable = true;
-    package = pkgs.hyprland;
+    package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
+    portalPackage =
+      inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
     systemd = {
       enable = true;
       enableXdgAutostart = true;
@@ -73,46 +63,21 @@ in
         "QP_QPA_PLATFORM,wayland;xcb"
       ];
 
-      monitor = (
-        map (
-          m:
-          "${m.name},${
-            if m.enabled then
-              "${toString m.width}x${toString m.height}@${toString m.refreshRate}"
-              + ",${toString m.x}x${toString m.y},1"
-              + ",transform,${toString m.transform}"
-              + ",vrr,${toString m.vrr}"
-            else
-              "disable"
-          }"
-        ) (config.monitors)
-      );
+      monitor = map (
+        m:
+        "${m.name},${
+          if m.enabled then
+            "${toString m.width}x${toString m.height}@${toString m.refresh_rate}"
+            + ",${toString m.x}x${toString m.y},1"
+            + ",transform,${toString m.transform}"
+            + ",vrr,${toString m.vrr}"
+          else
+            "disable"
+        }"
+      ) config.monitors;
 
       # Workspace
       workspace = lib.flatten (map (m: map (w: formatWorkspace m w) m.workspaces) config.monitors);
-
-      # workspace = (
-      #   let
-      #     workspaceIDs = lib.flatten [
-      #       (lib.range 0 9) # workspaces 0 through 9
-      #       "special" # add the special/scratchpad ws
-      #     ];
-      #   in
-      #     # workspace structure to build "[workspace], monitor:[name], default:[bool], persistent:[bool]"
-      #     map (
-      #       ws:
-      #       lib.concatMapStrings (
-      #         m:
-      #         if toString ws == m.workspace then
-      #           "${toString ws}, monitor:${m.name}, default:true, persistent:true"
-      #         else
-      #           if (ws == 1 || ws == "special") && m.primary == true then
-      #           "${toString ws}, monitor:${m.name}, default:true, persistent:true"
-      #         else
-      #           ""
-      #       ) config.monitors
-      #     ) workspaceIDs
-      # );
 
       exec-once = [
         "dbus-update-activation-environment --all --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
@@ -122,9 +87,9 @@ in
         "nm-applet --indicator"
         "pypr &"
         "sleep 2 && wallsetter"
-        "sleep 2 && wl-paste --type text --watch cliphist store"
-        "sleep 2 && wl-paste --type image --watch cliphist store"
-      ];
+        "wl-paste --type text --watch cliphist store"
+        "wl-paste --type image --watch cliphist store"
+      ] ++ onStartPrograms;
 
       input = {
         kb_layout = "us";

@@ -28,7 +28,10 @@ with lib;
           "idle_inhibitor"
         ];
 
-        modules-center = [ "hyprland/workspaces" ];
+        modules-center = [
+          "hyprland/workspaces"
+          "sway/workspaces"
+        ];
 
         modules-right = [
           "mpris"
@@ -39,6 +42,15 @@ with lib;
           "tray"
           "clock"
         ];
+
+        # https://github.com/Alexays/Waybar/wiki/Module:-Sway#workspaces
+        "sway/workspaces" = {
+          format = "{name}";
+          on-scroll-up = "swaymsg workspace next";
+          on-scroll-down = "swaymsg workspace prev";
+          on-click = "activate";
+          sort-by = "name";
+        };
 
         # https://man.archlinux.org/man/extra/waybar/waybar-hyprland-workspaces.5.en
         "hyprland/workspaces" = {

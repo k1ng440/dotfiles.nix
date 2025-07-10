@@ -45,14 +45,6 @@
     {
       overlays = import ./overlays { inherit inputs; };
       nixosConfigurations = mkHostConfigs (readHosts "nixos") true;
-
-      checks = forAllSystems (
-        system:
-        let
-          pkgs = nixpkgs.legacyPackages.${system};
-        in
-        import ./checks.nix { inherit inputs system pkgs; }
-      );
       formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.nixfmt-rfc-style);
       devShells = forAllSystems (
         system:
@@ -67,7 +59,7 @@
     IMPORTS
   */
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-24.11";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-25.05";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
     stub-flake.url = "github:k1ng440/stub-flake"; # A completely empty flake
     hyprland = {
@@ -79,7 +71,7 @@
       inputs.hyprland.follows = "hyprland";
     };
     home-manager = {
-      url = "github:nix-community/home-manager/release-24.11";
+      url = "github:nix-community/home-manager/release-25.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     pre-commit-hooks = {
@@ -87,17 +79,13 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     treefmt-nix.url = "github:numtide/treefmt-nix";
-    stylix.url = "github:danth/stylix/release-24.11";
+    stylix.url = "github:danth/stylix/release-25.05";
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
     sops-nix.url = "github:Mic92/sops-nix";
     nixgl = {
       url = "github:nix-community/nixGL";
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
-    # devshell = {
-    #   url = "github:numtide/devshell";
-    #   inputs.nixpkgs.follows = "nixpkgs";
-    # };
     solaar = {
       url = "https://flakehub.com/f/Svenum/Solaar-Flake/*.tar.gz";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -114,7 +102,6 @@
       url = "github:nix-community/nix-vscode-extensions";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
     # neovim external plugins
     nvim-plugin-vim-header = {
       url = "github:alpertuna/vim-header";

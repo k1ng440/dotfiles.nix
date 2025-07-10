@@ -2,6 +2,7 @@
   inputs,
   lib,
   hostSpec,
+  config,
   ...
 }:
 {
@@ -12,8 +13,7 @@
     inputs.hyprland.homeManagerModules.default
 
     ../../modules/common
-    ../../modules/home
-
+    ../common
     ./development
     ./desktops
     ./nvim
@@ -25,8 +25,8 @@
   ];
 
   home = {
-    username = lib.mkDefault hostSpec.username;
-    homeDirectory = lib.mkDefault hostSpec.home;
+    username = lib.mkDefault config.hostSpec.username;
+    homeDirectory = lib.mkDefault config.hostSpec.home;
     stateVersion = lib.mkDefault "24.11";
     sessionPath = [
       "$HOME/.local/bin"
@@ -54,7 +54,7 @@
       name = "DP-2";
       width = 3440;
       height = 1440;
-      refreshRate = 100;
+      refresh_rate = 100;
       x = -3440;
       y = 0;
       vrr = 1;
@@ -86,7 +86,7 @@
       name = "DP-1";
       width = 3440;
       height = 1440;
-      refreshRate = 120;
+      refresh_rate = 120;
       vrr = 1;
       primary = true;
       workspaces = [
@@ -95,15 +95,13 @@
           persistent = true;
           default = true;
           layout = "master";
-          onStart = [ ];
         }
         {
           name = "2";
           persistent = true;
           default = false;
           layout = "master";
-          onStart = [
-            "thunderbird"
+          on_start = [
             "spotify"
           ];
         }
@@ -112,7 +110,7 @@
           persistent = true;
           default = false;
           layout = "master";
-          onStart = [ "discord" ];
+          on_start = [ "discord" ];
         }
         {
           name = "4";
@@ -120,13 +118,26 @@
           default = false;
           layout = "master";
         }
+        {
+          name = "special:magic";
+          persistent = true;
+          default = true;
+        }
+        {
+          name = "special:mail";
+          persistent = true;
+          default = true;
+          on_start = [
+            "thunderbird"
+          ];
+        }
       ];
     }
     {
       name = "HDMI-A-1";
       width = 1920;
       height = 1080;
-      refreshRate = 60;
+      refresh_rate = 60;
       x = 0;
       y = -1100;
       vrr = 0;
@@ -136,7 +147,7 @@
           persistent = true;
           default = true;
           layout = "master";
-          onStart = [ ];
+          on_start = [ ];
         }
       ];
     }

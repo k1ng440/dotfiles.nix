@@ -1,5 +1,6 @@
 {
   pkgs,
+  lib,
   ...
 }:
 {
@@ -35,7 +36,7 @@
 
   qt = {
     enable = true;
-    platformTheme = "lxqt";
-    style = "adwaita-dark";
+    platformTheme = lib.mkForce "lxqt";
+    style = lib.mkForce "adwaita-dark";
   };
 }

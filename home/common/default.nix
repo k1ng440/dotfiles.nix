@@ -7,17 +7,16 @@
     ./git.nix
     ./kitty.nix
     ./starship.nix
-    ./swappy.nix
     ./virtmanager.nix
     ./rofi
-    ./wlogout
-    ./hyprland
-    ./waybar/waybar-ddubs.nix
+    ./wayland/hyprland
+    ./wayland/swaywm
     ./fastfetch
     ./scripts
     ./mime.nix
     ./user-directories.nix
-    ./terimal-applications.nix
+    ./terminal-applications.nix
+    ./desktop-entries.nix
   ];
 
   disabledModules = [
@@ -26,6 +25,7 @@
     "${inputs.stylix}/modules/nvim/hm.nix"
     "${inputs.stylix}/modules/waybar/hm.nix"
     "${inputs.stylix}/modules/rofi/hm.nix"
+    # "${inputs.stylix}/modules/sway/hm.nix"
     "${inputs.stylix}/modules/hyprland/hm.nix"
     "${inputs.stylix}/modules/hyprlock/hm.nix"
     "${inputs.stylix}/modules/hyprlock/hm.nix"

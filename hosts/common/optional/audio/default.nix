@@ -6,7 +6,7 @@
 }:
 {
   config = lib.mkIf (!config.hostSpec.isMinimal) {
-    hardware.pulseaudio.enable = lib.mkDefault false;
+    services.pulseaudio.enable = lib.mkDefault false;
     security.rtkit.enable = true;
 
     services.pipewire = {
