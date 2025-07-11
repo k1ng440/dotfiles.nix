@@ -16,17 +16,17 @@ let
   ) config.sops.secrets."passwords/${hostSpec.username}".path;
 in
 {
-
-  users.groups.k1ng = {
-    gid = 1000;
+  users.groups.${hostSpec.username} = {
+    gid = hostSpec.userUid;
   };
 
   users.mutableUsers = false; # Only allow declarative credentials; Required for password to be set via sops during system activation!
-  users.users.${hostSpec.username} = {
+  users.users."${hostSpec.username}" = {
     home = "/home/${hostSpec.username}";
+    uid = hostSpec.userUid;
     isNormalUser = true;
     hashedPasswordFile = sopsHashedPasswordFile; # Blank if sops is not working.
-    group = "k1ng";
+    group = hostSpec.username;
     createHome = true;
 
     extraGroups = lib.flatten [
@@ -45,9 +45,6 @@ in
       ])
     ];
   };
-
-  # No matter what environment we are in we want these tools for root, and the user(s)
-  programs.git.enable = true;
 
   # root's ssh key are mainly used for remote deployment, borg, and some other specific ops
   users.users.root = {

@@ -19,6 +19,7 @@
       fit-to-screen = false;
       control-center-width = 500;
       control-center-height = 1025;
+
       notification-window-width = 500;
       keyboard-shortcuts = true;
       image-visibility = "when-available";

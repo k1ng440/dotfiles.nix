@@ -19,7 +19,7 @@
   services.greetd.settings =
     let
       start = {
-        command = "sway --unsupported-gpu"; # dev/null for no messages on the screen`
+        command = "run-sway";
         user = "k1ng";
       };
     in

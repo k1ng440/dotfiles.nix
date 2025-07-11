@@ -10,7 +10,11 @@
     # Data variables that don't dictate configuration settings
     username = lib.mkOption {
       type = lib.types.str;
-      description = "The username of the host";
+      description = "The username of the primary user";
+    };
+    userUid = lib.mkOption {
+      type = lib.types.ints.positive;
+      description = "The uid of the primary user";
     };
     hostname = lib.mkOption {
       type = lib.types.str;

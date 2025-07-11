@@ -55,7 +55,7 @@ in
       inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
     systemd = {
       enable = true;
-      enableXdgAutostart = true;
+      enableXdgAutostart = false;
       variables = [ "--all" ];
     };
     settings = {

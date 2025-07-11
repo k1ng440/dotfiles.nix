@@ -23,6 +23,7 @@ in
     ../waybar/waybar-ddubs.nix
     ../wlogout
     ../swappy.nix
+    # ./scripts
   ];
 
   home.sessionVariables = {
@@ -83,12 +84,6 @@ in
         workspaceActivateCommands
         ++ workspaceStartupCommands
         ++ [
-          {
-            command = "exec dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway";
-          }
-          {
-            command = "exec systemctl --user restart pipewire-media-session xdg-desktop-portal xdg-desktop-portal-wlr xdg-desktop-portal-gtk";
-          }
           { command = "exec nm-applet --indicator"; }
           { command = "exec wl-paste --type text --watch cliphist store"; }
           { command = "exec wl-paste --type image --watch cliphist store"; }
@@ -125,6 +120,7 @@ in
         "${mod}+Shift+c" = "reload";
         "${mod}+r" = "exec ${menu}";
         "Print" = "exec screenshootin";
+        "${mod}+Shift+n" = "exec swaync-client -t -sw";
 
         # Windows
         "${mod}+c" = "kill";
@@ -159,8 +155,7 @@ in
         "${mod}+6" = "workspace number 6";
         "${mod}+7" = "workspace number 7";
         "${mod}+8" = "workspace number 8";
-        "${mod}+m" = "workspace special:magic";
-        "${mod}+n" = "workspace special:mail";
+        "${mod}+m" = "workspace special:";
         "${mod}+Shift+1" = "move container to workspace number 1";
         "${mod}+Shift+2" = "move container to workspace number 2";
         "${mod}+Shift+3" = "move container to workspace number 3";
@@ -169,8 +164,7 @@ in
         "${mod}+Shift+6" = "move container to workspace number 6";
         "${mod}+Shift+7" = "move container to workspace number 7";
         "${mod}+Shift+8" = "move container to workspace number 8";
-        "${mod}+Shift+m" = "move container to workspace special:magic";
-        "${mod}+Shift+n" = "move container to workspace special:mail";
+        "${mod}+Shift+m" = "move container to workspace special:";
 
         # Volume control
         "XF86AudioRaiseVolume" =
@@ -191,7 +185,7 @@ in
       };
 
       bars = [
-        { command = "${pkgs.waybar}/bin/waybar"; }
+        { command = "killall -9 .waybar-wrapped && sleep 1 && ${pkgs.waybar}/bin/waybar"; }
       ];
 
       # Appearance
@@ -202,34 +196,20 @@ in
       window = {
         border = 2;
       };
-      # colors = {
-      #   focused = {
-      #     border = "#46d9ff";
-      #     background = "#46d9ff";
-      #     text = "#ffffff";
-      #     indicator = "#46d9ff";
-      #     childBorder = "#46d9ff";
-      #   };
-      #   unfocused = {
-      #     border = "#333333";
-      #     background = "#222222";
-      #     text = "#888888";
-      #     indicator = "#292d2e";
-      #     childBorder = "#222222";
-      #   };
-      #   urgent = {
-      #     border = "#ff5555";
-      #     background = "#ff5555";
-      #     text = "#ffffff";
-      #     indicator = "#ff5555";
-      #     childBorder = "#ff5555";
-      #   };
-      # };
       seat = {
         "*" = {
           xcursor_theme = lib.mkForce "Adwaita 24"; # or "Adwaita 24"
         };
       };
+
+      assigns = {
+        "special:" = [
+          { app_id = "^thunderbird$"; }
+        ];
+      };
+
+      # ref:
+      # https://github.com/jjquin/swayarch/blob/master/.config/sway/config.d/window_rules
 
       window.commands = [
         {
@@ -350,7 +330,8 @@ in
           };
         }
         {
-          command = "floating enable, resize set 1030 710";
+          command = "floating enable";
+          # command = "floating enable, resize set 1030 710";
           criteria = {
             title = "^(?:Open|Add|Open Folder|Save File|Save File as|Add Folder to Workspace)$";
           };
@@ -395,6 +376,12 @@ in
           command = "floating enable";
           criteria = {
             app_id = "galculator";
+          };
+        }
+        {
+          command = "title_format \"<span>[X] %title</span>\"";
+          criteria = {
+            shell = "xwayland";
           };
         }
       ];

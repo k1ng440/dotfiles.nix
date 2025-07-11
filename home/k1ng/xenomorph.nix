@@ -119,12 +119,7 @@
           layout = "master";
         }
         {
-          name = "special:magic";
-          persistent = true;
-          default = true;
-        }
-        {
-          name = "special:mail";
+          name = "special:";
           persistent = true;
           default = true;
           on_start = [

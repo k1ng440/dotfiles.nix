@@ -40,6 +40,12 @@ in
       "keys/u2f_keys" = {
         sopsFile = "${sopsFolder}/shared.yaml";
       };
+      "samba/kong" = {
+        sopsFile = "${sopsFolder}/shared.yaml";
+        owner = "root";
+        group = "root";
+        mode = "0600";
+      };
     }
   ];
 

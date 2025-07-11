@@ -10,8 +10,11 @@
 
   security.pam.u2f = {
     enable = true;
-    settings.cue = true;
     control = "sufficient";
+    settings = {
+      interactive = false;
+      cue = true;
+    };
   };
 
   security.pam.services = {

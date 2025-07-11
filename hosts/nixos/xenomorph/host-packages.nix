@@ -18,8 +18,8 @@
     inotify-tools
     system-config-printer
     mimalloc # general-purpose memory allocator
-
-    rclone
+    cifs-utils
+    pkgs.unstable.rclone
     ffmpeg-full
   ];
 

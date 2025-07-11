@@ -216,13 +216,15 @@
         #workspaces button {
           padding: 0px 5px;
           background: transparent;
-          color: #${config.lib.stylix.colors.base04};
+          color: #${config.lib.stylix.colors.base04}; /* #d5c4a1 */
         }
         #workspaces button.active {
-          color: #${config.lib.stylix.colors.base08};
+          color: #${config.lib.stylix.colors.base05}; /* #fbf1c7 for better contrast */
+          background: #${config.lib.stylix.colors.base02}; /* #3c3836 for subtle bg */
         }
         #workspaces button:hover {
-          color: #${config.lib.stylix.colors.base08};
+          color: #${config.lib.stylix.colors.base08}; /* #fb4934 */
+          background: #${config.lib.stylix.colors.base01}; /* #32302f for hover bg */
         }
         tooltip {
           background: #${config.lib.stylix.colors.base00};

@@ -1,10 +1,16 @@
 {
   lib,
   config,
+  pkgs,
   ...
 }:
 {
   config = lib.mkIf (!config.hostSpec.isMinimal) {
+
+    environment.systemPackages = [
+      (pkgs.writeShellScriptBin "run-sway" (builtins.readFile ./run-sway.sh))
+    ];
+
     programs.sway = {
       enable = true;
       wrapperFeatures.gtk = true;

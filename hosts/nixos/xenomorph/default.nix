@@ -1,4 +1,9 @@
-{ lib, inputs, ... }:
+{
+  lib,
+  inputs,
+  config,
+  ...
+}:
 {
   imports = lib.flatten [
     (map lib.custom.relativeToRoot [
@@ -34,6 +39,7 @@
     isVirtualMachine = false;
     hostname = "xenomorph";
     username = "k1ng";
+    userUid = 1000;
   };
 
   hostConfig = {
@@ -44,14 +50,46 @@
   # Firewall
   networking.firewall.allowedUDPPorts = [ 34197 ]; # Factorio
 
-  boot.kernelParams = [
-    "hugepagesz=1G"
-    "hugepages=8"
-  ];
+  services.gvfs.enable = true;
+  services.samba.enable = true;
+  fileSystems =
+    let
+      uid = config.users.users.${config.hostSpec.username}.uid;
+      gid = config.users.groups.${config.hostSpec.username}.gid;
+      smb_automount_opts = "x-systemd.automount,noauto,x-systemd.idle-timeout=60,x-systemd.device-timeout=5s,x-systemd.mount-timeout=5s,uid=${toString uid},gid=${toString gid}";
+    in
+    {
+      "/mnt/sn550" = {
+        device = "/dev/disk/by-uuid/02DCA7E7DCA7D2E9";
+        fsType = "ntfs-3g";
+        options = [
+          "rw"
+          "uid=${toString uid}"
+        ];
+      };
 
-  boot.kernel.sysctl = {
-    "vm.nr_hugepages" = 8;
-    "vm.hugetlb_shm_group" = 0;
-    "vm.transparent_hugepage.enabled" = "never";
-  };
+      "/mnt/kong/media" = {
+        device = "//kong.lan/media";
+        fsType = "cifs";
+        options = [ "${smb_automount_opts},credentials=${config.sops.secrets."samba/kong".path}" ];
+      };
+
+      "/mnt/kong/photos" = {
+        device = "//kong.lan/photos";
+        fsType = "cifs";
+        options = [ "${smb_automount_opts},credentials=${config.sops.secrets."samba/kong".path}" ];
+      };
+
+      "/mnt/kong/backup" = {
+        device = "//kong.lan/backup";
+        fsType = "cifs";
+        options = [ "${smb_automount_opts},credentials=${config.sops.secrets."samba/kong".path}" ];
+      };
+
+      "/mnt/kong/torrents" = {
+        device = "//kong.lan/torrents";
+        fsType = "cifs";
+        options = [ "${smb_automount_opts},credentials=${config.sops.secrets."samba/kong".path}" ];
+      };
+    };
 }
