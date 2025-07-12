@@ -59,7 +59,6 @@
         check_color = "rgba(204, 136, 34, 0)";
         fail_color = "rgba(204, 34, 34, 0)";
         fail_text = "$FAIL <b>($ATTEMPTS)</b>";
-        fail_transition = 300;
         capslock_color = -1;
         numlock_color = -1;
         bothlock_color = -1;

@@ -1,12 +1,11 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 {
   programs.kitty = {
     enable = true;
     package = pkgs.kitty;
-    # font.package = pkgs.fira-code;
     shellIntegration.enableFishIntegration = true;
+    enableGitIntegration = true;
     settings = {
-
       font_size = 14;
       wheel_scroll_min_lines = 1;
       window_padding_width = 4;
@@ -21,10 +20,9 @@
       tab_bar_edge = "top";
       tab_bar_margin_width = 0;
       tab_bar_style = "powerline";
-      #tab_bar_style = "fade";
       enabled_layouts = "splits";
       font_features = "FiraCode-Regular +ss01 +ss02 +ss03 +ss04 +ss05 +ss07 +ss08 +zero +onum";
-      # symbol_map = "U+e700-U+e7c5 Symbols Nerd Font";
+      background_opacity = lib.mkForce "0.8";
     };
     extraConfig = ''
       # Clipboard

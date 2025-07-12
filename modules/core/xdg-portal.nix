@@ -18,6 +18,7 @@
           xdg-desktop-portal-wlr
         ];
         config = {
+          common.default = [ "gtk" ];
           sway = {
             default = [ "gtk" ];
             "org.freedesktop.impl.portal.OpenURI" = "gtk";

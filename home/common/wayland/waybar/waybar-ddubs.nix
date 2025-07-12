@@ -17,11 +17,12 @@
         modules-left = [
           "custom/startmenu"
           "wlr/taskbar"
-          # "hyprland/window"
           "pulseaudio"
           "cpu"
           "memory"
           "idle_inhibitor"
+          "hyprland/window"
+          "sway/window"
         ];
 
         modules-center = [
@@ -35,6 +36,7 @@
           "battery"
           "tray"
           "clock"
+          "systemd-failed-units"
           "custom/exit"
         ];
 
@@ -62,6 +64,16 @@
               groupedWorkspaces = lib.groupBy (pair: pair.name) workspaceMonitorPairs;
             in
             lib.mapAttrs (workspaceName: pairs: map (pair: pair.monitor) pairs) groupedWorkspaces;
+        };
+
+        "sway/window" = {
+          offscreen-css-text = "(inactive)";
+          rewrite = {
+            "(.*) - vim" = " $1";
+            "(.*) - Nvim" = " $1";
+            "(.*) - Mozilla Firefox" = " $1";
+            "(.*) - fish" = "> [$1]";
+          };
         };
 
         # https://man.archlinux.org/man/extra/waybar/waybar-hyprland-workspaces.5.en
@@ -222,13 +234,20 @@
           on-click = "";
           tooltip = false;
         };
+        "systemd-failed-units" = {
+          "hide-on-ok" = true;
+          "format" = "✗ {nr_failed}";
+          "format-ok" = "✓";
+          "system" = true;
+          "user" = true;
+        };
       }
     ];
     style =
       let
         background = "#${config.lib.stylix.colors.base00}";
         foreground = "#${config.lib.stylix.colors.base05}";
-        # active-background = background;
+        active-background = background;
         active-foreground = "#${config.lib.stylix.colors.base08}";
 
         # Additional variables for borders and styling
@@ -258,7 +277,7 @@
             background: ${workspace-background};
             margin: 4px 4px;
             padding: 5px 5px;
-            border-radius: 16px;
+            border-radius: 12px;
             border: 1px solid ${border-color};
           }
 
@@ -289,53 +308,48 @@
             background-color: ${border-color};
           }
 
-          /* Common module styling */
           #window, #pulseaudio, #cpu, #memory, #taskbar, #idle_inhibitor,
-          #network, #battery, #custom-notification,
-          #tray, #custom-exit, #mpris, #clock {
-            margin: 4px 0px;
-            padding: 0px 18px;
-            background: ${background};
-            border-radius: 8px;
-          }
-
-          /* Left-side modules */
-          #window, #pulseaudio, #cpu, #memory, #taskbar, #idle_inhibitor {
-            margin-left: 7px;
+          #network, #battery, #custom-notification, #tray, #custom-exit,
+          #mpris, #clock, #window, #pulseaudio, #cpu, memory, #taskbar,
+          #idle_inhibitor, #custom-startmenu, #systemd-failed-units {
+            margin: 4px 0 4px 7px;
             font-weight: bold;
-          }
-
-          /* Right-side modules */
-          #network, #battery,
-          #custom-notification, #tray, #custom-exit, #mpris, #clock {
-            margin-right: 7px;
-            font-size: 20px;
             color: ${foreground};
+            background: ${background};
+            border-radius: 6px;
+            padding: 2px 8px 2px 8px;
           }
 
-          /* System modules color */
-          #window, #pulseaudio, #cpu, #memory, #taskbar {
-            color: ${foreground};
+          window#waybar.empty {
+            background-color: transparent;
           }
 
-          /* Special module overrides */
           #idle_inhibitor.deactivated {
-            font-size: 28px;
             color: ${foreground};
+            font-size: 18px;
           }
 
           #idle_inhibitor.activated {
-            font-size: 28px;
             color: ${active-foreground};
+            font-size: 18px;
           }
 
           #custom-startmenu {
             color: ${accent-color};
             background: ${border-color};
-            font-size: 22px;
-            margin: 4px 0px;
-            padding: 0px 5px;
-            border-radius: 16px;
+            font-size: 20px;
+            margin-left: 10px;
+          }
+
+          #custom-exit {
+            color: ${accent-color};
+            background: ${border-color};
+            margin-right: 10px;
+          }
+
+          #systemd-failed-units {
+            background-color: ${active-background};
+            color: ${active-foreground};
           }
 
           /* Taskbar button styling */
@@ -357,16 +371,12 @@
           /* Tooltip styling */
           tooltip {
             background: ${background};
-            border: 1px solid ${active-foreground};
+            border: 1px solid ${workspace-background};
             border-radius: 12px;
           }
 
-          #tray {
-            padding: 2px 18px 0 18px;
-          }
-
           tooltip label {
-            color: ${active-foreground};
+            color: ${foreground};
           }
         ''
       ];

@@ -7,7 +7,7 @@
   programs.hyprland = {
     package = inputs.hyprland.packages.${pkgs.system}.hyprland;
     portalPackage = inputs.hyprland.packages.${pkgs.system}.xdg-desktop-portal-hyprland;
-    enable = true;
+    enable = false;
     withUWSM = true;
     xwayland = {
       enable = true;

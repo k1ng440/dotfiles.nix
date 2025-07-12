@@ -13,7 +13,10 @@ let
   hyprlock = lib.getExe' pkgs.hyprlock "hyprlock";
   terminal = "kitty";
   fileManager = "thunar";
-  menu = "${pkgs.rofi}/bin/rofi -show drun";
+  menu = pkgs.writeShellScript "rofi-menu.sh" ''
+    		monitor="$(swaymsg -t get_outputs | jq '.[] | select(.focused) | .name' -r)"
+    		${pkgs.rofi}/bin/rofi -show drun -modi drun -monitor "$monitor" $@
+    	'';
 in
 {
   imports = [
@@ -53,6 +56,11 @@ in
       terminal = terminal;
       menu = menu;
 
+      focus = {
+        followMouse = "yes";
+        newWindow = "smart";
+      };
+
       # Startup programs
       startup =
         let
@@ -84,9 +92,16 @@ in
         workspaceActivateCommands
         ++ workspaceStartupCommands
         ++ [
+          {
+            command = "exec systemctl --user import-environment WAYLAND_DISPLAY DISPLAY XDG_CURRENT_DESKTOP SWAYSOCK I3SOCK XCURSOR_SIZE XCURSOR_THEME";
+          }
+          {
+            command = "exec dbus-update-activation-environment WAYLAND_DISPLAY DISPLAY XDG_CURRENT_DESKTOP SWAYSOCK I3SOCK XCURSOR_SIZE XCURSOR_THEME";
+          }
           { command = "exec nm-applet --indicator"; }
           { command = "exec wl-paste --type text --watch cliphist store"; }
           { command = "exec wl-paste --type image --watch cliphist store"; }
+          { command = "exec sleep 5 && systemctl --user restart swww-daemon.service"; }
         ];
 
       # Workspace assignments
@@ -166,6 +181,10 @@ in
         "${mod}+Shift+8" = "move container to workspace number 8";
         "${mod}+Shift+m" = "move container to workspace special:";
 
+        # Scratchpad
+        "${mod}+Shift+minus" = "move scratchpad";
+        "${mod}+minus" = "scratchpad show";
+
         # Volume control
         "XF86AudioRaiseVolume" =
           "exec ${wpctl} set-mute @DEFAULT_AUDIO_SINK@ 0 && ${wpctl} set-volume -l 1.4 @DEFAULT_AUDIO_SINK@ 5%+";
@@ -185,14 +204,18 @@ in
       };
 
       bars = [
-        { command = "killall -9 .waybar-wrapped && sleep 1 && ${pkgs.waybar}/bin/waybar"; }
+        { command = "${pkgs.waybar}/bin/waybar"; }
       ];
 
       # Appearance
       gaps = {
-        inner = 0;
-        outer = 0;
+        inner = 2;
+        outer = 2;
+        bottom = 2;
+        left = 2;
+        right = 2;
       };
+
       window = {
         border = 2;
       };
@@ -401,5 +424,9 @@ in
         };
       };
     };
+
+    extraConfig = ''
+      swaybg_command -
+    '';
   };
 }

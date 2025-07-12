@@ -1,5 +1,9 @@
-{ hostSpec, ... }:
+{ pkgs, hostSpec, ... }:
 {
+  home.packages = with pkgs; [
+    meld # Visual diff and merge tool
+  ];
+
   programs = {
     gh.enable = true;
     lazygit.enable = true;
@@ -28,6 +32,9 @@
         stasha = "stash --all"; # stash even untracked and ignored files
         pushf = "push --force-with-lease"; # only force pushes if no new commits have pushed after the last pull
         l = "log --graph --abbrev-commit --decorate --date=relative --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' --all -n 15";
+        graph = "log --graph --decorate --oneline";
+        map = "!git graph --all";
+        watch = "!watch -ct 'git -c color.status=always status -s && echo && git map --color'";
       };
       ignores = [
         "*~"
