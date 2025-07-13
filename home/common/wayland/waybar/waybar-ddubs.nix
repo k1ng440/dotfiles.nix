@@ -4,6 +4,9 @@
   config,
   ...
 }:
+let
+  warpStatusScript = import ./warp-status-script.nix { inherit pkgs; };
+in
 {
   # Configure & Theme Waybar
   # https://github-wiki-see.page/m/Alexays/Waybar/wiki/Module%3A-Hyprland
@@ -35,6 +38,7 @@
           "custom/notification"
           "battery"
           "tray"
+          "custom/cloudflare-warp"
           "clock"
           "systemd-failed-units"
           "custom/exit"
@@ -85,17 +89,27 @@
           sort-by = "name";
         };
 
+        "custom/cloudflare-warp" = {
+          format = "{text}";
+          interval = 10;
+          return-type = "json";
+          exec = "${warpStatusScript}/bin/waybar-warp-status";
+          on-click = "warp-cli connect";
+          on-click-right = "warp-cli disconnect";
+          tooltip = true;
+          tooltip-format = "Left click: Connect\nRight click: Disconnect";
+        };
+
         "wlr/taskbar" = {
-          "format" = "{icon}";
-          "icon-size" = 18;
-          "tooltip-format" = "{title}";
-          "on-click" = "activate";
-          "on-click-middle" = "close";
-          # "ignore-list" = ["Alacritty" "kitty"];
-          "app_ids-mapping" = {
+          format = "{icon}";
+          icon-size = 18;
+          tooltip-format = "{title}";
+          on-click = "activate";
+          on-click-middle = "close";
+          app_ids-mapping = {
             "firefoxdeveloperedition" = "firefox-developer-edition";
           };
-          "rewrite" = {
+          rewrite = {
             "Firefox Web Browser" = "Firefox";
             "Foot Server" = "Terminal";
           };
@@ -104,6 +118,15 @@
           format = '' {:L%I:%M %p}'';
           tooltip-format = "<small>{calendar}</small>";
           tooltip = true;
+          calendar = {
+            format = {
+              # months =    "<span color='#ffead3'><b>{}</b></span>";
+              # days =      "<span color='#ecc6d9'><b>{}</b></span>";
+              # weeks =     "<span color='#99ffdd'><b>W{}</b></span>";
+              # weekdays =  "<span color='#ffcc66'><b>{}</b></span>";
+              today = "<span color='#${config.lib.stylix.colors.base08}'><b>{}</b></span>";
+            };
+          };
         };
         "hyprland/window" = {
           max-length = 22;
@@ -311,7 +334,9 @@
           #window, #pulseaudio, #cpu, #memory, #taskbar, #idle_inhibitor,
           #network, #battery, #custom-notification, #tray, #custom-exit,
           #mpris, #clock, #window, #pulseaudio, #cpu, memory, #taskbar,
-          #idle_inhibitor, #custom-startmenu, #systemd-failed-units {
+          #idle_inhibitor, #custom-startmenu, #systemd-failed-units,
+          #custom-cloudflare-warp
+          {
             margin: 4px 0 4px 7px;
             font-weight: bold;
             color: ${foreground};
@@ -350,6 +375,11 @@
           #systemd-failed-units {
             background-color: ${active-background};
             color: ${active-foreground};
+          }
+
+          #custom-cloudflare-warp.connected {
+              background-color: ${active-background};
+              color: ${active-foreground};
           }
 
           /* Taskbar button styling */

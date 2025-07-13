@@ -42,6 +42,8 @@
     username = "k1ng";
     userUid = 1000;
     cloudflare-warp = true;
+    swaywm.enabled = true;
+    hyprland.enabled = false;
   };
 
   hostConfig = {

@@ -5,8 +5,7 @@
   ...
 }:
 {
-  config = lib.mkIf (!config.hostSpec.isMinimal) {
-
+  config = lib.mkIf (!config.hostSpec.isMinimal && config.hostSpec.swaywm.enabled) {
     environment.systemPackages = [
       (pkgs.writeShellScriptBin "run-sway" (builtins.readFile ./run-sway.sh))
     ];
@@ -21,7 +20,10 @@
       extraPackages = [
       ];
     };
+
     services.gnome.gnome-keyring.enable = true;
+    programs.hyprlock.enable = true;
+
     security.pam.services.swaylock = { };
     security.pam.loginLimits = [
       {

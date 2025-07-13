@@ -1,12 +1,17 @@
-{ ... }:
+{ lib, hostSpec, ... }:
+let
+  hyprland-enabled = !hostSpec.isMinimal && hostSpec.hyprland.enabled;
+in
 {
-  imports = [
-    ./animations-end4.nix
-    ./binds.nix
-    ./hypridle.nix
-    ./hyprland.nix
-    ./hyprlock.nix
-    ./pyprland.nix
-    ./windowrules.nix
-  ];
+  imports =
+    [ ]
+    ++ lib.optionals hyprland-enabled [
+      ./animations-end4.nix
+      ./binds.nix
+      ../common/hypridle.nix
+      ../common/hyprlock.nix
+      ./hyprland.nix
+      ./pyprland.nix
+      ./windowrules.nix
+    ];
 }

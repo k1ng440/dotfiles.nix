@@ -152,6 +152,33 @@
       default = false;
       description = "Whether to enable Cloudflare Zero Trust client daemon.";
     };
+
+    hyprland = {
+      enabled = lib.mkOption {
+        type = lib.types.bool;
+        default = false;
+        description = "Whether to enable hyprland.";
+      };
+    };
+
+    swaywm = {
+      enabled = lib.mkOption {
+        type = lib.types.bool;
+        default = false;
+        description = "Whether to enable Sway window manager.";
+      };
+    };
+
+    wm-enabled = lib.mkOption {
+      type = lib.types.bool;
+      description = "Whether window manager enabled.";
+      default =
+        let
+          swaywm = config.hostSpec.swaywm;
+          hyprland = config.hostSpec.hyprland;
+        in
+        swaywm.enabled || hyprland.enabled;
+    };
   };
 
   config = {
@@ -170,6 +197,19 @@
         {
           assertion = !isImpermanent || (isImpermanent && !("${config.hostSpec.persistFolder}" == ""));
           message = "config.system.impermanence.enable is true but no persistFolder path is provided";
+        }
+        {
+          assertion = !(config.hostSpec.hyprland.enabled && config.hostSpec.swaywm.enabled);
+          message = ''
+            Cannot enable both Hyprland and Sway simultaneously.
+            Current configuration:
+              - hostSpec.hyprland.enabled = ${toString config.hostSpec.hyprland.enabled}
+              - hostSpec.swaywm.enabled = ${toString config.hostSpec.swaywm.enabled}
+
+            Please choose one compositor:
+              - For modern features and animations: enable only Hyprland
+              - For stability and i3 compatibility: enable only Sway
+          '';
         }
       ];
   };

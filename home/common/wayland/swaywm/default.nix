@@ -23,10 +23,17 @@ in
     ../common/packages.nix
     ../common/swaync.nix
     ../common/swww.nix
+    ../common/hypridle.nix
+    ../common/hyprlock.nix
     ../waybar/waybar-ddubs.nix
     ../wlogout
     ../swappy.nix
     # ./scripts
+  ];
+
+  home.packages = with pkgs; [
+    dex # Program to generate and execute DesktopEntry files of the Application type
+    xorg.xrandr
   ];
 
   home.sessionVariables = {
@@ -35,6 +42,7 @@ in
     XDG_SESSION_DESKTOP = "sway";
     XDG_CURRENT_DESKTOP = "sway";
     XDG_SESSION_TYPE = "wayland";
+    _JAVA_AWT_WM_NONREPARENTING = "1"; # Fix for Java based applications
   };
 
   home.pointerCursor = {
@@ -101,7 +109,14 @@ in
           { command = "exec nm-applet --indicator"; }
           { command = "exec wl-paste --type text --watch cliphist store"; }
           { command = "exec wl-paste --type image --watch cliphist store"; }
-          { command = "exec sleep 5 && systemctl --user restart swww-daemon.service"; }
+          {
+            command = "systemctl --user start sway-session.target";
+            always = true;
+          }
+          {
+            command = "xrandr --output $(xrandr | grep -m 1 XWAYLAND | awk '{print $1;}') --primary";
+            always = true;
+          }
         ];
 
       # Workspace assignments
