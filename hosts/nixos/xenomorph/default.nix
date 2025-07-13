@@ -32,6 +32,7 @@
     ./configurations.nix
     ./host-packages.nix
     ./stylix.nix
+    ./borgbackup.nix
   ];
 
   hostSpec = {
@@ -40,6 +41,7 @@
     hostname = "xenomorph";
     username = "k1ng";
     userUid = 1000;
+    cloudflare-warp = true;
   };
 
   hostConfig = {

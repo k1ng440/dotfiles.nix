@@ -13,5 +13,6 @@
     ./xdg-portal.nix
     ./applications.nix
     ./udev.nix
+    ./cloudflare-warp.nix
   ];
 }

@@ -20,14 +20,8 @@
   systemd.user.services.swww-daemon = {
     Unit = {
       Description = "swww wallpaper daemon";
-      PartOf = [
-        "sway-session.target"
-        "hyprland-session.target"
-      ];
-      After = [
-        "sway-session.target"
-        "hyprland-session.target"
-      ];
+      PartOf = [ "graphical-session.target" ];
+      After = [ "graphical-session.target" ];
     };
     Service = {
       Type = "simple";
@@ -40,20 +34,13 @@
       ];
     };
     Install = {
-      WantedBy = [
-        "sway-session.target"
-        "hyprland-session.target"
-      ];
+      WantedBy = [ "graphical-session.target" ];
     };
   };
 
   systemd.user.services.wallpaper-cycler = {
     Unit = {
       Description = "Cycle wallpapers with swww";
-      PartOf = [
-        "sway-session.target"
-        "hyprland-session.target"
-      ];
       After = [ "swww-daemon.service" ];
     };
     Service = {
@@ -64,10 +51,7 @@
       ];
     };
     Install = {
-      WantedBy = [
-        "sway-session.target"
-        "hyprland-session.target"
-      ];
+      WantedBy = [ "graphical-session.target" ];
     };
   };
 

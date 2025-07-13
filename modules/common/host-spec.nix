@@ -147,6 +147,11 @@
       default = "1";
       description = "Used to indicate what scaling to use. Floating point number";
     };
+    cloudflare-warp = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      description = "Whether to enable Cloudflare Zero Trust client daemon.";
+    };
   };
 
   config = {

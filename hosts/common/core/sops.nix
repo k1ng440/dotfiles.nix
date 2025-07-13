@@ -6,6 +6,7 @@
 }:
 let
   sopsFolder = builtins.toString inputs.nix-secrets + "/sops";
+  hostSpec = config.hostSpec;
 in
 {
   sops = {
@@ -44,6 +45,16 @@ in
         sopsFile = "${sopsFolder}/shared.yaml";
         owner = "root";
         group = "root";
+        mode = "0600";
+      };
+      "borgbackup/encryption_key" = {
+        owner = hostSpec.username;
+        group = hostSpec.username;
+        mode = "0600";
+      };
+      "ssh/borgbackup" = {
+        owner = hostSpec.username;
+        group = hostSpec.username;
         mode = "0600";
       };
     }
