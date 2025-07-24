@@ -1,6 +1,6 @@
 # Add your reusable home-manager modules to this directory, on their own file (https://wiki.nixos.org/wiki/NixOS_modules).
 # These should be stuff you would like to share with others, not your personal configurations.
-{ inputs, ... }:
+{ pkgs, inputs, ... }:
 {
   imports = [
     ./emoji.nix
@@ -9,6 +9,7 @@
     ./starship.nix
     ./virtmanager.nix
     ./rofi
+    ./wofi
     ./wayland/hyprland
     ./wayland/swaywm
     ./fastfetch
@@ -17,6 +18,10 @@
     ./user-directories.nix
     ./terminal-applications.nix
     ./desktop-entries.nix
+  ];
+
+  home.packages = [
+    (import ./sway-open { inherit pkgs; })
   ];
 
   disabledModules = [

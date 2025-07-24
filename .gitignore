@@ -11,3 +11,6 @@ result
 # qemu
 *.qcow2
 _nixos/**
+
+
+nohup.out

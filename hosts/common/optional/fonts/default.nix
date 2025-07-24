@@ -1,14 +1,17 @@
 {
+  inputs,
   lib,
   pkgs,
   config,
   ...
 }:
 {
+
   config = lib.mkIf (!config.hostSpec.isMinimal) {
     fonts.packages = with pkgs; [
       dejavu_fonts
       noto-fonts
+      garamond-libre
       font-awesome
       material-icons
       noto-fonts-cjk-sans
@@ -18,11 +21,12 @@
       nerd-fonts.symbols-only
       inter
       ibm-plex
+      inputs.nix-secrets.packages."${pkgs.system}".BerkeleyMonoFont
     ];
 
-    # ++ builtins.filter lib.attrsets.isDerivation (builtins.attrValues pkgs.maple-mono);
     fonts.fontconfig = {
       enable = true;
+      cache32Bit = true;
       defaultFonts = {
         serif = [
           "IBM Plex Serif"

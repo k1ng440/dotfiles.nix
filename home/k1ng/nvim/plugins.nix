@@ -61,5 +61,6 @@ with unstable.vimPlugins;
   vim-abolish
   vim-surround
   avante-nvim
+  nightfox-nvim # theme
 ]
 ++ pluginPackages

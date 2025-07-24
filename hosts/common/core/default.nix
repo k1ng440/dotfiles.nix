@@ -49,6 +49,7 @@ in
     pkgs.just
     pkgs.rsync
     pkgs.openssh
+    pkgs.findutils
   ];
 
   networking.hostName = config.hostSpec.hostname;

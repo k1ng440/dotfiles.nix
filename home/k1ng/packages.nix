@@ -37,7 +37,6 @@
       tldr # Modern Unix `man`
       speedtest-go # Terminal speedtest.net
       upterm # Terminal sharing
-      speedtest-go # Terminal speedtest.net
       timer # Terminal timer
       usbutils # Terminal USB info
       gocryptfs # Encryption
@@ -45,7 +44,6 @@
       age # modern and secure file encryption tool
       sops # Simple and flexible tool for managing secrets
       ssh-to-age # Convert SSH Ed25519 keys to age keys
-
     ]
     ++ lib.optionals (hostSpec.wm-enabled) [
       spotify
@@ -56,5 +54,7 @@
       foot
       bustle # Graphical D-Bus message analyser and profiler
       d-spy # D-Bus exploration tool
+      gradia # screenshot
+      simple-scan
     ];
 }

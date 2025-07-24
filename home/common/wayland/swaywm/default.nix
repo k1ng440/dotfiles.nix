@@ -149,8 +149,9 @@ in
         "${mod}+Alt+e" = "exec ${fileManager}";
         "${mod}+Shift+c" = "reload";
         "${mod}+r" = "exec ${menu}";
-        "Print" = "exec screenshootin";
+        "Print" = "exec gradia --screenshot=INTERACTIVE";
         "${mod}+Shift+n" = "exec swaync-client -t -sw";
+        "${mod}+Ctrl+b" = "exec 'pkill -USR1 .waybar-wrapped'";
 
         # Windows
         "${mod}+c" = "kill";
@@ -305,6 +306,12 @@ in
           };
         }
         {
+          command = "floating enable, floating_minimum_size 250 x 400";
+          criteria = {
+            class = "zoom";
+          };
+        }
+        {
           command = "floating enable, resize set 1401 492, move position 6 40";
           criteria = {
             app_id = "^com.saivert.pwvucontrol$";
@@ -324,9 +331,9 @@ in
           };
         }
         {
-          command = "inhibit_idle focus, floating enable, border none, fullscreen enable";
+          command = "inhibit_idle focus, border none, fullscreen enable";
           criteria = {
-            class = "^(dolphin-emu|sm64ex|gamescope|steam_app.*|factorio|LLBlaze\.x86_64)$";
+            class = "^(steam_app.*|factorio)$";
           };
         }
         # { command = "floating enable, resize set 70% 70%"; criteria = { window_type = "^(utility|toolbar|splash|menu)$"; }; }
@@ -417,11 +424,18 @@ in
           };
         }
         {
+          command = "floating enable";
+          criteria = {
+            app_id = "be.alexandervanhee.gradia";
+          };
+        }
+        {
           command = "title_format \"<span>[X] %title</span>\"";
           criteria = {
             shell = "xwayland";
           };
         }
+
       ];
 
       # Input configuration
@@ -442,6 +456,8 @@ in
 
     extraConfig = ''
       swaybg_command -
+      focus_on_window_activation focus
+      font pango:Berkeley Mono, Berkeley Mono Variable, monospace 10
     '';
   };
 }

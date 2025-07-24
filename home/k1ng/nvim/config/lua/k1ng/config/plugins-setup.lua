@@ -9,6 +9,7 @@ local oil_detail = false
 oil.setup({
   default_file_explorer = true,
   delete_to_trash = true,
+  skip_confirm_for_simple_edits = true,
   win_options = {
     winbar = " %{v:lua.require('oil').get_current_dir()}",
   },
@@ -83,7 +84,7 @@ vim.schedule(function()
 
   -- inc-rename. https://github.com/smjonas/inc-rename.nvim
   require('inc_rename').setup({})
-  vim.keymap.set('n', 'gra', function()
+  vim.keymap.set('n', 'grn', function()
     return ':IncRename ' .. vim.fn.expand('<cword>')
   end, { expr = true })
 end)

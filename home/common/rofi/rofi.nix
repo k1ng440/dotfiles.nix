@@ -12,7 +12,7 @@
         modi = "drun,filebrowser,run";
         show-icons = true;
         icon-theme = "Papirus";
-        font = "JetBrainsMono Nerd Font Mono 12";
+        font = "Berkeley Mono, Berkeley Mono Variable, Symbols Nerd Font, monospace";
         drun-display-format = "{icon} {name}";
         display-drun = " Apps";
         display-run = " Run";
@@ -25,18 +25,18 @@
         {
           "*" = {
             bg = mkLiteral "#${config.lib.stylix.colors.base00}";
-            bg-alt = mkLiteral "#${config.lib.stylix.colors.base09}";
-            foreground = mkLiteral "#${config.lib.stylix.colors.base01}";
-            selected = mkLiteral "#${config.lib.stylix.colors.base08}";
-            active = mkLiteral "#${config.lib.stylix.colors.base0B}";
-            text-selected = mkLiteral "#${config.lib.stylix.colors.base00}";
-            text-color = mkLiteral "#${config.lib.stylix.colors.base05}";
-            border-color = mkLiteral "#${config.lib.stylix.colors.base0F}";
+            bg-alt = mkLiteral "#${config.lib.stylix.colors.base02}";
+            foreground = mkLiteral "#${config.lib.stylix.colors.base07}";
+            selected = mkLiteral "#${config.lib.stylix.colors.base03}";
+            active = mkLiteral "#${config.lib.stylix.colors.base03}";
+            text-selected = mkLiteral "#${config.lib.stylix.colors.base07}";
+            text-color = mkLiteral "#${config.lib.stylix.colors.base07}";
+            border-color = mkLiteral "#${config.lib.stylix.colors.base04}";
             urgent = mkLiteral "#${config.lib.stylix.colors.base0E}";
           };
           "window" = {
             transparency = "real";
-            width = mkLiteral "1000px";
+            width = mkLiteral "700px";
             location = mkLiteral "center";
             anchor = mkLiteral "center";
             fullscreen = false;
@@ -44,7 +44,7 @@
             y-offset = mkLiteral "0px";
             cursor = "default";
             enabled = true;
-            border-radius = mkLiteral "15px";
+            border-radius = mkLiteral "8px";
             background-color = mkLiteral "@bg";
           };
           "mainbox" = {
@@ -52,21 +52,9 @@
             spacing = mkLiteral "0px";
             orientation = mkLiteral "horizontal";
             children = map mkLiteral [
-              # "imagebox"
               "listbox"
             ];
             background-color = mkLiteral "transparent";
-          };
-          "imagebox" = {
-            padding = mkLiteral "20px";
-            background-color = mkLiteral "transparent";
-            background-image = mkLiteral ''url("~/Pictures/Wallpapers/Rainnight.jpg", height)'';
-            orientation = mkLiteral "vertical";
-            children = map mkLiteral [
-              "inputbar"
-              "dummy"
-              "mode-switcher"
-            ];
           };
           "listbox" = {
             spacing = mkLiteral "20px";

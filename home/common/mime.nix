@@ -68,6 +68,27 @@ in
       "application/xhtml+xml" = [ browser ];
       "application/x-extension-xhtml" = [ browser ];
       "application/x-extension-xht" = [ browser ];
+
+      # Documents
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document" = [ "libreoffice-writer.desktop" ]; # .docx
+      "application/msword" = [ "libreoffice-writer.desktop" ]; # .doc
+      "application/vnd.oasis.opendocument.text" = [ "libreoffice-writer.desktop" ]; # .odt
+      "text/rtf" = [ "libreoffice-writer.desktop" ]; # .rtf
+
+      # Spreadsheets
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" = [ "libreoffice-calc.desktop" ]; # .xlsx
+      "application/vnd.ms-excel" = [ "libreoffice-calc.desktop" ]; # .xls
+      "application/vnd.oasis.opendocument.spreadsheet" = [ "libreoffice-calc.desktop" ]; # .ods
+
+      # Presentations
+      "application/vnd.openxmlformats-officedocument.presentationml.presentation" = [ "libreoffice-impress.desktop" ]; # .pptx
+      "application/vnd.ms-powerpoint" = [ "libreoffice-impress.desktop" ]; # .ppt
+      "application/vnd.oasis.opendocument.presentation" = [ "libreoffice-impress.desktop" ]; # .odp
+
+      # Other Formats
+      "application/vnd.oasis.opendocument.graphics" = [ "libreoffice-draw.desktop" ]; # .odg
+      "application/vnd.oasis.opendocument.formula" = [ "libreoffice-math.desktop" ]; # .odf
+      "application/pdf" = [ "libreoffice-draw.desktop" ]; # .pdf
     };
   };
 }

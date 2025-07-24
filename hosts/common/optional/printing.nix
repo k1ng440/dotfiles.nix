@@ -17,11 +17,12 @@
     };
     printing = {
       enable = true;
-      listenAddresses = [ "*:631" ];
+      listenAddresses = [ "localhost:631" "127.0.0.1:631" ];
       allowFrom = [ "all" ];
       browsing = true;
       defaultShared = true;
       openFirewall = true;
+      startWhenNeeded = false;
     };
   };
 
@@ -48,8 +49,13 @@
           name = "Brother_DCP-T510W";
           model = "everywhere";
           ppdOptions = {
-            PageSize = "A4";
+            media = "iso_a4_210x297mm";
             OutputOrder = "Reverse";
+
+            # IPP scaling options:
+            print-scaling = "fit";
+            print-quality = "normal";
+            orientation-requested = "portrait";
           };
         }
       ];

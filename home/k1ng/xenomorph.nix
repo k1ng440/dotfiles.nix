@@ -45,7 +45,6 @@
     };
   };
 
-  fonts.fontconfig.enable = true;
   news.display = "silent";
 
   # See modules/home-manager/monitors.nix

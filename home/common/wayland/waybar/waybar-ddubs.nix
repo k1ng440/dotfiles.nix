@@ -17,6 +17,7 @@ in
       {
         layer = "top";
         position = "top";
+        ipc = true;
         modules-left = [
           "custom/startmenu"
           "wlr/taskbar"
@@ -51,9 +52,6 @@ in
           on-scroll-down = "swaymsg workspace prev";
           on-click = "activate";
           sort-by = "name";
-          format-icons = {
-            urgent = "";
-          };
 
           persistent-workspaces =
             let
@@ -284,7 +282,7 @@ in
       lib.concatStrings [
         ''
           * {
-            font-family: "Roboto", "Symbols Nerd Font", sans-serif;
+            font-family: "Berkeley Mono", "Berkeley Mono Variable", "Symbols Nerd Font", monospace;
             font-size: 14px;
             border-radius: 0px;
             border: none;
@@ -324,6 +322,10 @@ in
             background-color: ${border-color};
             border-radius: 12px;
             box-shadow: 0 0 4px ${shadow-color};
+          }
+
+          #workspaces button.urgent {
+            color: ${active-foreground};
           }
 
           #workspaces button:hover {
