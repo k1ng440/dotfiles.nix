@@ -4,7 +4,7 @@
     commandLineArgs = [
       "--no-default-browser-check"
       "--restore-last-session"
-      "--enable-features=UseOzonePlatform,VaapiVideoDecodeLinuxGL,VaapiVideoEncoder,Vulkan,VulkanFromANGLE,DefaultANGLEVulkan,VaapiIgnoreDriverChecks,VaapiVideoDecoder,PlatformHEVCDecoderSupport,UseMultiPlaneFormatForHardwareVideo"
+      "--enable-features=UseOzonePlatform"
       "--ozone-platform=wayland"
     ];
   };
