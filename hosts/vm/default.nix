@@ -2,7 +2,7 @@
 {
   imports = [
     ./hardware-configuration.nix
-    ./configuratioons.nix
+    ./configurations.nix
     ./host-packages.nix
   ];
 }

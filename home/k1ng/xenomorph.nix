@@ -8,7 +8,7 @@
 {
   imports = [
     inputs.sops-nix.homeManagerModules.sops
-    inputs.nix-index-database.hmModules.nix-index
+    inputs.nix-index-database.homeModules.nix-index
     inputs.vscode-server.nixosModules.home
     inputs.hyprland.homeManagerModules.default
 

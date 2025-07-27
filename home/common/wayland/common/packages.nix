@@ -13,6 +13,7 @@
     xdg-utils
     cliphist
     wl-clipboard
+    nwg-bar
   ];
 
 }

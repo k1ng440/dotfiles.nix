@@ -74,10 +74,6 @@ vim.schedule(function()
   -- A snazzy 💅 buffer line (with tabpage integration) for Neovim built using lua.
   require('bufferline').setup({})
 
-  -- render-markdown.nvim setup. https://github.com/MeanderingProgrammer/render-markdown.nvim
-  -- Plugin to improve viewing Markdown files in Neovim
-  require('render-markdown').setup({})
-
   -- git-conflict.nvim. https://github.com/akinsho/git-conflict.nvim
   -- A plugin to visualise and resolve conflicts
   require('git-conflict').setup({})
@@ -537,3 +533,15 @@ vim.schedule(function()
   vim.keymap.set("n", "<leader>lc", "<cmd>:OtherClear<CR>", { noremap = true, silent = true, desc = "Clears the internal reference to the other/alternative file" })
   -- stylua: ignore end
 end)
+
+
+vim.schedule(function ()
+  local ok, render_markdown = pcall(require, "render-markdown")
+  if ok then
+    render_markdown .setup({
+      enabled = true,
+      completions = { blink = { enabled = true } },
+    })
+  end
+end)
+

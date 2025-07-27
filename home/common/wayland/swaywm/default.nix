@@ -9,7 +9,7 @@ let
   wpctl = lib.getExe' pkgs.wireplumber "wpctl";
   brightnessctl = lib.getExe' pkgs.brightnessctl "brightnessctl";
   playerctl = lib.getExe' pkgs.playerctl "playerctl";
-  wlogout = lib.getExe' pkgs.wlogout "wlogout";
+  logout = lib.getExe' pkgs.nwg-bar "nwg-bar";
   hyprlock = lib.getExe' pkgs.hyprlock "hyprlock";
   terminal = "kitty";
   fileManager = "thunar";
@@ -34,6 +34,7 @@ in
   home.packages = with pkgs; [
     dex # Program to generate and execute DesktopEntry files of the Application type
     xorg.xrandr
+    swayosd
   ];
 
   home.sessionVariables = {
@@ -109,6 +110,7 @@ in
           { command = "exec nm-applet --indicator"; }
           { command = "exec wl-paste --type text --watch cliphist store"; }
           { command = "exec wl-paste --type image --watch cliphist store"; }
+          { command = "exec swayosd-server"; }
           {
             command = "systemctl --user start sway-session.target";
             always = true;
@@ -145,7 +147,7 @@ in
         "${mod}+Return" = "exec ${terminal}";
         "${mod}+q" = "exec ${terminal}";
         "${mod}+Ctrl+l" = "exec ${hyprlock}";
-        "${mod}+Shift+e" = "exec ${wlogout}";
+        "${mod}+Shift+e" = "exec ${logout}";
         "${mod}+Alt+e" = "exec ${fileManager}";
         "${mod}+Shift+c" = "reload";
         "${mod}+r" = "exec ${menu}";
@@ -201,17 +203,12 @@ in
         "${mod}+Shift+minus" = "move scratchpad";
         "${mod}+minus" = "scratchpad show";
 
-        # Volume control
-        "XF86AudioRaiseVolume" =
-          "exec ${wpctl} set-mute @DEFAULT_AUDIO_SINK@ 0 && ${wpctl} set-volume -l 1.4 @DEFAULT_AUDIO_SINK@ 5%+";
-        "XF86AudioLowerVolume" =
-          "exec ${wpctl} set-mute @DEFAULT_AUDIO_SINK@ 0 && ${wpctl} set-volume -l 1.4 @DEFAULT_AUDIO_SINK@ 5%-";
-        "XF86AudioMute" =
-          "exec ${wpctl} set-mute @DEFAULT_AUDIO_SINK@ toggle; ${wpctl} set-source-mute @DEFAULT_SOURCE@ toggle";
-
-        # Brightness control
-        "XF86MonBrightnessUp" = "exec ${brightnessctl} s 10%+";
-        "XF86MonBrightnessDown" = "exec ${brightnessctl} s 10%-";
+        XF86AudioRaiseVolume = "exec swayosd-client --output-volume raise";
+        XF86AudioLowerVolume  = "exec swayosd-client --output-volume lower";
+        XF86AudioMute = "exec swayosd-client --output-volume mute-toggle";
+        XF86AudioMicMute = "exec swayosd-client --input-volume mute-toggle";
+        XF86MonBrightnessUp = "exec swayosd-client --brightness raise";
+        XF86MonBrightnessDown = "exec swayosd-client --brightness lower";
 
         # Media control
         "XF86AudioPlay" = "exec ${playerctl} --ignore-player=firefox,chromium,brave play-pause";
@@ -337,12 +334,12 @@ in
           };
         }
         # { command = "floating enable, resize set 70% 70%"; criteria = { window_type = "^(utility|toolbar|splash|menu)$"; }; }
-        {
-          command = "floating enable, max_render_time off; blur disabled";
-          criteria = {
-            class = "^(steam)$";
-          };
-        }
+        # {
+        #   command = "floating enable, max_render_time off; blur disabled";
+        #   criteria = {
+        #     class = "^(steam)$";
+        #   };
+        # }
         {
           command = "floating enable, max_render_time off; blur disabled";
           criteria = {

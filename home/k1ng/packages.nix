@@ -56,5 +56,6 @@
       d-spy # D-Bus exploration tool
       gradia # screenshot
       simple-scan
+      cameractrls-gtk4 # webcam control
     ];
 }

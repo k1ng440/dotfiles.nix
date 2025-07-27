@@ -10,6 +10,7 @@
     let
       inherit (self) outputs;
       lib = nixpkgs.lib;
+      overlays = import ./overlays { inherit inputs; };
 
       mkHost = host: isNixOS: {
         ${host} =
@@ -25,9 +26,14 @@
 
             modules = [
               ./hosts/${if isNixOS then "nixos" else "darwin"}/${host}
+              # Add overlays to all host configurations
+              ({ config, pkgs, ... }: {
+                nixpkgs.overlays = [ overlays.default ];
+              })
             ];
           };
       };
+
       # Invoke mkHost for each host config that is declared for either nixos or darwin
       mkHostConfigs =
         hosts: isDarwin: lib.foldl (acc: set: acc // set) { } (lib.map (host: mkHost host isDarwin) hosts);
@@ -43,7 +49,7 @@
       ];
     in
     {
-      overlays = import ./overlays { inherit inputs; };
+      overlays = overlays;
       nixosConfigurations = mkHostConfigs (readHosts "nixos") true;
       formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.nixfmt-rfc-style);
       devShells = forAllSystems (
@@ -143,7 +149,7 @@
     # Authenticate via ssh and use shallow clone
     nix-secrets = {
       url = "git+ssh://git@gitlab.com/k1ng4401/nix-secrets.git?ref=main&shallow=1";
-      inputs = { };
+      inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 }

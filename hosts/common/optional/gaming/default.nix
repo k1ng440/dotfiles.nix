@@ -34,7 +34,7 @@
     gamemode = {
       enable = true;
       settings = {
-        #see gamemode man page for settings info
+        #see gamemode man page for settings info
         general = {
           softrealtime = "auto";
           inhibit_screensaver = 1;
@@ -62,5 +62,7 @@
     lutris
     bottles
     vulkan-tools
+    nexusmods-app
+    winetricks
   ];
 }

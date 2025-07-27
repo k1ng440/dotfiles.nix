@@ -1,6 +1,4 @@
-if vim.loader then
-  vim.loader.enable()
-end
+vim.loader.enable()
 
 local opt = vim.opt
 local g = vim.g
@@ -91,7 +89,6 @@ opt.wildignore:append('*/.vscode/*')
 opt.wildignore:append('*/.idea/*')
 opt.wildignore:append('*/.gitignore')
 
-
 -- neovim 0.11.0 is required
 if vim.fn.has('nvim-0.11.0') == 1 then
   local lspconfigs = {}
@@ -106,5 +103,5 @@ if vim.fn.has('nvim-0.11.0') == 1 then
   vim.lsp.enable(lspconfigs)
 end
 
-
 require('k1ng.config.init')
+

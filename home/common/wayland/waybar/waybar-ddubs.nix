@@ -6,6 +6,7 @@
 }:
 let
   warpStatusScript = import ./warp-status-script.nix { inherit pkgs; };
+  logout = lib.getExe' pkgs.nwg-bar "nwg-bar";
 in
 {
   # Configure & Theme Waybar
@@ -198,7 +199,7 @@ in
         "custom/exit" = {
           tooltip = false;
           format = "";
-          on-click = "sleep 0.1 && wlogout";
+          on-click = "sleep 0.1 && ${logout}";
         };
         "custom/startmenu" = {
           tooltip = false;

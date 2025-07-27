@@ -60,7 +60,6 @@ with unstable.vimPlugins;
   vim-speeddating
   vim-abolish
   vim-surround
-  avante-nvim
   nightfox-nvim # theme
 ]
 ++ pluginPackages
