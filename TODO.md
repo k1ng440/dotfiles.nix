@@ -6,7 +6,7 @@
   - [x] Configure
     - [x] Host Machine SSH
     - [x] User password
-- [ ] Home manager configuration
+- [x] Home manager configuration
   - [x] Wayland
 - [ ]  Setup and configure [UPSMON]
 - [ ] Hardware Acceleration Nvidia
@@ -18,4 +18,4 @@
 
 
 # Neovim TODO
-- [ ] Fix (CTRL + l) key bind for oil.nvim
+- [x] Fix (CTRL + l) key bind for oil.nvim

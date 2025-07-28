@@ -46,17 +46,6 @@ in
     _JAVA_AWT_WM_NONREPARENTING = "1"; # Fix for Java based applications
   };
 
-  home.pointerCursor = {
-    name = lib.mkForce "Adwaita";
-    package = lib.mkForce pkgs.adwaita-icon-theme;
-    size = 24;
-    x11 = {
-      enable = true;
-      defaultCursor = lib.mkForce "Adwaita";
-    };
-    sway.enable = true;
-  };
-
   wayland.windowManager.sway = {
     enable = true;
     wrapperFeatures.gtk = true;
@@ -232,12 +221,6 @@ in
       window = {
         border = 2;
       };
-      seat = {
-        "*" = {
-          xcursor_theme = lib.mkForce "Adwaita 24"; # or "Adwaita 24"
-        };
-      };
-
       assigns = {
         "special:" = [
           { app_id = "^thunderbird$"; }

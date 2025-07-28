@@ -27,16 +27,5 @@
         name = "Noto Color Emoji";
       };
     };
-    cursor = {
-      package = pkgs.bibata-cursors;
-      name = "Bibata-Modern-Ice";
-      size = 24;
-    };
-  };
-
-  qt = {
-    enable = true;
-    platformTheme = lib.mkForce "lxqt";
-    style = lib.mkForce "adwaita-dark";
   };
 }
