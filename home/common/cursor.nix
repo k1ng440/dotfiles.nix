@@ -1,4 +1,4 @@
-{ pkgs, lib, hostSpec, ... }: let
+{ pkgs, lib, machine, ... }: let
   cursorName = "catppuccin-mocha-red-cursors";
   cursorPkg = pkgs.catppuccin-cursors.mochaRed;
   cursorSize = 24;
@@ -15,8 +15,8 @@ in {
       enable = true;
       defaultCursor = lib.mkForce cursorName;
     };
-    sway.enable = hostSpec.swaywm.enabled;
-    hyprcursor.enable =  hostSpec.hyprland.enabled;
+    sway.enable = machine.windowManager.sway.enable;
+    hyprcursor.enable =  machine.windowManager.hyprland.enable;
     dotIcons.enable = true;
 
   };

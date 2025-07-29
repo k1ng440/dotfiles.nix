@@ -1,7 +1,7 @@
 { lib, ... }:
 {
 
-  hostSpec = {
+  machine = {
     isMinimal = true;
     isVirtualMachine = false;
     hostname = "nixos-minimal";
@@ -20,11 +20,6 @@
     ./host-packages.nix
   ];
 
-  hostConfig = {
-    msmtp.enable = false;
-  };
-
   boot.kernelParams = [ ];
-
   boot.kernel.sysctl = { };
 }

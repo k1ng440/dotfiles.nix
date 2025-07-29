@@ -6,7 +6,7 @@
   ...
 }:
 {
-  config = lib.mkIf (!config.hostSpec.isMinimal && config.hostSpec.hyprland.enabled) {
+  config = lib.mkIf (config.machine.hyprland.enable) {
     programs.hyprland = {
       package = inputs.hyprland.packages.${pkgs.system}.hyprland;
       portalPackage = inputs.hyprland.packages.${pkgs.system}.xdg-desktop-portal-hyprland;

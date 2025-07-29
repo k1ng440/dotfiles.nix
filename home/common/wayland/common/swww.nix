@@ -1,4 +1,4 @@
-{ pkgs, hostSpec, ... }:
+{ pkgs, machine, ... }:
 {
   home.packages = with pkgs; [
     swww
@@ -11,7 +11,7 @@
     text = ''
       #!${pkgs.bash}/bin/bash
       export PATH=${pkgs.coreutils}/bin:${pkgs.findutils}/bin:$PATH
-      WALLPAPER=$(${pkgs.findutils}/bin/find /home/${hostSpec.username}/Pictures/Wallpapers/wallpapers/ -type f \( -name "*.jpg" -o -name "*.jpeg" -o -name "*.png" \) | ${pkgs.findutils}/bin/xargs -n 1 echo | ${pkgs.coreutils}/bin/shuf -n 1)
+      WALLPAPER=$(${pkgs.findutils}/bin/find /home/${machine.username}/Pictures/Wallpapers/wallpapers/ -type f \( -name "*.jpg" -o -name "*.jpeg" -o -name "*.png" \) | ${pkgs.findutils}/bin/xargs -n 1 echo | ${pkgs.coreutils}/bin/shuf -n 1)
       ${pkgs.swww}/bin/swww img "$WALLPAPER"
     '';
     executable = true;
@@ -45,7 +45,7 @@
     };
     Service = {
       Type = "oneshot";
-      ExecStart = "${pkgs.bash}/bin/bash /home/${hostSpec.username}/.local/bin/change-wallpaper";
+      ExecStart = "${pkgs.bash}/bin/bash /home/${machine.username}/.local/bin/change-wallpaper";
       Environment = [
         "PATH=${pkgs.coreutils}/bin:${pkgs.findutils}/bin:${pkgs.swww}/bin"
       ];

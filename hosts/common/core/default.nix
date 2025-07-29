@@ -33,32 +33,37 @@ in
   ];
 
   # Core host spec
-  hostSpec = {
+  machine = let
+    hasSecrets = inputs ? nix-secrets;
+  in {
     username = "k1ng";
     handle = "k1ng440";
+    msmtp = {
+      enable = hasSecrets;
+      config = if hasSecrets then inputs.nix-secrets.msmtp else {};
+    };
+
     inherit (inputs.nix-secrets)
       domain
       email
       userFullName
       networking
-      msmtp
       ;
   };
 
   environment.systemPackages = [
     pkgs.just
-    pkgs.rsync
     pkgs.openssh
     pkgs.findutils
   ];
 
-  networking.hostName = config.hostSpec.hostname;
+  networking.hostName = config.username.hostname;
 
   # Configure Home manager
   home-manager.useGlobalPkgs = true;
   home-manager.backupFileExtension = "bk";
   home-manager.extraSpecialArgs = {
-    hostSpec = config.hostSpec;
+    machine = config.machine;
   };
 
   # Overlays

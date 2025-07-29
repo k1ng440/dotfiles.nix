@@ -1,4 +1,4 @@
-{ pkgs, hostSpec, ... }:
+{ pkgs, machine, ... }:
 {
   home.packages =
     with pkgs;
@@ -45,7 +45,7 @@
       sops # Simple and flexible tool for managing secrets
       ssh-to-age # Convert SSH Ed25519 keys to age keys
     ]
-    ++ lib.optionals (hostSpec.wm-enabled) [
+    ++ lib.optionals (machine.useWindowManager) [
       spotify
       yubikey-manager
       pkgs.unstable.plex-desktop

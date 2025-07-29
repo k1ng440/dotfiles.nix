@@ -2,8 +2,8 @@
 {
   services.syncthing = {
     enable = true;
-    user = "${config.hostSpec.username}";
-    dataDir = "/home/${config.hostSpec.username}";
-    configDir = "/home/${config.hostSpec.username}/.config/syncthing";
+    user = "${config.machine.username}";
+    dataDir = "${config.machine.home}";
+    configDir = "${config.machine.home}/.config/syncthing";
   };
 }

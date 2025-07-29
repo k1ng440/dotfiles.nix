@@ -1,7 +1,6 @@
 {
   inputs,
   lib,
-  hostSpec,
   config,
   ...
 }:
@@ -24,8 +23,8 @@
   ];
 
   home = {
-    username = lib.mkDefault config.hostSpec.username;
-    homeDirectory = lib.mkDefault config.hostSpec.home;
+    username = lib.mkDefault config.machine.username;
+    homeDirectory = lib.mkDefault config.machine.home;
     stateVersion = lib.mkDefault "24.11";
     sessionPath = [
       "$HOME/.local/bin"

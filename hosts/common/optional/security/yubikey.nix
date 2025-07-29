@@ -4,8 +4,8 @@
   services.udev.packages = [ pkgs.yubikey-personalization ];
 
   sops.secrets."keys/u2f_keys" = {
-    owner = config.hostSpec.username;
-    path = "/home/${config.hostSpec.username}/.config/Yubico/u2f_keys";
+    owner = config.machine.username;
+    path = "${config.machine.home}/.config/Yubico/u2f_keys";
   };
 
   security.pam.u2f = {

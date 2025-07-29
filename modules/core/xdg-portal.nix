@@ -5,7 +5,7 @@
   ...
 }:
 {
-  config = lib.mkIf (!config.hostSpec.isMinimal) {
+  config = lib.mkIf (config.machine.useWindowManager ) {
     xdg = {
       autostart.enable = true;
       portal = {

@@ -1,6 +1,6 @@
 {
   imports = [
-    ./host-spec.nix
+    ./machine-spec.nix
     ./monitors.nix
   ];
 }

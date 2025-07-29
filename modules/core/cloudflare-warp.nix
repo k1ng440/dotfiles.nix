@@ -1,7 +1,4 @@
 { config, ... }:
-let
-  hostSpec = config.hostSpec;
-in
 {
-  services.cloudflare-warp.enable = hostSpec.cloudflare-warp;
+  services.cloudflare-warp.enable = config.machine.networking.cloudflare-warp;
 }

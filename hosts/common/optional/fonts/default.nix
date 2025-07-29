@@ -7,7 +7,7 @@
 }:
 {
 
-  config = lib.mkIf (!config.hostSpec.isMinimal) {
+  config = lib.mkIf (config.machine.useWindowManager && !config.isMinimal) {
     fonts.packages = with pkgs; [
       dejavu_fonts
       noto-fonts

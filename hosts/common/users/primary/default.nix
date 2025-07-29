@@ -13,11 +13,11 @@ in
   # Use mkMerge with proper evaluation deferral
   users = lib.mkMerge [
     {
-      groups.${config.hostSpec.username} = {};
-      users.${config.hostSpec.username} = {
-        name = config.hostSpec.username;
-        group = config.hostSpec.username;
-        uid = config.hostSpec.userUid;
+      groups.${config.machine.username} = {};
+      users.${config.machine.username} = {
+        name = config.machine.username;
+        group = config.machine.username;
+        uid = config.machine.userUid;
         shell = pkgs.fish;
         openssh.authorizedKeys.keys =
           lib.lists.forEach pubKeys (key: builtins.readFile key);
@@ -26,24 +26,24 @@ in
   ];
 
   systemd.tmpfiles.rules = [
-    "d /home/${config.hostSpec.username}/.ssh 0750 ${config.hostSpec.username} ${config.hostSpec.username} -"
-    "d /home/${config.hostSpec.username}/.ssh/sockets 0750 ${config.hostSpec.username} ${config.hostSpec.username} -"
+    "d /home/${config.machine.username}/.ssh 0750 ${config.machine.username} ${config.machine.username} -"
+    "d /home/${config.machine.username}/.ssh/sockets 0750 ${config.machine.username} ${config.machine.username} -"
   ];
 
   # Home manager configuration - evaluated lazily
   home-manager = lib.mkIf
     (inputs ? "home-manager" &&
-      !config.hostSpec.isMinimal &&
-      builtins.pathExists (lib.custom.relativeToRoot "home/${config.hostSpec.username}/${config.hostSpec.hostname}.nix")
+      !config.machine.isMinimal &&
+      builtins.pathExists (lib.custom.relativeToRoot "home/${config.machine.username}/${config.machine.hostname}.nix")
     )
     {
       backupFileExtension = "bk";
       useGlobalPkgs = true;
       useUserPackages = true;
-      extraSpecialArgs = { inherit pkgs inputs; hostSpec = config.hostSpec; };
-      users.${config.hostSpec.username} = {
+      extraSpecialArgs = { inherit pkgs inputs; machine = config.machine; };
+      users.${config.machine.username} = {
         imports = [
-          (lib.custom.relativeToRoot "home/${config.hostSpec.username}/${config.hostSpec.hostname}.nix")
+          (lib.custom.relativeToRoot "home/${config.machine.username}/${config.machine.hostname}.nix")
         ];
       };
     };

@@ -6,7 +6,7 @@
 }:
 let
   sopsFolder = (builtins.toString inputs.nix-secrets) + "/sops";
-  msmtpCfg = config.hostSpec.msmtp;
+  msmtpCfg = config.machine.msmtp;
 in
 {
   options.hostConfig.msmtp = {
@@ -21,8 +21,8 @@ in
     sops.secrets = {
       "passwords/msmtp" = {
         sopsFile = "${sopsFolder}/shared.yaml";
-        owner = config.users.users.${config.hostSpec.username}.name;
-        inherit (config.users.users.${config.hostSpec.username}) group;
+        owner = config.users.users.${config.machine.username}.name;
+        inherit (config.users.users.${config.machine.username}) group;
       };
     };
 
@@ -37,7 +37,7 @@ in
         passwordeval = "cat ${config.sops.secrets."passwords/msmtp".path}";
         tls = msmtpCfg.tls;
         tls_starttls = msmtpCfg.tls;
-        from = config.hostSpec.email.notifier;
+        from = config.machine.email.notifier;
         logfile = "~/.msmtp.log";
       };
     };
@@ -49,8 +49,8 @@ in
     environment.etc = {
       "aliases" = {
         text = ''
-          root: ${config.hostSpec.email.notifier}
-          ${config.hostSpec.username}: ${config.hostSpec.email.user}
+          root: ${config.machine.email.notifier}
+          ${config.machine.username}: ${config.machine.email.user}
         '';
         mode = "0644";
       };

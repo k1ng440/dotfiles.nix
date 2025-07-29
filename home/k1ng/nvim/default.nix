@@ -1,13 +1,12 @@
 {
   pkgs,
-  lib,
   config,
   inputs,
-  hostSpec,
+  machine,
   ...
 }:
 let
-  nvimConfigDirectory = config.lib.file.mkOutOfStoreSymlink "${hostSpec.home}/nix/nix-config/home/${hostSpec.username}/nvim/config";
+  nvimConfigDirectory = config.lib.file.mkOutOfStoreSymlink "${machine.home}/nix/nix-config/home/${machine.username}/nvim/config";
   intelephenseLicenseFile = config.lib.file.mkOutOfStoreSymlink "/home/k1ng/nix/nix-config/secrets/intelephense-license.txt";
   plugins = import ./plugins.nix { inherit pkgs inputs; };
 in

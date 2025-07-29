@@ -1,4 +1,4 @@
-{ pkgs, hostSpec, ... }:
+{ pkgs, machine, ... }:
 {
   home.packages = with pkgs; [
     meld # Visual diff and merge tool
@@ -10,8 +10,8 @@
 
     git = {
       enable = true;
-      userName = hostSpec.userFullName;
-      userEmail = hostSpec.email.work;
+      userName = machine.userFullName;
+      userEmail = machine.email.work;
       aliases = {
         co = "checkout";
         ec = "config --global -e";

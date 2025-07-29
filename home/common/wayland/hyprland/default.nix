@@ -1,11 +1,6 @@
-{ lib, hostSpec, ... }:
-let
-  hyprland-enabled = !hostSpec.isMinimal && hostSpec.hyprland.enabled;
-in
+{ lib, machine, ... }:
 {
-  imports =
-    [ ]
-    ++ lib.optionals hyprland-enabled [
+  imports = lib.mkIf machine.hyprland.eanble [
       ./animations-end4.nix
       ./binds.nix
       ../common/hypridle.nix

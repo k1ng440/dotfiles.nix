@@ -6,10 +6,10 @@
   ...
 }:
 let
-  hostSpec = config.hostSpec;
+  machine = config.machine;
 
   repos = {
-    # TODO:  Move this to hostSpec
+    # TODO:  Move this to machine
     kong = "ssh://pavel@192.168.0.10//masterpool/backup";
   };
 
@@ -105,9 +105,9 @@ in
 
   services.borgbackup.jobs = {
     home-primary = mkBorgJob {
-      name = "${hostSpec.hostname}/${hostSpec.username}-home";
+      name = "${machine.hostname}/${machine.username}-home";
       repo = repos.kong;
-      paths = "/home/${hostSpec.username}/";
+      paths = "/home/${machine.username}/";
       passphraseFile = config.sops.secrets."borgbackup/encryption_key".path;
       excludeCategories = [
         "cache"
@@ -115,7 +115,7 @@ in
         "userSpecific"
       ];
       overrides = {
-        user = hostSpec.username;
+        user = machine.username;
       };
     };
   };
