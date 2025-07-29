@@ -5,7 +5,7 @@
   ...
 }:
 {
-  config = lib.mkIf (!config.machine.sway.eanble) {
+  config = lib.mkIf (config.machine.windowManager.sway.enable) {
   environment.systemPackages = [
     (pkgs.writeShellScriptBin "run-sway" ''
       set -euo pipefail
@@ -48,7 +48,7 @@
     programs.sway = {
       enable = true;
       wrapperFeatures.gtk = true;
-      extraOptions = [ ] ++ lib.optionals (lib.elem config.machine.capabilities "nvidia-gpu") [
+      extraOptions = [ ] ++ lib.optionals (lib.elem "nvidia-gpu" config.machine.capabilities) [
         "--unsupported-gpu"
       ];
       extraSessionCommands = "";

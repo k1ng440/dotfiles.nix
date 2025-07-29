@@ -12,7 +12,7 @@ let
 
   # Decrypt password to /run/secrets-for-users/ so it can be used to create the user
   sopsHashedPasswordFile = lib.optionalString (
-    !config.machine.isMinimal
+    !config.machine.computed.isMinimal
   ) config.sops.secrets."passwords/${machine.username}".path;
 in
 {

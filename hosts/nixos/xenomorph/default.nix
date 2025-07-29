@@ -36,23 +36,55 @@
   ];
 
   machine = {
-    isMinimal = false;
-    isVirtualMachine = false;
+    hostType = "workstation";
     hostname = "xenomorph";
     username = "k1ng";
     userUid = 1000;
-    cloudflare-warp = true;
-    swaywm.enabled = true;
-    hyprland.enabled = false;
+    platform = {
+      isVirtualMachine = false;
+      isLinux = true;
+    };
+    networking = {
+      cloudflare-warp = true;
+      ports = {
+        udp = {
+          factorio = {
+            port = 34197;
+            open = true;
+            service = "factorio";
+            description = "Factorio multiplayer UDP";
+          };
+        };
+      };
+    };
+    windowManager =  {
+      sway.enable = true;
+      hyprland.enable = false;
+    };
+    capabilities = [
+      "gpu"
+      "nvidia-gpu"
+      "audio"
+      "high-memory"
+      "bluetooth"
+      "camera"
+      "multi-monitor"
+      "tpm"
+      "secure-boot"
+      "audio-production"
+      "gaming"
+      "development"
+      "machine-learning"
+      "streaming"
+      "container-runtime"
+      "virtualization"
+    ];
   };
 
   hostConfig = {
     msmtp.enable = true;
     android-studio.enable = true;
   };
-
-  # Firewall
-  networking.firewall.allowedUDPPorts = [ 34197 ]; # Factorio
 
   services.gvfs.enable = true;
   services.samba.enable = true;

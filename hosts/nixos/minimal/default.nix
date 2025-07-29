@@ -2,8 +2,10 @@
 {
 
   machine = {
-    isMinimal = true;
-    isVirtualMachine = false;
+    platform = {
+      isVirtualMachine = false;
+      isLinux = true;
+    };
     hostname = "nixos-minimal";
     username = "k1ng";
   };

@@ -45,7 +45,7 @@
       sops # Simple and flexible tool for managing secrets
       ssh-to-age # Convert SSH Ed25519 keys to age keys
     ]
-    ++ lib.optionals (machine.useWindowManager) [
+    ++ lib.optionals (machine.windowManager.enabled) [
       spotify
       yubikey-manager
       pkgs.unstable.plex-desktop

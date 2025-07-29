@@ -5,7 +5,7 @@
   ...
 }:
 {
-  config = lib.mkIf (lib.elem config.machine.capabilities "audio") {
+  config = lib.mkIf (lib.elem "audio" config.machine.capabilities) {
     services.pulseaudio.enable = lib.mkDefault false;
     security.rtkit.enable = true;
 

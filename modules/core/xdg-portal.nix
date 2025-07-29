@@ -5,7 +5,7 @@
   ...
 }:
 {
-  config = lib.mkIf (config.machine.useWindowManager ) {
+  config = lib.mkIf (config.machine.windowManager.enabled) {
     xdg = {
       autostart.enable = true;
       portal = {

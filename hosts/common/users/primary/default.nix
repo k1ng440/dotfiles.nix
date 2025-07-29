@@ -33,7 +33,7 @@ in
   # Home manager configuration - evaluated lazily
   home-manager = lib.mkIf
     (inputs ? "home-manager" &&
-      !config.machine.isMinimal &&
+      !config.machine.computed.isMinimal &&
       builtins.pathExists (lib.custom.relativeToRoot "home/${config.machine.username}/${config.machine.hostname}.nix")
     )
     {

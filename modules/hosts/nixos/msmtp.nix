@@ -6,7 +6,8 @@
 }:
 let
   sopsFolder = (builtins.toString inputs.nix-secrets) + "/sops";
-  msmtpCfg = config.machine.msmtp;
+
+  msmtpCfg = builtins.trace config.machine.msmtp.config config.machine.msmtp.config;
 in
 {
   options.hostConfig.msmtp = {

@@ -5,7 +5,7 @@
   ...
 }:
 {
-  config = lib.mkIf (!config.machine.isMinimal) {
+  config = lib.mkIf (!config.machine.computed.isMinimal) {
     programs.appimage.binfmt = true;
     programs.nix-ld.enable = true;
     services.flatpak.enable = true;

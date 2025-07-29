@@ -1,6 +1,6 @@
 { lib, machine, ... }:
 {
-  imports = lib.mkIf machine.hyprland.eanble [
+  imports = [] ++ lib.optionals machine.windowManager.hyprland.enable [
       ./animations-end4.nix
       ./binds.nix
       ../common/hypridle.nix

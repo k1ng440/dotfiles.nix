@@ -7,7 +7,7 @@
 }:
 {
 
-  config = lib.mkIf (config.machine.useWindowManager && !config.isMinimal) {
+  config = lib.mkIf (config.machine.windowManager.enabled && !config.machine.computed.isMinimal) {
     fonts.packages = with pkgs; [
       dejavu_fonts
       noto-fonts

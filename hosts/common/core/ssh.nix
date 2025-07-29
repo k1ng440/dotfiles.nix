@@ -27,10 +27,10 @@
           gitlab.com ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAfuCHKVTjquxvt6CM6tdG4SLp1Btn/nOeHHE5UOzRdf
         '')
       ]
-      ++ lib.optional (!config.machine.isMinimal) (
+      ++ lib.optional (!config.machine.computed.isMinimal) (
         pkgs.writeText "custom_private_known_hosts" inputs.nix-secrets.networking.ssh.knownHostsFileContents
       )
-      ++ lib.optional (config.machine.isWork) (
+      ++ lib.optional (config.machine.computed.isWork) (
         pkgs.writeText "custom_work_known_hosts" inputs.nix-secrets.work.ssh.knownHostsFileContents
       );
   };

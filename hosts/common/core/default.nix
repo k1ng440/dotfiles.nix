@@ -38,17 +38,14 @@ in
   in {
     username = "k1ng";
     handle = "k1ng440";
+    userFullName = "Asaduzzaman Pavel";
     msmtp = {
       enable = hasSecrets;
       config = if hasSecrets then inputs.nix-secrets.msmtp else {};
     };
-
-    inherit (inputs.nix-secrets)
-      domain
-      email
-      userFullName
-      networking
-      ;
+    domain = if hasSecrets then (inputs.nix-secrets.domain or "workgroup") else "workgroup";
+    email = if hasSecrets then (inputs.nix-secrets.email or "contact@iampavel.dev") else "contact@iampavel.dev";
+    networking = {};
   };
 
   environment.systemPackages = [
@@ -57,7 +54,7 @@ in
     pkgs.findutils
   ];
 
-  networking.hostName = config.username.hostname;
+  networking.hostName = config.machine.hostname;
 
   # Configure Home manager
   home-manager.useGlobalPkgs = true;

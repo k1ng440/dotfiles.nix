@@ -6,7 +6,7 @@
   ...
 }:
 {
-  config = lib.mkIf (config.machine.hyprland.enable) {
+  config = lib.mkIf (config.machine.windowManager.hyprland.enable) {
     programs.hyprland = {
       package = inputs.hyprland.packages.${pkgs.system}.hyprland;
       portalPackage = inputs.hyprland.packages.${pkgs.system}.xdg-desktop-portal-hyprland;

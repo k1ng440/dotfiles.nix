@@ -70,6 +70,7 @@ in
     home = mkOption {
       type = types.path;
       description = "The home directory of the user";
+      readOnly = true;
       default =
         let user = config.machine.username;
         in if pkgs.stdenv.isLinux then "/home/${user}" else "/Users/${user}";
@@ -665,7 +666,7 @@ in
     warnings =
       let
         hostSpec = config.machine;
-      in lib.optional (hostSpec.hostType == "server" && hostSpec.useWindowManager)
+      in lib.optional (hostSpec.hostType == "server" && hostSpec.windowManager.enabled)
       "Server host has window manager enabled - this may not be intended"
       ++ lib.optional (hostSpec.environment != "production" && hostSpec.computed.isWork)
       "Work environment detected in non-production setting - ensure this is intentional";
