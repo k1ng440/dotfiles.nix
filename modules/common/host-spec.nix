@@ -76,6 +76,31 @@
       default = "";
     };
     # Configuration Settings
+    hostType = lib.mkOption {
+      type = lib.types.enum [ "minimal" "workstation" "server" "mobile" ];
+      default = "workstation";
+      description = "The type of host system";
+    };
+    environment = lib.mkOption {
+      type = lib.types.enum [ "development" "staging" "production" ];
+      default = "production";
+      description = "The environment this host runs in";
+    };
+    capabilities = lib.mkOption {
+      type = lib.types.listOf (lib.types.enum [
+        "gpu"
+        "nvidia-gpu"
+        "audio-production"
+        "gaming"
+        "development"
+        "container-runtime"
+        "virtualization"
+        "networking"
+        "storage-server"
+      ]);
+      default = [];
+      description = "Special capabilities or roles of this host";
+    };
     isMinimal = lib.mkOption {
       type = lib.types.bool;
       default = false;
@@ -131,11 +156,6 @@
       type = lib.types.bool;
       default = true;
       description = "Used to indicate a host that uses a window manager";
-    };
-    useAtticCache = lib.mkOption {
-      type = lib.types.bool;
-      default = true;
-      description = "Used to indicate a host that uses LAN atticd for caching";
     };
     hdr = lib.mkOption {
       type = lib.types.bool;

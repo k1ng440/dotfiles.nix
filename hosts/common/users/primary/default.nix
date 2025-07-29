@@ -1,60 +1,50 @@
-{
-  inputs,
-  pkgs,
-  config,
-  lib,
-  ...
-}:
+{ inputs, pkgs, config, lib, ... }:
 let
-  hostSpec = config.hostSpec;
-  pubKeys = lib.filesystem.listFilesRecursive ./keys;
+  pubKeys = let
+    keysPath = ./keys;
+  in
+    if builtins.pathExists keysPath
+    then lib.filesystem.listFilesRecursive keysPath
+  else [];
 in
-{
+  {
   programs.fish.enable = true;
-  users.users.${hostSpec.username} = {
-    name = lib.trace hostSpec.username hostSpec.username;
-    shell = pkgs.fish; # default shell
 
-    # These get placed into /etc/ssh/authorized_keys.d/<name> on nixos
-    openssh.authorizedKeys.keys = lib.lists.forEach pubKeys (key: builtins.readFile key);
-  };
+  # Use mkMerge with proper evaluation deferral
+  users = lib.mkMerge [
+    {
+      groups.${config.hostSpec.username} = {};
+      users.${config.hostSpec.username} = {
+        name = config.hostSpec.username;
+        group = config.hostSpec.username;
+        uid = config.hostSpec.userUid;
+        shell = pkgs.fish;
+        openssh.authorizedKeys.keys =
+          lib.lists.forEach pubKeys (key: builtins.readFile key);
+      };
+    }
+  ];
 
-  # Create ssh sockets directory for controlpaths when homemanager not loaded (i.e. isMinimal)
-  systemd.tmpfiles.rules =
-    let
-      user = config.users.users.${hostSpec.username}.name;
-      group = config.users.users.${hostSpec.username}.group;
-    in
-    # you must set the rule for .ssh separately first, otherwise it will be automatically created as root:root and .ssh/sockects will fail
-    [
-      "d /home/${hostSpec.username}/.ssh 0750 ${user} ${group} -"
-      "d /home/${hostSpec.username}/.ssh/sockets 0750 ${user} ${group} -"
-    ];
-}
-# Import the user's personal/home configurations, unless the environment is minimal
-// lib.optionalAttrs (inputs ? "home-manager") {
-  home-manager = {
-    backupFileExtension = "bk";
-    extraSpecialArgs = {
-      inherit pkgs inputs;
-      hostSpec = config.hostSpec;
+  systemd.tmpfiles.rules = [
+    "d /home/${config.hostSpec.username}/.ssh 0750 ${config.hostSpec.username} ${config.hostSpec.username} -"
+    "d /home/${config.hostSpec.username}/.ssh/sockets 0750 ${config.hostSpec.username} ${config.hostSpec.username} -"
+  ];
+
+  # Home manager configuration - evaluated lazily
+  home-manager = lib.mkIf
+    (inputs ? "home-manager" &&
+      !config.hostSpec.isMinimal &&
+      builtins.pathExists (lib.custom.relativeToRoot "home/${config.hostSpec.username}/${config.hostSpec.hostname}.nix")
+    )
+    {
+      backupFileExtension = "bk";
+      useGlobalPkgs = true;
+      useUserPackages = true;
+      extraSpecialArgs = { inherit pkgs inputs; hostSpec = config.hostSpec; };
+      users.${config.hostSpec.username} = {
+        imports = [
+          (lib.custom.relativeToRoot "home/${config.hostSpec.username}/${config.hostSpec.hostname}.nix")
+        ];
+      };
     };
-
-    users.${hostSpec.username}.imports = lib.flatten (
-      lib.optional (!hostSpec.isMinimal) [
-        (
-          { config, ... }:
-          import (lib.custom.relativeToRoot "home/${hostSpec.username}/${hostSpec.hostname}.nix") {
-            inherit
-              pkgs
-              inputs
-              config
-              lib
-              hostSpec
-              ;
-          }
-        )
-      ]
-    );
-  };
 }
