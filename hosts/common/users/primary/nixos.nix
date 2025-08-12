@@ -42,6 +42,7 @@ in
         "adbusers" # for Android
         "kvm"
         "libvirtd"
+        "seat"
       ])
     ];
   };

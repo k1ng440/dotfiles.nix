@@ -6,6 +6,9 @@ let
     if builtins.pathExists keysPath
     then lib.filesystem.listFilesRecursive keysPath
   else [];
+
+  exisitngGroupOnly =
+    groups: builtins.filter (group: builtins.hasAttr group config.users.groups) groups;
 in
   {
   programs.fish.enable = true;
@@ -21,7 +24,24 @@ in
         shell = pkgs.fish;
         openssh.authorizedKeys.keys =
           lib.lists.forEach pubKeys (key: builtins.readFile key);
+        extraGroups = lib.flatten [
+          "wheel"
+          (exisitngGroupOnly [
+            "audio"
+            "video"
+            "docker"
+            "git"
+            "networkmanager"
+            "scanner" # for print/scan"
+            "lp" # for print/scan"
+            "adbusers" # for Android
+            "kvm"
+            "libvirtd"
+            "seat"
+          ])
+        ];
       };
+
     }
   ];
 

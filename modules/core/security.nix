@@ -1,4 +1,4 @@
-_: {
+{inputs, ...} : {
   security = {
     rtkit.enable = true;
     polkit = {

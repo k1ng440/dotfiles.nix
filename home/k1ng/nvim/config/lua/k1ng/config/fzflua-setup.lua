@@ -79,6 +79,11 @@ vim.schedule(function()
       stat_file = true,
       cwd_only = true,
     },
+    previewers = {
+      builtin = {
+        syntax_limit_b = 1024 * 100, -- 100KB
+      },
+    },
     winopts = {
       row = 1,
       col = 0,

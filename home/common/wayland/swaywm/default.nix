@@ -310,17 +310,10 @@ in
             instance = "^(origin\.exe|gamescope)$";
           };
         }
-        {
-          command = "inhibit_idle focus, border none, fullscreen enable";
-          criteria = {
-            class = "^(steam_app.*|factorio)$";
-          };
-        }
-        # { command = "floating enable, resize set 70% 70%"; criteria = { window_type = "^(utility|toolbar|splash|menu)$"; }; }
         # {
-        #   command = "floating enable, max_render_time off; blur disabled";
+        #   command = "inhibit_idle focus, border none, fullscreen enable, mark steam_game";
         #   criteria = {
-        #     class = "^(steam)$";
+        #     class = "^steam_app_.*$|^factorio$";
         #   };
         # }
         {
@@ -415,7 +408,11 @@ in
             shell = "xwayland";
           };
         }
-
+        { command = "move container to workspace special:"; criteria = { app_id = "thunderbird"; }; }
+        { command = "floating disable"; criteria = { app_id = "thunderbird"; }; }
+        { command = "floating enable"; criteria = { app_id = "thunderbird"; title = ".*Compose.*"; }; }
+        { command = "resize set width 800 height 600"; criteria = { app_id = "thunderbird"; title = ".*(Compose|Write\:).*"; }; }
+        { command = "floating enable"; criteria = { app_id = "thunderbird"; title = ".*(Preferences|Settings|Address Book).*"; }; }
       ];
 
       # Input configuration

@@ -231,8 +231,16 @@ vim.schedule(function()
           opts = {
             prefix_min_len = 4,
             score_offset = 10, -- should be lower priority
-            max_filesize = '300K',
-            search_casing = '--smart-case',
+            project_root_marker = ".git",
+            fallback_to_regex_highlighting = true,
+            backend = {
+              use = "ripgrep",
+              customize_icon_highlight = true,
+              ripgrep = {
+                max_filesize = "1M",
+                search_casing = '--smart-case',
+              }
+            }
           },
         },
       },
@@ -361,6 +369,7 @@ vim.schedule(function()
     stages = 'fade_in_slide_out',
     timeout = 2000,
     background_colour = '#1e222a',
+    merge_duplicates = true,
     icons = {
       ERROR = '',
       WARN = '',
@@ -545,3 +554,22 @@ vim.schedule(function ()
   end
 end)
 
+
+vim.schedule(function ()
+  local ok, avante = pcall(require, 'avante')
+  if ok then
+    avante.setup({
+      provider = "ollama",
+      providers = {
+        ollama = {
+          endpoint = "localhost:11434",
+          model = "hf.co/lmstudio-community/Qwen3-Coder-30B-A3B-Instruct-GGUF:Q4_K_M",
+          disable_tools = false,
+          extra_request_body = {
+            stream = true
+          }
+        }
+      },
+    })
+  end
+end)

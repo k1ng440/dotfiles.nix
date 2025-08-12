@@ -59,10 +59,19 @@
   environment.systemPackages = with pkgs; [
     mangohud
     protonup-qt
-    lutris
     bottles
     vulkan-tools
     nexusmods-app
-    winetricks
+    corefonts
+    xorg.xrandr
+    xorg.xwininfo
+    libva
+    libva-utils
+    (pkgs.unstable.lutris.override {
+      extraPkgs = pkgs: [
+        pkgs.wineWowPackages.stagingFull
+        pkgs.winetricks
+      ];
+    })
   ];
 }
