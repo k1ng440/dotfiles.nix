@@ -104,7 +104,7 @@ vim.schedule(function()
 
   map('n', '<leader>sr', fzf.files, { desc = '[S]earch [R]esume' })
   map('n', '<leader>sf', fzf.files, { desc = '[S]earch [F]iles' })
-  map('n', '<leader>sg', fzf.live_grep_glob, { desc = '[S]earch [G]rep' })
+  map('n', '<leader>sg', fzf.live_grep, { desc = '[S]earch [G]rep' })
   map('n', '<leader>sw', fzf.grep_cword, { desc = '[S]earch [W]ord' })
   map('n', '<leader>fh', fzf.oldfiles, { desc = '[S]earch Recent Files' })
   map('n', '<leader>sk', fzf.keymaps, { desc = '[S]earch [K]eymaps' })

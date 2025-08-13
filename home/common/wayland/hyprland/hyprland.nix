@@ -3,6 +3,7 @@
   config,
   pkgs,
   inputs,
+  machine,
   ...
 }:
 let
@@ -49,7 +50,7 @@ in
   ];
 
   wayland.windowManager.hyprland = {
-    enable = false;
+    enable = machine.windowManager.hyprland.enable;
     package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
     portalPackage =
       inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
@@ -176,8 +177,6 @@ in
       };
 
       render = {
-        explicit_sync = 1; # Change to 1 to disable
-        explicit_sync_kms = 1;
         direct_scanout = 0;
       };
     };

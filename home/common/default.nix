@@ -12,8 +12,7 @@
     ./cursor.nix
     ./rofi
     ./wofi
-    ./wayland/hyprland
-    ./wayland/swaywm
+    ./wayland
     ./fastfetch
     ./scripts
     ./mime.nix

@@ -2,6 +2,7 @@
   config,
   pkgs,
   lib,
+  machine,
   ...
 }:
 let
@@ -19,14 +20,8 @@ let
     	'';
 in
 {
-  imports = [
+  imports = [] ++ lib.optionals machine.windowManager.sway.enable [
     ../common/packages.nix
-    ../common/swaync.nix
-    ../common/swww.nix
-    ../common/hypridle.nix
-    ../common/hyprlock.nix
-    ../waybar/waybar-ddubs.nix
-    ../wlogout
     ../swappy.nix
     # ./scripts
   ];
@@ -37,7 +32,7 @@ in
     swayosd
   ];
 
-  home.sessionVariables = {
+  home.sessionVariables = lib.mkIf machine.windowManager.sway.enable {
     XDG_CONFIG_HOME = "$HOME/.config";
     GTK_USE_PORTAL = "1";
     XDG_SESSION_DESKTOP = "sway";
@@ -47,7 +42,7 @@ in
   };
 
   wayland.windowManager.sway = {
-    enable = true;
+    enable = machine.windowManager.sway.enable;
     wrapperFeatures.gtk = true;
     config = {
       modifier = mod;

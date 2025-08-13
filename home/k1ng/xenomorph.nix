@@ -61,21 +61,21 @@
           persistent = true;
           default = true;
           layout = "master";
-          layout_orientation = "left";
+          layout_orientation = "right";
         }
         {
           name = "6";
           persistent = true;
           default = false;
           layout = "master";
-          layout_orientation = "left";
+          layout_orientation = "right";
         }
         {
           name = "7";
           persistent = true;
           default = false;
           layout = "master";
-          layout_orientation = "left";
+          layout_orientation = "right";
         }
       ];
     }

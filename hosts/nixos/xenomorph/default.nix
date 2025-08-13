@@ -13,8 +13,7 @@
       "hosts/common/optional/nvidia"
       "hosts/common/optional/audio"
       "hosts/common/optional/fonts"
-      "hosts/common/optional/hyprland"
-      "hosts/common/optional/swaywm"
+      "hosts/common/optional/wayland"
       "hosts/common/optional/solaar"
       "hosts/common/optional/thunar"
       "hosts/common/optional/virtualisation"
@@ -58,8 +57,8 @@
       };
     };
     windowManager =  {
-      sway.enable = true;
-      hyprland.enable = false;
+      sway.enable = false;
+      hyprland.enable = true;
     };
     capabilities = [
       "gpu"

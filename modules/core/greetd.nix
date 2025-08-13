@@ -1,7 +1,4 @@
-{
-  pkgs,
-  ...
-}:
+{ pkgs, lib, config, ... }:
 {
   # Create the greeter user
   users.users.greeter = {
@@ -19,11 +16,16 @@
   services.greetd.settings =
     let
       start = {
-        command = "run-sway";
         user = "k1ng";
+        command =
+          if config.machine.windowManager.hyprland.enable then
+            "run-hyprland"
+          else if config.machine.windowManager.sway.enable then
+            "run-sway"
+          else
+            "${pkgs.bashInteractive}/bin/bash";
       };
-    in
-    {
+    in {
       initial_session = start;
       default_session = start;
     };
