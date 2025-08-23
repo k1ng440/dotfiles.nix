@@ -20,7 +20,6 @@
   systemd.user.services.swww-daemon = {
     Unit = {
       Description = "swww wallpaper daemon";
-      PartOf = [ "graphical-session.target" ];
       After = [ "graphical-session.target" ];
     };
     Service = {
@@ -42,6 +41,7 @@
     Unit = {
       Description = "Cycle wallpapers with swww";
       After = [ "swww-daemon.service" ];
+      Wants = [ "swww-daemon.service" ];
     };
     Service = {
       Type = "oneshot";
@@ -50,9 +50,6 @@
         "PATH=${pkgs.coreutils}/bin:${pkgs.findutils}/bin:${pkgs.swww}/bin"
       ];
     };
-    Install = {
-      WantedBy = [ "graphical-session.target" ];
-    };
   };
 
   systemd.user.timers.wallpaper-cycler = {
@@ -60,7 +57,7 @@
       Description = "Timer for cycling wallpapers";
     };
     Timer = {
-      OnBootSec = "5min";
+      OnBootSec = "2min";
       OnUnitActiveSec = "5min";
       Unit = "wallpaper-cycler.service";
     };

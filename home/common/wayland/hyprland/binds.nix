@@ -51,12 +51,10 @@ in
       "CTRL SUPER SHIFT, l, resizeactive,5 0"
 
       # Volume
-      ", XF86AudioRaiseVolume, exec, ${wpctl} set-mute @DEFAULT_AUDIO_SINK@ 0 && ${wpctl} set-volume -l 1.4 @DEFAULT_AUDIO_SINK@ 5%+"
-      ", XF86AudioLowerVolume, exec, ${wpctl} set-mute @DEFAULT_AUDIO_SINK@ 0 && ${wpctl} set-volume -l 1.4 @DEFAULT_AUDIO_SINK@ 5%-"
-
-      # Brightness
-      ", XF86MonBrightnessUp, exec, ${brightnessctl} s 10%+"
-      ", XF86MonBrightnessDown, exec, ${brightnessctl} s 10%-"
+      ", XF86AudioRaiseVolume, exec, swayosd-client --output-volume raise"
+      ", XF86AudioLowerVolume, exec, swayosd-client --output-volume lower"
+      ", XF86AudioMute, exec, swayosd-client --output-volume mute-toggle"
+      ", XF86AudioMicMute, exec, swayosd-client --input-volume mute-toggle"
     ];
 
     bindel = [
@@ -73,10 +71,16 @@ in
         ", XF86AudioPlay, exec, '${playerctl} --ignore-player=firefox,chromium,brave play-pause'"
         ", XF86AudioNext, exec, '${playerctl} --ignore-player=firefox,chromium,brave next'"
         ", XF86AudioPrev, exec, '${playerctl} --ignore-player=firefox,chromium,brave previous'"
-      ]
-      ++ lib.flatten [
+
         "${mod}, space, exec, rofi -show drun" # App launcher
         "${mod}, R, exec, rofi -show drun" # App launcher
+
+
+        # Group
+        "${mod}, W, togglegroup"
+        # "${mod} ALT, H, changegroupactive, b"
+        # "${mod} ALT, L, changegroupactive, f"
+
 
         # Circle Window
         "ALT, Tab, cyclenext"
@@ -106,9 +110,9 @@ in
       # Swap windows
       ++ (lib.mapAttrsToList (key: direction: "${mod} SHIFT, ${key}, swapwindow,${direction}") directions)
       # Switch Workspaces
-      ++ (map (n: "${mod}, ${n}, workspace, name:${n}") workspaces)
+      ++ (map (n: "${mod}, ${n}, workspace, ${n}") workspaces)
       # Move Window to Workspaces
-      ++ (map (n: "${mod} SHIFT, ${n}, movetoworkspace, name:${n}") workspaces)
+      ++ (map (n: "${mod} SHIFT, ${n}, movetoworkspace, ${n}") workspaces)
       # Special Workspace
       ++ [
         "${mod}, S, togglespecialworkspace, magic"

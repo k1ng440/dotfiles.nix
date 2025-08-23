@@ -26,12 +26,6 @@ in
     # ./scripts
   ];
 
-  home.packages = with pkgs; [
-    dex # Program to generate and execute DesktopEntry files of the Application type
-    xorg.xrandr
-    swayosd
-  ];
-
   home.sessionVariables = lib.mkIf machine.windowManager.sway.enable {
     XDG_CONFIG_HOME = "$HOME/.config";
     GTK_USE_PORTAL = "1";

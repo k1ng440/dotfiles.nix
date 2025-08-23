@@ -256,7 +256,7 @@ in
           on-click = "";
           tooltip = false;
         };
-        "systemd-failed-units" = {
+        systemd-failed-units = {
           "hide-on-ok" = true;
           "format" = "✗ {nr_failed}";
           "format-ok" = "✓";
@@ -315,6 +315,9 @@ in
 
           #workspaces button.persistent {
             color: ${muted-color};
+          }
+          #workspaces button.empty {
+            opacity: 0.5;
           }
 
           #workspaces button.active,

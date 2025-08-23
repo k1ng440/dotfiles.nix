@@ -29,11 +29,6 @@ let
   );
 in
 {
-
-  imports = [
-    ../common/packages.nix
-  ];
-
   home.packages = with pkgs; [
     ydotool
     hyprpolkitagent
@@ -90,6 +85,7 @@ in
         "sleep 2 && wallsetter"
         "wl-paste --type text --watch cliphist store"
         "wl-paste --type image --watch cliphist store"
+        "swayosd-server &"
       ] ++ onStartPrograms;
 
       input = {
@@ -152,7 +148,7 @@ in
       };
 
       decoration = {
-        rounding = 10;
+        rounding = 1;
         blur = {
           enabled = true;
           size = 5;
