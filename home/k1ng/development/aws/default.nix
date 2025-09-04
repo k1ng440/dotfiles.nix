@@ -1,0 +1,6 @@
+{ ... }:
+{
+  imports = [
+    ./aws-mfa.nix
+  ];
+}

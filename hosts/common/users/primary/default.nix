@@ -38,6 +38,7 @@ in
             "kvm"
             "libvirtd"
             "seat"
+            "pcscd"
           ])
         ];
       };

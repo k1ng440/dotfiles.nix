@@ -1,55 +1,46 @@
 { pkgs, lib, machine, ... }: let
-  cursorName = "catppuccin-mocha-red-cursors";
-  cursorPkg = pkgs.catppuccin-cursors.mochaRed;
+  cursorName = "catppuccin-mocha-light-cursors";
+  cursorPkg = pkgs.catppuccin-cursors.mochaLight;
   cursorSize = 24;
 in {
-  home.packages = [
-    cursorPkg
-  ];
+  home.packages = lib.optionals machine.windowManager.enabled [ cursorPkg ];
 
   home.pointerCursor = {
-    name = lib.mkForce cursorName;
-    package = lib.mkForce cursorPkg;
-    size = lib.mkForce cursorSize;
+    enable = machine.windowManager.enabled;
+    name = cursorName;
+    package = cursorPkg;
+    size = cursorSize;
     x11 = {
       enable = true;
-      defaultCursor = lib.mkForce cursorName;
+      defaultCursor = cursorName;
     };
     sway.enable = machine.windowManager.sway.enable;
-    hyprcursor.enable =  machine.windowManager.hyprland.enable;
+    hyprcursor = {
+      enable = builtins.trace machine.windowManager.hyprland.enable machine.windowManager.hyprland.enable;
+      size = cursorSize;
+    };
     dotIcons.enable = true;
-
   };
 
   gtk = {
     enable = true;
     cursorTheme = {
-      package = lib.mkForce cursorPkg;
-      name = lib.mkForce cursorName;
-      size = lib.mkForce cursorSize;
+      package = cursorPkg;
+      name = cursorName;
+      size = cursorSize;
     };
 
     # GTK3 settings
     gtk3.extraConfig = {
-      gtk-cursor-theme-name = lib.mkForce cursorName;
-      gtk-cursor-theme-size = lib.mkForce cursorSize;
+      gtk-cursor-theme-name = cursorName;
+      gtk-cursor-theme-size = cursorSize;
     };
 
     # GTK4 settings
     gtk4.extraConfig = {
-      gtk-cursor-theme-name = lib.mkForce cursorName;
-      gtk-cursor-theme-size = lib.mkForce cursorSize;
+      gtk-cursor-theme-name = cursorName;
+      gtk-cursor-theme-size = cursorSize;
     };
-  };
-
-  xresources.properties = {
-    "Xcursor.theme" = lib.mkForce cursorName;
-    "Xcursor.size" = lib.mkForce (builtins.toString cursorSize);
-  };
-
-  home.sessionVariables = {
-    XCURSOR_THEME = lib.mkForce cursorName;
-    XCURSOR_SIZE = lib.mkForce (builtins.toString cursorSize);
   };
 
   qt = {
@@ -57,4 +48,10 @@ in {
     platformTheme.name = lib.mkForce "gtk";
     style.name = lib.mkForce "gtk2";
   };
+
+  home.activation.setHyprCursor = lib.hm.dag.entryAfter ["writeBoundary"] ''
+    if [ "${toString machine.windowManager.hyprland.enable}" = "1" ]; then
+      $DRY_RUN_CMD ${pkgs.hyprland}/bin/hyprctl setcursor ${cursorName} ${toString cursorSize} || echo "Failed to set cursor theme"
+    fi
+  '';
 }

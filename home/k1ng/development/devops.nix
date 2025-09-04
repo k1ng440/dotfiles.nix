@@ -1,5 +1,9 @@
 { pkgs, ... }:
 {
+  imports = [
+    ./aws
+  ];
+
   home.packages = with pkgs; [
     act
     ansible
@@ -15,6 +19,7 @@
     openstackclient
     swiftclient
     # terraform
+    kubectl
     tilt
     kubernetes-polaris
     fzf

@@ -2,6 +2,7 @@
 
 {
   services.udev.packages = [ pkgs.yubikey-personalization ];
+  services.pcscd.enable = true;
 
   sops.secrets."keys/u2f_keys" = {
     owner = config.machine.username;

@@ -120,7 +120,7 @@
           persistent = true;
           default = true;
           on_start = [
-            "thunderbird"
+            # "thunderbird"
           ];
         }
       ];

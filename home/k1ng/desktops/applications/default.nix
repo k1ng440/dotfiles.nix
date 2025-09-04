@@ -11,7 +11,7 @@
     font-manager
     galculator
     mission-center
-    thunderbird
+    #thunderbird
     discord
     wofi
   ];

@@ -4,6 +4,7 @@
     subversionClient
     pre-commit
     gnumake # make
+    nix-init
   ];
 
   programs.direnv = {
