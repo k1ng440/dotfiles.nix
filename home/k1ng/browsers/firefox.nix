@@ -1,4 +1,4 @@
-{ config, ... }:
+{ config, pkgs, ... }:
 let
   homeDir = config.home.homeDirectory;
   defaultSettings = {
@@ -20,6 +20,7 @@ in
 {
   programs.firefox = {
     enable = true;
+    package = pkgs.firefox-bin;
 
     # Refer to https://mozilla.github.io/policy-templates or `about:policies#documentation` in firefox
     policies = {

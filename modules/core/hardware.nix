@@ -4,6 +4,7 @@
   services.auto-cpufreq.enable = true;
 
   hardware = {
+    graphics.enable = true;
     graphics.enable32Bit = true;
     enableRedistributableFirmware = true;
     keyboard.qmk.enable = true;
