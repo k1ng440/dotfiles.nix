@@ -1,9 +1,4 @@
-{
-  lib,
-  config,
-  pkgs,
-  ...
-}:
+{ lib, config, pkgs, ... }:
 {
   nixpkgs.config.cudaSupport = true;
   services.xserver.videoDrivers = lib.mkForce [ "nvidia" ];
@@ -14,55 +9,119 @@
     nvtopPackages.nvidia
   ];
 
-  hardware.graphics = {
-    enable = true;
-    enable32Bit = true;
-    extraPackages = with pkgs; [
-      nvidia-vaapi-driver # VAAPI
-    ];
-  };
-
-  boot.initrd.kernelModules = [
-    "nvidia"
-    "nvidia_modeset"
-    "nvidia_drm"
-    "nvidia_uvm"
-  ];
-
-  hardware.nvidia = {
-    open = false;
-    prime.sync.enable = lib.mkForce false;
-    modesetting.enable = true;
-    powerManagement.enable = true;
-    nvidiaSettings = false;
+  hardware = {
+    nvidia = {
+      open = true;
+      gsp.enable = config.hardware.nvidia.open;
+      nvidiaSettings = false;
+      prime.sync.enable = lib.mkForce false;
+      modesetting.enable = true;
+      powerManagement.enable = true;
+    };
+    graphics = {
+      enable = true;
+      enable32Bit = true;
+      extraPackages = with pkgs; [
+        nvidia-vaapi-driver # VAAPI
+      ];
+    };
   };
 
   environment = {
-    etc."nvidia/nvidia-application-profiles-rc.d/50-limit-free-buffer-pool.json".source =
-      ./50-limit-free-buffer-pool.json;
-    variables = {
-      __EGL_VENDOR_LIBRARY_FILENAMES = "${config.hardware.nvidia.package}/share/glvnd/egl_vendor.d/10_nvidia.json";
+    sessionVariables = {
+      # fix hw acceleration and native wayland on losslesscut
+      __EGL_VENDOR_LIBRARY_FILENAMES = "/run/opengl-driver/share/glvnd/egl_vendor.d/10_nvidia.json";
+      CUDA_CACHE_PATH = "$XDG_CACHE_HOME/nv";
+      # disable vsync
+      __GL_SYNC_TO_VBLANK = "0";
+      # enable gsync / vrr support
+      __GL_VRR_ALLOWED = "1";
+      # lowest frame buffering -> lower latency
+      __GL_MaxFramesAllowed = "1";
+
       GBM_BACKEND = "nvidia-drm";
-      __GLX_VENDOR_LIBRARY_NAME = "nvidia";
       MOZ_DISABLE_RDD_SANDBOX = "1";
       LIBVA_DRIVER_NAME = "nvidia";
       NVD_BACKEND = "direct";
       EGL_PLATFORM = "wayland";
+      __GLX_VENDOR_LIBRARY_NAME = "nvidia";
       MOZ_DRM_DEVICE = "/dev/dri/renderD128";
+    };
+    # fix high vram usage on discord and hyprland. match with the wrapper procnames
+    etc."nvidia/nvidia-application-profiles-rc.d/50-limit-free-buffer-pool.json".text = builtins.toJSON {
+      rules =
+        map (proc: {
+          pattern = {
+            feature = "procname";
+            matches = proc;
+          };
+          profile = "No VidMem Reuse";
+        }) [
+          "Hyprland"
+          ".Hyprland-wrapped"
+          "Discord"
+          ".Discord-wrapped"
+          "DiscordCanary"
+          ".DiscordCanary-wrapped"
+          "electron"
+          ".electron-wrapped"
+          "librewolf"
+          ".librewolf-wrapped"
+          ".librewolf-wrapped_"
+          "losslesscut"
+        ];
+    };
+  };
+
+  systemd = {
+    # makes kexec work with nvidia GPUs.
+    services.nvidia-kexec = {
+      unitConfig = {
+        Description = "Unload Nvidia before kexec";
+        Documentation = "man:modprobe(8)";
+        DefaultDependencies = "no";
+        After = "umount.target";
+        Before = "kexec.target";
+      };
+      serviceConfig = {
+        Type = "oneshot";
+        ExecStart = "${lib.getExe' pkgs.kmod "modprobe"} -r nvidia_drm";
+      };
+      wantedBy = ["kexec.target"];
+    };
+    services.nvidia-temp = {
+      description = "Nvidia GPU temperature monitoring"; # exposes hardware temperature at /tmp/nvidia-temp for monitoring
+      wantedBy = ["multi-user.target"];
+      before = ["fancontrol.service"];
+      script = ''
+          while :; do
+          temp="$(${lib.getExe' config.hardware.nvidia.package "nvidia-smi"} --query-gpu=temperature.gpu --format=csv,noheader,nounits)"
+          echo "$((temp * 1000))" > /tmp/nvidia-temp
+          sleep 5
+          done
+          '';
+      serviceConfig = {
+        Type = "simple";
+        Restart = "always";
+        RestartSec = 5;
+      };
     };
   };
 
   boot = {
+    initrd.kernelModules = [
+      "nvidia"
+      "nvidia_modeset"
+      "nvidia_drm"
+      "nvidia_uvm"
+    ];
+
     kernelParams = lib.mkMerge [
       [
-        # NVreg_UsePageAttributeTable=1 (Default 0) - Activating the better
-        # memory management method (PAT). The PAT method creates a partition type table
-        # at a specific address mapped inside the register and utilizes the memory architecture
-        # and instruction set more efficiently and faster.
-        # If your system can support this feature, it should improve CPU performance.
         "nvidia.NVreg_UsePageAttributeTable=1"
-
         "nvidia_modeset.disable_vrr_memclk_switch=1" # stop really high memclk when vrr is in use.
+        "nvidia.NVreg_EnableResizableBar=1" # enable reBAR
+        "nvidia.NVreg_RegistryDwords=RmEnableAggressiveVblank=1" # low-latency stuff
       ]
       (lib.mkIf config.hardware.nvidia.powerManagement.enable [
         "nvidia.NVreg_TemporaryFilePath=/var/tmp"

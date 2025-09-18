@@ -14,7 +14,7 @@
       "hosts/common/optional/audio"
       "hosts/common/optional/fonts"
       "hosts/common/optional/wayland"
-      "hosts/common/optional/solaar"
+      # "hosts/common/optional/solaar"
       "hosts/common/optional/thunar"
       "hosts/common/optional/virtualisation"
       "hosts/common/optional/gaming"

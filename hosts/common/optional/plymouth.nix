@@ -1,18 +1,24 @@
-{ lib, pkgs, ... }:
+{ pkgs, lib, config, ... }:
 {
   stylix.targets.plymouth.enable = false;
-  environment.systemPackages = [ pkgs.adi1090x-plymouth-themes ];
   boot = {
     kernelParams = [
-      "quiet" # shut up kernel output prior to prompts
+      "quiet"
+      "splash"
+      "boot.shell_on_fail"
+      "udev.log_priority=3"
+      "rd.systemd.show_status=auto"
     ];
     plymouth = {
-      enable = true;
-      theme = lib.mkForce "hexagon_dots";
-      themePackages = [
-        (pkgs.adi1090x-plymouth-themes.override { selected_themes = [ "hexagon_dots" ]; })
+      enable = false;
+      theme = "rings";
+      themePackages = with pkgs; [
+        (adi1090x-plymouth-themes.override {
+          selected_themes = [ "rings" ];
+        })
       ];
     };
-    consoleLogLevel = 0;
+    consoleLogLevel = 3;
+    initrd.verbose = false;
   };
 }

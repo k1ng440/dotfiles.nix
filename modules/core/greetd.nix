@@ -1,4 +1,4 @@
-{ pkgs, lib, config, ... }:
+{ pkgs, config, ... }:
 {
   # Create the greeter user
   users.users.greeter = {

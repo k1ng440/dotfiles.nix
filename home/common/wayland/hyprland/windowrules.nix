@@ -74,6 +74,8 @@
         "float, class:com.saivert.pwvucontrol"
         "size 1401 492, class:com.saivert.pwvucontrol"
         "move 6 40, class:com.saivert.pwvucontrol"
+        "float, class:^(firefox)$, title:^(Extension.*)$"
+        "center, class:^(firefox)$, title:^(Extension.*)$"
       ];
     };
   };
