@@ -101,7 +101,7 @@ in
 
       general = {
         "$modifier" = "SUPER";
-        layout = "master";
+        layout = "dwindle";
         gaps_in = 4;
         gaps_out = 8;
         border_size = 2;
@@ -113,6 +113,7 @@ in
 
       # https://wiki.hyprland.org/Configuring/Variables/#misc
       misc = {
+        force_default_wallpaper = 0;
         layers_hog_keyboard_focus = true;
         initial_workspace_tracking = 0;
         mouse_move_enables_dpms = true;
@@ -138,17 +139,22 @@ in
 
       decoration = {
         rounding = 1;
+        rounding_power = 2;
+        active_opacity   = "1.0";
+        inactive_opacity = "1.0";
+
         blur = {
           enabled = true;
-          size = 5;
-          passes = 3;
+          size = 2;
+          passes = 1;
           ignore_opacity = false;
           new_optimizations = true;
         };
+
         shadow = {
           enabled = true;
-          range = 4;
-          render_power = 3;
+          range = 5;
+          render_power = 4;
           color = "rgba(1a1a1aee)";
         };
       };
