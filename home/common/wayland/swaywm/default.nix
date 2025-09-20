@@ -88,7 +88,6 @@ in
           { command = "exec nm-applet --indicator"; }
           { command = "exec wl-paste --type text --watch cliphist store"; }
           { command = "exec wl-paste --type image --watch cliphist store"; }
-          { command = "exec swayosd-server"; }
           {
             command = "systemctl --user start sway-session.target";
             always = true;

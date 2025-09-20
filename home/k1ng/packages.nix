@@ -59,5 +59,7 @@
       simple-scan
       cameractrls-gtk4 # webcam control
       obsidian
+      thunderbird-bin
+      stremio
     ];
 }

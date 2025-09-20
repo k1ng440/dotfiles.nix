@@ -5,6 +5,7 @@
     ./common/hyprlock.nix
     ./common/swaync.nix
     ./common/swww.nix
+    ./common/swayosd.nix
     ./waybar/waybar-ddubs.nix
     ./wlogout
     ./hyprland
