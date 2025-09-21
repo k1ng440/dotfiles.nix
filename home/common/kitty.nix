@@ -23,6 +23,8 @@
       enabled_layouts = "splits";
       font_features = "FiraCode-Regular +ss01 +ss02 +ss03 +ss04 +ss05 +ss07 +ss08 +zero +onum";
       background_opacity = lib.mkForce "0.95";
+      enable_background_blur = "yes";
+      background_blur = 1;
     };
     extraConfig = ''
       # Clipboard

@@ -29,7 +29,7 @@ return {
         unusedwrite = true,
         useany = true,
       },
-      usePlaceholders = false,
+      usePlaceholders = true,
       completeUnimported = true,
       staticcheck = true,
       vulncheck = 'imports',

@@ -136,6 +136,7 @@ vim.schedule(function()
     keymap = {
       ['<return>'] = { 'accept', 'fallback' },
       ['<C-d>'] = { 'show', 'show_documentation', 'hide_documentation' },
+      ['<C-k>'] = { 'show_signature', 'hide_signature', 'fallback' },
       ['<C-e>'] = { 'cancel', 'fallback' },
       ['<C-p>'] = { 'select_prev', 'fallback' },
       ['<C-n>'] = { 'select_next', 'fallback' },
@@ -231,21 +232,30 @@ vim.schedule(function()
           opts = {
             prefix_min_len = 4,
             score_offset = 10, -- should be lower priority
-            project_root_marker = ".git",
+            project_root_marker = '.git',
             fallback_to_regex_highlighting = true,
             backend = {
-              use = "ripgrep",
+              use = 'ripgrep',
               customize_icon_highlight = true,
               ripgrep = {
-                max_filesize = "1M",
+                max_filesize = '1M',
                 search_casing = '--smart-case',
-              }
-            }
+              },
+            },
           },
         },
       },
     },
-    signature = { enabled = true },
+    signature = {
+      enabled = true,
+      trigger = {
+        enabled = true,
+        show_on_keyword = true,
+        show_on_trigger_character = true,
+        show_on_insert = true,
+        blocked_trigger_characters = {},
+      }
+    },
     fuzzy = {
       implementation = 'prefer_rust_with_warning',
       sorts = { 'exact', 'score', 'sort_text' },
@@ -543,32 +553,30 @@ vim.schedule(function()
   -- stylua: ignore end
 end)
 
-
-vim.schedule(function ()
-  local ok, render_markdown = pcall(require, "render-markdown")
+vim.schedule(function()
+  local ok, render_markdown = pcall(require, 'render-markdown')
   if ok then
-    render_markdown .setup({
+    render_markdown.setup({
       enabled = true,
       completions = { blink = { enabled = true } },
     })
   end
 end)
 
-
-vim.schedule(function ()
+vim.schedule(function()
   local ok, avante = pcall(require, 'avante')
   if ok then
     avante.setup({
-      provider = "ollama",
+      provider = 'ollama',
       providers = {
         ollama = {
-          endpoint = "localhost:11434",
-          model = "hf.co/lmstudio-community/Qwen3-Coder-30B-A3B-Instruct-GGUF:Q4_K_M",
+          endpoint = 'localhost:11434',
+          model = 'hf.co/lmstudio-community/Qwen3-Coder-30B-A3B-Instruct-GGUF:Q4_K_M',
           disable_tools = false,
           extra_request_body = {
-            stream = true
-          }
-        }
+            stream = true,
+          },
+        },
       },
     })
   end
