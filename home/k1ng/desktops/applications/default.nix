@@ -1,7 +1,7 @@
 { pkgs, ... }:
 {
   home.packages = with pkgs; [
-    slack
+    # slack
     pkgs.unstable.zoom-us
     nautilus
     lxappearance

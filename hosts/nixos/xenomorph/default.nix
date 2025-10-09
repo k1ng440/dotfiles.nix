@@ -82,7 +82,7 @@
 
   hostConfig = {
     msmtp.enable = true;
-    android-studio.enable = true;
+    android-studio.enable = false;
   };
 
   services.gvfs.enable = true;

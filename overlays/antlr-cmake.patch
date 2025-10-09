@@ -1,0 +1,8 @@
+--- a/runtime/Cpp/runtime/CMakeLists.txt
++++ b/runtime/Cpp/runtime/CMakeLists.txt
+@@ -1,4 +1,4 @@
+-cmake_minimum_required(VERSION 3.1)
++cmake_minimum_required(VERSION 3.10)
+ project(antlr4_runtime CXX)
+
+ set(VERSION 4.9.3)
