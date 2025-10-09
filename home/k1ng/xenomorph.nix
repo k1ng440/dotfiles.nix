@@ -120,7 +120,7 @@
           persistent = true;
           default = true;
           on_start = [
-            # "thunderbird"
+            "thunderbird"
           ];
         }
       ];
@@ -146,4 +146,10 @@
   ];
 
   xdg.configFile."mimeapps.list".force = true;
+
+  services.wlsunset = {
+    enable = true;
+    latitude = 23.8;
+    longitude = 90.41;
+  };
 }

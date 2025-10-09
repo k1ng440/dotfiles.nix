@@ -18,7 +18,7 @@
       "hosts/common/optional/thunar"
       "hosts/common/optional/virtualisation"
       "hosts/common/optional/gaming"
-      "hosts/common/optional/ai"
+      # "hosts/common/optional/ai"
       "hosts/common/optional/security"
       "hosts/common/optional/applications.nix"
       "hosts/common/optional/printing.nix"
@@ -125,6 +125,12 @@
         device = "//kong.lan/torrents";
         fsType = "cifs";
         options = [ "${smb_automount_opts},credentials=${config.sops.secrets."samba/kong".path}" ];
+      };
+
+      "/mnt/hass" = {
+        device = "//192.168.0.6/config";
+        fsType = "cifs";
+        options = [ "${smb_automount_opts},credentials=${config.sops.secrets."samba/hass".path}" ];
       };
     };
 }

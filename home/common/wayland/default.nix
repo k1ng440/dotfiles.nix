@@ -16,5 +16,6 @@
     dex # Program to generate and execute DesktopEntry files of the Application type
     xorg.xrandr
     swayosd
+    qt6.qtwayland
   ];
 }

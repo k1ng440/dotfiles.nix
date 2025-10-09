@@ -7,10 +7,9 @@
 }:
 {
   config = lib.mkIf (config.machine.windowManager.hyprland.enable) {
-
     programs.hyprland = {
-      package = inputs.hyprland.packages.${pkgs.system}.hyprland;
-      portalPackage = inputs.hyprland.packages.${pkgs.system}.xdg-desktop-portal-hyprland;
+      package = pkgs.hyprland;
+      portalPackage = pkgs.xdg-desktop-portal-hyprland;
       enable = true;
       withUWSM = true;
       xwayland = {
@@ -18,7 +17,10 @@
       };
     };
 
-    environment.sessionVariables.NIXOS_OZONE_WL = "1";
+    environment.sessionVariables = {
+      NIXOS_OZONE_WL = "1";
+      QT_STYLE_OVERRIDE = "Fusion";
+    };
 
     environment.systemPackages = with pkgs; [
       kitty

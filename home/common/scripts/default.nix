@@ -12,5 +12,10 @@
     (import ./rofi-launcher.nix { inherit pkgs; })
     (import ./screenshootin.nix { inherit pkgs; })
     (import ./pwvucontrol-toggle.nix { inherit pkgs; })
+
+    # Dependencies
+    pkgs.hyprshot
+    pkgs.satty
+    pkgs.slurp
   ];
 }

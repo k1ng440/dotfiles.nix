@@ -3,6 +3,7 @@
 { pkgs, inputs, ... }:
 {
   imports = [
+    ./ime.nix
     ./emoji.nix
     ./git.nix
     ./kitty.nix
@@ -33,7 +34,6 @@
     "${inputs.stylix}/modules/rofi/hm.nix"
     # "${inputs.stylix}/modules/sway/hm.nix"
     "${inputs.stylix}/modules/hyprland/hm.nix"
-    "${inputs.stylix}/modules/hyprlock/hm.nix"
     "${inputs.stylix}/modules/hyprlock/hm.nix"
   ];
 }

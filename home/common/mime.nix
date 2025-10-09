@@ -4,7 +4,8 @@ let
   file-manager = "thunar.desktop";
   video-player = "mpv.desktop";
   audio-player = "mpv.desktop";
-  image-viewer = "swappy.desktop";
+  image-viewer = "imv.desktop";
+  pdf-viewer = "org.kde.okular.desktop";
 in
 {
   xdg.mime.enable = true;
@@ -74,6 +75,8 @@ in
       "application/msword" = [ "libreoffice-writer.desktop" ]; # .doc
       "application/vnd.oasis.opendocument.text" = [ "libreoffice-writer.desktop" ]; # .odt
       "text/rtf" = [ "libreoffice-writer.desktop" ]; # .rtf
+      "application/pdf" = [ pdf-viewer ];
+
 
       # Spreadsheets
       "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" = [ "libreoffice-calc.desktop" ]; # .xlsx
@@ -88,7 +91,6 @@ in
       # Other Formats
       "application/vnd.oasis.opendocument.graphics" = [ "libreoffice-draw.desktop" ]; # .odg
       "application/vnd.oasis.opendocument.formula" = [ "libreoffice-math.desktop" ]; # .odf
-      "application/pdf" = [ "libreoffice-draw.desktop" ]; # .pdf
 
       "x-scheme-handler/nxm" = [ "com.nexusmods.app.desktop" ];
     };

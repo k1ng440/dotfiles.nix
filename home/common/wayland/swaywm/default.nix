@@ -22,11 +22,11 @@ in
 {
   imports = [] ++ lib.optionals machine.windowManager.sway.enable [
     ../common/packages.nix
-    ../swappy.nix
     # ./scripts
   ];
 
   home.sessionVariables = lib.mkIf machine.windowManager.sway.enable {
+    XMODIFIERS = "@im=fcitx";
     XDG_CONFIG_HOME = "$HOME/.config";
     GTK_USE_PORTAL = "1";
     XDG_SESSION_DESKTOP = "sway";
@@ -406,8 +406,8 @@ in
       # Input configuration
       input = {
         "type:keyboard" = {
-          xkb_layout = "us";
-          xkb_options = "ctrl:nocaps";
+          xkb_layout = "us,jp";
+          xkb_options = "ctrl:nocaps,grp:alt_shift_toggle";
           repeat_delay = "200";
           repeat_rate = "50";
         };

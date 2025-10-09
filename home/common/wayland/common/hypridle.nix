@@ -22,23 +22,15 @@ let
       fi
     fi
   '';
-  lockScript = pkgs.writeShellScript "lock-screen" ''
-    if pgrep -x "Hyprland" > /dev/null; then
-      loginctl lock-session
-    elif pgrep -x "sway" > /dev/null; then
-      hyprlock
-    else
-      hyprlock
-    fi
-  '';
 in
 {
   services.hypridle = {
     enable = true;
     settings = {
       general = {
-        lock_cmd = "${lockScript}";
-        before_sleep_cmd = "${lockScript}";
+        lock_cmd = "${pkgs.hyprlock}/bin/hyprlock";
+        before_sleep_cmd = "${pkgs.hyprlock}/bin/hyprlock";
+
         after_sleep_cmd = "${dpmsScript} on";
         ignore_dbus_inhibit = false;
         ignore_systemd_inhibit = false;
@@ -54,7 +46,7 @@ in
         # Lock the screen
         {
           timeout = 300;
-          on-timeout = "${lockScript}";
+          on-timeout ="${pkgs.hyprlock}/bin/hyprlock";
         }
         # Turn off screen
         {

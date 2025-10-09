@@ -21,6 +21,7 @@
     cifs-utils
     pkgs.unstable.rclone
     ffmpeg-full
+    adwaita-qt
   ];
 
   environment.shells = with pkgs; [

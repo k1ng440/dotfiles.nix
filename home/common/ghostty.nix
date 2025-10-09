@@ -5,7 +5,7 @@
     installBatSyntax = true;
     package = pkgs.ghostty;
     settings = {
-      theme = "catppuccin-mocha";
+      # theme = "catppuccin-mocha";
       font-family = "Berkeley Mono";
       font-style = "Regular";
       font-size = 15;
@@ -14,6 +14,7 @@
       cursor-style-blink = false;
       clipboard-paste-protection = false;
       background-opacity = 0.8;
+      background-blur-radius = 20;
       gtk-single-instance = true;
       keybind = [
         "alt+h=goto_split:left"

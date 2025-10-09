@@ -22,9 +22,9 @@
       tab_bar_style = "powerline";
       enabled_layouts = "splits";
       font_features = "FiraCode-Regular +ss01 +ss02 +ss03 +ss04 +ss05 +ss07 +ss08 +zero +onum";
-      background_opacity = lib.mkForce "0.95";
+      background_opacity = lib.mkForce 0.9;
       enable_background_blur = "yes";
-      background_blur = 1;
+      background_blur = 32;
     };
     extraConfig = ''
       # Clipboard

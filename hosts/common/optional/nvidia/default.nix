@@ -11,12 +11,12 @@
 
   hardware = {
     nvidia = {
-      open = true;
-      gsp.enable = config.hardware.nvidia.open;
+      open = false;
       nvidiaSettings = false;
       prime.sync.enable = lib.mkForce false;
       modesetting.enable = true;
       powerManagement.enable = true;
+      videoAcceleration = true;
     };
     graphics = {
       enable = true;

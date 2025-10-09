@@ -39,6 +39,7 @@ in
             "libvirtd"
             "seat"
             "pcscd"
+            "lpadmin"
           ])
         ];
       };

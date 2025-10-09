@@ -1,4 +1,4 @@
-{ lib, machine, ... }:
+{ ... }:
 {
   imports = [
       ./animations-end4.nix

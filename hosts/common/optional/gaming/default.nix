@@ -58,7 +58,6 @@
 
   environment.systemPackages = with pkgs; [
     mangohud
-    protonup-qt
     bottles
     vulkan-tools
     nexusmods-app

@@ -7,7 +7,7 @@
       ];
       windowrulev2 = [
         "tag +file-manager, class:^([Tt]hunar|org.gnome.Nautilus|[Pp]cmanfm-qt)$"
-        "tag +terminal, class:^(Alacritty|kitty|kitty-dropterm)$"
+        "tag +terminal, class:^(Alacritty|kitty|kitty-dropterm|ghostty)$"
         "tag +browser, class:^(Brave-browser(-beta|-dev|-unstable)?)$"
         "tag +browser, class:^([Ff]irefox|org.mozilla.firefox|[Ff]irefox-esr)$"
         "tag +browser, class:^([Gg]oogle-chrome(-beta|-dev|-unstable)?)$"
@@ -76,6 +76,10 @@
         "move 6 40, class:com.saivert.pwvucontrol"
         "float, class:^(firefox)$, title:^(Extension.*)$"
         "center, class:^(firefox)$, title:^(Extension.*)$"
+        "opacity 0.80, class:^(kitty|com.mitchellh.ghostty)$"
+        "opacity 1 1, class:^(zoom|vlc|mpv|org.kde.kdenlive|com.obsproject.Studio|com.github.PintaProject.Pinta|imv|org.gnome.NautilusPreviewer)$"
+        "minsize 600 200, class:^(com.gabm.satty)$"
+        "center, class:^(com.gabm.satty)$"
       ];
     };
   };

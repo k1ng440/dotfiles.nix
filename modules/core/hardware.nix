@@ -1,4 +1,4 @@
-{ ... }:
+{ pkgs, ... }:
 {
   services.power-profiles-daemon.enable = false;
   services.auto-cpufreq.enable = true;
@@ -12,4 +12,8 @@
     bluetooth.powerOnBoot = true;
     ledger.enable = true;
   };
+
+  hardware.firmware = with pkgs; [
+    linux-firmware
+  ];
 }

@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 {
   environment.systemPackages = [
     pkgs.brscan4
@@ -17,12 +17,16 @@
     };
     printing = {
       enable = true;
-      listenAddresses = [ "localhost:631" "127.0.0.1:631" ];
+      listenAddresses = [ "127.0.0.1:631" ];
       allowFrom = [ "all" ];
       browsing = true;
       defaultShared = true;
       openFirewall = true;
-      startWhenNeeded = false;
+      # drivers = lib.singleton (pkgs.linkFarm "drivers" [
+      #   { name = "share/cups/model/brother_dcpt510w_printer_en.ppd";
+      #     path = ./brother_dcpt510w_printer_en.ppd;
+      #   }
+      # ]);
     };
   };
 
@@ -48,15 +52,6 @@
           location = "home";
           name = "Brother_DCP-T510W";
           model = "everywhere";
-          ppdOptions = {
-            media = "iso_a4_210x297mm";
-            OutputOrder = "Reverse";
-
-            # IPP scaling options:
-            print-scaling = "fit";
-            print-quality = "normal";
-            orientation-requested = "portrait";
-          };
         }
       ];
     };

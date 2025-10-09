@@ -86,6 +86,19 @@ in
           on-scroll-down = "hyprctl dispatch workspace e-1";
           on-click = "activate";
           sort-by = "name";
+          # persistent-workspaces =
+          #   let
+          #     workspaceMonitorPairs = lib.concatMap (
+          #       m:
+          #       map (w: {
+          #         name = w.name;
+          #         monitor = m.name;
+          #       }) m.workspaces
+          #     ) config.monitors;
+          #
+          #     groupedWorkspaces = lib.groupBy (pair: pair.name) workspaceMonitorPairs;
+          #   in
+          #     lib.mapAttrs (workspaceName: pairs: map (pair: pair.monitor) pairs) groupedWorkspaces;
         };
 
         "custom/cloudflare-warp" = {

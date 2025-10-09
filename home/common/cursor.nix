@@ -16,7 +16,7 @@ in {
     };
     sway.enable = machine.windowManager.sway.enable;
     hyprcursor = {
-      enable = builtins.trace machine.windowManager.hyprland.enable machine.windowManager.hyprland.enable;
+      enable = machine.windowManager.hyprland.enable;
       size = cursorSize;
     };
     dotIcons.enable = true;
@@ -41,12 +41,6 @@ in {
       gtk-cursor-theme-name = cursorName;
       gtk-cursor-theme-size = cursorSize;
     };
-  };
-
-  qt = {
-    enable = true;
-    platformTheme.name = lib.mkForce "gtk";
-    style.name = lib.mkForce "gtk2";
   };
 
   home.activation.setHyprCursor = lib.hm.dag.entryAfter ["writeBoundary"] ''

@@ -10,7 +10,6 @@
     settings = {
       general = {
         immediate_render = true;
-        grace = 0;
         hide_cursor = true;
       };
       animations = {

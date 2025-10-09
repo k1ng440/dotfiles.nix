@@ -33,7 +33,6 @@ in
     ydotool
     hyprpolkitagent
     hyprsunset
-    hyprshot
   ];
 
   systemd.user.targets.hyprland-session.Unit.Wants = [
@@ -46,9 +45,8 @@ in
 
   wayland.windowManager.hyprland = {
     enable = machine.windowManager.hyprland.enable;
-    package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
-    portalPackage =
-      inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
+    package = pkgs.hyprland;
+    portalPackage = pkgs.xdg-desktop-portal-hyprland;
     systemd = {
       enable = true;
       enableXdgAutostart = false;
@@ -56,6 +54,8 @@ in
     };
     settings = {
       env = [
+        "QT_IM_MODULE,fcitx"
+        "XMODIFIERS,@im=fcitx"
         "QP_QPA_PLATFORM,wayland;xcb"
       ];
 
@@ -77,7 +77,7 @@ in
 
       exec-once = [
         "dbus-update-activation-environment --all --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
-        "systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
+        "systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP QT_PLUGIN_PATH QT_QPA_PLATFORM QT_STYLE_OVERRIDE PATH"
         "systemctl --user start hyprpolkitagent"
         "killall -q waybar;sleep .5 && waybar"
         "nm-applet --indicator"
@@ -89,7 +89,7 @@ in
       ] ++ onStartPrograms;
 
       input = {
-        kb_layout = "us";
+        kb_layout = "us,jp";
         kb_options = [ ];
         numlock_by_default = true;
         repeat_delay = 200;
@@ -113,11 +113,12 @@ in
 
       # https://wiki.hyprland.org/Configuring/Variables/#misc
       misc = {
+        allow_session_lock_restore = 1;
         force_default_wallpaper = 0;
         layers_hog_keyboard_focus = true;
         initial_workspace_tracking = 0;
         mouse_move_enables_dpms = true;
-        key_press_enables_dpms = false;
+        key_press_enables_dpms = true;
         disable_hyprland_logo = true;
         disable_splash_rendering = true;
         enable_swallow = false;
@@ -145,10 +146,9 @@ in
 
         blur = {
           enabled = true;
-          size = 2;
-          passes = 1;
-          ignore_opacity = false;
-          new_optimizations = true;
+          size = 5;
+          passes = 3;
+          vibrancy = 0.17;
         };
 
         shadow = {

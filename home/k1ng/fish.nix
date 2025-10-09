@@ -22,7 +22,7 @@ in
       htop = "${pkgs.bottom}/bin/btm --basic --tree --hide_table_gap --dot_marker";
       ip = lib.mkIf isLinux "${pkgs.iproute2}/bin/ip --color --brief";
       less = "${pkgs.bat}/bin/bat";
-      lm = "${pkgs.lima-bin}/bin/limactl";
+      lm = "${pkgs.lima}/bin/limactl";
       lolcat = "${pkgs.dotacat}/bin/dotacat";
       lsusb = "${pkgs.cyme}/bin/cyme --headings";
       moon = "${pkgs.curlMinimal}/bin/curl -s wttr.in/Moon";

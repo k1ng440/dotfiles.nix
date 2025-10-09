@@ -5,6 +5,7 @@
     pre-commit
     gnumake # make
     nix-init
+    go
   ];
 
   programs.direnv = {

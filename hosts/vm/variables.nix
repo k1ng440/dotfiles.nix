@@ -26,7 +26,7 @@
   };
 
   # Keyboard Layout
-  keyboardLayout = "us";
+  keyboardLayout = "us,jp";
   consoleKeyMap = "us";
 
   # Enable NFS

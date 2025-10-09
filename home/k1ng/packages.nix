@@ -45,11 +45,11 @@
       sops # Simple and flexible tool for managing secrets
       ssh-to-age # Convert SSH Ed25519 keys to age keys
       imagemagick
+      nmap
     ]
     ++ lib.optionals (machine.windowManager.enabled) [
       spotify
       yubikey-manager
-      pkgs.unstable.plex-desktop
       libreoffice # office
       obs-studio
       foot
@@ -60,6 +60,9 @@
       cameractrls-gtk4 # webcam control
       obsidian
       thunderbird-bin
-      stremio
+      anki-bin
+      shairport-sync
+      pkgs.unstable.gemini-cli
+      pkgs.nodejs_24
     ];
 }

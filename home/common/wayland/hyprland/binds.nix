@@ -12,7 +12,7 @@ let
   playerctl = lib.getExe' pkgs.playerctl "playerctl";
   wlogout = lib.getExe' pkgs.wlogout "wlogout";
   hyprlock = lib.getExe' pkgs.hyprlock "hyprlock";
-  terminal = "kitty";
+  terminal = "ghostty";
   fileManager = "thunar";
   workspaces = builtins.concatLists [
     (map toString (lib.range 1 9))
@@ -75,12 +75,15 @@ in
         "${mod}, space, exec, rofi -show drun" # App launcher
         "${mod}, R, exec, rofi -show drun" # App launcher
 
+        "${mod}, Tab, workspace, previous"
+        "${mod} SHIFT, C, centerwindow" # Center floating windows
+
+        "${mod}, comma, workspace, -1"    # Previous workspace
+        "${mod}, period, workspace, +1"   # Next workspace
 
         # Group
         "${mod}, W, togglegroup"
-        # "${mod} ALT, H, changegroupactive, b"
-        # "${mod} ALT, L, changegroupactive, f"
-
+        "${mod}, G, togglesplit"
 
         # Circle Window
         "ALT, Tab, cyclenext"
@@ -90,9 +93,14 @@ in
 
         # Float
         "${mod}, F, togglefloating" # Float toggle
-        "${mod}, P, pin, active" # pins a floating window (i.e. show it on all workspaces)
 
-        # Split
+        "${mod}, P, pseudo" # toggle pseudotile
+
+        # apps
+        "${mod} ALT, P, exec, chromium --profile-directory=Default --app=https://www.perplexity.ai"
+        "${mod} ALT, G, exec, chromium --profile-directory=Default --app=https://gemini.google.com"
+
+        # Split
         "${mod} ALT, S, togglesplit" # Toggle split
 
         # Kill active / focus window
@@ -104,11 +112,19 @@ in
 
         # Toggle between dwindle and master layout
         "${mod} SHIFT, apostrophe, exec, hyprctl keyword general:layout \"$(hyprctl getoption general:layout | grep -q 'dwindle' && echo 'master' || echo 'dwindle')\""
+
+        # Emergency exits
+        "CTRL ALT, Delete, exec, systemctl --user restart hyprland-session.target"
+
+        # Switch Keyboard Layout
+        "ALT, Shift_L, exec, hyprctl switchxkblayout"
       ]
       # Move focus from active window to window in specified direction (UP/k, Down/j, Left/h, Right/l)
       ++ (lib.mapAttrsToList (key: direction: "${mod}, ${key}, movefocus,${direction}") directions)
+      # Move to workspace
+      ++ (map (n: "${mod} ALT, ${n}, movetoworkspacesilent, ${n}") workspaces)
       # Swap windows
-      ++ (lib.mapAttrsToList (key: direction: "${mod} SHIFT, ${key}, swapwindow,${direction}") directions)
+      ++ (lib.mapAttrsToList (key: direction: "${mod} SHIFT, ${key}, movewindow,${direction}") directions)
       # Switch Workspaces
       ++ (map (n: "${mod}, ${n}, workspace, ${n}") workspaces)
       # Move Window to Workspaces

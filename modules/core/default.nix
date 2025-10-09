@@ -8,7 +8,6 @@
     ./packages.nix
     ./security.nix
     ./services.nix
-    ./hardware.nix
     ./system.nix
     ./xdg-portal.nix
     ./applications.nix

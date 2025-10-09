@@ -47,6 +47,12 @@ in
         group = "root";
         mode = "0600";
       };
+      "samba/hass" = {
+        sopsFile = "${sopsFolder}/shared.yaml";
+        owner = "root";
+        group = "root";
+        mode = "0600";
+      };
       "borgbackup/encryption_key" = {
         owner = machine.username;
         group = machine.username;

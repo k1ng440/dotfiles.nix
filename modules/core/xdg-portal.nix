@@ -17,7 +17,8 @@
           pkgs.xdg-desktop-portal
           pkgs.xdg-desktop-portal-gtk
         ] ++ lib.optionals config.machine.windowManager.hyprland.enable [
-          inputs.hyprland.packages.${pkgs.system}.xdg-desktop-portal-hyprland
+             # pkgs.unstable.xdg-desktop-portal-hyprland
+          # inputs.hyprland.packages.${pkgs.system}.xdg-desktop-portal-hyprland
         ] ++ lib.optionals config.machine.windowManager.sway.enable [
           pkgs.xdg-desktop-portal-wlr
         ];

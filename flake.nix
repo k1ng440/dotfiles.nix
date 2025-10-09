@@ -80,21 +80,19 @@
   */
   inputs = {
     # Core Nix ecosystem
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-25.05";
+    # nixpkgs.url = "github:nixos/nixpkgs/nixos-25.05";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
 
     # System management
     home-manager = {
-      url = "github:nix-community/home-manager/release-25.05";
+      url = "github:nix-community/home-manager";
+      # url = "github:nix-community/home-manager/release-25.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
     # Hardware
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
-    solaar = {
-      url = "https://flakehub.com/f/Svenum/Solaar-Flake/*.tar.gz";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
 
     # Security and secrets
     sops-nix = {
@@ -104,7 +102,7 @@
 
     # Styling and theming
     stylix = {
-      url = "github:danth/stylix/release-25.05";
+      url = "github:nix-community/stylix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -121,7 +119,7 @@
     # Hyprland window manager
     hyprland = {
       url = "github:hyprwm/Hyprland";
-      # inputs.nixpkgs.follows = "nixpkgs";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
     hyprland-plugins = {
       url = "github:hyprwm/hyprland-plugins";

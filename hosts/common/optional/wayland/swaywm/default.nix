@@ -55,7 +55,6 @@
     };
 
     services.gnome.gnome-keyring.enable = true;
-    programs.hyprlock.enable = true;
 
     security.pam.services.swaylock = { };
     security.pam.loginLimits = [
