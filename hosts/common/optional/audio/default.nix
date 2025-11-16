@@ -80,7 +80,7 @@
     ];
 
     environment.systemPackages = with pkgs; [
-      pamixer
+      # pamixer
       pwvucontrol
       alsa-utils
       qjackctl

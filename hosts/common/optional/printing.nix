@@ -22,11 +22,9 @@
       browsing = true;
       defaultShared = true;
       openFirewall = true;
-      # drivers = lib.singleton (pkgs.linkFarm "drivers" [
-      #   { name = "share/cups/model/brother_dcpt510w_printer_en.ppd";
-      #     path = ./brother_dcpt510w_printer_en.ppd;
-      #   }
-      # ]);
+      drivers = [
+          (pkgs.writeTextDir "share/cups/model/Brother_DCP-T510W.ppd" (builtins.readFile ./Brother_DCP-T510W.ppd))
+      ];
     };
   };
 
@@ -51,7 +49,7 @@
           deviceUri = "ipp://192.168.50.240/ipp";
           location = "home";
           name = "Brother_DCP-T510W";
-          model = "everywhere";
+          model = "Brother_DCP-T510W.ppd";
         }
       ];
     };

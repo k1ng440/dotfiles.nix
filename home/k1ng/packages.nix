@@ -46,6 +46,7 @@
       ssh-to-age # Convert SSH Ed25519 keys to age keys
       imagemagick
       nmap
+      tcpdump
     ]
     ++ lib.optionals (machine.windowManager.enabled) [
       spotify

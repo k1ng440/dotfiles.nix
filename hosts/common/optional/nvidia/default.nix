@@ -11,11 +11,12 @@
 
   hardware = {
     nvidia = {
-      open = false;
-      nvidiaSettings = false;
+      open = true;
+      nvidiaSettings = true;
       prime.sync.enable = lib.mkForce false;
       modesetting.enable = true;
       powerManagement.enable = true;
+      powerManagement.finegrained = false;
       videoAcceleration = true;
     };
     graphics = {
@@ -122,6 +123,8 @@
         "nvidia_modeset.disable_vrr_memclk_switch=1" # stop really high memclk when vrr is in use.
         "nvidia.NVreg_EnableResizableBar=1" # enable reBAR
         "nvidia.NVreg_RegistryDwords=RmEnableAggressiveVblank=1" # low-latency stuff
+        "mem_sleep_default=deep"
+        "nvidia.NVreg_EnableS0ixPowerManagement=0"
       ]
       (lib.mkIf config.hardware.nvidia.powerManagement.enable [
         "nvidia.NVreg_TemporaryFilePath=/var/tmp"

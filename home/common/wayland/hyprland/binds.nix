@@ -113,8 +113,8 @@ in
         # Toggle between dwindle and master layout
         "${mod} SHIFT, apostrophe, exec, hyprctl keyword general:layout \"$(hyprctl getoption general:layout | grep -q 'dwindle' && echo 'master' || echo 'dwindle')\""
 
-        # Emergency exits
-        "CTRL ALT, Delete, exec, systemctl --user restart hyprland-session.target"
+        # Reload Hyprland
+        "CTRL ALT, Delete, exec, hyprctl 'dispatch exit'"
 
         # Switch Keyboard Layout
         "ALT, Shift_L, exec, hyprctl switchxkblayout"
