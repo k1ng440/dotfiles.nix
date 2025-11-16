@@ -19,7 +19,7 @@
     file-roller # Archive Manager
     gedit # Simple Graphical Text Editor
     gimp # Great Photo Editor
-    glxinfo # needed for inxi diag util
+    mesa-demos # needed for inxi diag util
     htop # Simple Terminal Based System Monitor
     hyprpicker # Color Picker
     qimgv # For Image Viewing

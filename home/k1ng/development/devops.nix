@@ -15,7 +15,7 @@
     kubernetes-helm
     kubeseal
     minio-client
-    mysql-client
+    mariadb.client
     openstackclient
     swiftclient
     # terraform

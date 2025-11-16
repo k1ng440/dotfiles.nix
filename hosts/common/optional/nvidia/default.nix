@@ -90,23 +90,6 @@
       };
       wantedBy = ["kexec.target"];
     };
-    services.nvidia-temp = {
-      description = "Nvidia GPU temperature monitoring"; # exposes hardware temperature at /tmp/nvidia-temp for monitoring
-      wantedBy = ["multi-user.target"];
-      before = ["fancontrol.service"];
-      script = ''
-          while :; do
-          temp="$(${lib.getExe' config.hardware.nvidia.package "nvidia-smi"} --query-gpu=temperature.gpu --format=csv,noheader,nounits)"
-          echo "$((temp * 1000))" > /tmp/nvidia-temp
-          sleep 5
-          done
-          '';
-      serviceConfig = {
-        Type = "simple";
-        Restart = "always";
-        RestartSec = 5;
-      };
-    };
   };
 
   boot = {

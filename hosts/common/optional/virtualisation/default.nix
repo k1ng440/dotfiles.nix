@@ -19,7 +19,7 @@
     spice
     spice-gtk
     spice-protocol
-    win-virtio
+    virtio-win
     win-spice
   ];
   services.spice-vdagentd.enable = true;

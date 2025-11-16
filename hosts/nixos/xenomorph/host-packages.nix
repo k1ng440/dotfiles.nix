@@ -20,7 +20,6 @@
     mimalloc # general-purpose memory allocator
     cifs-utils
     pkgs.unstable.rclone
-    ffmpeg-full
     adwaita-qt
   ];
 

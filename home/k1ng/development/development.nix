@@ -4,7 +4,7 @@
     subversionClient
     pre-commit
     gnumake # make
-    nix-init
+    # nix-init
     go
   ];
 
