@@ -96,11 +96,11 @@ in
 
         "${mod}, P, pseudo" # toggle pseudotile
 
-        # apps
+        # Apps
         "${mod} ALT, P, exec, chromium --profile-directory=Default --app=https://www.perplexity.ai"
         "${mod} ALT, G, exec, chromium --profile-directory=Default --app=https://gemini.google.com"
 
-        # Split
+        # Split
         "${mod} ALT, S, togglesplit" # Toggle split
 
         # Kill active / focus window

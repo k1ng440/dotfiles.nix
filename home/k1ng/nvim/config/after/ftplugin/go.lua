@@ -22,6 +22,13 @@ remap('n', '<leader>td', function()
 end, { desc = 'Debug Nearest function (Go)' })
 
 vim.schedule(function()
+  require("no-go").setup({
+    enabled = true,
+    identifiers = { "err" },
+  })
+end)
+
+vim.schedule(function()
   local ok, godoc = pcall(require, 'godoc')
   if ok then
     godoc.setup({

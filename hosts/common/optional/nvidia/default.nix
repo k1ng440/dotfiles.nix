@@ -19,6 +19,10 @@
       powerManagement.finegrained = false;
       videoAcceleration = true;
     };
+    nvidia-container-toolkit = {
+      enable = true;
+      package = pkgs.nvidia-container-toolkit;
+    };
     graphics = {
       enable = true;
       enable32Bit = true;

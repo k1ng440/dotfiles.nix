@@ -32,6 +32,7 @@
     ./host-packages.nix
     ./stylix.nix
     ./borgbackup.nix
+    ./firejail.nix
   ];
 
   machine = {

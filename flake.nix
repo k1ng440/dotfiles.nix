@@ -174,6 +174,10 @@
       url = "github:smjonas/inc-rename.nvim";
       flake = false;
     };
+    nvim-plugin-no-go = {
+      url = "github:TheNoeTrevino/no-go.nvim";
+      flake = false;
+    };
 
     # Personal Repositories
     # Authenticate via ssh and use shallow clone

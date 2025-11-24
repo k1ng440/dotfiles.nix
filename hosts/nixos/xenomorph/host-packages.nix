@@ -21,6 +21,7 @@
     cifs-utils
     pkgs.unstable.rclone
     adwaita-qt
+    zip
   ];
 
   environment.shells = with pkgs; [

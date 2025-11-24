@@ -49,6 +49,7 @@
       tcpdump
     ]
     ++ lib.optionals (machine.windowManager.enabled) [
+      woeusb-ng
       spotify
       yubikey-manager
       libreoffice # office
@@ -65,5 +66,6 @@
       shairport-sync
       pkgs.unstable.gemini-cli
       pkgs.nodejs_24
+
     ];
 }

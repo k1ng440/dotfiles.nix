@@ -10,6 +10,7 @@
     ./wlogout
     ./hyprland
     ./swaywm
+    ./chromium-flags.nix
   ];
 
   home.packages = with pkgs; [
@@ -18,4 +19,7 @@
     swayosd
     qt6.qtwayland
   ];
+
+
+
 }
