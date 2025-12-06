@@ -6,7 +6,7 @@
 }:
 let
   sopsFolder = builtins.toString inputs.nix-secrets + "/sops";
-  machine = config.machine;
+  inherit (config) machine;
 in
 {
   sops = {
@@ -73,7 +73,7 @@ in
     let
       ageFolder = "${config.machine.home}/.config/sops/age";
       user = config.users.users.${config.machine.username}.name;
-      group = config.users.users.${config.machine.username}.group;
+      inherit (config.users.users.${config.machine.username}) group;
     in
     ''
       mkdir -p ${ageFolder} && chown -R ${user}:${group} ${config.machine.home}/.config

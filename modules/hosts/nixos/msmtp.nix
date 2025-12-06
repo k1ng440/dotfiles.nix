@@ -32,11 +32,9 @@ in
       setSendmail = true;
       accounts.default = {
         auth = true;
-        host = msmtpCfg.host;
-        port = msmtpCfg.port;
+        inherit (msmtpCfg) host port tls;
         user = msmtpCfg.username;
         passwordeval = "cat ${config.sops.secrets."passwords/msmtp".path}";
-        tls = msmtpCfg.tls;
         tls_starttls = msmtpCfg.tls;
         from = config.machine.email.notifier;
         logfile = "~/.msmtp.log";

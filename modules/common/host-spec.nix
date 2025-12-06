@@ -77,28 +77,39 @@
     };
     # Configuration Settings
     hostType = lib.mkOption {
-      type = lib.types.enum [ "minimal" "workstation" "server" "mobile" ];
+      type = lib.types.enum [
+        "minimal"
+        "workstation"
+        "server"
+        "mobile"
+      ];
       default = "workstation";
       description = "The type of host system";
     };
     environment = lib.mkOption {
-      type = lib.types.enum [ "development" "staging" "production" ];
+      type = lib.types.enum [
+        "development"
+        "staging"
+        "production"
+      ];
       default = "production";
       description = "The environment this host runs in";
     };
     capabilities = lib.mkOption {
-      type = lib.types.listOf (lib.types.enum [
-        "gpu"
-        "nvidia-gpu"
-        "audio-production"
-        "gaming"
-        "development"
-        "container-runtime"
-        "virtualization"
-        "networking"
-        "storage-server"
-      ]);
-      default = [];
+      type = lib.types.listOf (
+        lib.types.enum [
+          "gpu"
+          "nvidia-gpu"
+          "audio-production"
+          "gaming"
+          "development"
+          "container-runtime"
+          "virtualization"
+          "networking"
+          "storage-server"
+        ]
+      );
+      default = [ ];
       description = "Special capabilities or roles of this host";
     };
     isMinimal = lib.mkOption {
@@ -194,8 +205,7 @@
       description = "Whether window manager enabled.";
       default =
         let
-          swaywm = config.hostSpec.swaywm;
-          hyprland = config.hostSpec.hyprland;
+          inherit (config.hostSpec) swaywm hyprland;
         in
         swaywm.enabled || hyprland.enabled;
     };
@@ -215,7 +225,7 @@
           message = "isWork is true but no work attribute set is provided";
         }
         {
-          assertion = !isImpermanent || (isImpermanent && !("${config.hostSpec.persistFolder}" == ""));
+          assertion = !isImpermanent || (isImpermanent && "${config.hostSpec.persistFolder}" != "");
           message = "config.system.impermanence.enable is true but no persistFolder path is provided";
         }
         {

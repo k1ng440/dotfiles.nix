@@ -120,7 +120,7 @@
           persistent = true;
           default = true;
           on_start = [
-            "thunderbird"
+            "MOZ_ENABLE_WAYLAND=1 thunderbird"
           ];
         }
       ];

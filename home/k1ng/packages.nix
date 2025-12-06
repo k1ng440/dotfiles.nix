@@ -1,4 +1,9 @@
-{ pkgs, machine, ... }:
+{
+  self,
+  pkgs,
+  machine,
+  ...
+}:
 {
   home.packages =
     with pkgs;
@@ -48,7 +53,7 @@
       nmap
       tcpdump
     ]
-    ++ lib.optionals (machine.windowManager.enabled) [
+    ++ lib.optionals machine.windowManager.enabled [
       woeusb-ng
       spotify
       yubikey-manager
@@ -66,6 +71,6 @@
       shairport-sync
       pkgs.unstable.gemini-cli
       pkgs.nodejs_24
-
+      # self.packages.${pkgs.system}.stremio
     ];
 }

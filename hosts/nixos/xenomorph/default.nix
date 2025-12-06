@@ -57,7 +57,7 @@
         };
       };
     };
-    windowManager =  {
+    windowManager = {
       sway.enable = false;
       hyprland.enable = true;
     };

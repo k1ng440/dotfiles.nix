@@ -8,7 +8,7 @@ let
   pluginPackages = builtins.map (
     name:
     unstable.vimUtils.buildVimPlugin {
-      name = name;
+      inherit name;
       src = inputs.${name};
       version = inputs.${name}.locked.rev or "0.0.0";
     }

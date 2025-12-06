@@ -59,12 +59,12 @@ in
               workspaceMonitorPairs = lib.concatMap (
                 m:
                 map (w: {
-                  name = w.name;
+                  inherit (w) name;
                   monitor = m.name;
                 }) m.workspaces
               ) config.monitors;
 
-              groupedWorkspaces = lib.groupBy (pair: pair.name) workspaceMonitorPairs;
+              groupedWorkspaces = builtins.groupBy (pair: pair.name) workspaceMonitorPairs;
             in
             lib.mapAttrs (workspaceName: pairs: map (pair: pair.monitor) pairs) groupedWorkspaces;
         };

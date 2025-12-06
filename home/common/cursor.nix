@@ -1,25 +1,40 @@
-{ pkgs, lib, machine, ... }: let
+{
+  pkgs,
+  lib,
+  machine,
+  ...
+}:
+let
   cursorName = "catppuccin-mocha-light-cursors";
   cursorPkg = pkgs.catppuccin-cursors.mochaLight;
   cursorSize = 24;
-in {
-  home.packages = lib.optionals machine.windowManager.enabled [ cursorPkg ];
+in
+{
+  home = {
+    packages = lib.optionals machine.windowManager.enabled [ cursorPkg ];
 
-  home.pointerCursor = {
-    enable = machine.windowManager.enabled;
-    name = cursorName;
-    package = cursorPkg;
-    size = cursorSize;
-    x11 = {
-      enable = true;
-      defaultCursor = cursorName;
-    };
-    sway.enable = machine.windowManager.sway.enable;
-    hyprcursor = {
-      enable = machine.windowManager.hyprland.enable;
+    pointerCursor = {
+      enable = machine.windowManager.enabled;
+      name = cursorName;
+      package = cursorPkg;
       size = cursorSize;
+      x11 = {
+        enable = true;
+        defaultCursor = cursorName;
+      };
+      sway.enable = machine.windowManager.sway.enable;
+      hyprcursor = {
+        inherit (machine.windowManager.hyprland) enable;
+        size = cursorSize;
+      };
+      dotIcons.enable = true;
     };
-    dotIcons.enable = true;
+
+    activation.setHyprCursor = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      if [ "${toString machine.windowManager.hyprland.enable}" = "1" ]; then
+        $DRY_RUN_CMD ${pkgs.hyprland}/bin/hyprctl setcursor ${cursorName} ${toString cursorSize} || echo "Failed to set cursor theme"
+      fi
+    '';
   };
 
   gtk = {
@@ -42,10 +57,4 @@ in {
       gtk-cursor-theme-size = cursorSize;
     };
   };
-
-  home.activation.setHyprCursor = lib.hm.dag.entryAfter ["writeBoundary"] ''
-    if [ "${toString machine.windowManager.hyprland.enable}" = "1" ]; then
-      $DRY_RUN_CMD ${pkgs.hyprland}/bin/hyprctl setcursor ${cursorName} ${toString cursorSize} || echo "Failed to set cursor theme"
-    fi
-  '';
 }

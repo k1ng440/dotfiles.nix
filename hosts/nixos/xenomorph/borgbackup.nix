@@ -6,7 +6,7 @@
   ...
 }:
 let
-  machine = config.machine;
+  inherit (config) machine;
 
   repos = {
     # TODO:  Move this to machine

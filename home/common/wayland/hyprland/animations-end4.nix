@@ -1,5 +1,4 @@
-{ ... }:
-{
+_: {
   wayland.windowManager.hyprland.settings = {
     # Name: END-4
     # Credit: END-4 project https://github.com/end-4/dots-hyprland

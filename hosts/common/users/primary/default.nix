@@ -1,29 +1,34 @@
-{ inputs, pkgs, config, lib, ... }:
+{
+  self,
+  inputs,
+  pkgs,
+  config,
+  lib,
+  ...
+}:
 let
-  pubKeys = let
-    keysPath = ./keys;
-  in
-    if builtins.pathExists keysPath
-    then lib.filesystem.listFilesRecursive keysPath
-  else [];
+  pubKeys =
+    let
+      keysPath = ./keys;
+    in
+    if builtins.pathExists keysPath then lib.filesystem.listFilesRecursive keysPath else [ ];
 
   exisitngGroupOnly =
     groups: builtins.filter (group: builtins.hasAttr group config.users.groups) groups;
 in
-  {
+{
   programs.fish.enable = true;
 
   # Use mkMerge with proper evaluation deferral
   users = lib.mkMerge [
     {
-      groups.${config.machine.username} = {};
+      groups.${config.machine.username} = { };
       users.${config.machine.username} = {
         name = config.machine.username;
         group = config.machine.username;
         uid = config.machine.userUid;
         shell = pkgs.fish;
-        openssh.authorizedKeys.keys =
-          lib.lists.forEach pubKeys (key: builtins.readFile key);
+        openssh.authorizedKeys.keys = lib.lists.forEach pubKeys (key: builtins.readFile key);
         extraGroups = lib.flatten [
           "wheel"
           (exisitngGroupOnly [
@@ -53,20 +58,27 @@ in
   ];
 
   # Home manager configuration - evaluated lazily
-  home-manager = lib.mkIf
-    (inputs ? "home-manager" &&
-      !config.machine.computed.isMinimal &&
-      builtins.pathExists (lib.custom.relativeToRoot "home/${config.machine.username}/${config.machine.hostname}.nix")
-    )
-    {
-      backupFileExtension = "bk";
-      useGlobalPkgs = true;
-      useUserPackages = true;
-      extraSpecialArgs = { inherit pkgs inputs; machine = config.machine; };
-      users.${config.machine.username} = {
-        imports = [
-          (lib.custom.relativeToRoot "home/${config.machine.username}/${config.machine.hostname}.nix")
-        ];
+  home-manager =
+    lib.mkIf
+      (
+        inputs ? "home-manager"
+        && !config.machine.computed.isMinimal
+        && builtins.pathExists (
+          lib.custom.relativeToRoot "home/${config.machine.username}/${config.machine.hostname}.nix"
+        )
+      )
+      {
+        backupFileExtension = "bk";
+        useGlobalPkgs = true;
+        useUserPackages = true;
+        extraSpecialArgs = {
+          inherit self pkgs inputs;
+          inherit (config) machine;
+        };
+        users.${config.machine.username} = {
+          imports = [
+            (lib.custom.relativeToRoot "home/${config.machine.username}/${config.machine.hostname}.nix")
+          ];
+        };
       };
-    };
 }

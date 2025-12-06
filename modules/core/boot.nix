@@ -1,9 +1,16 @@
 { pkgs, config, ... }:
 {
   boot = {
-    loader.efi.canTouchEfiVariables = true;
-    loader.systemd-boot.enable = true;
-    loader.systemd-boot.configurationLimit = 5;
+    loader = {
+      efi.canTouchEfiVariables = true;
+      systemd-boot.enable = true;
+      systemd-boot.configurationLimit = 5;
+
+      # Hide the OS choice for bootloaders.
+      # It's still possible to open the bootloader list by pressing any key
+      # It will just not appear on screen unless a key is pressed
+      timeout = 0;
+    };
 
     initrd.verbose = false;
 
@@ -25,10 +32,6 @@
       "vm.max_map_count" = 2147483642;
     };
 
-    # Hide the OS choice for bootloaders.
-    # It's still possible to open the bootloader list by pressing any key
-    # It will just not appear on screen unless a key is pressed
-    loader.timeout = 0;
   };
 
   programs.appimage = {

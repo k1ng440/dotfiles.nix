@@ -40,15 +40,17 @@ in
   environment.etc."motd".text = ''
     Run `fetch-config` to fetch the configuration from GitHub.
   '';
-  users.motdFile = "/etc/motd";
-  users.users.root = {
-    openssh.authorizedKeys.keys = sshKeys;
-  };
-  users.users.nixos = {
-    isNormalUser = true;
-    extraGroups = [ "wheel" ];
-    shell = pkgs.bash;
-    openssh.authorizedKeys.keys = sshKeys;
+  users = {
+    motdFile = "/etc/motd";
+    users.root = {
+      openssh.authorizedKeys.keys = sshKeys;
+    };
+    users.nixos = {
+      isNormalUser = true;
+      extraGroups = [ "wheel" ];
+      shell = pkgs.bash;
+      openssh.authorizedKeys.keys = sshKeys;
+    };
   };
 
   hardware.enableAllFirmware = false;

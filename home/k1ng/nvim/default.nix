@@ -16,7 +16,7 @@ in
     defaultEditor = true;
     viAlias = true;
     vimAlias = true;
-    plugins = plugins;
+    inherit plugins;
     package = inputs.nixpkgs-unstable.legacyPackages.${pkgs.system}.neovim-unwrapped;
     extraPackages = [
       pkgs.bash-language-server

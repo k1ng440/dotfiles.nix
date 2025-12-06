@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   aws-mfa = pkgs.writeShellApplication {
@@ -130,17 +135,20 @@ let
     '';
   };
 
-in {
-  programs.bash.shellAliases = {
-    aws-mfa-export = "aws-mfa --export";
-  };
+in
+{
+  programs = {
+    bash.shellAliases = {
+      aws-mfa-export = "aws-mfa --export";
+    };
 
-  programs.zsh.shellAliases = {
-    aws-mfa-export = "aws-mfa --export";
-  };
+    zsh.shellAliases = {
+      aws-mfa-export = "aws-mfa --export";
+    };
 
-  programs.fish.shellAliases = {
-    aws-mfa-export = "aws-mfa --export";
+    fish.shellAliases = {
+      aws-mfa-export = "aws-mfa --export";
+    };
   };
 
   # Optional: Create a quick session helper

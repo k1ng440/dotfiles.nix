@@ -33,20 +33,23 @@ in
   ];
 
   # Core host spec
-  machine = let
-    hasSecrets = inputs ? nix-secrets;
-  in {
-    username = "k1ng";
-    handle = "k1ng440";
-    userFullName = "Asaduzzaman Pavel";
-    msmtp = {
-      enable = hasSecrets;
-      config = if hasSecrets then inputs.nix-secrets.msmtp else {};
+  machine =
+    let
+      hasSecrets = inputs ? nix-secrets;
+    in
+    {
+      username = "k1ng";
+      handle = "k1ng440";
+      userFullName = "Asaduzzaman Pavel";
+      msmtp = {
+        enable = hasSecrets;
+        config = if hasSecrets then inputs.nix-secrets.msmtp else { };
+      };
+      domain = if hasSecrets then (inputs.nix-secrets.domain or "workgroup") else "workgroup";
+      email =
+        if hasSecrets then (inputs.nix-secrets.email or "contact@iampavel.dev") else "contact@iampavel.dev";
+      networking = { };
     };
-    domain = if hasSecrets then (inputs.nix-secrets.domain or "workgroup") else "workgroup";
-    email = if hasSecrets then (inputs.nix-secrets.email or "contact@iampavel.dev") else "contact@iampavel.dev";
-    networking = {};
-  };
 
   environment.systemPackages = [
     pkgs.just
@@ -57,10 +60,12 @@ in
   networking.hostName = config.machine.hostname;
 
   # Configure Home manager
-  home-manager.useGlobalPkgs = true;
-  home-manager.backupFileExtension = "bk";
-  home-manager.extraSpecialArgs = {
-    machine = config.machine;
+  home-manager = {
+    useGlobalPkgs = true;
+    backupFileExtension = "bk";
+    extraSpecialArgs = {
+      inherit (config) machine;
+    };
   };
 
   # Overlays

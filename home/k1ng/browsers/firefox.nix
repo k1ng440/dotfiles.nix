@@ -50,7 +50,7 @@ in
       # memory reports. In the Main Process section, scroll down to Other Measurements.
       # There you will find the installed (active) extensions with their names and their ids
       # displayed as baseURL=moz-extension://[random-ids].
-      ExtensionSettings = (
+      ExtensionSettings =
         let
           extension = shortId: uuid: {
             name = uuid;
@@ -84,8 +84,7 @@ in
           # Misc
           (extension "auto-tab-discard" "{c2c003ee-bd69-42a2-b0e9-6f34222cb046}")
           (extension "reddit-enhancement-suite" "jid1-xUfzOsOFlzSOXg@jetpack")
-        ]
-      );
+        ];
     };
 
     profiles.main = {

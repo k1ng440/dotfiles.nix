@@ -1,12 +1,14 @@
 { pkgs, config, ... }:
+let
+  inherit (config.home) homeDirectory;
+in
 {
   home.packages = [
     (import ./emopicker9000.nix { inherit pkgs; })
     (import ./keybinds.nix { inherit pkgs; })
     (import ./task-waybar.nix { inherit pkgs; })
     (import ./wallsetter.nix {
-      inherit pkgs;
-      homeDirectory = config.home.homeDirectory;
+      inherit pkgs homeDirectory;
     })
     (import ./web-search.nix { inherit pkgs; })
     (import ./rofi-launcher.nix { inherit pkgs; })

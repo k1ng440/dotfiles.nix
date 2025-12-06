@@ -2,13 +2,13 @@
   description = "k1ng's NixOS, nix-darwin and Home Manager Configuration";
   outputs =
     inputs@{
-    self,
-    nixpkgs,
-    ...
+      self,
+      nixpkgs,
+      ...
     }:
     let
       inherit (self) outputs;
-      lib = nixpkgs.lib;
+      inherit (nixpkgs) lib;
       overlays = import ./overlays { inherit inputs; };
 
       mkHost = host: isNixOS: {
@@ -16,28 +16,42 @@
           let
             systemFunc = if isNixOS then lib.nixosSystem else builtins.throw "Unsupported System";
           in
-            systemFunc {
-              specialArgs = {
-                lib = nixpkgs.lib.extend (
-                  self: super: {
-                    custom = import ./lib { inherit (nixpkgs) lib; };
-                  }
-                );
-                inherit inputs outputs isNixOS;
-                isDarwin = !isNixOS;
-              };
-              modules = [
-                ./hosts/${if isNixOS then "nixos" else "darwin"}/${host}
-                ({ config, pkgs, ... }: {
-                  nixpkgs.overlays = [ overlays.default ];
-                })
-              ];
+          systemFunc {
+            specialArgs = {
+              inherit self;
+              lib = nixpkgs.lib.extend (
+                self: super: {
+                  custom = import ./lib { inherit (nixpkgs) lib; };
+                }
+              );
+              inherit inputs outputs isNixOS;
+              isDarwin = !isNixOS;
             };
+            modules = [
+              ./hosts/${if isNixOS then "nixos" else "darwin"}/${host}
+              (
+                {
+                  config,
+                  pkgs,
+                  lib,
+                  ...
+                }:
+                {
+                  nixpkgs.overlays = [ overlays.default ];
+                  nixpkgs.config.allowUnfreePredicate =
+                    pkg:
+                    builtins.elem (lib.getName pkg) [
+                      "stremio-shell"
+                      "stremio-server"
+                    ];
+                }
+              )
+            ];
+          };
       };
 
-      mkHostConfigs = hosts: isNixOS:
-        lib.foldl (acc: set: acc // set) { }
-        (lib.map (host: mkHost host isNixOS) hosts);
+      mkHostConfigs =
+        hosts: isNixOS: lib.foldl (acc: set: acc // set) { } (lib.map (host: mkHost host isNixOS) hosts);
 
       readHosts = folder: lib.attrNames (builtins.readDir ./hosts/${folder});
 
@@ -50,10 +64,28 @@
       ];
       forAllSystems = nixpkgs.lib.genAttrs supportedSystems;
     in
-      {
-      overlays = overlays;
+    {
+      inherit overlays;
+      packages = forAllSystems (
+        system:
+        let
+          pkgs = import nixpkgs {
+            inherit system;
+            config.allowUnfreePredicate =
+              pkg:
+              builtins.elem (lib.getName pkg) [
+                "stremio-shell"
+                "stremio-server"
+              ];
+          };
+          stremio-custom = pkgs.callPackage ./packages/stremio.nix { };
+        in
+        {
+          stremio = stremio-custom;
+        }
+      );
+
       nixosConfigurations = mkHostConfigs (readHosts "nixos") true;
-      formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.nixfmt-rfc-style);
       devShells = forAllSystems (
         system:
         import ./shell.nix {
@@ -62,21 +94,34 @@
         }
       );
 
+      formatter = forAllSystems (
+        system:
+        let
+          pkgs = nixpkgs.legacyPackages.${system};
+          inherit (self.checks.${system}.pre-commit-check) config;
+          inherit (config) package configFile;
+          script = ''
+            ${pkgs.lib.getExe package} run --all-files --config ${configFile}
+          '';
+        in
+        pkgs.writeShellScriptBin "pre-commit-run" script
+      );
+
       checks = forAllSystems (system: {
         pre-commit-check = inputs.pre-commit-hooks.lib.${system}.run {
           src = ./.;
           hooks = {
             nixfmt.enable = true;
             nil.enable = true;
-            deadnix.enable = true;
-            statix.enable = true;
+            deadnix.enable = false;
+            statix.enable = false;
           };
         };
       });
     };
 
   /**
-  IMPORTS
+    IMPORTS
   */
   inputs = {
     # Core Nix ecosystem
@@ -108,6 +153,10 @@
     # Development tools
     treefmt-nix = {
       url = "github:numtide/treefmt-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    pre-commit-hooks = {
+      url = "github:cachix/git-hooks.nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 

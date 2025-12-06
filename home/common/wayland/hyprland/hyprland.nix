@@ -45,7 +45,7 @@ in
   ];
 
   wayland.windowManager.hyprland = {
-    enable = machine.windowManager.hyprland.enable;
+    inherit (machine.windowManager.hyprland) enable;
     package = pkgs.hyprland;
     portalPackage = pkgs.xdg-desktop-portal-hyprland;
     plugins = [
@@ -90,7 +90,8 @@ in
         "wl-paste --type text --watch cliphist store"
         "wl-paste --type image --watch cliphist store"
         "swayosd-server &"
-      ] ++ onStartPrograms;
+      ]
+      ++ onStartPrograms;
 
       input = {
         kb_layout = "us,jp";
@@ -146,7 +147,7 @@ in
       decoration = {
         rounding = 1;
         rounding_power = 2;
-        active_opacity   = "1.0";
+        active_opacity = "1.0";
         inactive_opacity = "1.0";
 
         blur = {

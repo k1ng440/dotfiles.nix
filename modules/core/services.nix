@@ -19,7 +19,7 @@
     };
 
     smartd = {
-      enable = (!config.machine.computed.isMinimal && !config.machine.platform.isVirtualMachine);
+      enable = !config.machine.computed.isMinimal && !config.machine.platform.isVirtualMachine;
       autodetect = true;
     };
   };

@@ -37,32 +37,34 @@
     };
   };
 
-  systemd.user.services.wallpaper-cycler = {
-    Unit = {
-      Description = "Cycle wallpapers with swww";
-      After = [ "swww-daemon.service" ];
-      Wants = [ "swww-daemon.service" ];
+  systemd = {
+    user.services.wallpaper-cycler = {
+      Unit = {
+        Description = "Cycle wallpapers with swww";
+        After = [ "swww-daemon.service" ];
+        Wants = [ "swww-daemon.service" ];
+      };
+      Service = {
+        Type = "oneshot";
+        ExecStart = "${pkgs.bash}/bin/bash /home/${machine.username}/.local/bin/change-wallpaper";
+        Environment = [
+          "PATH=${pkgs.coreutils}/bin:${pkgs.findutils}/bin:${pkgs.swww}/bin"
+        ];
+      };
     };
-    Service = {
-      Type = "oneshot";
-      ExecStart = "${pkgs.bash}/bin/bash /home/${machine.username}/.local/bin/change-wallpaper";
-      Environment = [
-        "PATH=${pkgs.coreutils}/bin:${pkgs.findutils}/bin:${pkgs.swww}/bin"
-      ];
-    };
-  };
 
-  systemd.user.timers.wallpaper-cycler = {
-    Unit = {
-      Description = "Timer for cycling wallpapers";
-    };
-    Timer = {
-      OnBootSec = "2min";
-      OnUnitActiveSec = "5min";
-      Unit = "wallpaper-cycler.service";
-    };
-    Install = {
-      WantedBy = [ "timers.target" ];
+    user.timers.wallpaper-cycler = {
+      Unit = {
+        Description = "Timer for cycling wallpapers";
+      };
+      Timer = {
+        OnBootSec = "2min";
+        OnUnitActiveSec = "5min";
+        Unit = "wallpaper-cycler.service";
+      };
+      Install = {
+        WantedBy = [ "timers.target" ];
+      };
     };
   };
 }

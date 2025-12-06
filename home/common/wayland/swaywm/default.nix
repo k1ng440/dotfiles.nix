@@ -20,7 +20,7 @@ let
     	'';
 in
 {
-  imports = [] ++ lib.optionals machine.windowManager.sway.enable [
+  imports = lib.optionals machine.windowManager.sway.enable [
     ../common/packages.nix
     # ./scripts
   ];
@@ -36,12 +36,12 @@ in
   };
 
   wayland.windowManager.sway = {
-    enable = machine.windowManager.sway.enable;
+    inherit (machine.windowManager.sway) enable;
     wrapperFeatures.gtk = true;
     config = {
       modifier = mod;
-      terminal = terminal;
-      menu = menu;
+      inherit terminal;
+      inherit menu;
 
       focus = {
         followMouse = "yes";
@@ -110,7 +110,7 @@ in
       # Monitor configuration
       output = lib.listToAttrs (
         map (m: {
-          name = m.name;
+          inherit (m) name;
           value = {
             mode = "${toString m.width}x${toString m.height}@${toString m.refresh_rate}Hz";
             position = "${toString m.x},${toString m.y}";
@@ -181,7 +181,7 @@ in
         "${mod}+minus" = "scratchpad show";
 
         XF86AudioRaiseVolume = "exec swayosd-client --output-volume raise";
-        XF86AudioLowerVolume  = "exec swayosd-client --output-volume lower";
+        XF86AudioLowerVolume = "exec swayosd-client --output-volume lower";
         XF86AudioMute = "exec swayosd-client --output-volume mute-toggle";
         XF86AudioMicMute = "exec swayosd-client --input-volume mute-toggle";
         XF86MonBrightnessUp = "exec swayosd-client --brightness raise";
@@ -396,11 +396,39 @@ in
             shell = "xwayland";
           };
         }
-        { command = "move container to workspace special:"; criteria = { app_id = "thunderbird"; }; }
-        { command = "floating disable"; criteria = { app_id = "thunderbird"; }; }
-        { command = "floating enable"; criteria = { app_id = "thunderbird"; title = ".*Compose.*"; }; }
-        { command = "resize set width 800 height 600"; criteria = { app_id = "thunderbird"; title = ".*(Compose|Write\:).*"; }; }
-        { command = "floating enable"; criteria = { app_id = "thunderbird"; title = ".*(Preferences|Settings|Address Book).*"; }; }
+        {
+          command = "move container to workspace special:";
+          criteria = {
+            app_id = "thunderbird";
+          };
+        }
+        {
+          command = "floating disable";
+          criteria = {
+            app_id = "thunderbird";
+          };
+        }
+        {
+          command = "floating enable";
+          criteria = {
+            app_id = "thunderbird";
+            title = ".*Compose.*";
+          };
+        }
+        {
+          command = "resize set width 800 height 600";
+          criteria = {
+            app_id = "thunderbird";
+            title = ".*(Compose|Write\:).*";
+          };
+        }
+        {
+          command = "floating enable";
+          criteria = {
+            app_id = "thunderbird";
+            title = ".*(Preferences|Settings|Address Book).*";
+          };
+        }
       ];
 
       # Input configuration

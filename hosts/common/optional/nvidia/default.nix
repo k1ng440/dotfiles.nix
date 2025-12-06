@@ -1,4 +1,9 @@
-{ lib, config, pkgs, ... }:
+{
+  lib,
+  config,
+  pkgs,
+  ...
+}:
 {
   services.xserver.videoDrivers = lib.mkForce [ "nvidia" ];
 
@@ -11,12 +16,20 @@
   hardware = {
     nvidia = {
       open = true;
+      gsp.enable = config.hardware.nvidia.open;
       nvidiaSettings = true;
       prime.sync.enable = lib.mkForce false;
       modesetting.enable = true;
       powerManagement.enable = true;
       powerManagement.finegrained = false;
       videoAcceleration = true;
+      package = config.boot.kernelPackages.nvidiaPackages.mkDriver {
+        version = "590.44.01";
+        sha256_64bit = "sha256-VbkVaKwElaazojfxkHnz/nN/5olk13ezkw/EQjhKPms=";
+        openSha256 = "sha256-ft8FEnBotC9Bl+o4vQA1rWFuRe7gviD/j1B8t0MRL/o=";
+        settingsSha256 = "sha256-ZpuVZybW6CFN/gz9rx+UJvQ715FZnAOYfHn5jt5Z2C8=";
+        persistencedSha256 = lib.fakeSha256;
+      };
     };
     nvidia-container-toolkit = {
       enable = true;
@@ -52,29 +65,33 @@
       MOZ_DRM_DEVICE = "/dev/dri/renderD128";
     };
     # fix high vram usage on discord and hyprland. match with the wrapper procnames
-    etc."nvidia/nvidia-application-profiles-rc.d/50-limit-free-buffer-pool.json".text = builtins.toJSON {
-      rules =
-        map (proc: {
-          pattern = {
-            feature = "procname";
-            matches = proc;
-          };
-          profile = "No VidMem Reuse";
-        }) [
-          "Hyprland"
-          ".Hyprland-wrapped"
-          "Discord"
-          ".Discord-wrapped"
-          "DiscordCanary"
-          ".DiscordCanary-wrapped"
-          "electron"
-          ".electron-wrapped"
-          "librewolf"
-          ".librewolf-wrapped"
-          ".librewolf-wrapped_"
-          "losslesscut"
-        ];
-    };
+    etc."nvidia/nvidia-application-profiles-rc.d/50-limit-free-buffer-pool.json".text =
+      builtins.toJSON
+        {
+          rules =
+            map
+              (proc: {
+                pattern = {
+                  feature = "procname";
+                  matches = proc;
+                };
+                profile = "No VidMem Reuse";
+              })
+              [
+                "Hyprland"
+                ".Hyprland-wrapped"
+                "Discord"
+                ".Discord-wrapped"
+                "DiscordCanary"
+                ".DiscordCanary-wrapped"
+                "electron"
+                ".electron-wrapped"
+                "librewolf"
+                ".librewolf-wrapped"
+                ".librewolf-wrapped_"
+                "losslesscut"
+              ];
+        };
   };
 
   systemd = {
@@ -91,7 +108,7 @@
         Type = "oneshot";
         ExecStart = "${lib.getExe' pkgs.kmod "modprobe"} -r nvidia_drm";
       };
-      wantedBy = ["kexec.target"];
+      wantedBy = [ "kexec.target" ];
     };
   };
 

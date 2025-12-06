@@ -6,7 +6,7 @@
   ...
 }:
 {
-  config = lib.mkIf (config.machine.windowManager.enabled) {
+  config = lib.mkIf config.machine.windowManager.enabled {
     xdg = {
       autostart.enable = true;
       portal = {
@@ -16,9 +16,11 @@
         extraPortals = [
           pkgs.xdg-desktop-portal
           pkgs.xdg-desktop-portal-gtk
-        ] ++ lib.optionals config.machine.windowManager.hyprland.enable [
+        ]
+        ++ lib.optionals config.machine.windowManager.hyprland.enable [
           pkgs.xdg-desktop-portal-hyprland
-        ] ++ lib.optionals config.machine.windowManager.sway.enable [
+        ]
+        ++ lib.optionals config.machine.windowManager.sway.enable [
           pkgs.xdg-desktop-portal-wlr
         ];
         config = {
