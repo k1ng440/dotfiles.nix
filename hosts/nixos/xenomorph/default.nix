@@ -18,7 +18,7 @@
       "hosts/common/optional/thunar"
       "hosts/common/optional/virtualisation"
       "hosts/common/optional/gaming"
-      # "hosts/common/optional/ai"
+      "hosts/common/optional/ai"
       "hosts/common/optional/security"
       "hosts/common/optional/applications.nix"
       "hosts/common/optional/printing.nix"

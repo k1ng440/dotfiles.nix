@@ -1,7 +1,7 @@
 { config, ... }:
 {
   # Database for aiding terminal-based programs
-  environment.enableAllTerminfo = true;
+  environment.enableAllTerminfo = false;
   # Enable firmware with a license allowing redistribution
   hardware.enableRedistributableFirmware = true;
 

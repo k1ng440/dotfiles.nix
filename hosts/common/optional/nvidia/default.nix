@@ -1,6 +1,5 @@
 { lib, config, pkgs, ... }:
 {
-  nixpkgs.config.cudaSupport = true;
   services.xserver.videoDrivers = lib.mkForce [ "nvidia" ];
 
   environment.systemPackages = with pkgs; [
@@ -110,8 +109,9 @@
         "nvidia_modeset.disable_vrr_memclk_switch=1" # stop really high memclk when vrr is in use.
         "nvidia.NVreg_EnableResizableBar=1" # enable reBAR
         "nvidia.NVreg_RegistryDwords=RmEnableAggressiveVblank=1" # low-latency stuff
-        "mem_sleep_default=deep"
-        "nvidia.NVreg_EnableS0ixPowerManagement=0"
+        "mem_sleep_default=s2idle"
+        "nvidia.NVreg_EnableS0ixPowerManagement=1"
+        "nvidia.NVreg_S0ixPowerManagementVideoMemoryThreshold=512"
       ]
       (lib.mkIf config.hardware.nvidia.powerManagement.enable [
         "nvidia.NVreg_TemporaryFilePath=/var/tmp"

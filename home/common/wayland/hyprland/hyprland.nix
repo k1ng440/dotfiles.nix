@@ -33,6 +33,7 @@ in
     ydotool
     hyprpolkitagent
     hyprsunset
+    hyprpicker
   ];
 
   systemd.user.targets.hyprland-session.Unit.Wants = [
@@ -47,6 +48,9 @@ in
     enable = machine.windowManager.hyprland.enable;
     package = pkgs.hyprland;
     portalPackage = pkgs.xdg-desktop-portal-hyprland;
+    plugins = [
+      inputs.hyprland-plugins.packages.${pkgs.stdenv.hostPlatform.system}.hyprexpo
+    ];
     systemd = {
       enable = true;
       enableXdgAutostart = false;
@@ -106,6 +110,7 @@ in
         gaps_out = 8;
         border_size = 2;
         resize_on_border = true;
+        hover_icon_on_border = false;
         "col.active_border" =
           "rgb(${config.lib.stylix.colors.base08}) rgb(${config.lib.stylix.colors.base0C}) 45deg";
         "col.inactive_border" = "rgb(${config.lib.stylix.colors.base01})";

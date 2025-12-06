@@ -61,7 +61,7 @@
       simple-scan
       cameractrls-gtk4 # webcam control
       obsidian
-      thunderbird-bin
+      # thunderbird-bin
       anki-bin
       shairport-sync
       pkgs.unstable.gemini-cli

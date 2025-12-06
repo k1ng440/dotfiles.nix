@@ -81,9 +81,7 @@
   inputs = {
     # Core Nix ecosystem
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    # nixpkgs.url = "github:NixOS/nixpkgs/7df7ff7d8e00218376575f0acdcc5d66741351ee";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
-    # nixpkgs-unstable.url = "github:NixOS/nixpkgs/7df7ff7d8e00218376575f0acdcc5d66741351ee";
 
     # System management
     home-manager = {
@@ -108,10 +106,6 @@
     };
 
     # Development tools
-    pre-commit-hooks = {
-      url = "github:cachix/git-hooks.nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     treefmt-nix = {
       url = "github:numtide/treefmt-nix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -120,7 +114,7 @@
     # Hyprland window manager
     hyprland = {
       url = "github:hyprwm/Hyprland";
-      inputs.nixpkgs.follows = "nixpkgs";
+      # inputs.nixpkgs.follows = "nixpkgs";
     };
     hyprland-plugins = {
       url = "github:hyprwm/hyprland-plugins";
@@ -128,20 +122,12 @@
     };
 
     # Utility flakes
-    nixgl = {
-      url = "github:nix-community/nixGL";
-      inputs.nixpkgs.follows = "nixpkgs-unstable";
-    };
     nix-index-database = {
       url = "github:nix-community/nix-index-database";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    nixos-needsreboot = {
-      url = "github:thefossguy/nixos-needsreboot";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
 
-    # neovim external plugins
+    # Neovim external plugins
     nvim-plugin-vim-header = {
       url = "github:alpertuna/vim-header";
       flake = false;

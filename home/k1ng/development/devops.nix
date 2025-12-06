@@ -7,7 +7,7 @@
   home.packages = with pkgs; [
     act
     ansible
-    awscli2
+    # awscli2
     azure-cli
     eksctl
     kind

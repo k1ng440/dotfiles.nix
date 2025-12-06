@@ -118,6 +118,9 @@ in
 
         # Switch Keyboard Layout
         "ALT, Shift_L, exec, hyprctl switchxkblayout"
+
+        # plugins
+        # "${mod} CTRL, g, hyprexpo:expo, toggle"
       ]
       # Move focus from active window to window in specified direction (UP/k, Down/j, Left/h, Right/l)
       ++ (lib.mapAttrsToList (key: direction: "${mod}, ${key}, movefocus,${direction}") directions)

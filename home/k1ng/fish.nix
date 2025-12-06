@@ -34,6 +34,8 @@ in
       store-path = "${pkgs.coreutils-full}/bin/readlink (${pkgs.which}/bin/which $argv)";
       top = "${pkgs.bottom}/bin/btm --basic --tree --hide_table_gap --dot_marker --mem_as_value";
       tree = "${pkgs.eza}/bin/eza --tree";
+      qr = "curl -F-=\<- qrenco.de";
+      netcount = "netstat -ntu | tail -n +3 | awk '{print $5}' | sed 's/:[0-9]*$//' | sort | uniq -c | sort -rn";
     };
     shellInit = ''
       set fish_greeting ""

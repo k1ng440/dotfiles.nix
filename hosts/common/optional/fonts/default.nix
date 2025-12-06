@@ -30,14 +30,17 @@
       defaultFonts = {
         serif = [
           "IBM Plex Serif"
+          "Noto Serif CJK JP"
           "Symbols Nerd Font"
         ];
         sansSerif = [
           "IBM Plex Sans"
+          "Noto Sans CJK JP"
           "Symbols Nerd Font"
         ];
         monospace = [
           "IBM Plex Mono"
+          "Noto Sans CJK JP"
           "Symbols Nerd Font"
         ];
         emoji = [ "Noto Emoji" ];
