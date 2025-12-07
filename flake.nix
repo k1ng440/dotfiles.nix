@@ -10,6 +10,7 @@
       inherit (self) outputs;
       inherit (nixpkgs) lib;
       overlays = import ./overlays { inherit inputs; };
+      npins = import ./npins;
 
       mkHost = host: isNixOS: {
         ${host} =
@@ -18,14 +19,19 @@
           in
           systemFunc {
             specialArgs = {
-              inherit self;
+              inherit
+                self
+                inputs
+                outputs
+                isNixOS
+                npins
+                ;
+              isDarwin = !isNixOS;
               lib = nixpkgs.lib.extend (
                 self: super: {
                   custom = import ./lib { inherit (nixpkgs) lib; };
                 }
               );
-              inherit inputs outputs isNixOS;
-              isDarwin = !isNixOS;
             };
             modules = [
               ./hosts/${if isNixOS then "nixos" else "darwin"}/${host}
@@ -174,44 +180,6 @@
     nix-index-database = {
       url = "github:nix-community/nix-index-database";
       inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    # Neovim external plugins
-    nvim-plugin-vim-header = {
-      url = "github:alpertuna/vim-header";
-      flake = false;
-    };
-    nvim-plugin-blink-ripgrep = {
-      url = "github:mikavilpas/blink-ripgrep.nvim";
-      flake = false;
-    };
-    nvim-plugin-git-conflict = {
-      url = "github:akinsho/git-conflict.nvim/v2.1.0";
-      flake = false;
-    };
-    nvim-plugin-img-clip = {
-      url = "github:HakonHarnes/img-clip.nvim/v0.6.0";
-      flake = false;
-    };
-    nvim-plugin-godoc = {
-      url = "github:fredrikaverpil/godoc.nvim/v2.3.0";
-      flake = false;
-    };
-    nvim-plugin-other = {
-      url = "github:rgroli/other.nvim";
-      flake = false;
-    };
-    nvim-plugin-format-ts-errors = {
-      url = "github:davidosomething/format-ts-errors.nvim";
-      flake = false;
-    };
-    nvim-plugin-inc-rename = {
-      url = "github:smjonas/inc-rename.nvim";
-      flake = false;
-    };
-    nvim-plugin-no-go = {
-      url = "github:TheNoeTrevino/no-go.nvim";
-      flake = false;
     };
 
     # Personal Repositories

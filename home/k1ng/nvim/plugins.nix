@@ -1,7 +1,7 @@
 { pkgs, inputs, ... }:
 
 let
-  unstable = inputs.nixpkgs-unstable.legacyPackages.${pkgs.system};
+  unstable = inputs.nixpkgs-unstable.legacyPackages.${pkgs.stdenv.hostPlatform.system};
   filteredInputNames = builtins.filter (name: builtins.match "^nvim-plugin-.*" name != null) (
     builtins.attrNames inputs
   );

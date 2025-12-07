@@ -11,7 +11,7 @@ vim.schedule(function()
 
   local opts = {
     options = {
-      theme = 'tokyonight',
+      theme = 'nightfox',
       globalstatus = true,
       disabled_filetypes = { statusline = { 'dashboard', 'alpha', 'NvimTree', 'lazy', 'oil' } },
     },

@@ -5,6 +5,7 @@
   outputs,
   isNixOS,
   config,
+  npins,
   ...
 }:
 let
@@ -65,6 +66,7 @@ in
     backupFileExtension = "bk";
     extraSpecialArgs = {
       inherit (config) machine;
+      inherit npins;
     };
   };
 

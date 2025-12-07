@@ -177,12 +177,12 @@ vim.schedule(function()
       },
     },
     sources = {
-      default = { 'lsp', 'path', 'snippets', 'buffer', 'lazydev', 'markdown', 'ripgrep' },
+      default = { 'lsp', 'path', 'snippets', 'buffer', 'markdown', 'ripgrep' },
       providers = {
         lsp = {
           name = 'LSP',
           module = 'blink.cmp.sources.lsp',
-          fallbacks = { 'lazydev' },
+          -- fallbacks = { 'lazydev' },
           score_offset = 200, -- the higher the number, the higher the priority
           -- Filter text items from the LSP provider, since we have the buffer provider for that
           -- transform_items = function(_, items)
@@ -217,7 +217,7 @@ vim.schedule(function()
           min_keyword_length = 2,
           score_offset = 60, -- the higher the number, the higher the priority
         },
-        lazydev = { name = 'LazyDev', module = 'lazydev.integrations.blink', score_offset = 100 },
+        -- lazydev = { name = 'LazyDev', module = 'lazydev.integrations.blink', score_offset = 100 },
         markdown = { name = 'RenderMarkdown', module = 'render-markdown.integ.blink' },
         cmdline = {
           enabled = function()
@@ -266,17 +266,20 @@ end)
 
 -- HakonHarnes/img-clip.nvim setup. https://github.com/HakonHarnes/img-clip.nvim
 vim.schedule(function()
-  require('img-clip').setup({
-    default = {
-      embed_image_as_base64 = false,
-      prompt_for_file_name = false,
-      drag_and_drop = {
-        insert_mode = true,
+  local ok, imgClip = pcall(require, 'img-clip')
+  if ok then
+    imgClip.setup({
+      default = {
+        embed_image_as_base64 = false,
+        prompt_for_file_name = false,
+        drag_and_drop = {
+          insert_mode = true,
+        },
+        -- required for Windows users
+        use_absolute_path = true,
       },
-      -- required for Windows users
-      use_absolute_path = true,
-    },
-  })
+    })
+  end
 end)
 
 -- stevearc/conform.nvim setup. https://github.com/stevearc/conform.nvim
@@ -365,11 +368,16 @@ vim.schedule(function()
 end)
 
 -- lazydev.nvim
-require('lazydev').setup({
-  library = {
-    { path = '${3rd}/luv/library', words = { 'vim%.uv' } },
-  },
-})
+vim.schedule(function()
+  local ok, lazydev = pcall(require, 'lazydev')
+  if ok then
+    lazydev.setup({
+      library = {
+        { path = '${3rd}/luv/library', words = { 'vim%.uv' } },
+      },
+    })
+  end
+end)
 
 -- nvim-notify setup. https://github.com/rcarriga/nvim-notify
 -- A fancy, configurable, notification manager for NeoVim
@@ -534,23 +542,26 @@ end)
 
 -- other.nvim. https://github.com/rgroli/other.nvim
 vim.schedule(function()
-  require('other-nvim').setup({
-    mappings = {
-      'golang',
-      'angular',
-      'laravel',
-      'python',
-      'react',
-      'rust',
-    },
-  })
-  -- stylua: ignore start
-  vim.keymap.set("n", "<leader>ll", "<cmd>:Other<CR>", { noremap = true, silent = true, desc = "Opens the other/alternative file according to the configured mapping." })
-  vim.keymap.set("n", "<leader>ltn", "<cmd>:OtherTabNew<CR>", { noremap = true, silent = true, desc = "Like :Other but opens the file in a new tab." })
-  vim.keymap.set("n", "<leader>lp", "<cmd>:OtherSplit<CR>", { noremap = true, silent = true, desc = "Like :Other but opens the file in an horizontal split."  })
-  vim.keymap.set("n", "<leader>lv", "<cmd>:OtherVSplit<CR>", { noremap = true, silent = true, desc = "Like :Other but opens the file in a vertical split." })
-  vim.keymap.set("n", "<leader>lc", "<cmd>:OtherClear<CR>", { noremap = true, silent = true, desc = "Clears the internal reference to the other/alternative file" })
-  -- stylua: ignore end
+  local ok, other = pcall(require, 'other-nvim')
+  if ok then
+    other.setup({
+      mappings = {
+        'golang',
+        'angular',
+        'laravel',
+        'python',
+        'react',
+        'rust',
+      },
+    })
+    -- stylua: ignore start
+    vim.keymap.set("n", "<leader>ll", "<cmd>:Other<CR>", { noremap = true, silent = true, desc = "Opens the other/alternative file according to the configured mapping." })
+    vim.keymap.set("n", "<leader>ltn", "<cmd>:OtherTabNew<CR>", { noremap = true, silent = true, desc = "Like :Other but opens the file in a new tab." })
+    vim.keymap.set("n", "<leader>lp", "<cmd>:OtherSplit<CR>", { noremap = true, silent = true, desc = "Like :Other but opens the file in an horizontal split."  })
+    vim.keymap.set("n", "<leader>lv", "<cmd>:OtherVSplit<CR>", { noremap = true, silent = true, desc = "Like :Other but opens the file in a vertical split." })
+    vim.keymap.set("n", "<leader>lc", "<cmd>:OtherClear<CR>", { noremap = true, silent = true, desc = "Clears the internal reference to the other/alternative file" })
+    -- stylua: ignore end
+  end
 end)
 
 vim.schedule(function()
@@ -563,21 +574,21 @@ vim.schedule(function()
   end
 end)
 
-vim.schedule(function()
-  local ok, avante = pcall(require, 'avante')
-  if ok then
-    avante.setup({
-      provider = 'ollama',
-      providers = {
-        ollama = {
-          endpoint = 'localhost:11434',
-          model = 'hf.co/lmstudio-community/Qwen3-Coder-30B-A3B-Instruct-GGUF:Q4_K_M',
-          disable_tools = false,
-          extra_request_body = {
-            stream = true,
-          },
-        },
-      },
-    })
-  end
-end)
+-- vim.schedule(function()
+--   local ok, avante = pcall(require, 'avante')
+--   if ok then
+--     avante.setup({
+--       provider = 'ollama',
+--       providers = {
+--         ollama = {
+--           endpoint = 'localhost:11434',
+--           model = 'hf.co/lmstudio-community/Qwen3-Coder-30B-A3B-Instruct-GGUF:Q4_K_M',
+--           disable_tools = false,
+--           extra_request_body = {
+--             stream = true,
+--           },
+--         },
+--       },
+--     })
+--   end
+-- end)

@@ -21,7 +21,7 @@
       nerd-fonts.symbols-only
       inter
       ibm-plex
-      inputs.nix-secrets.packages."${pkgs.system}".BerkeleyMonoFont
+      inputs.nix-secrets.packages."${pkgs.stdenv.hostPlatform.system}".BerkeleyMonoFont
     ];
 
     fonts.fontconfig = {

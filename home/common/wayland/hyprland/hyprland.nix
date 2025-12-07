@@ -111,7 +111,6 @@ in
         gaps_out = 8;
         border_size = 2;
         resize_on_border = true;
-        hover_icon_on_border = false;
         "col.active_border" =
           "rgb(${config.lib.stylix.colors.base08}) rgb(${config.lib.stylix.colors.base0C}) 45deg";
         "col.inactive_border" = "rgb(${config.lib.stylix.colors.base01})";

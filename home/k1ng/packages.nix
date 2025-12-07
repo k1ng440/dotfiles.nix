@@ -71,6 +71,6 @@
       shairport-sync
       pkgs.unstable.gemini-cli
       pkgs.nodejs_24
-      # self.packages.${pkgs.system}.stremio
+      # self.packages.${pkgs.stdenv.hostPlatform.system}.stremio
     ];
 }
