@@ -1,4 +1,10 @@
-{ pkgs, lib, machine, ... }: {
+{
+  pkgs,
+  lib,
+  machine,
+  ...
+}:
+{
   imports = [
     ./common/packages.nix
     ./common/hypridle.nix
@@ -19,7 +25,4 @@
     swayosd
     qt6.qtwayland
   ];
-
-
-
 }

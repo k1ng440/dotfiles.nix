@@ -19,6 +19,34 @@ let
     gitsigns = false;
     oil = false;
     nightfox = false;
+    blink-ripgrep = false;
+    bufferline = false;
+    conform = false;
+    dressing = false;
+    fidget = false;
+    format-ts-errors = false;
+    friendly-snippets = false;
+    fzf-lua = false;
+    git-conflict = false;
+    godoc = false;
+    header = false;
+    inc-rename = false;
+    lint = false;
+    lsp-progress = false;
+    lualine = false;
+    luasnip = false;
+    lzn = false;
+    no-go = false;
+    promise-async = false;
+    schemastore = false;
+    startuptime = false;
+    todo-comments = false;
+    trouble = false;
+    ufo = false;
+    undotree = false;
+    vim-repeat = false;
+    vim-speeddating = false;
+    wordiff = false;
   };
   applyOptional = name: plugin: {
     inherit plugin;
@@ -53,9 +81,6 @@ with pkgsUnstable.vimPlugins;
   vim-fugitive
   vim-abolish
   vim-surround
-  nvim-fzf
-  fzf-lua
-  nui-nvim
   nvim-dap
   nvim-dap-virtual-text
   nvim-dap-ui

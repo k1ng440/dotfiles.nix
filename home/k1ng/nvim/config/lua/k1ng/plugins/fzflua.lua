@@ -69,10 +69,24 @@ vim.schedule(function()
       glob_separator = '%s%-%-',
       cwd_prompt_shorten_len = 16,
       cwd_prompt_shorten_val = 2,
+      fzf_opts = {
+        ['--history'] = vim.fn.stdpath("data") .. '/fzf-lua-grep-history',
+      },
     },
     files = {
+      hidden = false,
       cwd_prompt_shorten_len = 16,
       cwd_prompt_shorten_val = 2,
+      fzf_opts = {
+        ['--history'] = vim.fn.stdpath("data") .. '/fzf-lua-files-history',
+      },
+    },
+    buffers = {
+      prompt = "❯ ",
+    },
+    keymaps = {
+      prompt = "❯ ",
+      winopts = { preview = { hidden = true } },
     },
     oldfiles = {
       include_current_session = true,
@@ -96,13 +110,16 @@ vim.schedule(function()
         delay = 50,
       },
     },
+    fzf_opts = {
+      ["--layout"] = "default",
+      ['--cycle'] = true,
+    },
   })
 
   local Util = require('k1ng.util')
   local map = Util.keymap
 
-
-  map('n', '<leader>sr', fzf.files, { desc = '[S]earch [R]esume' })
+  map('n', '<leader>sr', fzf.resume, { desc = '[S]earch [R]esume' })
   map('n', '<leader>sf', fzf.files, { desc = '[S]earch [F]iles' })
   map('n', '<leader>sg', fzf.live_grep, { desc = '[S]earch [G]rep' })
   map('n', '<leader>sw', fzf.grep_cword, { desc = '[S]earch [W]ord' })
