@@ -28,12 +28,15 @@ in
     inherit plugins;
     package =
       inputs.nixpkgs-unstable.legacyPackages.${pkgs.stdenv.hostPlatform.system}.neovim-unwrapped;
-    extraPackages = [
-      pkgs.tree-sitter
-      pkgs.bash-language-server
-      pkgs.stylua
-      pkgs.shfmt
-      pkgs.luajitPackages.jsregexp
+    extraPackages = with pkgs; [
+      lua-language-server
+      nil
+      tree-sitter
+      bash-language-server
+      stylua
+      shfmt
+      luajitPackages.jsregexp
+      vscode-langservers-extracted
     ];
   };
 

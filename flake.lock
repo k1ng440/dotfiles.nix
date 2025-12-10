@@ -742,6 +742,22 @@
         "type": "github"
       }
     },
+    "npins": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1764162026,
+        "narHash": "sha256-EWA14ovB/5UFiK9fmEYtofIMbGnVeJ/4yK0aJEJXtsI=",
+        "owner": "andir",
+        "repo": "npins",
+        "rev": "84a362d77fb3c487ad759c80547facb028f4d96f",
+        "type": "github"
+      },
+      "original": {
+        "owner": "andir",
+        "repo": "npins",
+        "type": "github"
+      }
+    },
     "nur": {
       "inputs": {
         "flake-parts": [
@@ -822,10 +838,12 @@
         "nixos-hardware": "nixos-hardware",
         "nixpkgs": "nixpkgs_2",
         "nixpkgs-unstable": "nixpkgs-unstable",
+        "npins": "npins",
         "pre-commit-hooks": "pre-commit-hooks_2",
         "sops-nix": "sops-nix",
         "stub-flake": "stub-flake",
         "stylix": "stylix",
+        "systems": "systems_4",
         "treefmt-nix": "treefmt-nix"
       }
     },
@@ -929,6 +947,21 @@
       }
     },
     "systems_3": {
+      "locked": {
+        "lastModified": 1681028828,
+        "narHash": "sha256-Vy1rq5AaRuLzOxct8nz4T6wlgyUR7zLU309k9mBC768=",
+        "owner": "nix-systems",
+        "repo": "default",
+        "rev": "da67096a3b9bf56a91d16901293e51ba5b49a27e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-systems",
+        "repo": "default",
+        "type": "github"
+      }
+    },
+    "systems_4": {
       "locked": {
         "lastModified": 1681028828,
         "narHash": "sha256-Vy1rq5AaRuLzOxct8nz4T6wlgyUR7zLU309k9mBC768=",

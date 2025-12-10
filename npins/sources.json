@@ -121,9 +121,9 @@
       },
       "branch": "main",
       "submodules": false,
-      "revision": "0284d640fd88c56f100a43f41103c5b564699e15",
-      "url": "https://github.com/ibhagwan/fzf-lua/archive/0284d640fd88c56f100a43f41103c5b564699e15.tar.gz",
-      "hash": "1n0xk82dacgr24dqpp9sskj1a7gpsa6a7y8flispzagi3glg8ww8"
+      "revision": "bdfedf65cc0ea99cc6653567bf4b5d64eb0646f6",
+      "url": "https://github.com/ibhagwan/fzf-lua/archive/bdfedf65cc0ea99cc6653567bf4b5d64eb0646f6.tar.gz",
+      "hash": "0nsh8dinnal4bax23bzq05mf0fz6ha99lyagpw61dz8g5s2vfwvi"
     },
     "nvim-git-conflict": {
       "type": "GitRelease",

@@ -4,6 +4,7 @@
     inputs@{
       self,
       nixpkgs,
+      systems,
       ...
     }:
     let
@@ -11,6 +12,7 @@
       inherit (nixpkgs) lib;
       overlays = import ./overlays { inherit inputs; };
       npins = import ./npins;
+      eachSystem = nixpkgs.lib.genAttrs (import systems);
 
       mkHost = host: isNixOS: {
         ${host} =
@@ -19,13 +21,9 @@
           in
           systemFunc {
             specialArgs = {
-              inherit
-                self
-                inputs
-                outputs
-                isNixOS
-                npins
-                ;
+              inherit self inputs;
+              inherit outputs isNixOS;
+              inherit npins;
               isDarwin = !isNixOS;
               lib = nixpkgs.lib.extend (
                 self: super: {
@@ -60,19 +58,10 @@
         hosts: isNixOS: lib.foldl (acc: set: acc // set) { } (lib.map (host: mkHost host isNixOS) hosts);
 
       readHosts = folder: lib.attrNames (builtins.readDir ./hosts/${folder});
-
-      supportedSystems = [
-        "aarch64-linux"
-        "i686-linux"
-        "x86_64-linux"
-        "aarch64-darwin"
-        "x86_64-darwin"
-      ];
-      forAllSystems = nixpkgs.lib.genAttrs supportedSystems;
     in
     {
       inherit overlays;
-      packages = forAllSystems (
+      packages = eachSystem (
         system:
         let
           pkgs = import nixpkgs {
@@ -92,7 +81,7 @@
       );
 
       nixosConfigurations = mkHostConfigs (readHosts "nixos") true;
-      devShells = forAllSystems (
+      devShells = eachSystem (
         system:
         import ./shell.nix {
           pkgs = nixpkgs.legacyPackages.${system};
@@ -100,7 +89,7 @@
         }
       );
 
-      formatter = forAllSystems (
+      formatter = eachSystem (
         system:
         let
           pkgs = nixpkgs.legacyPackages.${system};
@@ -113,7 +102,7 @@
         pkgs.writeShellScriptBin "pre-commit-run" script
       );
 
-      checks = forAllSystems (system: {
+      checks = eachSystem (system: {
         pre-commit-check = inputs.pre-commit-hooks.lib.${system}.run {
           src = ./.;
           hooks = {
@@ -177,6 +166,11 @@
     };
 
     # Utility flakes
+    npins = {
+      url = "github:andir/npins";
+      flake = false;
+    };
+    systems.url = "github:nix-systems/default";
     nix-index-database = {
       url = "github:nix-community/nix-index-database";
       inputs.nixpkgs.follows = "nixpkgs";

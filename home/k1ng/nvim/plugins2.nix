@@ -6,7 +6,7 @@
   ...
 }:
 let
-  pkgsUnstable = inputs.nixpkgs-unstable.legacyPackages.${pkgs.system};
+  pkgsUnstable = inputs.nixpkgs-unstable.legacyPackages.${pkgs.stdenv.system};
   makePluginFromPin =
     name: pin:
     pkgs.vimUtils.buildVimPlugin {

@@ -229,8 +229,9 @@ in
         };
         "custom/notification" = {
           tooltip = false;
-          format = "{icon} {}";
+          format = "{icon} {text}";
           format-icons = {
+            default = "";
             notification = "<span foreground='red'><sup></sup></span>";
             none = "";
             dnd-notification = "<span foreground='red'><sup></sup></span>";
