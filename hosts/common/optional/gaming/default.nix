@@ -14,8 +14,8 @@
 
     gamescope = {
       enable = true;
-      capSysNice = true;
-      package = pkgs.unstable.gamescope;
+      capSysNice = false;
+      package = pkgs.gamescope;
       args = [
         "--rt"
         "--expose-wayland"
@@ -62,6 +62,7 @@
     vulkan-tools
     nexusmods-app
     corefonts
+    steamtinkerlaunch
     xorg.xrandr
     xorg.xwininfo
     libva

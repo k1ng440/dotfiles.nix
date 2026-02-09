@@ -34,6 +34,9 @@ in
     hyprpolkitagent
     hyprsunset
     hyprpicker
+    quickshell
+    bitwarden-cli
+    tesseract
   ];
 
   systemd.user.targets.hyprland-session.Unit.Wants = [
