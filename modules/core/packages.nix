@@ -5,7 +5,6 @@
     seahorse.enable = true;
     fuse.userAllowOther = true;
     mtr.enable = true;
-    adb.enable = true;
   };
 
   environment.systemPackages = with pkgs; [

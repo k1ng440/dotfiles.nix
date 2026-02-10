@@ -21,7 +21,7 @@
 
   home.packages = with pkgs; [
     dex # Program to generate and execute DesktopEntry files of the Application type
-    xorg.xrandr
+    xrandr
     swayosd
     qt6.qtwayland
   ];

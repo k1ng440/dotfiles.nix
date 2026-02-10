@@ -45,6 +45,7 @@ in
             "seat"
             "pcscd"
             "lpadmin"
+            "input"
           ])
         ];
       };

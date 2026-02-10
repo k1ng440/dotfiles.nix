@@ -60,11 +60,10 @@
     mangohud
     bottles
     vulkan-tools
-    nexusmods-app
     corefonts
     steamtinkerlaunch
-    xorg.xrandr
-    xorg.xwininfo
+    xrandr
+    xwininfo
     libva
     libva-utils
     (pkgs.unstable.lutris.override {

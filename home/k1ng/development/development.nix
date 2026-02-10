@@ -6,6 +6,7 @@
     gnumake # make
     # nix-init
     go
+    (python3.withPackages (ps: with ps; [ evdev ]))
   ];
 
   programs.direnv = {

@@ -23,7 +23,7 @@
       curlie # Terminal HTTP client
       cyme # Modern Unix `lsusb`
       dconf2nix # Nix code from Dconf files
-      dogdns # Modern Unix `dig`
+      doggo # Modern Unix `dig`
       fastfetch # Modern Unix system info
       fd # Modern Unix `find`
       file # Terminal file info

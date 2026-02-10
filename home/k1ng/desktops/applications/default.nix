@@ -9,7 +9,7 @@
     gnucash
     mpv
     font-manager
-    galculator
+    # galculator
     mission-center
     #thunderbird
     discord

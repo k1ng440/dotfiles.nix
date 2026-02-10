@@ -96,8 +96,6 @@ in
       # Other Formats
       "application/vnd.oasis.opendocument.graphics" = [ "libreoffice-draw.desktop" ]; # .odg
       "application/vnd.oasis.opendocument.formula" = [ "libreoffice-math.desktop" ]; # .odf
-
-      "x-scheme-handler/nxm" = [ "com.nexusmods.app.desktop" ];
     };
   };
 }

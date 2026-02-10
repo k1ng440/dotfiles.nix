@@ -1,7 +1,7 @@
 -- local parser_install_dir = os.getenv('HOME') .. '/.local/share/nvim/treesitter/parser'
 -- vim.opt.runtimepath:append(parser_install_dir)
 ---@diagnostic disable-next-line: missing-fields
-require('nvim-treesitter.configs').setup({
+require('nvim-treesitter').setup({
   sync_install = false,
   auto_install = false,
   -- parser_install_dir = parser_install_dir,
@@ -38,8 +38,8 @@ require('nvim-treesitter.configs').setup({
 })
 
 -- nvim-treesitter/nvim-treesitter-textobjects
-local move = require('nvim-treesitter.textobjects.move') ---@type table<string,fun(...)>
-local configs = require('nvim-treesitter.configs')
+local move = require('nvim-treesitter-textobjects.move') ---@type table<string,fun(...)>
+local configs = require('nvim-treesitter')
 for name, fn in pairs(move) do
   if name:find('goto') == 1 then
     move[name] = function(q, ...)

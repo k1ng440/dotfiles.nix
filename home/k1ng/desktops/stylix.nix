@@ -1,7 +1,7 @@
 { pkgs, ... }:
 {
   stylix.targets.qt.enable = true;
-  stylix.iconTheme = {
+  stylix.icons = {
     enable = true;
     package = pkgs.gruvbox-plus-icons;
     light = "Gruvbox-Plus-Light";
