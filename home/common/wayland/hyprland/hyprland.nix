@@ -49,8 +49,10 @@ in
 
   wayland.windowManager.hyprland = {
     inherit (machine.windowManager.hyprland) enable;
-    package = pkgs.hyprland;
-    portalPackage = pkgs.xdg-desktop-portal-hyprland;
+    package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
+    portalPackage =
+      inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
+
     plugins = [
       inputs.hyprland-plugins.packages.${pkgs.stdenv.hostPlatform.system}.hyprexpo
     ];
@@ -97,8 +99,9 @@ in
       ++ onStartPrograms;
 
       input = {
-        kb_layout = "us,jp";
-        kb_options = [ ];
+        kb_layout = "us";
+        # kb_layout = "us,jp,ru";
+        # kb_options = [ "grp:alt_shift_toggle" ];
         numlock_by_default = true;
         repeat_delay = 200;
         repeat_rate = 50;

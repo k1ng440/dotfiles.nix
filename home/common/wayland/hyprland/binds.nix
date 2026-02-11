@@ -78,6 +78,7 @@ in
         "${mod}, Tab, workspace, previous"
         "${mod} SHIFT, C, centerwindow" # Center floating windows
         "${mod}, grave, exec, pypr toggle term" # Toggle pyprland terminal scratchpad
+        "${mod}, m, exec, pypr toggle music" # Toggle music scratchpad
 
         "${mod}, comma, workspace, -1" # Previous workspace
         "${mod}, period, workspace, +1" # Next workspace
@@ -119,9 +120,6 @@ in
 
         # Switch Keyboard Layout
         "ALT, Shift_L, exec, hyprctl switchxkblayout"
-
-        # plugins
-        "${mod} CTRL, g, hyprexpo:expo, toggle"
       ]
       # Move focus from active window to window in specified direction (UP/k, Down/j, Left/h, Right/l)
       ++ (lib.mapAttrsToList (key: direction: "${mod}, ${key}, movefocus,${direction}") directions)

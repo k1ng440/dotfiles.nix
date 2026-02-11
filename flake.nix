@@ -62,10 +62,10 @@
     {
       inherit overlays;
       packages = eachSystem (
-        system:
+        _system:
         let
           pkgs = import nixpkgs {
-            inherit system;
+            system = _system; # Use _system here
             config.allowUnfreePredicate =
               pkg:
               builtins.elem (lib.getName pkg) [
@@ -82,18 +82,18 @@
 
       nixosConfigurations = mkHostConfigs (readHosts "nixos") true;
       devShells = eachSystem (
-        system:
+        _system:
         import ./shell.nix {
-          pkgs = nixpkgs.legacyPackages.${system};
-          checks = self.checks.${system};
+          pkgs = nixpkgs.legacyPackages.${_system};
+          checks = self.checks.${_system};
         }
       );
 
       formatter = eachSystem (
-        system:
+        _system:
         let
-          pkgs = nixpkgs.legacyPackages.${system};
-          inherit (self.checks.${system}.pre-commit-check) config;
+          pkgs = nixpkgs.legacyPackages.${_system};
+          inherit (self.checks.${_system}.pre-commit-check) config;
           inherit (config) package configFile;
           script = ''
             ${pkgs.lib.getExe package} run --all-files --config ${configFile}
@@ -102,8 +102,8 @@
         pkgs.writeShellScriptBin "pre-commit-run" script
       );
 
-      checks = eachSystem (system: {
-        pre-commit-check = inputs.pre-commit-hooks.lib.${system}.run {
+      checks = eachSystem (_system: {
+        pre-commit-check = inputs.pre-commit-hooks.lib.${_system}.run {
           src = ./.;
           hooks = {
             nixfmt.enable = true;

@@ -6,7 +6,7 @@
 }:
 {
   systemPackages = with pkgs; [
-    inputs.nixos-needtoreboot.packages.${system}.default
+    inputs.nixos-needtoreboot.packages.${pkgs.stdenv.hostPlatform.system}.default
   ];
 
   system = {
