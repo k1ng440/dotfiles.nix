@@ -1,4 +1,4 @@
-{ ... }:
+{ pkgs, config, ... }:
 {
   imports = [
     ./animations-end4.nix
@@ -6,5 +6,9 @@
     ./hyprland.nix
     ./pyprland.nix
     ./windowrules.nix
+  ];
+
+  home.packages = [
+    (import ./hyprgamemode.nix { inherit pkgs; })
   ];
 }

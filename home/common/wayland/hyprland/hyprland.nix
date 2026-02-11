@@ -109,6 +109,7 @@ in
 
       general = {
         "$modifier" = "SUPER";
+        allow_tearing = true;
         layout = "dwindle";
         gaps_in = 4;
         gaps_out = 8;

@@ -129,6 +129,8 @@
         "mem_sleep_default=s2idle"
         "nvidia.NVreg_EnableS0ixPowerManagement=1"
         "nvidia.NVreg_S0ixPowerManagementVideoMemoryThreshold=512"
+        "nvidia-drm.modeset=1"
+        "nvidia-drm.fbdev=1"
       ]
       (lib.mkIf config.hardware.nvidia.powerManagement.enable [
         "nvidia.NVreg_TemporaryFilePath=/var/tmp"

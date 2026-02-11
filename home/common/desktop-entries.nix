@@ -4,6 +4,14 @@ let
 in
 {
   xdg.desktopEntries = {
+    steam-flatpak = {
+      name = "Steam (Flatpak)";
+      genericName = "Gaming Platform";
+      exec = "flatpak run com.valvesoftware.Steam";
+      terminal = false;
+      icon = "steam";
+      categories = [ "Game" ];
+    };
     steam-bigpicture-gamescope = {
       name = "Steam Big Picture with Gamescope";
       exec = "gamescope -r ${toString primaryMonitor.refresh_rate} -W ${toString primaryMonitor.width} -H ${toString primaryMonitor.height} steam -- -bigpicture -pipewire-dmabuf -tenfoot";

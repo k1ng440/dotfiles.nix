@@ -91,8 +91,10 @@
         "center on, match:class ^(firefox)$, match:title ^(Extension.*)$"
         "opacity 0.80, match:class ^(kitty|com.mitchellh.ghostty)$"
         "opacity 1 1, match:class ^(zoom|vlc|mpv|org.kde.kdenlive|com.obsproject.Studio|com.github.PintaProject.Pinta|imv|org.gnome.NautilusPreviewer)$"
-        "min_size 600 200, match:class ^(com.gabm.satty)$"
-        "center on, match:class ^(com.gabm.satty)$"
+        "float on, center on, min_size 600 200, match:class com.gabm.satty"
+
+        # --- Game ---
+        "match:tag games*, immediate yes"
       ];
     };
   };

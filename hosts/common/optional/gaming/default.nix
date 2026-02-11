@@ -8,7 +8,7 @@
       gamescopeSession.enable = true;
       extraCompatPackages = [ pkgs.proton-ge-bin ];
       protontricks = {
-        enable = false;
+        enable = true;
       };
     };
 
@@ -19,6 +19,8 @@
       args = [
         "--rt"
         "--expose-wayland"
+        "--backend"
+        "sdl"
       ];
       env = {
         GAMESCOPE_WAYLAND_DISPLAY = "gamescope-0";
@@ -26,6 +28,10 @@
         PROTON_USE_WAYLAND = "1";
         DISABLE_LAYER_AMD_SWITCHABLE_GRAPHICS_1 = "1";
         DISABLE_LAYER_NV_OPTIMUS_1 = "1";
+
+        GBM_BACKEND = "nvidia-drm";
+        __GLX_VENDOR_LIBRARY_NAME = "nvidia";
+        LIBVA_DRIVER_NAME = "nvidia";
       };
     };
 

@@ -77,9 +77,10 @@ in
 
         "${mod}, Tab, workspace, previous"
         "${mod} SHIFT, C, centerwindow" # Center floating windows
+        "${mod}, grave, exec, pypr toggle term" # Toggle pyprland terminal scratchpad
 
-        "${mod}, comma, workspace, -1"    # Previous workspace
-        "${mod}, period, workspace, +1"   # Next workspace
+        "${mod}, comma, workspace, -1" # Previous workspace
+        "${mod}, period, workspace, +1" # Next workspace
 
         # Group
         "${mod}, W, togglegroup"
@@ -120,7 +121,7 @@ in
         "ALT, Shift_L, exec, hyprctl switchxkblayout"
 
         # plugins
-        # "${mod} CTRL, g, hyprexpo:expo, toggle"
+        "${mod} CTRL, g, hyprexpo:expo, toggle"
       ]
       # Move focus from active window to window in specified direction (UP/k, Down/j, Left/h, Right/l)
       ++ (lib.mapAttrsToList (key: direction: "${mod}, ${key}, movefocus,${direction}") directions)
@@ -148,6 +149,8 @@ in
         "${mod}, Q, exec, ${terminal}" # Terminal
         "${mod}, E, exec, ${fileManager}"
         ", Print, exec, screenshootin" # Print Screen
+        "${mod}, F1, exec, hyprgamemode" # Toggle Gamemode
+        "${mod} SHIFT, P, exec, hyprpicker -a" # Color picker
       ];
   };
 }

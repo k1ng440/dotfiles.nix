@@ -52,12 +52,11 @@
         log "Warning: Failed to import environment to systemd"
         fi
 
-        HYPR_CMD="Hyprland"
+        HYPR_CMD="start-hyprland"
 
         log "Launching Hyprland with command: $HYPR_CMD $*"
         exec $HYPR_CMD "$@"
       '')
-
     ];
   };
 }
