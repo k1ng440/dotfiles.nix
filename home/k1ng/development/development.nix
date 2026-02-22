@@ -7,6 +7,7 @@
     # nix-init
     go
     (python3.withPackages (ps: with ps; [ evdev ]))
+    gdb
   ];
 
   programs.direnv = {

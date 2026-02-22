@@ -9,7 +9,11 @@
     hostName = "${config.machine.hostname}";
     networkmanager.enable = true;
     enableIPv6 = true;
-    timeServers = options.networking.timeServers.default ++ [ "pool.ntp.org" ];
+    timeServers = [
+      "time.google.com"
+      "time.cloudflare.com"
+      "pool.ntp.org"
+    ];
     firewall = {
       enable = true;
     };

@@ -60,6 +60,7 @@ in
     bindel = [
       ", XF86MonBrightnessDown, exec, hyprctl hyprsunset gamma -10"
       ", XF86MonBrightnessUp, exec, hyprctl hyprsunset gamma +10"
+
     ];
 
     bind =

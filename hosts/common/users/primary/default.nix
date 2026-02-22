@@ -46,6 +46,7 @@ in
             "pcscd"
             "lpadmin"
             "input"
+            "wireshark"
           ])
         ];
       };

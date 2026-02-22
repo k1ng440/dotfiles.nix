@@ -72,5 +72,6 @@
       pkgs.unstable.gemini-cli
       pkgs.nodejs_24
       # self.packages.${pkgs.stdenv.hostPlatform.system}.stremio
+      wireshark
     ];
 }
