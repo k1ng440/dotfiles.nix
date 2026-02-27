@@ -20,6 +20,7 @@
     ./user-directories.nix
     ./terminal-applications.nix
     ./desktop-entries.nix
+    ./wine.nix
   ];
 
   home.packages = [

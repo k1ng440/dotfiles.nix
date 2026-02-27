@@ -52,6 +52,7 @@
       imagemagick
       nmap
       tcpdump
+      _7zz
     ]
     ++ lib.optionals machine.windowManager.enabled [
       woeusb-ng

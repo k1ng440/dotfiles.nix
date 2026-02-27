@@ -17,6 +17,7 @@
     ./hyprland
     ./swaywm
     ./chromium-flags.nix
+    ./fuzzel.nix
   ];
 
   home.packages = with pkgs; [

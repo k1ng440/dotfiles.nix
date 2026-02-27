@@ -79,8 +79,8 @@
         # --- Misc ---
         "pin on, match:title ^(Picture-in-Picture)$"
         "keep_aspect_ratio on, match:title ^(Picture-in-Picture)$"
-        "no_blur on, match:tag games*"
-        "fullscreen on, match:tag games*"
+        "no_blur on, match:tag games"
+        "fullscreen on, match:tag games"
 
         # --- Specific Apps ---
         "float on, match:class com.saivert.pwvucontrol"
@@ -94,7 +94,8 @@
         "float on, center on, min_size 600 200, match:class com.gabm.satty"
 
         # --- Game ---
-        "match:tag games*, immediate yes"
+        "match:tag games, immediate yes"
+        "match:tag games, suppress_event activate"
       ];
     };
   };

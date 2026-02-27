@@ -18,6 +18,7 @@
       "hosts/common/optional/thunar"
       "hosts/common/optional/virtualisation"
       "hosts/common/optional/gaming"
+      "hosts/common/optional/wine"
       "hosts/common/optional/ai"
       "hosts/common/optional/security"
       "hosts/common/optional/applications.nix"

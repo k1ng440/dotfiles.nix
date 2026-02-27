@@ -36,8 +36,6 @@
       package = pkgs.nvidia-container-toolkit;
     };
     graphics = {
-      enable = true;
-      enable32Bit = true;
       extraPackages = with pkgs; [
         nvidia-vaapi-driver # VAAPI
       ];
@@ -126,6 +124,7 @@
         "nvidia_modeset.disable_vrr_memclk_switch=1" # stop really high memclk when vrr is in use.
         "nvidia.NVreg_EnableResizableBar=1" # enable reBAR
         "nvidia.NVreg_RegistryDwords=RmEnableAggressiveVblank=1" # low-latency stuff
+        "nvidia.NVreg_PreserveVideoMemoryAllocations=1"
         "mem_sleep_default=s2idle"
         "nvidia.NVreg_EnableS0ixPowerManagement=1"
         "nvidia.NVreg_S0ixPowerManagementVideoMemoryThreshold=512"

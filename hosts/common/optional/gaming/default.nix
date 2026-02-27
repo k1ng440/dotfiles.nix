@@ -16,23 +16,6 @@
       enable = true;
       capSysNice = false;
       package = pkgs.gamescope;
-      args = [
-        "--rt"
-        "--expose-wayland"
-        "--backend"
-        "sdl"
-      ];
-      env = {
-        GAMESCOPE_WAYLAND_DISPLAY = "gamescope-0";
-        PROTON_USE_SDL = "1";
-        PROTON_USE_WAYLAND = "1";
-        DISABLE_LAYER_AMD_SWITCHABLE_GRAPHICS_1 = "1";
-        DISABLE_LAYER_NV_OPTIMUS_1 = "1";
-
-        GBM_BACKEND = "nvidia-drm";
-        __GLX_VENDOR_LIBRARY_NAME = "nvidia";
-        LIBVA_DRIVER_NAME = "nvidia";
-      };
     };
 
     # To run steam games in game mode, add the following to the game's properties from within steam
@@ -72,11 +55,6 @@
     xwininfo
     libva
     libva-utils
-    (pkgs.unstable.lutris.override {
-      extraPkgs = pkgs: [
-        pkgs.wineWowPackages.stagingFull
-        pkgs.winetricks
-      ];
-    })
+    pkgs.unstable.lutris
   ];
 }

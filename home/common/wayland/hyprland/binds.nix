@@ -44,11 +44,16 @@ in
       "${mod}, Z, exec, pypr zoom ++0.5"
       "${mod} SHIFT, Z, exec, pypr zoom"
 
-      # Resize active window 5 pixels in direction
-      "CTRL SUPER SHIFT, h, resizeactive,-5 0"
-      "CTRL SUPER SHIFT, j, resizeactive,0 5"
-      "CTRL SUPER SHIFT, k, resizeactive,0 -5"
-      "CTRL SUPER SHIFT, l, resizeactive,5 0"
+      # Resize active window
+      "CTRL ${mod} SHIFT, h, resizeactive,-5 0"
+      "CTRL ${mod} SHIFT, j, resizeactive,0 5"
+      "CTRL ${mod} SHIFT, k, resizeactive,0 -5"
+      "CTRL ${mod} SHIFT, l, resizeactive,5 0"
+
+      "${mod}, minus, resizeactive, -100 0"
+      "${mod}, equal, resizeactive, 100 0"
+      "${mod} SHIFT, minus, resizeactive, 0 -100"
+      "${mod} SHIFT, equal, resizeactive, 0 100"
 
       # Volume
       ", XF86AudioRaiseVolume, exec, swayosd-client --output-volume raise"
@@ -76,7 +81,7 @@ in
         "${mod}, space, exec, rofi -show drun" # App launcher
         "${mod}, R, exec, rofi -show drun" # App launcher
 
-        "${mod}, Tab, workspace, previous"
+        # "${mod}, Tab, workspace, previous"
         "${mod} SHIFT, C, centerwindow" # Center floating windows
         "${mod}, grave, exec, pypr toggle term" # Toggle pyprland terminal scratchpad
         "${mod}, m, exec, pypr toggle music" # Toggle music scratchpad
@@ -121,6 +126,11 @@ in
 
         # Switch Keyboard Layout
         "ALT, Shift_L, exec, hyprctl switchxkblayout"
+
+        # Lock mouse to current window
+        "${mod}, Escape, exec, hyprctl keyword \"input:cursor_lock_to_window\" 1"
+        # Unlock mouse
+        "${mod} SHIFT, Escape, exec, hyprctl keyword \"input:cursor_lock_to_window\" 0"
       ]
       # Move focus from active window to window in specified direction (UP/k, Down/j, Left/h, Right/l)
       ++ (lib.mapAttrsToList (key: direction: "${mod}, ${key}, movefocus,${direction}") directions)
@@ -134,8 +144,8 @@ in
       ++ (map (n: "${mod} SHIFT, ${n}, movetoworkspace, ${n}") workspaces)
       # Special Workspace
       ++ [
-        "${mod}, S, togglespecialworkspace, magic"
-        "${mod} SHIFT, S, movetoworkspace, special:magic"
+        # "${mod}, S, togglespecialworkspace, magic"
+        # "${mod} SHIFT, S, movetoworkspace, special:magic"
       ]
       # Lock screen / Logout / Reload
       ++ [

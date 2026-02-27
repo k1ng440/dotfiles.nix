@@ -1,4 +1,4 @@
-{ config, ... }:
+{ pkgs, config, ... }:
 {
   # Services to start
   services = {
@@ -15,12 +15,35 @@
     avahi = {
       enable = true;
       nssmdns4 = true;
-      openFirewall = true;
+      publish = {
+        enable = true;
+        addresses = true;
+        workstation = true;
+      };
     };
 
     smartd = {
       enable = !config.machine.computed.isMinimal && !config.machine.platform.isVirtualMachine;
       autodetect = true;
+    };
+
+    syslogd = {
+      timers.clear-tmp = {
+        description = "Clear /tmp weekly";
+        wantedBy = [ "timers.target" ];
+        timerConfig = {
+          OnCalendar = "weekly";
+          Persistent = true;
+        };
+      };
+
+      services.clear-tmp = {
+        description = "Clear /tmp directory";
+        serviceConfig = {
+          Type = "oneshot";
+          ExecStart = "${pkgs.coreutils}/bin/find /tmp -type f -atime +7 -delete";
+        };
+      };
     };
   };
 }

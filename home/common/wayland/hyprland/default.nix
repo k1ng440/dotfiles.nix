@@ -6,6 +6,7 @@
     ./hyprland.nix
     ./pyprland.nix
     ./windowrules.nix
+    ./scripts
   ];
 
   home.packages = [

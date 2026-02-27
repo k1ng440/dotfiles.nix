@@ -34,6 +34,7 @@ in
           (exisitngGroupOnly [
             "audio"
             "video"
+            "render"
             "docker"
             "git"
             "networkmanager"
