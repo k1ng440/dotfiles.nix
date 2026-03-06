@@ -28,13 +28,47 @@
       "nvidia"
     ];
 
-    environment.systemPackages = with pkgs; [
-      gnome-tweaks
-      gnome-extension-manager
-    ];
+    environment.systemPackages =
+      (with pkgs; [
+        gnome-tweaks
+        gnome-extension-manager
+        nautilus-python
+        gnome-shell-extensions
+      ])
+      ++ (with pkgs.gnomeExtensions; [
+        appindicator
+        dash-to-dock
+        gsconnect
+        gtile
+        just-perfection
+        logo-menu
+        no-overview
+        space-bar
+        top-bar-organizer
+        wireless-hid
+        vitals
+      ]);
 
     # GNOME specific fixes/tweaks
     services.udev.packages = with pkgs; [ gnome-settings-daemon ];
+    services.libinput.enable = true;
+
+    # Open firewall for samba connections to work.
+    networking.firewall.extraCommands = "iptables -t raw -A OUTPUT -p udp -m udp --dport 137 -j CT --helper netbios-ns";
+
+    # Open firewall for KDE Connect/GSConnect
+    networking.firewall.allowedTCPPortRanges = [
+      {
+        from = 1714;
+        to = 1764;
+      }
+    ];
+    networking.firewall.allowedUDPPortRanges = [
+      {
+        from = 1714;
+        to = 1764;
+      }
+    ];
 
     stylix.targets.gnome.enable = false;
 
@@ -42,12 +76,17 @@
       (with pkgs; [
         gnome-photos
         gnome-tour
+        epiphany
+        geary
+        gnome-font-viewer
+        gnome-system-monitor
+        gnome-maps
       ])
       ++ (with pkgs; [
         cheese # webcam tool
         gnome-music
-        epiphany # web browser
-        geary # email reader
+        # epiphany # web browser
+        # geary # email reader
         evince # document viewer
         gnome-characters
         totem # video player

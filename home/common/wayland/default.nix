@@ -12,6 +12,7 @@
     ./common/swaync.nix
     ./common/swww.nix
     ./common/swayosd.nix
+    ./common/easyeffects.nix
     ./waybar/waybar-ddubs.nix
     ./wlogout
     ./hyprland

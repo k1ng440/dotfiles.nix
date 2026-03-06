@@ -88,6 +88,8 @@
       alsa-utils
       qjackctl
       carla
+      easyeffects
+      lsp-plugins
     ];
   };
 }

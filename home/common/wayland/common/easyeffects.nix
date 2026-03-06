@@ -1,0 +1,4 @@
+{ ... }:
+{
+  services.easyeffects.enable = true;
+}
