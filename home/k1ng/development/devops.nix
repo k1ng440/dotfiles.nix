@@ -8,7 +8,7 @@
     act
     ansible
     # awscli2
-    azure-cli
+    # azure-cli
     eksctl
     kind
     kubelogin-oidc

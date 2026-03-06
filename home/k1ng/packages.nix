@@ -58,7 +58,7 @@
       woeusb-ng
       spotify
       yubikey-manager
-      libreoffice # office
+      libreoffice-fresh # office
       obs-studio
       foot
       bustle # Graphical D-Bus message analyser and profiler

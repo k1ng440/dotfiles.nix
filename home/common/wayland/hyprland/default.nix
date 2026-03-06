@@ -7,9 +7,6 @@
     ./pyprland.nix
     ./windowrules.nix
     ./scripts
-  ];
-
-  home.packages = [
-    (import ./hyprgamemode.nix { inherit pkgs; })
+    ./hyprgamemode.nix
   ];
 }

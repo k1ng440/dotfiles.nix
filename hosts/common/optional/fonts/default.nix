@@ -10,13 +10,13 @@
   config = lib.mkIf (config.machine.windowManager.enabled && !config.machine.computed.isMinimal) {
     fonts.packages = with pkgs; [
       dejavu_fonts
-      noto-fonts
+      # noto-fonts
       garamond-libre
       font-awesome
       material-icons
-      noto-fonts-cjk-sans
-      noto-fonts-cjk-serif
-      noto-fonts-monochrome-emoji
+      # noto-fonts-cjk-sans
+      # noto-fonts-cjk-serif
+      # noto-fonts-monochrome-emoji
       nerd-fonts.jetbrains-mono
       nerd-fonts.symbols-only
       inter

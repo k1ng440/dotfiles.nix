@@ -1,4 +1,10 @@
-{inputs, ...} : {
+{
+  inputs,
+  config,
+  pkgs,
+  ...
+}:
+{
   security = {
     rtkit.enable = true;
     polkit = {
@@ -20,7 +26,15 @@
       '';
     };
     pam.services.swaylock = {
-      text = ''auth include login '';
+      text = "auth include login ";
+    };
+
+    apparmor = {
+      enable = config.machine.security.selinux;
+      packages = with pkgs; [
+        apparmor-utils
+        apparmor-profiles
+      ];
     };
   };
 }

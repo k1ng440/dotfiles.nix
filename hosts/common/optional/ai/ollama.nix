@@ -5,7 +5,7 @@
 {
   services.ollama = {
     package = pkgs.unstable.ollama-cuda;
-    enable = true;
+    enable = false;
     environmentVariables = {
       OLLAMA_ORIGINS = "chrome-extension://*,moz-extension://*,safari-web-extension://*";
       OLLAMA_LLM_LIBRARY = "cuda_v12";

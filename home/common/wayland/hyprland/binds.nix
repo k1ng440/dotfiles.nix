@@ -91,7 +91,7 @@ in
 
         # Group
         "${mod}, W, togglegroup"
-        "${mod}, G, togglesplit"
+        "${mod}, G, layoutmsg, togglesplit"
 
         # Circle Window
         "ALT, Tab, cyclenext"
@@ -113,6 +113,7 @@ in
 
         # Kill active / focus window
         "${mod} SHIFT, Q, killactive"
+        "${mod} SHIFT, C, forcekillactive"
         "${mod}, C, killactive"
 
         # Clipboard

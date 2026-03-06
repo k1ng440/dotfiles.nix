@@ -18,7 +18,7 @@
         "tag +im, match:class ^(org.telegram.desktop|io.github.tdesktop_x64.TDesktop)$"
         "tag +im, match:class ^(teams-for-linux)$"
         "tag +games, match:class ^(gamescope)$"
-        "tag +games, match:class ^(steam_app_\d+)$"
+        "tag +games, match:class ^steam_app_[0-9]+$"
         "tag +gamestore, match:class ^([Ss]team)$"
         "tag +gamestore, match:title ^([Ll]utris)$"
         "tag +gamestore, match:class ^(com.heroicgameslauncher.hgl)$"
@@ -42,8 +42,6 @@
         "center on, float on, stay_focused on, match:class ^(gcr-prompter)$"
 
         # --- Idle Inhibition ---
-        "idle_inhibit fullscreen, match:class ^(.*)$"
-        "idle_inhibit fullscreen, match:title ^(.*)$"
         "idle_inhibit fullscreen, match:fullscreen 1"
 
         # --- Float Rules ---
@@ -91,11 +89,11 @@
         "center on, match:class ^(firefox)$, match:title ^(Extension.*)$"
         "opacity 0.80, match:class ^(kitty|com.mitchellh.ghostty)$"
         "opacity 1 1, match:class ^(zoom|vlc|mpv|org.kde.kdenlive|com.obsproject.Studio|com.github.PintaProject.Pinta|imv|org.gnome.NautilusPreviewer)$"
-        "float on, center on, min_size 600 200, match:class com.gabm.satty"
+        "float on, pin on, dim_around on, center on, min_size 600 200, match:class com.gabm.satty"
 
         # --- Game ---
-        "match:tag games, immediate yes"
-        "match:tag games, suppress_event activate"
+        "immediate yes, no_blur on, suppress_event fullscreen maximize activate focus, fullscreen on, tile off, match:tag games"
+        "rounding 0, no_anim off, opaque on, no_shadow on, match:tag games"
       ];
     };
   };

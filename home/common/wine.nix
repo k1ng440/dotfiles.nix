@@ -1,17 +1,31 @@
 { pkgs, ... }:
 let
-  winePkg = pkgs.wineWowPackages.waylandFull;
+  winePkg = pkgs.wineWowPackages.staging;
+
+  winetricksPackages = [
+    "corefonts"
+    "comctl32"
+    "dotnet48"
+    "vcrun2015"
+  ];
+
   winePath = pkgs.lib.makeBinPath [
     winePkg
     pkgs.winetricks
     pkgs.gnused
     pkgs.coreutils
+    pkgs.findutils
+    pkgs.gnugrep
+    pkgs.which
+    pkgs.xorg.xorgserver
+    pkgs.cabextract
+    pkgs.vulkan-loader # Added for vkd3d/driver support
   ];
 in
 {
   systemd.user.services.winetricks-init = {
     Unit = {
-      Description = "Initialize Wine prefix";
+      Description = "Initialize Wine prefix for Fallout 76 Tools";
       After = [ "graphical-session.target" ];
       PartOf = [ "graphical-session.target" ];
     };
@@ -23,32 +37,57 @@ in
         "WINEARCH=win64"
         "WINEDEBUG=-all"
         "PATH=${winePath}"
-        "DISPLAY=:0"
+        "WINE=${winePkg}/bin/wine"
+        "WINE_BIN=${winePkg}/bin/wine"
+        "LD_LIBRARY_PATH=${
+          pkgs.lib.makeLibraryPath [
+            pkgs.vulkan-loader
+            pkgs.wayland
+            pkgs.libGL
+          ]
+        }"
       ];
 
       ExecStart = pkgs.writeShellScript "init-wine-prefix" ''
-        for i in {1..30}; do
-          if [ -e /tmp/.X11-unix/X0 ]; then break; fi
-          sleep 0.5
-        done
+        export WINE_BIN="${winePkg}/bin/wine"
 
-        if [ ! -f "$WINEPREFIX/.winetricks-initialized" ]; then
-          # wine reg add "HKEY_CURRENT_USER\Software\Wine\Drivers" /v "Graphics" /t REG_SZ /d "x11" /f
-          winetricks -q corefonts comctl32 dotnet48 vcrun2015
+        install_verb() {
+          local verb=$1
+          local marker="$WINEPREFIX/.winetricks-$verb"
 
-          # Disable GPU acceleration in the UI to fix the "Black Menu"
-          wine reg add "HKEY_CURRENT_USER\Software\Wine\Direct3D" /v "renderer" /t REG_SZ /d "gdi" /f
-          wine reg add "HKEY_CURRENT_USER\Software\Wine\Direct3D" /v "MaxVersionGL" /t REG_DWORD /d 0x30002 /f
+          if [ ! -f "$marker" ]; then
+            echo "Installing $verb..."
+            if xvfb-run -a -s "-screen 0 1024x768x24" winetricks --unattended "$verb"; then
+              touch "$marker"
+              echo "$verb installed successfully."
+            else
+              echo "ERROR: Failed to install $verb"
+              # Don't exit immediately, try the next one
+            fi
+          fi
+        }
 
-          touch "$WINEPREFIX/.winetricks-initialized"
+        # 1. Clean up corrupt prefix if kernel32 is missing
+        if [ -d "$WINEPREFIX" ] && [ ! -f "$WINEPREFIX/drive_c/windows/system32/kernel32.dll" ]; then
+           echo "Prefix exists but is corrupt (kernel32.dll missing). Nuking..."
+           rm -rf "$WINEPREFIX"
         fi
 
-        if [ ! -f "$WINEPREFIX/.theme-applied" ]; then
-          wine reg add "HKEY_CURRENT_USER\Control Panel\Colors" /v "Window" /t REG_SZ /d "30 30 30" /f
-          wine reg add "HKEY_CURRENT_USER\Control Panel\Colors" /v "WindowText" /t REG_SZ /d "255 255 255" /f
-          wine reg add "HKEY_CURRENT_USER\Control Panel\Desktop" /v "LogPixels" /t REG_DWORD /d 120 /f
-          touch "$WINEPREFIX/.theme-applied"
+        # 2. Force fresh initialization
+        if [ ! -d "$WINEPREFIX" ]; then
+           echo "Initializing fresh win64 prefix..."
+           ${winePkg}/bin/wineboot -i
+           ${winePkg}/bin/wineserver -w
         fi
+
+        # 3. Install the list
+        ${pkgs.lib.concatMapStringsSep "\n" (verb: "install_verb ${verb}") winetricksPackages}
+
+        # 4. Registry Fixes
+        ${winePkg}/bin/wine reg add "HKEY_CURRENT_USER\Software\Wine\Direct3D" /v "renderer" /t REG_SZ /d "gdi" /f
+        ${winePkg}/bin/wine reg add "HKEY_CURRENT_USER\Control Panel\Desktop" /v "LogPixels" /t REG_DWORD /d 120 /f
+
+        echo "Initialization process finished."
       '';
       RemainAfterExit = true;
     };

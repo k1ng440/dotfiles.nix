@@ -48,6 +48,7 @@ in
             "lpadmin"
             "input"
             "wireshark"
+            "gamemode"
           ])
         ];
       };
