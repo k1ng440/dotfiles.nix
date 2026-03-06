@@ -200,14 +200,22 @@
       };
     };
 
+    gnome = {
+      enabled = lib.mkOption {
+        type = lib.types.bool;
+        default = false;
+        description = "Whether to enable GNOME desktop environment.";
+      };
+    };
+
     wm-enabled = lib.mkOption {
       type = lib.types.bool;
       description = "Whether window manager enabled.";
       default =
         let
-          inherit (config.hostSpec) swaywm hyprland;
+          inherit (config.hostSpec) swaywm hyprland gnome;
         in
-        swaywm.enabled || hyprland.enabled;
+        swaywm.enabled || hyprland.enabled || gnome.enabled;
     };
   };
 
@@ -229,16 +237,21 @@
           message = "config.system.impermanence.enable is true but no persistFolder path is provided";
         }
         {
-          assertion = !(config.hostSpec.hyprland.enabled && config.hostSpec.swaywm.enabled);
+          assertion =
+            (if config.hostSpec.hyprland.enabled then 1 else 0)
+            + (if config.hostSpec.swaywm.enabled then 1 else 0)
+            + (if config.hostSpec.gnome.enabled then 1 else 0) <= 1;
           message = ''
-            Cannot enable both Hyprland and Sway simultaneously.
+            Cannot enable multiple window managers/desktops simultaneously.
             Current configuration:
               - hostSpec.hyprland.enabled = ${toString config.hostSpec.hyprland.enabled}
               - hostSpec.swaywm.enabled = ${toString config.hostSpec.swaywm.enabled}
+              - hostSpec.gnome.enabled = ${toString config.hostSpec.gnome.enabled}
 
-            Please choose one compositor:
+            Please choose only one:
               - For modern features and animations: enable only Hyprland
               - For stability and i3 compatibility: enable only Sway
+              - For full desktop experience: enable only GNOME
           '';
         }
       ];

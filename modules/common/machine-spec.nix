@@ -1,5 +1,10 @@
 # Specifications For Differentiating Hosts
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 let
   inherit (lib) mkOption mkEnableOption types;
 
@@ -18,17 +23,23 @@ let
 
   # Validation helpers
   validators = {
-    validateHostType = hostType: capabilities:
+    validateHostType =
+      hostType: capabilities:
       let
-        serverCapabilities = [ "storage-server" "networking" "container-runtime" ];
+        serverCapabilities = [
+          "storage-server"
+          "networking"
+          "container-runtime"
+        ];
         hasServerCapability = builtins.any (cap: builtins.elem cap capabilities) serverCapabilities;
       in
-        if hostType == "server" && !hasServerCapability
-        then throw "Server host type should have at least one server capability"
-      else true;
+      if hostType == "server" && !hasServerCapability then
+        throw "Server host type should have at least one server capability"
+      else
+        true;
   };
 in
-  {
+{
   options.machine = {
     # === Core Identity ===
     username = mkOption {
@@ -72,8 +83,10 @@ in
       description = "The home directory of the user";
       readOnly = true;
       default =
-        let user = config.machine.username;
-        in if pkgs.stdenv.isLinux then "/home/${user}" else "/Users/${user}";
+        let
+          user = config.machine.username;
+        in
+        if pkgs.stdenv.isLinux then "/home/${user}" else "/Users/${user}";
       defaultText = lib.literalExpression ''
         if pkgs.stdenv.isLinux then "/home/''${config.machine.username}" else "/Users/''${config.machine.username}"
       '';
@@ -83,7 +96,7 @@ in
     email = mkOption {
       type = types.attrsOf commonTypes.emailAddr;
       description = "Email addresses for different purposes";
-      default = {};
+      default = { };
       example = {
         personal = "contact@iampavel.dev";
         work = "asad@example-work.com";
@@ -92,7 +105,12 @@ in
 
     # === Host Classification ===
     hostType = mkOption {
-      type = types.enum [ "minimal" "workstation" "server" "mobile" ];
+      type = types.enum [
+        "minimal"
+        "workstation"
+        "server"
+        "mobile"
+      ];
       default = "workstation";
       description = ''
         The type of host system:
@@ -104,7 +122,11 @@ in
     };
 
     environment = mkOption {
-      type = types.enum [ "development" "staging" "production" ];
+      type = types.enum [
+        "development"
+        "staging"
+        "production"
+      ];
       default = "production";
       description = "The deployment environment this host runs in";
     };
@@ -134,34 +156,40 @@ in
 
     # === Hardware Capabilities ===
     capabilities = mkOption {
-      type = types.listOf (types.enum [
-        # Hardware capabilities
+      type = types.listOf (
+        types.enum [
+          # Hardware capabilities
+          "gpu"
+          "nvidia-gpu"
+          "high-memory"
+          "low-power"
+          "battery"
+          "bluetooth"
+          "camera"
+          "multi-monitor"
+          "tpm"
+          "secure-boot"
+          "audio"
+          # Software/Service capabilities
+          "audio-production"
+          "gaming"
+          "development"
+          "machine-learning"
+          "streaming"
+          "container-runtime"
+          "virtualization"
+          # Server roles
+          "networking"
+          "storage-server"
+        ]
+      );
+      default = [ ];
+      description = "Special hardware capabilities or roles of this host";
+      example = [
         "gpu"
-        "nvidia-gpu"
-        "high-memory"
-        "low-power"
-        "battery"
-        "bluetooth"
-        "camera"
-        "multi-monitor"
-        "tpm"
-        "secure-boot"
-        "audio"
-        # Software/Service capabilities
-        "audio-production"
         "gaming"
         "development"
-        "machine-learning"
-        "streaming"
-        "container-runtime"
-        "virtualization"
-        # Server roles
-        "networking"
-        "storage-server"
-      ]);
-      default = [];
-      description = "Special hardware capabilities or roles of this host";
-      example = [ "gpu" "gaming" "development" ];
+      ];
     };
 
     # === Hardware Configuration ===
@@ -177,25 +205,27 @@ in
           cloudflare-warp = mkEnableOption "Cloudflare Zero Trust client daemon";
           ports = {
             tcp = lib.mkOption {
-              type = lib.types.attrsOf (lib.types.submodule {
-                options = {
-                  port = lib.mkOption {
-                    type = types.ints.positive;
-                    description = "TCP port number to open in the firewall";
+              type = lib.types.attrsOf (
+                lib.types.submodule {
+                  options = {
+                    port = lib.mkOption {
+                      type = types.ints.positive;
+                      description = "TCP port number to open in the firewall";
+                    };
+                    open = lib.mkEnableOption "Open this TCP port in the firewall";
+                    service = lib.mkOption {
+                      type = lib.types.str;
+                      default = "";
+                      description = "Service associated with this port (e.g., 'ssh', 'http')";
+                    };
+                    description = lib.mkOption {
+                      type = lib.types.str;
+                      default = "";
+                      description = "Description of the port's purpose";
+                    };
                   };
-                  open = lib.mkEnableOption "Open this TCP port in the firewall";
-                  service = lib.mkOption {
-                    type = lib.types.str;
-                    default = "";
-                    description = "Service associated with this port (e.g., 'ssh', 'http')";
-                  };
-                  description = lib.mkOption {
-                    type = lib.types.str;
-                    default = "";
-                    description = "Description of the port's purpose";
-                  };
-                };
-              });
+                }
+              );
               default = {
                 ssh = {
                   port = 6960;
@@ -222,26 +252,28 @@ in
             };
 
             udp = lib.mkOption {
-              type = lib.types.attrsOf (lib.types.submodule {
-                options = {
-                  port = lib.mkOption {
-                    type = types.ints.positive;
-                    description = "UDP port number to open in the firewall";
+              type = lib.types.attrsOf (
+                lib.types.submodule {
+                  options = {
+                    port = lib.mkOption {
+                      type = types.ints.positive;
+                      description = "UDP port number to open in the firewall";
+                    };
+                    open = lib.mkEnableOption "Open this UDP port in the firewall";
+                    service = lib.mkOption {
+                      type = lib.types.str;
+                      default = "";
+                      description = "Service associated with this port (e.g., 'wireguard')";
+                    };
+                    description = lib.mkOption {
+                      type = lib.types.str;
+                      default = "";
+                      description = "Description of the port's purpose";
+                    };
                   };
-                  open = lib.mkEnableOption "Open this UDP port in the firewall";
-                  service = lib.mkOption {
-                    type = lib.types.str;
-                    default = "";
-                    description = "Service associated with this port (e.g., 'wireguard')";
-                  };
-                  description = lib.mkOption {
-                    type = lib.types.str;
-                    default = "";
-                    description = "Description of the port's purpose";
-                  };
-                };
-              });
-              default = {};
+                }
+              );
+              default = { };
               description = "UDP ports to configure in the firewall";
               example = {
                 wireguard = {
@@ -256,12 +288,12 @@ in
 
           customConfig = mkOption {
             type = types.attrsOf types.anything;
-            default = {};
+            default = { };
             description = "Additional networking configuration";
           };
         };
       };
-      default = {};
+      default = { };
       description = "Networking configuration";
     };
 
@@ -275,40 +307,42 @@ in
 
       config = mkOption {
         type = types.attrsOf types.anything;
-        default = {};
+        default = { };
         description = "msmtp configuration options";
       };
     };
 
     # === Work Configuration ===
     work = mkOption {
-      type = types.nullOr (types.submodule {
-        options = {
-          enabled = mkOption {
-            type = types.bool;
-            default = false;
-            description = "Whether this is a work machine";
-          };
+      type = types.nullOr (
+        types.submodule {
+          options = {
+            enabled = mkOption {
+              type = types.bool;
+              default = false;
+              description = "Whether this is a work machine";
+            };
 
-          organization = mkOption {
-            type = types.str;
-            description = "Organization name";
-            example = "Acme Corp";
-          };
+            organization = mkOption {
+              type = types.str;
+              description = "Organization name";
+              example = "Acme Corp";
+            };
 
-          vpn = mkOption {
-            type = types.bool;
-            default = false;
-            description = "Whether work VPN is required";
-          };
+            vpn = mkOption {
+              type = types.bool;
+              default = false;
+              description = "Whether work VPN is required";
+            };
 
-          customConfig = mkOption {
-            type = types.attrsOf types.anything;
-            default = {};
-            description = "Additional work-specific configuration";
+            customConfig = mkOption {
+              type = types.attrsOf types.anything;
+              default = { };
+              description = "Additional work-specific configuration";
+            };
           };
-        };
-      });
+        }
+      );
       default = null;
       description = "Work-related configuration (null if not a work machine)";
     };
@@ -331,6 +365,11 @@ in
         default = ../../assets/wallpapers/wallpaper_3862_3440x1440.jpg;
         description = "Image for generating color scheme";
       };
+      monitorsXml = mkOption {
+        type = types.nullOr types.lines;
+        default = null;
+        description = "Content of monitors.xml for GDM/GNOME";
+      };
     };
 
     # === Window Manager Configuration ===
@@ -343,11 +382,18 @@ in
         enable = mkEnableOption "Sway window manager";
       };
 
+      gnome = {
+        enable = mkEnableOption "GNOME desktop environment";
+      };
+
       # Computed option
       enabled = mkOption {
         type = types.bool;
         description = "Whether any window manager is enabled";
-        default = config.machine.windowManager.hyprland.enable || config.machine.windowManager.sway.enable;
+        default =
+          config.machine.windowManager.hyprland.enable
+          || config.machine.windowManager.sway.enable
+          || config.machine.windowManager.gnome.enable;
         readOnly = true;
       };
     };
@@ -362,7 +408,10 @@ in
       secureBoot = mkEnableOption "UEFI Secure Boot";
       encryptedRoot = mkEnableOption "full disk encryption";
       bootloader = mkOption {
-        type = types.enum [ "systemd-boot" "grub" ];
+        type = types.enum [
+          "systemd-boot"
+          "grub"
+        ];
         default = "systemd-boot";
       };
     };
@@ -372,45 +421,58 @@ in
       enable = mkEnableOption "backup system";
 
       strategy = mkOption {
-        type = types.enum [ "restic" "borg" "rsync" "zfs" "custom" ];
+        type = types.enum [
+          "restic"
+          "borg"
+          "rsync"
+          "zfs"
+          "custom"
+        ];
         default = "borg";
         description = "Backup strategy/tool to use";
       };
 
       destinations = mkOption {
-        type = types.listOf (types.submodule {
-          options = {
-            name = mkOption {
-              type = types.str;
-              description = "Destination name/identifier";
-              example = "remote-server";
-            };
+        type = types.listOf (
+          types.submodule {
+            options = {
+              name = mkOption {
+                type = types.str;
+                description = "Destination name/identifier";
+                example = "remote-server";
+              };
 
-            type = mkOption {
-              type = types.enum [ "local" "remote" "cloud" "network" ];
-              description = "Type of backup destination";
-            };
+              type = mkOption {
+                type = types.enum [
+                  "local"
+                  "remote"
+                  "cloud"
+                  "network"
+                ];
+                description = "Type of backup destination";
+              };
 
-            path = mkOption {
-              type = types.str;
-              description = "Backup destination path or URL";
-              example = "/mnt/backup";
-            };
+              path = mkOption {
+                type = types.str;
+                description = "Backup destination path or URL";
+                example = "/mnt/backup";
+              };
 
-            priority = mkOption {
-              type = types.ints.between 1 10;
-              default = 5;
-              description = "Backup priority (1=highest, 10=lowest)";
-            };
+              priority = mkOption {
+                type = types.ints.between 1 10;
+                default = 5;
+                description = "Backup priority (1=highest, 10=lowest)";
+              };
 
-            encryption = mkOption {
-              type = types.bool;
-              default = true;
-              description = "Whether backups to this destination are encrypted";
+              encryption = mkOption {
+                type = types.bool;
+                default = true;
+                description = "Whether backups to this destination are encrypted";
+              };
             };
-          };
-        });
-        default = [];
+          }
+        );
+        default = [ ];
         description = "List of backup destinations";
         example = [
           {
@@ -427,7 +489,13 @@ in
         type = types.submodule {
           options = {
             frequency = mkOption {
-              type = types.enum [ "hourly" "daily" "weekly" "monthly" "custom" ];
+              type = types.enum [
+                "hourly"
+                "daily"
+                "weekly"
+                "monthly"
+                "custom"
+              ];
               default = "daily";
               description = "Backup frequency";
             };
@@ -446,7 +514,7 @@ in
             };
           };
         };
-        default = {};
+        default = { };
         description = "Backup scheduling configuration";
       };
 
@@ -478,7 +546,7 @@ in
             };
           };
         };
-        default = {};
+        default = { };
         description = "Backup retention policy";
       };
 
@@ -490,7 +558,11 @@ in
               default = [ config.machine.home ];
               defaultText = "[ config.machine.home ]";
               description = "Paths to include in backups";
-              example = [ "/home/user" "/etc" "/var/lib/important" ];
+              example = [
+                "/home/user"
+                "/etc"
+                "/var/lib/important"
+              ];
             };
 
             exclude = mkOption {
@@ -508,7 +580,7 @@ in
             };
           };
         };
-        default = {};
+        default = { };
         description = "Backup path configuration";
       };
 
@@ -528,7 +600,14 @@ in
             };
 
             methods = mkOption {
-              type = types.listOf (types.enum [ "email" "webhook" "desktop" "log" ]);
+              type = types.listOf (
+                types.enum [
+                  "email"
+                  "webhook"
+                  "desktop"
+                  "log"
+                ]
+              );
               default = [ "log" ];
               description = "Notification methods to use";
             };
@@ -541,13 +620,13 @@ in
             };
           };
         };
-        default = {};
+        default = { };
         description = "Backup notification configuration";
       };
 
       customConfig = mkOption {
         type = types.attrsOf types.anything;
-        default = {};
+        default = { };
         description = "Additional backup tool-specific configuration";
       };
     };
@@ -592,7 +671,10 @@ in
       useWindowManager = mkOption {
         type = types.bool;
         description = "Whether to use a window manager";
-        default = config.machine.hyprland.enable || config.machine.sway.enable;
+        default =
+          config.machine.windowManager.hyprland.enable
+          || config.machine.windowManager.sway.enable
+          || config.machine.windowManager.gnome.enable;
         readOnly = true;
       };
     };
@@ -602,9 +684,11 @@ in
     assertions =
       let
         hostSpec = config.machine;
-        isImpermanent = config ? "system" && config.system ? "impermanence" && config.system.impermanence.enable;
+        isImpermanent =
+          config ? "system" && config.system ? "impermanence" && config.system.impermanence.enable;
         wmConfig = hostSpec.windowManager;
-      in [
+      in
+      [
         # Work configuration validation
         {
           assertion = !hostSpec.computed.isWork || (hostSpec.work != null && hostSpec.work.enabled);
@@ -619,16 +703,21 @@ in
 
         # Window manager mutual exclusion
         {
-          assertion = !(wmConfig.hyprland.enable && wmConfig.sway.enable);
+          assertion =
+            (if wmConfig.hyprland.enable then 1 else 0)
+            + (if wmConfig.sway.enable then 1 else 0)
+            + (if wmConfig.gnome.enable then 1 else 0) <= 1;
           message = ''
-            Cannot enable both Hyprland and Sway simultaneously.
+            Cannot enable multiple window managers simultaneously.
             Current configuration:
               - machine.windowManager.hyprland.enable = ${toString wmConfig.hyprland.enable}
               - machine.windowManager.sway.enable = ${toString wmConfig.sway.enable}
+              - machine.windowManager.gnome.enable = ${toString wmConfig.gnome.enable}
 
-            Please choose one compositor:
+            Please choose only one compositor/desktop:
               - For modern features and animations: enable only Hyprland
               - For stability and i3 compatibility: enable only Sway
+              - For full desktop experience: enable only GNOME
           '';
         }
 
@@ -666,9 +755,12 @@ in
     warnings =
       let
         hostSpec = config.machine;
-      in lib.optional (hostSpec.hostType == "server" && hostSpec.windowManager.enabled)
-      "Server host has window manager enabled - this may not be intended"
-      ++ lib.optional (hostSpec.environment != "production" && hostSpec.computed.isWork)
-      "Work environment detected in non-production setting - ensure this is intentional";
+      in
+      lib.optional (
+        hostSpec.hostType == "server" && hostSpec.windowManager.enabled
+      ) "Server host has window manager enabled - this may not be intended"
+      ++ lib.optional (
+        hostSpec.environment != "production" && hostSpec.computed.isWork
+      ) "Work environment detected in non-production setting - ensure this is intentional";
   };
 }

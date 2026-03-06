@@ -58,7 +58,7 @@
       MOZ_DISABLE_RDD_SANDBOX = "1";
       LIBVA_DRIVER_NAME = "nvidia";
       NVD_BACKEND = "direct";
-      EGL_PLATFORM = "wayland";
+      # EGL_PLATFORM = "wayland";
       __GLX_VENDOR_LIBRARY_NAME = "nvidia";
       MOZ_DRM_DEVICE = "/dev/dri/renderD128";
     };

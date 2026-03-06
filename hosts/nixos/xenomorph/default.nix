@@ -60,7 +60,8 @@
     };
     windowManager = {
       sway.enable = false;
-      hyprland.enable = true;
+      hyprland.enable = false;
+      gnome.enable = true;
     };
     capabilities = [
       "gpu"

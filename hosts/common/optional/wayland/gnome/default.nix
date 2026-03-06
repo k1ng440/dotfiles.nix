@@ -1,0 +1,60 @@
+{
+  lib,
+  config,
+  pkgs,
+  ...
+}:
+{
+  imports = [ ./gdm.nix ];
+  config = lib.mkIf config.machine.windowManager.gnome.enable {
+    # Enable GNOME desktop environment
+    services.xserver = {
+      enable = true;
+    };
+
+    services.displayManager.gdm = {
+      enable = true;
+      wayland = true;
+      autoSuspend = false;
+    };
+
+    services.desktopManager.gnome.enable = true;
+
+    # Disable greetd when GNOME is enabled because we use GDM
+    services.greetd.enable = lib.mkForce false;
+
+    # Fix for GNOME on NVIDIA if applicable
+    services.xserver.videoDrivers = lib.mkIf (lib.elem "nvidia-gpu" config.machine.capabilities) [
+      "nvidia"
+    ];
+
+    environment.systemPackages = with pkgs; [
+      gnome-tweaks
+      gnome-extension-manager
+    ];
+
+    # GNOME specific fixes/tweaks
+    services.udev.packages = with pkgs; [ gnome-settings-daemon ];
+
+    stylix.targets.gnome.enable = false;
+
+    environment.gnome.excludePackages =
+      (with pkgs; [
+        gnome-photos
+        gnome-tour
+      ])
+      ++ (with pkgs; [
+        cheese # webcam tool
+        gnome-music
+        epiphany # web browser
+        geary # email reader
+        evince # document viewer
+        gnome-characters
+        totem # video player
+        tali # poker game
+        iagno # go game
+        hitori # vcxo game
+        atomix # puzzle game
+      ]);
+  };
+}

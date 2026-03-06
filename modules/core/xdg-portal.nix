@@ -22,6 +22,9 @@
         ]
         ++ lib.optionals config.machine.windowManager.sway.enable [
           pkgs.xdg-desktop-portal-wlr
+        ]
+        ++ lib.optionals config.machine.windowManager.gnome.enable [
+          pkgs.xdg-desktop-portal-gnome
         ];
         config = {
           common.default = [ "gtk" ];
@@ -36,6 +39,12 @@
             "org.freedesktop.impl.portal.Screenshot" = "wlr";
             "org.freedesktop.impl.portal.GlobalShortcuts" = "gtk";
             "org.freedesktop.impl.portal.FileChooser" = "gtk";
+          };
+          gnome = lib.mkIf config.machine.windowManager.gnome.enable {
+            default = [
+              "gnome"
+              "gtk"
+            ];
           };
         };
       };

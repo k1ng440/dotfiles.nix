@@ -1,5 +1,5 @@
 # This is just a basic enabling of the XFCE windows manager for simplicity
 {
-  services.xserver.desktopManager.xfce.enable = true;
-  services.xserver.desktopManager.xfce.enableScreensaver = false;
+  services.desktopManager.xfce.enable = true;
+  services.desktopManager.xfce.enableScreensaver = false;
 }

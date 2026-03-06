@@ -1,6 +1,6 @@
 { pkgs, ... }:
 let
-  winePkg = pkgs.wineWowPackages.staging;
+  winePkg = pkgs.wineWow64Packages.staging;
 
   winetricksPackages = [
     "corefonts"
