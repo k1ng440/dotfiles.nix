@@ -1,4 +1,12 @@
-{ pkgs, machine, ... }:
+{
+  lib,
+  pkgs,
+  machine,
+  ...
+}:
+let
+  isHyprland = machine.windowManager.hyprland.enable;
+in
 {
   home.packages = with pkgs; [
     swww
@@ -17,28 +25,28 @@
     executable = true;
   };
 
-  systemd.user.services.swww-daemon = {
-    Unit = {
-      Description = "swww wallpaper daemon";
-      After = [ "graphical-session.target" ];
-    };
-    Service = {
-      Type = "simple";
-      ExecStart = "/bin/sh -c 'WAYLAND_DISPLAY=\"$(ls /run/user/%U/wayland-* | head -n1 | xargs basename)\" swww-daemon'";
-      Restart = "always";
-      RestartSec = 5;
-      Environment = [
-        "XDG_RUNTIME_DIR=/run/user/%U"
-        "PATH=${pkgs.coreutils}/bin:${pkgs.swww}/bin:${pkgs.findutils}/bin"
-      ];
-    };
-    Install = {
-      WantedBy = [ "graphical-session.target" ];
-    };
-  };
-
   systemd = {
-    user.services.wallpaper-cycler = {
+    user.services.swww-daemon = lib.mkIf isHyprland {
+      Unit = {
+        Description = "swww wallpaper daemon";
+        After = [ "graphical-session.target" ];
+      };
+      Service = {
+        Type = "simple";
+        ExecStart = "/bin/sh -c 'WAYLAND_DISPLAY=\"$(ls /run/user/%U/wayland-* | head -n1 | xargs basename)\" swww-daemon'";
+        Restart = "always";
+        RestartSec = 5;
+        Environment = [
+          "XDG_RUNTIME_DIR=/run/user/%U"
+          "PATH=${pkgs.coreutils}/bin:${pkgs.swww}/bin:${pkgs.findutils}/bin"
+        ];
+      };
+      Install = {
+        WantedBy = [ "graphical-session.target" ];
+      };
+    };
+
+    user.services.wallpaper-cycler = lib.mkIf isHyprland {
       Unit = {
         Description = "Cycle wallpapers with swww";
         After = [ "swww-daemon.service" ];
@@ -53,7 +61,7 @@
       };
     };
 
-    user.timers.wallpaper-cycler = {
+    user.timers.wallpaper-cycler = lib.mkIf isHyprland {
       Unit = {
         Description = "Timer for cycling wallpapers";
       };

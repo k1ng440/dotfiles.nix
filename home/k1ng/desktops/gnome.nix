@@ -2,6 +2,7 @@
   lib,
   pkgs,
   machine,
+  config,
   ...
 }:
 let
@@ -16,18 +17,22 @@ in
           "appindicatorsupport@rgcjonas.gmail.com"
           "dash-to-dock@micxgx.gmail.com"
           "gsconnect@andyholmes.github.io"
-          "gTile@vladimir.vitkov.jp"
           "just-perfection-desktop@just-perfection"
           "logomenu@aryan_naveen"
           "no-overview@fthx"
-          "space-bar@github.com"
-          "top-bar-organizer@gnome-shell-extensions.gcampax.github.com"
-          "wireless-hid@chwick.github.com"
+          "space-bar@luchrioh"
+          "top-bar-organizer@julian.gse.jsts.xyz"
+          "wireless-hid@chlumskyvaclav.gmail.com"
           "aylurs-widgets@aylur"
-          "vitals@corecoding.com"
+          "Vitals@CoreCoding.com"
           "native-window-placement@gnome-shell-extensions.gcampax.github.com"
           "drive-menu@gnome-shell-extensions.gcampax.github.com"
           "user-theme@gnome-shell-extensions.gcampax.github.com"
+          "pop-shell@system76.com"
+          "system-monitor@gnome-shell-extensions.gcampax.github.com"
+          "workspace-indicator@gnome-shell-extensions.gcampax.github.com"
+          "launch-new-instance@gnome-shell-extensions.gcampax.github.com"
+          "logomenu@aryan_k"
         ];
         favorite-apps = [
           "org.gnome.Nautilus.desktop"
@@ -46,13 +51,13 @@ in
       };
 
       "org/gnome/desktop/peripherals/mouse" = {
-        speed = 0.5; # Increase mouse speed (range -1.0 to 1.0)
+        speed = 0.5;
         accel-profile = "flat";
       };
 
       "org/gnome/desktop/peripherals/keyboard" = {
-        delay = 160; # Even lower delay (in ms)
-        repeat-interval = 20; # Faster repeat interval (in ms)
+        delay = lib.hm.gvariant.mkUint32 200;
+        repeat-interval = lib.hm.gvariant.mkUint32 20;
       };
 
       "org/gnome/desktop/peripherals/touchpad" = {
@@ -65,6 +70,12 @@ in
       };
 
       "org/gnome/desktop/wm/keybindings" = {
+        hide-window = [ ];
+        minimize = [ "<Super>comma" ];
+        close = [ "<Super>c" ];
+        toggle-message-tray = [ ];
+        push-to-talk-quiet = [ ];
+
         switch-to-workspace-1 = [ "<Super>1" ];
         switch-to-workspace-2 = [ "<Super>2" ];
         switch-to-workspace-3 = [ "<Super>3" ];
@@ -101,10 +112,38 @@ in
         switch-to-application-10 = [ ];
       };
 
+      "org/gnome/settings-daemon/plugins/media-keys" = {
+        custom-keybindings = [
+          "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/"
+          "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1/"
+          "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom2/"
+        ];
+
+        screensaver = [ ]; # Disables GNOME Screen Lock
+      };
+
+      "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0" = {
+        binding = "<Super>r";
+        command = "ulauncher";
+        name = "Launcher";
+      };
+
+      "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1" = {
+        binding = "<Super>q";
+        command = "ghostty";
+        name = "Ghostty";
+      };
+
+      "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom2" = {
+        binding = "<Super>e";
+        command = "thunar";
+        name = "File Manager";
+      };
+
       "org/gnome/mutter" = {
         edge-tiling = true;
         dynamic-workspaces = false;
-        workspaces-only-on-primary = false;
+        workspaces-only-on-primary = true;
       };
 
       "org/gnome/shell/extensions/dash-to-dock" = {
@@ -128,25 +167,94 @@ in
         menu-button-icon-image = 23; # NixOS logo
       };
 
-      "org/gnome/shell/extensions/aylurs-widgets" = {
-        background-clock = false;
-        battery-bar = false;
-        dash-board = false;
-        date-menu-date-format = "%H:%M  %B %d";
-        date-menu-hide-clocks = true;
-        date-menu-hide-system-levels = true;
-        date-menu-hide-user = true;
-        date-menu-indicator-position = 2;
-        media-player = false;
-        notification-indicator = false;
-        power-menu = false;
-        quick-toggles = false;
-        workspace-indicator = false;
-      };
+      "org/gnome/shell/extensions/pop-shell" = {
+        tile-by-default = true;
+        gap-inner = 2;
+        gap-outer = 2;
+        show-active-hint = true;
+        active-hint-border-radius = 2;
 
-      "org/gnome/shell/extensions/gtile" = {
-        show-icon = false;
-        grid-sizes = "8x2,4x2,2x2";
+        close-window = [ "<Super>c" ];
+        activate-launcher = [ "<Super>slash" ];
+        tile-enter = [ "<Super>Return" ]; # Enter management mode
+
+        # Window Movement (within tiling)
+        tile-move-left = [
+          "<Shift><Super>h"
+          "<Shift><Super>Left"
+        ];
+        tile-move-right = [
+          "<Shift><Super>l"
+          "<Shift><Super>Right"
+        ];
+        tile-move-up = [
+          "<Shift><Super>k"
+          "<Shift><Super>Up"
+        ];
+        tile-move-down = [
+          "<Shift><Super>j"
+          "<Shift><Super>Down"
+        ];
+
+        # Focus Navigation
+        focus-left = [
+          "<Super>h"
+          "<Super>Left"
+        ];
+        focus-right = [
+          "<Super>l"
+          "<Super>Right"
+        ];
+        focus-up = [
+          "<Super>k"
+          "<Super>Up"
+        ];
+        focus-down = [
+          "<Super>j"
+          "<Super>Down"
+        ];
+
+        # Toggle between Horizontal and Vertical split for the next window
+        tile-orientation = [ "<Super>o" ];
+
+        # Toggle a window between Floating and Tiling (useful for calculators or small tools)
+        tile-floating = [ "<Super>g" ];
+
+        # Keep a window (like a terminal or docs) always on top
+        always-on-top = [ "<Super>t" ];
+
+        # Toggle Fullscreen (great for focused coding in Ghostty)
+        toggle-fullscreen = [ "<Super>f" ];
+
+        cycle-display-orientation = [ ];
+      };
+    };
+
+    systemd.user.services.ulauncher = {
+      Unit = {
+        Description = "Linux Application Launcher";
+        After = [ "graphical-session.target" ];
+        PartOf = [ "graphical-session.target" ];
+      };
+      Service = {
+        ExecStart = "${pkgs.ulauncher}/bin/ulauncher --hide-window";
+        Restart = "on-failure";
+        StartLimitIntervalSec = 0;
+        X-Restart-Triggers = [
+          config.xdg.configFile."ulauncher/settings.json".source
+        ];
+      };
+      Install = {
+        WantedBy = [ "graphical-session.target" ];
+      };
+    };
+
+    xdg.configFile."ulauncher/settings.json" = {
+      force = true;
+      text = builtins.toJSON {
+        disable-desktop-filters = false;
+        show-recent-apps = "10";
+        theme-name = "dark";
       };
     };
   };

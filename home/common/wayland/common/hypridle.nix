@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ config, pkgs, ... }:
 let
   dpmsScript = pkgs.writeShellScript "dpms-control" ''
     if pgrep -x "Hyprland" > /dev/null; then
@@ -25,7 +25,7 @@ let
 in
 {
   services.hypridle = {
-    enable = true;
+    enable = config.machine.windowManager.hyprland.enable;
     settings = {
       general = {
         lock_cmd = "${pkgs.hyprlock}/bin/hyprlock";
@@ -46,7 +46,7 @@ in
         # Lock the screen
         {
           timeout = 300;
-          on-timeout ="${pkgs.hyprlock}/bin/hyprlock";
+          on-timeout = "${pkgs.hyprlock}/bin/hyprlock";
         }
         # Turn off screen
         {

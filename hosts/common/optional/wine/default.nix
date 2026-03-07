@@ -1,12 +1,12 @@
 { pkgs, ... }:
 {
   environment.systemPackages = with pkgs; [
-    wineWowPackages.waylandFull
+    wineWow64Packages.staging
     winetricks
   ];
 
   boot.binfmt.registrations.wine = {
     magicOrExtension = "MZ";
-    interpreter = "${pkgs.wineWowPackages.waylandFull}/bin/wine";
+    interpreter = "${pkgs.wineWow64Packages.staging}/bin/wine";
   };
 }

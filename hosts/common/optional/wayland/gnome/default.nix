@@ -34,12 +34,12 @@
         gnome-extension-manager
         nautilus-python
         gnome-shell-extensions
+        ulauncher
       ])
       ++ (with pkgs.gnomeExtensions; [
         appindicator
         dash-to-dock
         gsconnect
-        gtile
         just-perfection
         logo-menu
         no-overview
@@ -47,6 +47,7 @@
         top-bar-organizer
         wireless-hid
         vitals
+        pop-shell
       ]);
 
     # GNOME specific fixes/tweaks
