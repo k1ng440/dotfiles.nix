@@ -43,10 +43,6 @@ in
     "xdg-desktop-autostart.target"
   ];
 
-  disabledModules = [
-    "${inputs.stylix}/modules/hyprland/hm.nix"
-  ];
-
   wayland.windowManager.hyprland = {
     inherit (machine.windowManager.hyprland) enable;
     package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
@@ -118,9 +114,8 @@ in
         gaps_out = 8;
         border_size = 2;
         resize_on_border = true;
-        "col.active_border" =
-          "rgb(${config.lib.stylix.colors.base08}) rgb(${config.lib.stylix.colors.base0C}) 45deg";
-        "col.inactive_border" = "rgb(${config.lib.stylix.colors.base01})";
+        "col.active_border" = "rgb(fb4934) rgb(8ec07c) 45deg";
+        "col.inactive_border" = "rgb(3c3836)";
       };
 
       # https://wiki.hyprland.org/Configuring/Variables/#misc

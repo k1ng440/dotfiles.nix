@@ -13,6 +13,11 @@
       settings.General.DisplayServer = "x11-user";
     };
 
+    services.displayManager.autoLogin = {
+      enable = true;
+      user = config.machine.username;
+    };
+
     services.desktopManager.plasma6.enable = true;
 
     # Disable greetd when KDE is enabled because we use SDDM

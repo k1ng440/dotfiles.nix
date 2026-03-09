@@ -77,8 +77,6 @@
       }
     ];
 
-    stylix.targets.gnome.enable = false;
-
     environment.gnome.excludePackages =
       (with pkgs; [
         gnome-photos

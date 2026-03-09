@@ -24,15 +24,15 @@
         in
         {
           "*" = {
-            bg = mkLiteral "#${config.lib.stylix.colors.base00}";
-            bg-alt = mkLiteral "#${config.lib.stylix.colors.base02}";
-            foreground = mkLiteral "#${config.lib.stylix.colors.base07}";
-            selected = mkLiteral "#${config.lib.stylix.colors.base03}";
-            active = mkLiteral "#${config.lib.stylix.colors.base03}";
-            text-selected = mkLiteral "#${config.lib.stylix.colors.base07}";
-            text-color = mkLiteral "#${config.lib.stylix.colors.base07}";
-            border-color = mkLiteral "#${config.lib.stylix.colors.base04}";
-            urgent = mkLiteral "#${config.lib.stylix.colors.base0E}";
+            bg = mkLiteral "#1d2021";
+            bg-alt = mkLiteral "#504945";
+            foreground = mkLiteral "#fbf1c7";
+            selected = mkLiteral "#665c54";
+            active = mkLiteral "#665c54";
+            text-selected = mkLiteral "#fbf1c7";
+            text-color = mkLiteral "#fbf1c7";
+            border-color = mkLiteral "#bdae93";
+            urgent = mkLiteral "#d3869b";
           };
           "window" = {
             transparency = "real";

@@ -31,7 +31,6 @@ not worth encrypting.
   - [Customize Nix Packages | Gentoo Experience on NixOS - Vimjoyer](https://www.youtube.com/watch?v=jHb7Pe7x1ZY)
   - [Nix Hour](https://www.youtube.com/results?search_query=nix+hour)
   - [Linux Gaming Setup - Vimjoyer](https://www.youtube.com/watch?v=qlfm3MEbqYA)
-  - [Stylix - Vimjoyer](https://www.youtube.com/watch?v=ljHkWgBaQWU)
 
 - articles:
   - [Nix by example](https://medium.com/@MrJamesFisher/nix-by-example-a0063a1a4c55)

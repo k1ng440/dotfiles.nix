@@ -16,7 +16,6 @@ in
   imports = lib.flatten [
     inputs.home-manager.${platformModules}.home-manager
     inputs.sops-nix.${platformModules}.sops
-    inputs.stylix.${platformModules}.stylix
 
     (map lib.custom.relativeToRoot [
       "modules/common"

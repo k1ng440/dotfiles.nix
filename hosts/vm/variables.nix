@@ -35,9 +35,6 @@
   # Enable Printing Support
   printEnable = false;
 
-  # # Set Stylix Image
-  # stylixImage = ../../wallpapers/AnimeGirlNightSky.jpg;
-  #
   # # Set Waybar
   # # Includes alternates such as waybar-simple.nix & waybar-ddubs.nix
   # waybarChoice = ../../modules/home/waybar/waybar-simple.nix;

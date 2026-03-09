@@ -1,6 +1,10 @@
-{ pkgs, lib, config, ... }:
 {
-  stylix.targets.plymouth.enable = false;
+  pkgs,
+  lib,
+  config,
+  ...
+}:
+{
   boot = {
     kernelParams = [
       "quiet"

@@ -359,12 +359,6 @@ in
 
     # === Visual & Desktop Configuration ===
     desktop = {
-      autoStyling = mkEnableOption "automatic styling with stylix";
-      stylixImage = mkOption {
-        type = types.path;
-        default = ../../assets/wallpapers/wallpaper_3862_3440x1440.jpg;
-        description = "Image for generating color scheme";
-      };
       monitorsXml = mkOption {
         type = types.nullOr types.lines;
         default = null;

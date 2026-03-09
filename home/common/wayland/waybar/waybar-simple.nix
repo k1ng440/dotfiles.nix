@@ -49,7 +49,7 @@
           on-scroll-down = "hyprctl dispatch workspace e-1";
         };
         "clock" = {
-          format = '' {:L%I:%M %p}'';
+          format = " {:L%I:%M %p}";
           tooltip = true;
           tooltip-format = "<big>{:%A, %d.%B %Y }</big>\n<tt><small>{calendar}</small></tt>";
         };
@@ -210,89 +210,89 @@
           min-height: 0px;
         }
         window#waybar {
-          background: #${config.lib.stylix.colors.base00};
-          color: #${config.lib.stylix.colors.base05};
+          background: #1d2021;
+          color: #d5c4a1;
         }
         #workspaces button {
           padding: 0px 5px;
           background: transparent;
-          color: #${config.lib.stylix.colors.base04}; /* #d5c4a1 */
+          color: #bdae93; /* #d5c4a1 */
         }
         #workspaces button.active {
-          color: #${config.lib.stylix.colors.base05}; /* #fbf1c7 for better contrast */
-          background: #${config.lib.stylix.colors.base02}; /* #3c3836 for subtle bg */
+          color: #d5c4a1; /* #fbf1c7 for better contrast */
+          background: #504945; /* #3c3836 for subtle bg */
         }
         #workspaces button:hover {
-          color: #${config.lib.stylix.colors.base08}; /* #fb4934 */
-          background: #${config.lib.stylix.colors.base01}; /* #32302f for hover bg */
+          color: #fb4934; /* #fb4934 */
+          background: #3c3836; /* #32302f for hover bg */
         }
         tooltip {
-          background: #${config.lib.stylix.colors.base00};
-          border: 1px solid #${config.lib.stylix.colors.base05};
+          background: #1d2021;
+          border: 1px solid #d5c4a1;
           border-radius: 12px;
         }
         tooltip label {
-          color: #${config.lib.stylix.colors.base05};
+          color: #d5c4a1;
         }
         #window {
           padding: 0px 10px;
         }
         #pulseaudio, #cpu, #memory, #idle_inhibitor {
           padding: 0px 10px;
-          background: #${config.lib.stylix.colors.base04};
-          color: #${config.lib.stylix.colors.base00};
+          background: #bdae93;
+          color: #1d2021;
         }
         #custom-startmenu {
-          color: #${config.lib.stylix.colors.base02};
+          color: #504945;
           padding: 0px 14px;
           font-size: 20px;
-          background: #${config.lib.stylix.colors.base0B};
+          background: #b8bb26;
         }
         #custom-hyprbindings, #network, #battery,
         #custom-notification, #custom-exit {
-          background: #${config.lib.stylix.colors.base0F};
-          color: #${config.lib.stylix.colors.base00};
+          background: #d65d0e;
+          color: #1d2021;
           padding: 0px 10px;
         }
         #tray {
-          background: #${config.lib.stylix.colors.base02};
-          color: #${config.lib.stylix.colors.base00};
+          background: #504945;
+          color: #1d2021;
           padding: 0px 10px;
         }
         #clock {
           font-weight: bold;
           padding: 0px 10px;
-          color: #${config.lib.stylix.colors.base00};
-          background: #${config.lib.stylix.colors.base0E};
+          color: #1d2021;
+          background: #d3869b;
         }
         #custom-arrow1 {
           font-size: 24px;
-          color: #${config.lib.stylix.colors.base0E};
-          background: #${config.lib.stylix.colors.base02};
+          color: #d3869b;
+          background: #504945;
         }
         #custom-arrow2 {
           font-size: 24px;
-          color: #${config.lib.stylix.colors.base02};
-          background: #${config.lib.stylix.colors.base0F};
+          color: #504945;
+          background: #d65d0e;
         }
         #custom-arrow3 {
           font-size: 24px;
-          color: #${config.lib.stylix.colors.base00};
-          background: #${config.lib.stylix.colors.base0F};
+          color: #1d2021;
+          background: #d65d0e;
         }
         #custom-arrow4 {
           font-size: 22px;
-          color: #${config.lib.stylix.colors.base0F};
+          color: #d65d0e;
           background: transparent;
         }
         #custom-arrow6 {
           font-size: 24px;
-          color: #${config.lib.stylix.colors.base0B};
-          background: #${config.lib.stylix.colors.base04};
+          color: #b8bb26;
+          background: #bdae93;
         }
         #custom-arrow7 {
           font-size: 24px;
-          color: #${config.lib.stylix.colors.base04};
+          color: #bdae93;
           background: transparent;
         }
       ''

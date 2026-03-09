@@ -31,7 +31,6 @@
     ./hardware-configuration.nix
     ./configurations.nix
     ./host-packages.nix
-    ./stylix.nix
     ./borgbackup.nix
     ./firejail.nix
   ];

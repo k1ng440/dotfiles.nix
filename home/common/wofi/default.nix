@@ -15,8 +15,8 @@
     };
     style =
       let
-        background = "#${config.lib.stylix.colors.base00}";
-        foreground = "#${config.lib.stylix.colors.base05}";
+        background = "#1d2021";
+        foreground = "#d5c4a1";
       in
       ''
         window {

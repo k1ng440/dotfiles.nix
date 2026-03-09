@@ -127,7 +127,7 @@ in
           };
         };
         "clock" = {
-          format = '' {:L%I:%M %p}'';
+          format = " {:L%I:%M %p}";
           tooltip-format = "<small>{calendar}</small>";
           tooltip = true;
           calendar = {
@@ -136,7 +136,7 @@ in
               # days =      "<span color='#ecc6d9'><b>{}</b></span>";
               # weeks =     "<span color='#99ffdd'><b>W{}</b></span>";
               # weekdays =  "<span color='#ffcc66'><b>{}</b></span>";
-              today = "<span color='#${config.lib.stylix.colors.base08}'><b>{}</b></span>";
+              today = "<span color='#fb4934'><b>{}</b></span>";
             };
           };
         };
@@ -281,18 +281,18 @@ in
     ];
     style =
       let
-        background = "#${config.lib.stylix.colors.base00}";
-        foreground = "#${config.lib.stylix.colors.base05}";
+        background = "#1d2021";
+        foreground = "#d5c4a1";
         active-background = background;
-        active-foreground = "#${config.lib.stylix.colors.base08}";
+        active-foreground = "#fb4934";
 
         # Additional variables for borders and styling
-        border-color = "#${config.lib.stylix.colors.base02}";
-        workspace-background = "#${config.lib.stylix.colors.base01}";
-        muted-color = "#${config.lib.stylix.colors.base03}";
-        highlight-color = "#${config.lib.stylix.colors.base05}";
-        shadow-color = "#${config.lib.stylix.colors.base03}";
-        accent-color = "#${config.lib.stylix.colors.base0B}";
+        border-color = "#504945";
+        workspace-background = "#3c3836";
+        muted-color = "#665c54";
+        highlight-color = "#d5c4a1";
+        shadow-color = "#665c54";
+        accent-color = "#b8bb26";
       in
       lib.concatStrings [
         ''

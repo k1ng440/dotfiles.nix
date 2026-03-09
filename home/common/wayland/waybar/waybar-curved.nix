@@ -62,7 +62,7 @@ in
           on-scroll-down = "hyprctl dispatch workspace e-1";
         };
         "clock" = {
-          format = ''  {:L%I:%M %p}'';
+          format = "  {:L%I:%M %p}";
           tooltip = true;
           tooltip-format = "<big>{:%A, %d.%B %Y }</big>\n<tt><small>{calendar}</small></tt>";
         };
@@ -206,8 +206,8 @@ in
           background: rgba(0,0,0,0);
         }
         #workspaces {
-          color: #${config.lib.stylix.colors.base00};
-          background: #${config.lib.stylix.colors.base01};
+          color: #1d2021;
+          background: #3c3836;
           margin: 4px 4px;
           padding: 5px 5px;
           border-radius: 16px;
@@ -217,8 +217,8 @@ in
           padding: 0px 5px;
           margin: 0px 3px;
           border-radius: 16px;
-          color: #${config.lib.stylix.colors.base00};
-          background: linear-gradient(45deg, #${config.lib.stylix.colors.base08}, #${config.lib.stylix.colors.base0D});
+          color: #1d2021;
+          background: linear-gradient(45deg, #fb4934, #83a598);
           opacity: 0.5;
           transition: ${betterTransition};
         }
@@ -227,8 +227,8 @@ in
           padding: 0px 5px;
           margin: 0px 3px;
           border-radius: 16px;
-          color: #${config.lib.stylix.colors.base00};
-          background: linear-gradient(45deg, #${config.lib.stylix.colors.base08}, #${config.lib.stylix.colors.base0D});
+          color: #1d2021;
+          background: linear-gradient(45deg, #fb4934, #83a598);
           transition: ${betterTransition};
           opacity: 1.0;
           min-width: 40px;
@@ -236,31 +236,31 @@ in
         #workspaces button:hover {
           font-weight: bold;
           border-radius: 16px;
-          color: #${config.lib.stylix.colors.base00};
-          background: linear-gradient(45deg, #${config.lib.stylix.colors.base08}, #${config.lib.stylix.colors.base0D});
+          color: #1d2021;
+          background: linear-gradient(45deg, #fb4934, #83a598);
           opacity: 0.8;
           transition: ${betterTransition};
         }
         tooltip {
-          background: #${config.lib.stylix.colors.base00};
-          border: 1px solid #${config.lib.stylix.colors.base08};
+          background: #1d2021;
+          border: 1px solid #fb4934;
           border-radius: 12px;
         }
         tooltip label {
-          color: #${config.lib.stylix.colors.base08};
+          color: #fb4934;
         }
         #window, #pulseaudio, #cpu, #memory, #idle_inhibitor {
           font-weight: bold;
           margin: 4px 0px;
           margin-left: 7px;
           padding: 0px 18px;
-          background: #${config.lib.stylix.colors.base04};
-          color: #${config.lib.stylix.colors.base00};
+          background: #bdae93;
+          color: #1d2021;
           border-radius: 24px 10px 24px 10px;
         }
         #custom-startmenu {
-          color: #${config.lib.stylix.colors.base0B};
-          background: #${config.lib.stylix.colors.base02};
+          color: #b8bb26;
+          background: #504945;
           font-size: 28px;
           margin: 0px;
           padding: 0px 30px 0px 15px;
@@ -269,8 +269,8 @@ in
         #custom-hyprbindings, #network, #battery,
         #custom-notification, #tray, #custom-exit {
           font-weight: bold;
-          background: #${config.lib.stylix.colors.base0F};
-          color: #${config.lib.stylix.colors.base00};
+          background: #d65d0e;
+          color: #1d2021;
           margin: 4px 0px;
           margin-right: 7px;
           border-radius: 10px 24px 10px 24px;
@@ -279,7 +279,7 @@ in
         #clock {
           font-weight: bold;
           color: #0D0E15;
-          background: linear-gradient(90deg, #${config.lib.stylix.colors.base0E}, #${config.lib.stylix.colors.base0C});
+          background: linear-gradient(90deg, #d3869b, #8ec07c);
           margin: 0px;
           padding: 0px 15px 0px 30px;
           border-radius: 0px 0px 0px 40px;

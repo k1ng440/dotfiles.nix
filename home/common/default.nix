@@ -28,15 +28,4 @@
   home.packages = [
     (import ./sway-open { inherit pkgs; })
   ];
-
-  disabledModules = [
-    "${inputs.stylix}/modules/neovim/hm.nix"
-    "${inputs.stylix}/modules/lazygit/hm.nix"
-    "${inputs.stylix}/modules/nvim/hm.nix"
-    "${inputs.stylix}/modules/waybar/hm.nix"
-    "${inputs.stylix}/modules/rofi/hm.nix"
-    # "${inputs.stylix}/modules/sway/hm.nix"
-    "${inputs.stylix}/modules/hyprland/hm.nix"
-    "${inputs.stylix}/modules/hyprlock/hm.nix"
-  ];
 }

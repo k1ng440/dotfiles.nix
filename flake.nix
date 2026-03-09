@@ -141,12 +141,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # Styling and theming
-    stylix = {
-      url = "github:nix-community/stylix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     plasma-manager = {
       url = "github:nix-community/plasma-manager";
       inputs.nixpkgs.follows = "nixpkgs";
