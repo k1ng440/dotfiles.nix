@@ -19,6 +19,7 @@
     ./swaywm
     ./chromium-flags.nix
     ./fuzzel.nix
+    ./dconf.nix
   ];
 
   home.packages = with pkgs; [

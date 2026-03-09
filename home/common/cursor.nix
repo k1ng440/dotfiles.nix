@@ -2,11 +2,12 @@
   pkgs,
   lib,
   machine,
+  outputs,
   ...
 }:
 let
-  cursorName = "catppuccin-mocha-light-cursors";
-  cursorPkg = pkgs.catppuccin-cursors.mochaLight;
+  cursorName = "BreezeX-Dark";
+  cursorPkg = outputs.packages.${pkgs.system}.breezex-cursor;
   cursorSize = 24;
 in
 {

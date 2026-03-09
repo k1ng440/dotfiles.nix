@@ -66,7 +66,7 @@ in
     backupFileExtension = "bk";
     extraSpecialArgs = {
       inherit (config) machine;
-      inherit npins;
+      inherit npins inputs outputs;
     };
   };
 

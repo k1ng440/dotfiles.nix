@@ -11,6 +11,8 @@
     ./starship.nix
     ./virtmanager.nix
     ./cursor.nix
+    ./qt.nix
+    ./gtk.nix
     ./rofi
     ./wofi
     ./wayland

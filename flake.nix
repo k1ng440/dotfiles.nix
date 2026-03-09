@@ -74,9 +74,11 @@
               ];
           };
           stremio-custom = pkgs.callPackage ./packages/stremio.nix { };
+          breezex-cursor = pkgs.callPackage ./packages/breezex-cursor.nix { };
         in
         {
           stremio = stremio-custom;
+          breezex-cursor = breezex-cursor;
         }
       );
 
@@ -143,6 +145,14 @@
     stylix = {
       url = "github:nix-community/stylix";
       inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    catppuccin.url = "github:catppuccin/nix";
+
+    plasma-manager = {
+      url = "github:nix-community/plasma-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.home-manager.follows = "home-manager";
     };
 
     # Development tools

@@ -8,9 +8,9 @@
   config = lib.mkIf config.machine.windowManager.kde.enable {
     services.xserver.enable = true;
 
-    services.displayManager.sddm = {
+    services.displayManager.plasma-login-manager = {
       enable = true;
-      wayland.enable = true;
+      settings.General.DisplayServer = "x11-user";
     };
 
     services.desktopManager.plasma6.enable = true;

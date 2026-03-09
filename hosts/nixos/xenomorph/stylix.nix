@@ -4,7 +4,8 @@
   ...
 }:
 {
-  stylix.targets.qt.enable = true;
+  stylix.targets.qt.enable = false;
+  stylix.targets.gtk.enable = false;
   stylix = {
     enable = true;
     base16Scheme = "${pkgs.base16-schemes}/share/themes/gruvbox-dark-hard.yaml"; # preview https://dt.iki.fi/base16-previews#gruvbox-dark-hard

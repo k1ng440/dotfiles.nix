@@ -1,6 +1,7 @@
 { pkgs, ... }:
 {
-  stylix.targets.qt.enable = true;
+  stylix.targets.qt.enable = false;
+  stylix.targets.gtk.enable = false;
   stylix.targets.firefox.profileNames = [ "main" ];
   stylix.icons = {
     enable = true;
