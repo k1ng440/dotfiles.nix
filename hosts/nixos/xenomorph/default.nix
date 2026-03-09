@@ -61,7 +61,8 @@
     windowManager = {
       sway.enable = false;
       hyprland.enable = false;
-      gnome.enable = true;
+      gnome.enable = false;
+      kde.enable = true;
     };
     capabilities = [
       "gpu"

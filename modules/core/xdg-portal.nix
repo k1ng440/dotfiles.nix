@@ -25,6 +25,9 @@
         ]
         ++ lib.optionals config.machine.windowManager.gnome.enable [
           pkgs.xdg-desktop-portal-gnome
+        ]
+        ++ lib.optionals config.machine.windowManager.kde.enable [
+          pkgs.xdg-desktop-portal-kde
         ];
         config = {
           common.default = [ "gtk" ];
@@ -43,6 +46,12 @@
           gnome = lib.mkIf config.machine.windowManager.gnome.enable {
             default = [
               "gnome"
+              "gtk"
+            ];
+          };
+          kde = lib.mkIf config.machine.windowManager.kde.enable {
+            default = [
+              "kde"
               "gtk"
             ];
           };

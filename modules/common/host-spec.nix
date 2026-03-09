@@ -208,14 +208,27 @@
       };
     };
 
+    kde = {
+      enabled = lib.mkOption {
+        type = lib.types.bool;
+        default = false;
+        description = "Whether to enable KDE Plasma desktop environment.";
+      };
+    };
+
     wm-enabled = lib.mkOption {
       type = lib.types.bool;
       description = "Whether window manager enabled.";
       default =
         let
-          inherit (config.hostSpec) swaywm hyprland gnome;
+          inherit (config.hostSpec)
+            swaywm
+            hyprland
+            gnome
+            kde
+            ;
         in
-        swaywm.enabled || hyprland.enabled || gnome.enabled;
+        swaywm.enabled || hyprland.enabled || gnome.enabled || kde.enabled;
     };
   };
 
@@ -240,18 +253,20 @@
           assertion =
             (if config.hostSpec.hyprland.enabled then 1 else 0)
             + (if config.hostSpec.swaywm.enabled then 1 else 0)
-            + (if config.hostSpec.gnome.enabled then 1 else 0) <= 1;
+            + (if config.hostSpec.gnome.enabled then 1 else 0)
+            + (if config.hostSpec.kde.enabled then 1 else 0) <= 1;
           message = ''
             Cannot enable multiple window managers/desktops simultaneously.
             Current configuration:
               - hostSpec.hyprland.enabled = ${toString config.hostSpec.hyprland.enabled}
               - hostSpec.swaywm.enabled = ${toString config.hostSpec.swaywm.enabled}
               - hostSpec.gnome.enabled = ${toString config.hostSpec.gnome.enabled}
+              - hostSpec.kde.enabled = ${toString config.hostSpec.kde.enabled}
 
             Please choose only one:
               - For modern features and animations: enable only Hyprland
               - For stability and i3 compatibility: enable only Sway
-              - For full desktop experience: enable only GNOME
+              - For full desktop experience: enable only GNOME or KDE Plasma
           '';
         }
       ];

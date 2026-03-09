@@ -386,6 +386,10 @@ in
         enable = mkEnableOption "GNOME desktop environment";
       };
 
+      kde = {
+        enable = mkEnableOption "KDE Plasma desktop environment";
+      };
+
       # Computed option
       enabled = mkOption {
         type = types.bool;
@@ -393,7 +397,8 @@ in
         default =
           config.machine.windowManager.hyprland.enable
           || config.machine.windowManager.sway.enable
-          || config.machine.windowManager.gnome.enable;
+          || config.machine.windowManager.gnome.enable
+          || config.machine.windowManager.kde.enable;
         readOnly = true;
       };
     };
@@ -706,18 +711,20 @@ in
           assertion =
             (if wmConfig.hyprland.enable then 1 else 0)
             + (if wmConfig.sway.enable then 1 else 0)
-            + (if wmConfig.gnome.enable then 1 else 0) <= 1;
+            + (if wmConfig.gnome.enable then 1 else 0)
+            + (if wmConfig.kde.enable then 1 else 0) <= 1;
           message = ''
             Cannot enable multiple window managers simultaneously.
             Current configuration:
               - machine.windowManager.hyprland.enable = ${toString wmConfig.hyprland.enable}
               - machine.windowManager.sway.enable = ${toString wmConfig.sway.enable}
               - machine.windowManager.gnome.enable = ${toString wmConfig.gnome.enable}
+              - machine.windowManager.kde.enable = ${toString wmConfig.kde.enable}
 
             Please choose only one compositor/desktop:
               - For modern features and animations: enable only Hyprland
               - For stability and i3 compatibility: enable only Sway
-              - For full desktop experience: enable only GNOME
+              - For full desktop experience: enable only GNOME or KDE Plasma
           '';
         }
 

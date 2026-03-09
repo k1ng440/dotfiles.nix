@@ -22,7 +22,9 @@
 
   services = {
     greetd = {
-      enable = lib.mkDefault (!config.machine.windowManager.gnome.enable);
+      enable = lib.mkDefault (
+        !config.machine.windowManager.gnome.enable && !config.machine.windowManager.kde.enable
+      );
       settings =
         let
           start = {
@@ -34,6 +36,8 @@
                 "run-sway"
               else if config.machine.windowManager.gnome.enable then
                 "dbus-run-session -- gnome-session"
+              else if config.machine.windowManager.kde.enable then
+                "dbus-run-session -- startplasma-wayland"
               else
                 "${pkgs.bashInteractive}/bin/bash";
           };
