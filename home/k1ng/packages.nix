@@ -60,7 +60,6 @@
       yubikey-manager
       libreoffice-fresh # office
       obs-studio
-      foot
       bustle # Graphical D-Bus message analyser and profiler
       d-spy # D-Bus exploration tool
       gradia # screenshot

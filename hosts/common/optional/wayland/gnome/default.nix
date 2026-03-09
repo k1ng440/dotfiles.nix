@@ -14,11 +14,16 @@
 
     services.displayManager.gdm = {
       enable = true;
-      wayland = true;
+      wayland = false;
       autoSuspend = false;
     };
 
     services.desktopManager.gnome.enable = true;
+
+    # GNOME relies on power-profiles-daemon for power management.
+    # auto-cpufreq can conflict with it.
+    services.power-profiles-daemon.enable = lib.mkForce true;
+    services.auto-cpufreq.enable = lib.mkForce false;
 
     # Disable greetd when GNOME is enabled because we use GDM
     services.greetd.enable = lib.mkForce false;
@@ -48,6 +53,7 @@
         wireless-hid
         vitals
         pop-shell
+        blur-my-shell
       ]);
 
     # GNOME specific fixes/tweaks

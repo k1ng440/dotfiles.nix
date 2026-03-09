@@ -12,7 +12,7 @@
         vertical-pad = 10;
         inner-pad = 5;
         fields = "name,generic,comment,categories,filename,keywords";
-        terminal = "${pkgs.foot}/bin/foot";
+        terminal = "${pkgs.ghostty}/bin/ghostty";
         prompt = "'🌐 '";
       };
       # colors = {

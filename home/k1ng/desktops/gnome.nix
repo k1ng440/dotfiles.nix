@@ -10,6 +10,7 @@ let
 in
 {
   config = mkIf machine.windowManager.gnome.enable {
+    dconf.enable = true;
     dconf.settings = {
       "org/gnome/shell" = {
         disable-user-extensions = false;
@@ -33,6 +34,7 @@ in
           "workspace-indicator@gnome-shell-extensions.gcampax.github.com"
           "launch-new-instance@gnome-shell-extensions.gcampax.github.com"
           "logomenu@aryan_k"
+          "blur-my-shell@aunetx"
         ];
         favorite-apps = [
           "org.gnome.Nautilus.desktop"
@@ -40,7 +42,8 @@ in
           "spotify.desktop"
           "discord.desktop"
           "steam.desktop"
-          "foot.desktop"
+          "com.mitchellh.ghostty.desktop"
+          "org.gnome.Settings.desktop"
         ];
       };
 
@@ -48,6 +51,11 @@ in
         color-scheme = "prefer-dark";
         enable-hot-corners = false;
         clock-show-weekday = true;
+        clock-show-date = true;
+      };
+
+      "org/gnome/desktop/default-applications/terminal" = {
+        exec = "ghostty";
       };
 
       "org/gnome/desktop/peripherals/mouse" = {
@@ -73,6 +81,7 @@ in
         hide-window = [ ];
         minimize = [ "<Super>comma" ];
         close = [ "<Super>c" ];
+        toggle-fullscreen = [ "<Shift><Super>f" ];
         toggle-message-tray = [ ];
         push-to-talk-quiet = [ ];
 
@@ -122,6 +131,13 @@ in
         screensaver = [ ]; # Disables GNOME Screen Lock
       };
 
+      "org/gnome/settings-daemon/plugins/power" = {
+        sleep-inactive-ac-timeout = 0;
+        sleep-inactive-ac-type = "nothing";
+        sleep-inactive-battery-timeout = 0;
+        sleep-inactive-battery-type = "nothing";
+      };
+
       "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0" = {
         binding = "<Super>r";
         command = "ulauncher";
@@ -138,6 +154,29 @@ in
         binding = "<Super>e";
         command = "thunar";
         name = "File Manager";
+      };
+
+      "org/gnome/shell/extensions/blur-my-shell/app-blur" = {
+        blur = true;
+        brightness = 0.6;
+        sigma = 30;
+        whitelist = [ "com.mitchellh.ghostty" ];
+      };
+
+      "org/gnome/shell/extensions/blur-my-shell/panel" = {
+        blur = true;
+        brightness = 0.6;
+        sigma = 30;
+        pipeline = "pipeline_default";
+        round-corners = true;
+        round-corners-radius = 12;
+      };
+
+      "org/gnome/shell/extensions/blur-my-shell/dash-to-dock" = {
+        blur = true;
+        brightness = 0.6;
+        sigma = 30;
+        static-blur = true;
       };
 
       "org/gnome/mutter" = {
@@ -159,12 +198,37 @@ in
       "org/gnome/shell/extensions/just-perfection" = {
         panel-size = 48;
         activities-button = false;
+        app-menu = false;
+        search = false;
+        window-picker-icon = false;
       };
 
       "org/gnome/shell/extensions/Logo-menu" = {
         hide-softwarecentre = true;
         menu-button-icon-click-type = 3;
         menu-button-icon-image = 23; # NixOS logo
+      };
+
+      "org/gnome/shell/extensions/space-bar/appearance" = {
+        workspaces-bar-padding = 10;
+        workspace-margin = 5;
+        active-workspace-border-radius = 12;
+      };
+
+      "org/gnome/shell/extensions/space-bar/behavior" = {
+        smart-format = true;
+      };
+
+      "org/gnome/shell/extensions/top-bar-organizer/order" = {
+        left-box-order = [
+          "space-bar"
+          "logomenu"
+        ];
+        center-box-order = [ "dateMenu" ];
+        right-box-order = [
+          "vitalsMenu"
+          "aggregateMenu"
+        ];
       };
 
       "org/gnome/shell/extensions/pop-shell" = {
@@ -224,9 +288,14 @@ in
         always-on-top = [ "<Super>t" ];
 
         # Toggle Fullscreen (great for focused coding in Ghostty)
-        toggle-fullscreen = [ "<Super>f" ];
+        toggle-fullscreen = [
+          "<Super>f"
+          "<Shift><Super>f"
+        ];
 
         cycle-display-orientation = [ ];
+
+        floating-exceptions = [ "Ulauncher" ];
       };
     };
 

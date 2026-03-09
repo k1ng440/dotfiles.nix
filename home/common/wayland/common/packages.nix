@@ -8,6 +8,7 @@
     grim
     slurp
     ydotool
+    xdotool # For xwayland
     xdg-terminal-exec
     xdg-utils
     cliphist
