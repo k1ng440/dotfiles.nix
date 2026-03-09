@@ -27,7 +27,7 @@
           pkgs.xdg-desktop-portal-gnome
         ]
         ++ lib.optionals config.machine.windowManager.kde.enable [
-          pkgs.xdg-desktop-portal-kde
+          pkgs.kdePackages.xdg-desktop-portal-kde
         ];
         config = {
           common.default = [ "gtk" ];
