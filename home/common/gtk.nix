@@ -22,10 +22,10 @@
       };
     };
     gtk4.theme = config.gtk.theme;
-    iconTheme = {
-      name = "Tela-circle-dark";
-      package = pkgs.tela-circle-icon-theme;
-    };
+    # iconTheme = {
+    #   name = "Tela-circle-dark";
+    #   package = pkgs.tela-circle-icon-theme;
+    # };
     font = {
       name = "Roboto";
       size = 11;

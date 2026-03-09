@@ -15,7 +15,6 @@
       name = "qtct";
       package = pkgs.kdePackages.qt6ct;
     };
-    style.name = "kvantum";
 
     qt6ctSettings = {
       Appearance = {
@@ -23,6 +22,4 @@
       };
     };
   };
-
-  catppuccin.kvantum.enable = true;
 }

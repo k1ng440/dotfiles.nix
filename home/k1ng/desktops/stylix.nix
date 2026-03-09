@@ -2,6 +2,7 @@
 {
   stylix.targets.qt.enable = false;
   stylix.targets.gtk.enable = false;
+  stylix.targets.gnome.enable = false;
   stylix.targets.firefox.profileNames = [ "main" ];
   stylix.icons = {
     enable = true;
