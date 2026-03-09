@@ -51,7 +51,7 @@ in
       # Basic Plasma configuration
       workspace = {
         clickItemTo = "select"; # Double click to open
-        lookAndFeel = "Catppuccin-Mocha-Lavender";
+        lookAndFeel = "org.kde.breeze.desktop";
         cursor = {
           theme = "BreezeX-Dark";
           size = 24;

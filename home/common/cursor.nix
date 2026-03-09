@@ -6,9 +6,9 @@
   ...
 }:
 let
-  cursorName = "BreezeX-Dark";
+  cursorName = "BreezeX-Light";
   cursorPkg = outputs.packages.${pkgs.system}.breezex-cursor;
-  cursorSize = 24;
+  cursorSize = 28;
 in
 {
   home = {

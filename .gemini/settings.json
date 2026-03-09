@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "nixos": {
+      "url": "https://mcp-nixos.ncaq.net/mcp",
+      "type": "http"
+    }
+  }
+}

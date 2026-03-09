@@ -6,7 +6,6 @@
 }:
 {
   imports = [
-    inputs.catppuccin.homeManagerModules.catppuccin
   ];
 
   qt = {

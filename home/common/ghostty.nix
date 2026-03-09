@@ -6,7 +6,6 @@
     installBatSyntax = true;
     package = pkgs.ghostty;
     settings = {
-      # theme = "catppuccin-mocha";
       font-family = "Berkeley Mono";
       font-style = "Regular";
       font-size = 15;
