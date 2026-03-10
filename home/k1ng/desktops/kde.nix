@@ -15,7 +15,6 @@ in
   ];
 
   config = mkIf machine.windowManager.kde.enable {
-    # KWin should launch fcitx5 on its own for the Wayland input method frontend
     xdg.configFile."autostart/org.fcitx.Fcitx5.desktop".text = ''
       [Desktop Entry]
       Exec=fcitx5
@@ -43,17 +42,61 @@ in
       NotShowIn=KDE;
     '';
 
+    home.packages = [
+      pkgs.kdePackages.krohnkite
+    ];
+
     programs.plasma = {
       enable = true;
 
-      configFile.kwinrc.Wayland.VirtualKeyboardLib = "org.fcitx.Fcitx5";
+      configFile.kwinrc = {
+        Wayland.VirtualKeyboardLib = "org.fcitx.Fcitx5";
+        Plugins.krohnkiteEnabled = true;
+        "Script-krohnkite" = {
+          "enableFloating" = true;
+          "screenGapBottom" = 5;
+          "screenGapLeft" = 5;
+          "screenGapRight" = 5;
+          "screenGapTop" = 5;
+          "tileLayoutGap" = 5;
+        };
+      };
+
+      configFile.spectaclerc = {
+        General = {
+          launchAction = "DoNotTakeScreenshot";
+          showOnClick = true;
+          showMessageOnSave = true;
+        };
+        GuiConfig = {
+          captureMode = 0; # Rectangular Region
+          quitAfterSaveCopy = true;
+        };
+        Save = {
+          saveFilenameFormat = "Screenshot_%Y%M%D_%H%M%S";
+        };
+      };
+
+      spectacle.shortcuts = {
+        captureActiveWindow = "Meta+Print";
+        captureEntireDesktop = "Shift+Print";
+        captureRectangularRegion = [
+          "Meta+Shift+S"
+          "Print"
+        ];
+      };
+
+      # Enable KWin Scripts
+      # kwin.scripts = {
+      #   krohnkite.enable = true;
+      # };
 
       # Basic Plasma configuration
       workspace = {
         clickItemTo = "select"; # Double click to open
-        lookAndFeel = "org.kde.breeze.desktop";
+        lookAndFeel = "org.kde.breezedark.desktop";
         cursor = {
-          theme = "BreezeX-Dark";
+          theme = "BreezeX-Light";
           size = 24;
         };
       };
@@ -76,12 +119,25 @@ in
       };
 
       shortcuts = {
-        "services/org.kde.spectacle.desktop" = {
-          "RectangularRegionScreenShot" = "Meta+Shift+S";
+        "ksmserver" = {
+          "Lock Session" = [
+            "Screensaver"
+            "Meta+Esc"
+          ];
         };
         "kwin" = {
           "Window Maximize" = "Meta+W";
           "Window Close" = "Meta+C";
+
+          # Krohnkite shortcuts
+          "Krohnkite: Cycle Layout" = "Meta+Space";
+          "Krohnkite: Focus Next" = "Meta+J";
+          "Krohnkite: Focus Previous" = "Meta+K";
+          "Krohnkite: Move Window Next" = "Meta+Shift+J";
+          "Krohnkite: Move Window Previous" = "Meta+Shift+K";
+          "Krohnkite: Shrink Main" = "Meta+H";
+          "Krohnkite: Grow Main" = "Meta+L";
+          "Krohnkite: Toggle Floating" = "Meta+F";
         };
       };
 

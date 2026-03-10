@@ -1,8 +1,8 @@
 {
   "mcpServers": {
     "nixos": {
-      "url": "https://mcp-nixos.ncaq.net/mcp",
-      "type": "http"
+      "command": "docker",
+      "args": ["run", "--rm", "-i", "ghcr.io/utensils/mcp-nixos"]
     }
   }
 }
