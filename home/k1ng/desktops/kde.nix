@@ -52,13 +52,17 @@ in
       configFile.kwinrc = {
         Wayland.VirtualKeyboardLib = "org.fcitx.Fcitx5";
         Plugins.krohnkiteEnabled = true;
-        "Script-krohnkite" = {
-          "enableFloating" = true;
-          "screenGapBottom" = 5;
-          "screenGapLeft" = 5;
-          "screenGapRight" = 5;
-          "screenGapTop" = 5;
-          "tileLayoutGap" = 5;
+        Script-krohnkite = {
+          enableFloating = true;
+          screenGapBottom = 5;
+          screenGapLeft = 5;
+          screenGapRight = 5;
+          screenGapTop = 5;
+          tileLayoutGap = 5;
+          tileGap = 8;
+        };
+        Effect-overview = {
+          BorderActivate = 9;
         };
       };
 
@@ -69,7 +73,7 @@ in
           showMessageOnSave = true;
         };
         GuiConfig = {
-          captureMode = 0; # Rectangular Region
+          captureMode = 0;
           quitAfterSaveCopy = true;
         };
         Save = {
@@ -85,11 +89,6 @@ in
           "Print"
         ];
       };
-
-      # Enable KWin Scripts
-      # kwin.scripts = {
-      #   krohnkite.enable = true;
-      # };
 
       # Basic Plasma configuration
       workspace = {
