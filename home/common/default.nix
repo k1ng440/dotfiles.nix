@@ -3,6 +3,7 @@
 { pkgs, inputs, ... }:
 {
   imports = [
+    inputs.catppuccin.homeModules.catppuccin
     ./ime.nix
     ./emoji.nix
     ./git.nix

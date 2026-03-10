@@ -1,4 +1,4 @@
-{ config, ... }:
+{ config, lib, ... }:
 {
   services.swaync = {
     enable = true;
@@ -60,7 +60,7 @@
         "notifications"
       ];
     };
-    style = ''
+    style = lib.mkForce ''
       * {
         font-family: JetBrainsMono Nerd Font Mono;
         font-weight: bold;

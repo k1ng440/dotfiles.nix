@@ -21,4 +21,7 @@
       };
     };
   };
+
+  # Catppuccin QT styling requires Kvantum, but we use qtct
+  catppuccin.kvantum.enable = false;
 }

@@ -64,6 +64,6 @@ in
   ];
 
   wayland.windowManager.hyprland.settings.bind = [
-    "${mod}, S, exec, ${web-search-script}/bin/fuzzel-web-search"
+    "${mod} SHIFT, R, exec, ${web-search-script}/bin/fuzzel-web-search"
   ];
 }

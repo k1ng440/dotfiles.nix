@@ -14,6 +14,7 @@ let
 in
 {
   imports = lib.flatten [
+    inputs.catppuccin.nixosModules.catppuccin
     inputs.home-manager.${platformModules}.home-manager
     inputs.sops-nix.${platformModules}.sops
 
@@ -65,7 +66,13 @@ in
     backupFileExtension = "bk";
     extraSpecialArgs = {
       inherit (config) machine;
-      inherit npins inputs outputs;
+      inherit
+        npins
+        inputs
+        outputs
+        isNixOS
+        ;
+      isHomeManager = true;
     };
   };
 

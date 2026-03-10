@@ -92,6 +92,8 @@ in
       name = "k1ng";
       isDefault = true;
 
+      extensions.force = true;
+
       settings = defaultSettings // {
         "signon.rememberSignons" = false; # Disable built-in password manager
         "browser.compactmode.show" = true;

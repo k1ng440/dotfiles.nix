@@ -24,6 +24,7 @@
               inherit self inputs;
               inherit outputs isNixOS;
               inherit npins;
+              isHomeManager = false;
               isDarwin = !isNixOS;
               lib = nixpkgs.lib.extend (
                 self: super: {
@@ -168,6 +169,7 @@
     };
 
     # Utility flakes
+    catppuccin.url = "github:catppuccin/nix";
     npins = {
       url = "github:andir/npins";
       flake = false;

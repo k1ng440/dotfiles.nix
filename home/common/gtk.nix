@@ -1,6 +1,7 @@
 {
   config,
   pkgs,
+  lib,
   ...
 }:
 {
@@ -9,12 +10,12 @@
     enable = true;
     colorScheme = "dark";
     theme = {
-      name = "Adwaita-dark";
+      # name = lib.mkForce "Adwaita-dark";
       package = pkgs.gnome-themes-extra;
     };
     iconTheme = {
-      name = "Tela-circle-dark";
-      package = pkgs.tela-circle-icon-theme;
+      name = lib.mkForce "Tela-circle-dark";
+      package = lib.mkForce pkgs.tela-circle-icon-theme;
     };
     font = {
       name = "Roboto";

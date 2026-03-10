@@ -79,7 +79,7 @@ in
         ", XF86AudioPrev, exec, '${playerctl} --ignore-player=firefox,chromium,brave previous'"
 
         "${mod}, space, exec, rofi -show drun" # App launcher
-        "${mod}, R, exec, rofi -show drun" # App launcher
+        "${mod}, R, exec, fuzzel" # App launcher
 
         # "${mod}, Tab, workspace, previous"
         "${mod} SHIFT, C, centerwindow" # Center floating windows
