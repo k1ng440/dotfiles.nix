@@ -10,7 +10,7 @@
     enable = true;
     colorScheme = "dark";
     theme = {
-      # name = lib.mkForce "Adwaita-dark";
+      name = lib.mkForce "Adwaita-dark";
       package = pkgs.gnome-themes-extra;
     };
     iconTheme = {

@@ -1,19 +1,20 @@
 {
-  config,
   pkgs,
-  inputs,
+  config,
   ...
 }:
 {
-  imports = [
+  home.packages = [
+    pkgs.catppuccin-kvantum
   ];
 
   qt = {
     enable = true;
-    platformTheme = {
-      name = "qtct";
-      package = pkgs.kdePackages.qt6ct;
-    };
+    style.name = "kvantum";
+    # platformTheme = {
+    #   name = "qtct";
+    #   package = pkgs.kdePackages.qt6ct;
+    # };
 
     qt6ctSettings = {
       Appearance = {
@@ -21,7 +22,4 @@
       };
     };
   };
-
-  # Catppuccin QT styling requires Kvantum, but we use qtct
-  catppuccin.kvantum.enable = false;
 }

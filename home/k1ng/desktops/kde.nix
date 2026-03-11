@@ -82,6 +82,7 @@ in
       };
 
       spectacle.shortcuts = {
+        recordRegion = "Meta+Alt+Print";
         captureActiveWindow = "Meta+Print";
         captureEntireDesktop = "Shift+Print";
         captureRectangularRegion = [
@@ -90,10 +91,22 @@ in
         ];
       };
 
+      hotkeys.commands = {
+        "fuzzel-launcher" = {
+          name = "Fuzzel Launcher";
+          key = "Meta+R";
+          command = "${pkgs.fuzzel}/bin/fuzzel";
+        };
+        "fuzzel-web-search" = {
+          name = "Fuzzel Web Search";
+          key = "Meta+Shift+R";
+          command = "fuzzel-web-search";
+        };
+      };
+
       # Basic Plasma configuration
       workspace = {
         clickItemTo = "select"; # Double click to open
-        lookAndFeel = "org.kde.breezedark.desktop";
         cursor = {
           theme = "BreezeX-Light";
           size = 24;

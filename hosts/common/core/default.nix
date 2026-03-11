@@ -63,7 +63,7 @@ in
   # Configure Home manager
   home-manager = {
     useGlobalPkgs = true;
-    backupFileExtension = "bk";
+    backupFileExtension = "backup";
     extraSpecialArgs = {
       inherit (config) machine;
       inherit

@@ -72,7 +72,7 @@ in
         )
       )
       {
-        backupFileExtension = "bk";
+        backupFileExtension = "backup";
         useGlobalPkgs = true;
         useUserPackages = true;
         extraSpecialArgs = {
