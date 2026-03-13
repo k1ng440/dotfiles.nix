@@ -4,6 +4,7 @@ let
 in
 {
   home.packages = [
+    (import ./noctalia-restart.nix { inherit pkgs; })
     (import ./emopicker9000.nix { inherit pkgs; })
     (import ./keybinds.nix { inherit pkgs; })
     (import ./task-waybar.nix { inherit pkgs; })

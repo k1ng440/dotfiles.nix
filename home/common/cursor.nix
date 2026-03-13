@@ -32,7 +32,7 @@ in
     };
 
     activation.setHyprCursor = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-      if [ "${toString machine.windowManager.hyprland.enable}" = "1" ]; then
+      if [ "${toString machine.windowManager.hyprland.enable}" = "1" ] && [ -n "''${HYPRLAND_INSTANCE_SIGNATURE:-}" ]; then
         $DRY_RUN_CMD ${pkgs.hyprland}/bin/hyprctl setcursor ${cursorName} ${toString cursorSize} || echo "Failed to set cursor theme"
       fi
     '';
