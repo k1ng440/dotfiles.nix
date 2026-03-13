@@ -1,4 +1,4 @@
-{ ... }:
+{ machine, ... }:
 {
-  services.swayosd.enable = true;
+  services.swayosd.enable = !machine.computed.isFullDE;
 }

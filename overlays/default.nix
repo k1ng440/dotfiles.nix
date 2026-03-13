@@ -4,20 +4,18 @@
 let
   stable-packages = final: _prev: {
     stable = import inputs.nixpkgs-stable {
-      inherit (final) system;
+      system = final.stdenv.hostPlatform.system;
       config.allowUnfree = true;
     };
   };
 
   unstable-packages = final: _prev: {
     unstable = import inputs.nixpkgs-unstable {
-      inherit (final) system;
+      system = final.stdenv.hostPlatform.system;
       config.allowUnfree = true;
     };
   };
 in
 {
-  default = final: prev:
-    (stable-packages final prev) //
-    (unstable-packages final prev);
+  default = final: prev: (stable-packages final prev) // (unstable-packages final prev);
 }

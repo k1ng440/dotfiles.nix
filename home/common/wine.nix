@@ -17,7 +17,7 @@ let
     pkgs.findutils
     pkgs.gnugrep
     pkgs.which
-    pkgs.xorg.xorgserver
+    pkgs.xorgserver
     pkgs.cabextract
     pkgs.vulkan-loader # Added for vkd3d/driver support
   ];

@@ -716,7 +716,15 @@ in
         default =
           config.machine.windowManager.hyprland.enable
           || config.machine.windowManager.sway.enable
-          || config.machine.windowManager.gnome.enable;
+          || config.machine.windowManager.gnome.enable
+          || config.machine.windowManager.kde.enable;
+        readOnly = true;
+      };
+
+      isFullDE = mkOption {
+        type = types.bool;
+        description = "Whether a full desktop environment (like GNOME or KDE) is enabled";
+        default = config.machine.windowManager.gnome.enable || config.machine.windowManager.kde.enable;
         readOnly = true;
       };
     };

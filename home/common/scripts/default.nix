@@ -14,6 +14,7 @@ in
     (import ./rofi-launcher.nix { inherit pkgs; })
     (import ./screenshootin.nix { inherit pkgs; })
     (import ./pwvucontrol-toggle.nix { inherit pkgs; })
+    (import ./kdegamemode.nix { inherit pkgs; })
 
     # Dependencies
     pkgs.hyprshot

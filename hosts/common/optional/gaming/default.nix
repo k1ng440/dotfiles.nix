@@ -34,8 +34,8 @@
           gpu_device = 1; # The DRM device number on the system (usually 0), ie. the number in /sys/class/drm/card0/
         };
         custom = {
-          start = "hyprgamemode on";
-          end = "hyprgamemode off";
+          start = "hyprgamemode on || kdegamemode on";
+          end = "hyprgamemode off || kdegamemode off";
         };
       };
     };

@@ -2,6 +2,7 @@
   pkgs,
   lib,
   config,
+  machine,
   ...
 }:
 let
@@ -12,7 +13,7 @@ in
   # Configure & Theme Waybar
   # https://github-wiki-see.page/m/Alexays/Waybar/wiki/Module%3A-Hyprland
   programs.waybar = {
-    enable = true;
+    enable = !machine.computed.isFullDE;
     package = pkgs.waybar;
     settings = [
       {

@@ -1,7 +1,12 @@
-{ config, lib, ... }:
+{
+  config,
+  lib,
+  machine,
+  ...
+}:
 {
   services.swaync = {
-    enable = true;
+    enable = !machine.computed.isFullDE;
     settings = {
       positionX = "right";
       positionY = "top";

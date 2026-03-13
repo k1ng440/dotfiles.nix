@@ -20,7 +20,6 @@ in
 
       cache.enable = true;
       nvim.enable = false;
-      # kvantum.enable = f;
     };
   };
 }

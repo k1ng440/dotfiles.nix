@@ -5,16 +5,19 @@
   ...
 }:
 let
-  isHyprland = machine.windowManager.hyprland.enable;
+  enableSwww = !machine.computed.isFullDE;
 in
 {
-  home.packages = with pkgs; [
-    swww
-    coreutils
-    findutils
-  ];
+  home.packages = lib.mkIf enableSwww (
+    with pkgs;
+    [
+      swww
+      coreutils
+      findutils
+    ]
+  );
 
-  home.file."wallpaper-script" = {
+  home.file."wallpaper-script" = lib.mkIf enableSwww {
     target = ".local/bin/change-wallpaper";
     text = ''
       #!${pkgs.bash}/bin/bash
@@ -26,7 +29,7 @@ in
   };
 
   systemd = {
-    user.services.swww-daemon = lib.mkIf isHyprland {
+    user.services.swww-daemon = lib.mkIf enableSwww {
       Unit = {
         Description = "swww wallpaper daemon";
         After = [ "graphical-session.target" ];
@@ -46,7 +49,7 @@ in
       };
     };
 
-    user.services.wallpaper-cycler = lib.mkIf isHyprland {
+    user.services.wallpaper-cycler = lib.mkIf enableSwww {
       Unit = {
         Description = "Cycle wallpapers with swww";
         After = [ "swww-daemon.service" ];
@@ -61,7 +64,7 @@ in
       };
     };
 
-    user.timers.wallpaper-cycler = lib.mkIf isHyprland {
+    user.timers.wallpaper-cycler = lib.mkIf enableSwww {
       Unit = {
         Description = "Timer for cycling wallpapers";
       };

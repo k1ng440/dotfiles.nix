@@ -42,7 +42,7 @@ in
           "spotify.desktop"
           "discord.desktop"
           "steam.desktop"
-          "com.mitchellh.ghostty.desktop"
+          "kitty.desktop"
           "org.gnome.Settings.desktop"
         ];
       };
@@ -55,7 +55,7 @@ in
       };
 
       "org/gnome/desktop/default-applications/terminal" = {
-        exec = "ghostty";
+        exec = "kitty";
       };
 
       "org/gnome/desktop/peripherals/mouse" = {
@@ -146,8 +146,8 @@ in
 
       "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1" = {
         binding = "<Super>q";
-        command = "ghostty";
-        name = "Ghostty";
+        command = "kitty";
+        name = "Kitty";
       };
 
       "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom2" = {
@@ -160,7 +160,7 @@ in
         blur = true;
         brightness = 0.6;
         sigma = 30;
-        whitelist = [ "com.mitchellh.ghostty" ];
+        whitelist = [ "kitty" ];
       };
 
       "org/gnome/shell/extensions/blur-my-shell/panel" = {

@@ -12,7 +12,7 @@ let
   playerctl = lib.getExe' pkgs.playerctl "playerctl";
   wlogout = lib.getExe' pkgs.wlogout "wlogout";
   hyprlock = lib.getExe' pkgs.hyprlock "hyprlock";
-  terminal = "ghostty";
+  terminal = "kitty";
   fileManager = "thunar";
   workspaces = builtins.concatLists [
     (map toString (lib.range 1 9))

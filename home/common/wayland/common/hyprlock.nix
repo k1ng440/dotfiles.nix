@@ -1,4 +1,8 @@
-{ config, ... }:
+{
+  config,
+  machine,
+  ...
+}:
 {
   home.file = {
     ".face.icon".source = ./face.jpg;
@@ -6,7 +10,7 @@
   };
 
   programs.hyprlock = {
-    enable = true;
+    enable = !machine.computed.isFullDE;
     settings = {
       general = {
         immediate_render = true;

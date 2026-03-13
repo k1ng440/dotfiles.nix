@@ -1,7 +1,7 @@
-{ config, ... }:
+{ config, machine, ... }:
 {
   programs.wlogout = {
-    enable = true;
+    enable = !machine.computed.isFullDE;
     layout = [
       {
         label = "shutdown";

@@ -5,7 +5,7 @@
       windowrule = [
         # --- Tags ---
         "tag +file-manager, match:class ^([Tt]hunar|org.gnome.Nautilus|[Pp]cmanfm-qt)$"
-        "tag +terminal, match:class ^(Alacritty|kitty|kitty-dropterm|ghostty)$"
+        "tag +terminal, match:class ^(Alacritty|kitty|kitty-dropterm)$"
         "tag +browser, match:class ^(Brave-browser(-beta|-dev|-unstable)?)$"
         "tag +browser, match:class ^([Ff]irefox|org.mozilla.firefox|[Ff]irefox-esr)$"
         "tag +browser, match:class ^([Gg]oogle-chrome(-beta|-dev|-unstable)?)$"
@@ -87,7 +87,7 @@
 
         "float on, match:class ^(firefox)$, match:title ^(Extension.*)$"
         "center on, match:class ^(firefox)$, match:title ^(Extension.*)$"
-        "opacity 0.80, match:class ^(kitty|com.mitchellh.ghostty)$"
+        "opacity 0.80, match:class ^(kitty)$"
         "opacity 1 1, match:class ^(zoom|vlc|mpv|org.kde.kdenlive|com.obsproject.Studio|com.github.PintaProject.Pinta|imv|org.gnome.NautilusPreviewer)$"
         "float on, pin on, dim_around on, center on, min_size 600 200, match:class com.gabm.satty"
 

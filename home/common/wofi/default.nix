@@ -11,7 +11,7 @@
       prompt = "";
       normal_window = false;
       allow_images = true;
-      term = "ghostty";
+      term = "kitty";
     };
     style =
       let

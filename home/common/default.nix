@@ -8,7 +8,6 @@
     ./emoji.nix
     ./git.nix
     ./kitty.nix
-    ./ghostty.nix
     ./starship.nix
     ./virtmanager.nix
     ./cursor.nix
