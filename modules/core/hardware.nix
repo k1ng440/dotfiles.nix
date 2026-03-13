@@ -1,7 +1,7 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 {
-  services.power-profiles-daemon.enable = false;
-  services.auto-cpufreq.enable = true;
+  services.power-profiles-daemon.enable = lib.mkDefault false;
+  services.auto-cpufreq.enable = lib.mkDefault true;
 
   hardware = {
     graphics.enable = true;

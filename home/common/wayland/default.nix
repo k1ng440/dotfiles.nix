@@ -14,6 +14,7 @@
     ./common/swayosd.nix
     ./common/easyeffects.nix
     ./waybar/waybar-ddubs.nix
+    ./noctalia.nix
     ./wlogout
     ./hyprland
     ./swaywm

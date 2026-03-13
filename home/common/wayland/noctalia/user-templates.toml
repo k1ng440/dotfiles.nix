@@ -1,0 +1,3 @@
+[templates.fresh]
+input_path = "~/.config/noctalia/templates/fresh.json"
+output_path = "~/.config/fresh/themes/noctalia.json"

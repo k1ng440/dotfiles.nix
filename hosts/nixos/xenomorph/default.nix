@@ -59,9 +59,12 @@
     };
     windowManager = {
       sway.enable = false;
-      hyprland.enable = false;
+      hyprland = {
+        enable = true;
+        noctalia.enable = true;
+      };
       gnome.enable = false;
-      kde.enable = true;
+      kde.enable = false;
     };
     capabilities = [
       "gpu"

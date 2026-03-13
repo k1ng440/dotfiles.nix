@@ -6,7 +6,7 @@
 }:
 {
   services.swaync = {
-    enable = !machine.computed.isFullDE;
+    enable = !machine.computed.isFullDE && !machine.windowManager.hyprland.noctalia.enable;
     settings = {
       positionX = "right";
       positionY = "top";

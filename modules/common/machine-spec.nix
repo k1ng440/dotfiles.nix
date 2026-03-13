@@ -413,6 +413,9 @@ in
     windowManager = {
       hyprland = {
         enable = mkEnableOption "Hyprland compositor";
+        noctalia = {
+          enable = mkEnableOption "Noctalia shell for Hyprland";
+        };
       };
 
       sway = {

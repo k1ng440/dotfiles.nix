@@ -3,6 +3,7 @@
 {
   lib,
   pkgs,
+  machine,
   ...
 }:
 let
@@ -23,11 +24,19 @@ let
     right = "r";
     up = "u";
     down = "d";
-    h = left;
-    l = right;
     k = up;
     j = down;
   };
+  noctalia =
+    cmd:
+    lib.concatStringsSep " " (
+      [
+        "noctalia-shell"
+        "ipc"
+        "call"
+      ]
+      ++ (lib.splitString " " cmd)
+    );
 in
 {
   # Reference of supported bind flags: https://wiki.hyprland.org/Configuring/Binds/#bind-flags
@@ -54,32 +63,70 @@ in
       "${mod}, equal, resizeactive, 100 0"
       "${mod} SHIFT, minus, resizeactive, 0 -100"
       "${mod} SHIFT, equal, resizeactive, 0 100"
-
-      # Volume
-      ", XF86AudioRaiseVolume, exec, swayosd-client --output-volume raise"
-      ", XF86AudioLowerVolume, exec, swayosd-client --output-volume lower"
-      ", XF86AudioMute, exec, swayosd-client --output-volume mute-toggle"
-      ", XF86AudioMicMute, exec, swayosd-client --input-volume mute-toggle"
     ];
 
-    bindel = [
-      ", XF86MonBrightnessDown, exec, hyprctl hyprsunset gamma -10"
-      ", XF86MonBrightnessUp, exec, hyprctl hyprsunset gamma +10"
+    bindel =
+      if machine.windowManager.hyprland.noctalia.enable then
+        [
+          # Volume
+          ", XF86AudioRaiseVolume, exec, ${noctalia "volume increase"}"
+          ", XF86AudioLowerVolume, exec, ${noctalia "volume decrease"}"
 
-    ];
+          # Brightness
+          ", XF86MonBrightnessDown, exec, ${noctalia "brightness decrease"}"
+          ", XF86MonBrightnessUp, exec, ${noctalia "brightness increase"}"
+        ]
+      else
+        [
+          # Volume
+          ", XF86AudioRaiseVolume, exec, swayosd-client --output-volume raise"
+          ", XF86AudioLowerVolume, exec, swayosd-client --output-volume lower"
+
+          # Brightness
+          ", XF86MonBrightnessDown, exec, hyprctl hyprsunset gamma -10"
+          ", XF86MonBrightnessUp, exec, hyprctl hyprsunset gamma +10"
+        ];
+
+    # Locked Binds (Work even when screen is locked)
+    bindl =
+      if machine.windowManager.hyprland.noctalia.enable then
+        [
+          ", XF86AudioMute, exec, ${noctalia "volume muteOutput"}"
+          ", XF86AudioMicMute, exec, ${wpctl} set-source-mute @DEFAULT_SOURCE@ toggle"
+        ]
+      else
+        [
+          ", XF86AudioMute, exec, swayosd-client --output-volume mute-toggle"
+          ", XF86AudioMicMute, exec, swayosd-client --input-volume mute-toggle"
+        ];
 
     bind =
       lib.flatten [
-        # Mute Toggle
-        ", XF86AudioMute, exec, ${wpctl} set-mute @DEFAULT_AUDIO_SINK@ toggle"
-        ", XF86AudioMute, exec, ${wpctl} set-source-mute @DEFAULT_SOURCE@ toggle"
         # Media Control
         ", XF86AudioPlay, exec, '${playerctl} --ignore-player=firefox,chromium,brave play-pause'"
         ", XF86AudioNext, exec, '${playerctl} --ignore-player=firefox,chromium,brave next'"
         ", XF86AudioPrev, exec, '${playerctl} --ignore-player=firefox,chromium,brave previous'"
 
-        "${mod}, space, exec, rofi -show drun" # App launcher
-        "${mod}, R, exec, fuzzel" # App launcher
+        (
+          if machine.windowManager.hyprland.noctalia.enable then
+            [
+              "${mod}, space, exec, ${noctalia "launcher toggle"}"
+              "${mod}, D, exec, ${noctalia "launcher toggle"}"
+              "${mod}, N, exec, ${noctalia "control-center toggle"}"
+              "${mod}, Tab, exec, ${noctalia "overview toggle"}"
+              "${mod}, R, exec, ${noctalia "launcher toggle"}"
+              "${mod}, V, exec, ${noctalia "plugin:clipper togglePanel"}"
+              "${mod} SHIFT, E, exec, ${noctalia "plugin:power-menu togglePanel"}"
+            ]
+          else
+            [
+              "${mod}, space, exec, rofi -show drun"
+              "${mod}, D, exec, rofi -show drun"
+              "${mod}, R, exec, fuzzel"
+              "${mod}, V, exec, cliphist list | wofi -dmenu | cliphist decode | wl-copy && wl-paste --no-newline | xargs -I {} wtype {}"
+              "${mod} SHIFT, E, exec, ${wlogout}"
+            ]
+        )
 
         # "${mod}, Tab, workspace, previous"
         "${mod} SHIFT, C, centerwindow" # Center floating windows
@@ -91,7 +138,7 @@ in
 
         # Group
         "${mod}, W, togglegroup"
-        "${mod}, G, layoutmsg, togglesplit"
+        # "${mod}, G, layoutmsg, togglesplit"
 
         # Circle Window
         "ALT, Tab, cyclenext"
@@ -109,15 +156,12 @@ in
         "${mod} ALT, G, exec, chromium --profile-directory=Default --app=https://gemini.google.com"
 
         # Split
-        "${mod} ALT, S, togglesplit" # Toggle split
+        # "${mod} ALT, S, togglesplit" # Toggle split
 
         # Kill active / focus window
         "${mod} SHIFT, Q, killactive"
         "${mod} SHIFT, C, forcekillactive"
         "${mod}, C, killactive"
-
-        # Clipboard
-        "${mod}, V, exec, cliphist list | wofi -dmenu | cliphist decode | wl-copy && wl-paste --no-newline | xargs -I {} wtype {}"
 
         # Toggle between dwindle and master layout
         "${mod} SHIFT, apostrophe, exec, hyprctl keyword general:layout \"$(hyprctl getoption general:layout | grep -q 'dwindle' && echo 'master' || echo 'dwindle')\""
@@ -151,7 +195,6 @@ in
       # Lock screen / Logout / Reload
       ++ [
         "${mod} ALT, L, exec, ${wpctl} set-mute @DEFAULT_AUDIO_SINK@ 0 && ${hyprlock}"
-        "${mod} SHIFT, E, exec, ${wlogout}"
         "${mod} ALT, R, exec, reload"
       ]
       # Applications

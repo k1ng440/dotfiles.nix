@@ -5,7 +5,7 @@
   ...
 }:
 let
-  enableSwww = !machine.computed.isFullDE;
+  enableSwww = !machine.computed.isFullDE && !machine.windowManager.hyprland.noctalia.enable;
 in
 {
   home.packages = lib.mkIf enableSwww (

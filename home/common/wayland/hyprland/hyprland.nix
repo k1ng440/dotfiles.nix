@@ -34,7 +34,6 @@ in
     hyprpolkitagent
     hyprsunset
     hyprpicker
-    quickshell
     bitwarden-cli
     tesseract
   ];
@@ -49,9 +48,9 @@ in
     portalPackage =
       inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
 
-    plugins = [
-      inputs.hyprland-plugins.packages.${pkgs.stdenv.hostPlatform.system}.hyprexpo
-    ];
+    # plugins = [
+    #   inputs.hyprland-plugins.packages.${pkgs.stdenv.hostPlatform.system}.hyprexpo
+    # ];
     systemd = {
       enable = true;
       enableXdgAutostart = false;
@@ -84,7 +83,12 @@ in
         "dbus-update-activation-environment --all --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
         "systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP QT_PLUGIN_PATH QT_QPA_PLATFORM QT_STYLE_OVERRIDE PATH"
         "systemctl --user start hyprpolkitagent"
-        "killall -q waybar;sleep .5 && waybar"
+        (
+          if machine.windowManager.hyprland.noctalia.enable then
+            "noctalia-shell"
+          else
+            "killall -q waybar;sleep .5 && waybar"
+        )
         "nm-applet --indicator"
         "pypr &"
         "sleep 2 && wallsetter"

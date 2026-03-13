@@ -13,7 +13,7 @@ in
   # Configure & Theme Waybar
   # https://github-wiki-see.page/m/Alexays/Waybar/wiki/Module%3A-Hyprland
   programs.waybar = {
-    enable = !machine.computed.isFullDE;
+    enable = !machine.computed.isFullDE && !machine.windowManager.hyprland.noctalia.enable;
     package = pkgs.waybar;
     settings = [
       {

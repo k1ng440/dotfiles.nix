@@ -9,6 +9,7 @@
     inputs.sops-nix.homeManagerModules.sops
     inputs.nix-index-database.homeModules.nix-index
     inputs.hyprland.homeManagerModules.default
+    inputs.noctalia.homeModules.default
 
     ../../modules/common
     ../common
@@ -48,10 +49,10 @@
   # See modules/home-manager/monitors.nix
   monitors = [
     {
-      name = "DP-2";
+      name = "DP-1";
       width = 3440;
       height = 1440;
-      refresh_rate = 100;
+      refresh_rate = 60;
       x = -3440;
       y = 0;
       vrr = 1;
@@ -80,7 +81,7 @@
       ];
     }
     {
-      name = "DP-1";
+      name = "DP-3";
       width = 3440;
       height = 1440;
       refresh_rate = 120;

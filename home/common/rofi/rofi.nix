@@ -1,12 +1,13 @@
 {
   pkgs,
   config,
+  machine,
   ...
 }:
 {
   programs = {
     rofi = {
-      enable = true;
+      enable = !machine.windowManager.hyprland.noctalia.enable;
       package = pkgs.rofi;
       extraConfig = {
         modi = "drun,filebrowser,run";

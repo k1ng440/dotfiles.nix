@@ -10,6 +10,7 @@
     tumbler.enable = true; # Image/video preview
     gnome.gnome-keyring.enable = true;
     dbus.implementation = "broker";
+    upower.enable = true;
 
     # TODO: Only enable this on truested networks.
     avahi = {
