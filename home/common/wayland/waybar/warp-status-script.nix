@@ -6,7 +6,6 @@ pkgs.writeShellScriptBin "waybar-warp-status" ''
       exit 1
   fi
 
-
   STATUS=$(warp-cli status 2>/dev/null)
 
   if echo "$STATUS" | grep -q "Status update: Connected"; then

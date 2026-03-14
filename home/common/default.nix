@@ -23,6 +23,7 @@
     ./terminal-applications.nix
     ./desktop-entries.nix
     ./wine.nix
+    ./thunar.nix
   ];
 
   home.packages = [

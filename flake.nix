@@ -62,27 +62,6 @@
     in
     {
       inherit overlays;
-      packages = eachSystem (
-        _system:
-        let
-          pkgs = import nixpkgs {
-            system = _system; # Use _system here
-            config.allowUnfreePredicate =
-              pkg:
-              builtins.elem (lib.getName pkg) [
-                "stremio-shell"
-                "stremio-server"
-              ];
-          };
-          stremio-custom = pkgs.callPackage ./packages/stremio.nix { };
-          breezex-cursor = pkgs.callPackage ./packages/breezex-cursor.nix { };
-        in
-        {
-          stremio = stremio-custom;
-          breezex-cursor = breezex-cursor;
-        }
-      );
-
       nixosConfigurations = mkHostConfigs (readHosts "nixos") true;
       devShells = eachSystem (
         _system:

@@ -7,7 +7,7 @@
 }:
 let
   cursorName = "BreezeX-Dark";
-  cursorPkg = outputs.packages.${pkgs.stdenv.hostPlatform.system}.breezex-cursor;
+  cursorPkg = pkgs.breezex-cursor;
   cursorSize = 28;
 in
 {

@@ -1,4 +1,3 @@
-# TODO: Make this a module to use with other hosts.
 {
   pkgs,
   lib,
@@ -9,8 +8,7 @@ let
   inherit (config) machine;
 
   repos = {
-    # TODO:  Move this to machine
-    kong = "ssh://pavel@192.168.0.10//masterpool/backup";
+    kong = machine.backupRepo or "ssh://pavel@192.168.0.10//masterpool/backup";
   };
 
   borgDefaults = {
@@ -19,9 +17,12 @@ let
     };
     environment = {
       BORG_RSH = "ssh -o 'StrictHostKeyChecking=no' -i ${config.sops.secrets."ssh/borgbackup".path}";
-      BORG_UNKNOWN_UNENCRYPTED_REPO_ACCESS_IS_OK = "yes";
     };
-    extraCreateArgs = "--verbose --stats --checkpoint-interval 600";
+    extraCreateArgs = lib.concatStringsSep " " [
+      "--verbose"
+      "--stats"
+      "--checkpoint-interval 600"
+    ];
     compression = "auto,zstd";
     startAt = "daily";
     user = "root";
@@ -30,7 +31,7 @@ let
   excludePatterns = {
     cache = [
       ".cache"
-      "*/cache2" # firefox
+      "*/cache2"
       "*/Cache"
       ".config/Slack/logs"
       ".config/Code/CachedData"
@@ -39,14 +40,12 @@ let
       "*/node_modules"
       "*/bower_components"
     ];
-
     build = [
       "*/_build"
       "*/.tox"
       "*/venv"
       "*/.venv"
     ];
-
     userSpecific = [
       "Downloads"
       "Music"
@@ -66,10 +65,14 @@ let
       ".sane"
       ".pub-cache"
       ".factorio.bak"
+      ".var/app"
     ];
   };
 
-  mkExcludePaths = basePath: patterns: map (pattern: "${basePath}/${pattern}") patterns;
+  # Prepends basePath to relative patterns; absolute patterns (starting with /) are passed through unchanged.
+  mkExcludePaths =
+    basePath: patterns:
+    map (pattern: if lib.hasPrefix "/" pattern then pattern else "${basePath}/${pattern}") patterns;
 
   mkBorgJob =
     {
@@ -81,13 +84,14 @@ let
         "cache"
         "build"
       ],
-      extraExcludes ? [ ],
+      extraExcludes ? [ ], # relative patterns, will be prefixed with paths
+      absoluteExcludes ? [ ], # absolute paths, passed through as-is
       overrides ? { },
     }:
     let
       selectedExcludes = lib.concatLists (map (cat: excludePatterns.${cat}) excludeCategories);
-      allExcludes = selectedExcludes ++ extraExcludes;
-      excludePaths = mkExcludePaths paths allExcludes;
+      allRelativeExcludes = selectedExcludes ++ extraExcludes;
+      excludePaths = mkExcludePaths paths allRelativeExcludes ++ absoluteExcludes;
     in
     borgDefaults
     // {
@@ -99,6 +103,7 @@ let
       exclude = excludePaths;
     }
     // overrides;
+
 in
 {
   environment.systemPackages = with pkgs; [ borgbackup ];

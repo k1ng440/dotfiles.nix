@@ -15,7 +15,17 @@ let
       config.allowUnfree = true;
     };
   };
+
+  custom-packages = final: _prev: {
+    stremio = final.callPackage ../packages/stremio.nix { };
+    breezex-cursor = final.callPackage ../packages/breezex-cursor.nix { };
+    noctalia-shell-git-main = final.callPackage ../packages/noctalia-shell.nix {
+      quickshell = inputs.noctalia-qs.packages.${final.stdenv.hostPlatform.system}.default;
+    };
+  };
 in
 {
-  default = final: prev: (stable-packages final prev) // (unstable-packages final prev);
+  default =
+    final: prev:
+    (stable-packages final prev) // (unstable-packages final prev) // (custom-packages final prev);
 }

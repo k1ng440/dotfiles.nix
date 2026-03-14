@@ -108,6 +108,7 @@ in
         follow_mouse = 1;
         float_switch_override_focus = 0;
         sensitivity = 0;
+        force_no_accel = true;
       };
 
       general = {
@@ -124,6 +125,7 @@ in
 
       # https://wiki.hyprland.org/Configuring/Variables/#misc
       misc = {
+        render_unfocused_fps = 60;
         allow_session_lock_restore = 1;
         force_default_wallpaper = 0;
         layers_hog_keyboard_focus = true;
@@ -157,9 +159,9 @@ in
 
         blur = {
           enabled = true;
-          size = 5;
-          passes = 3;
-          vibrancy = 0.17;
+          size = 3;
+          passes = 2;
+          vibrancy = 0.1696;
         };
 
         shadow = {
@@ -181,6 +183,17 @@ in
       render = {
         direct_scanout = 0;
       };
+
+      layerrule = [
+        "no_anim on, match:namespace selection"
+        {
+          name = "noctalia";
+          "match:namespace" = "noctalia-background-.*$";
+          ignore_alpha = 0.5;
+          blur = true;
+          blur_popups = true;
+        }
+      ];
     };
   };
 }

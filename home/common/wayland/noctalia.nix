@@ -1,5 +1,7 @@
 {
   lib,
+  outputs,
+  pkgs,
   config,
   machine,
   ...
@@ -7,6 +9,7 @@
 {
   programs.noctalia-shell = {
     enable = machine.windowManager.hyprland.noctalia.enable;
+    package = pkgs.noctalia-shell-git-main;
   };
 
   xdg.configFile = lib.mkIf machine.windowManager.hyprland.noctalia.enable {

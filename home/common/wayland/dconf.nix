@@ -44,5 +44,14 @@
       "type-format" = "category";
       "view-type" = "list";
     };
+
+    "org/xfce/thunar" = {
+      "last-remote-desktop-command" = "kitty";
+    };
+
+    "org/gnome/desktop/interface" = {
+      color-scheme = "prefer-dark";
+    };
   };
+
 }
