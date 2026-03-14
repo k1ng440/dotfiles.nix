@@ -1,87 +1,53 @@
 {
   description = "k1ng's NixOS, nix-darwin and Home Manager Configuration";
   outputs =
-    inputs@{
-      self,
-      nixpkgs,
-      systems,
-      ...
-    }:
+    inputs:
     let
-      inherit (self) outputs;
-      inherit (nixpkgs) lib;
+      inherit (inputs.nixpkgs) lib;
       overlays = import ./overlays { inherit inputs; };
       npins = import ./npins;
-      eachSystem = nixpkgs.lib.genAttrs (import systems);
+      eachSystem = lib.genAttrs (import inputs.systems);
 
-      mkHost = host: isNixOS: {
-        ${host} =
-          let
-            systemFunc = if isNixOS then lib.nixosSystem else builtins.throw "Unsupported System";
-          in
-          systemFunc {
-            specialArgs = {
-              inherit self inputs;
-              inherit outputs isNixOS;
-              inherit npins;
-              isHomeManager = false;
-              isDarwin = !isNixOS;
-              lib = nixpkgs.lib.extend (
-                self: super: {
-                  custom = import ./lib { inherit (nixpkgs) lib; };
-                }
-              );
-            };
-            modules = [
-              ./hosts/${if isNixOS then "nixos" else "darwin"}/${host}
-              (
-                {
-                  config,
-                  pkgs,
-                  lib,
-                  ...
-                }:
-                {
-                  nixpkgs.overlays = [ overlays.default ];
-                  nixpkgs.config.allowUnfreePredicate =
-                    pkg:
-                    builtins.elem (lib.getName pkg) [
-                      "stremio-shell"
-                      "stremio-server"
-                    ];
-                }
-              )
-            ];
-          };
+      mkHost = import ./lib/mkHost.nix {
+        inherit inputs overlays npins;
+        inherit (inputs) nixpkgs nix-darwin;
+        outputs = inputs.self.outputs;
       };
 
       mkHostConfigs =
-        hosts: isNixOS: lib.foldl (acc: set: acc // set) { } (lib.map (host: mkHost host isNixOS) hosts);
+        hosts: isNixOS:
+        lib.listToAttrs (
+          lib.map (host: {
+            name = host;
+            value = mkHost host isNixOS;
+          }) hosts
+        );
 
       readHosts = folder: lib.attrNames (builtins.readDir ./hosts/${folder});
     in
     {
       inherit overlays;
       nixosConfigurations = mkHostConfigs (readHosts "nixos") true;
+      darwinConfigurations = mkHostConfigs (readHosts "darwin") false;
+
       devShells = eachSystem (
         _system:
         import ./shell.nix {
-          pkgs = nixpkgs.legacyPackages.${_system};
-          checks = self.checks.${_system};
+          pkgs = inputs.nixpkgs.legacyPackages.${_system};
+          checks = inputs.self.checks.${_system};
         }
       );
 
       formatter = eachSystem (
         _system:
         let
-          pkgs = nixpkgs.legacyPackages.${_system};
-          inherit (self.checks.${_system}.pre-commit-check) config;
+          pkgs = inputs.nixpkgs.legacyPackages.${_system};
+          inherit (inputs.self.checks.${_system}.pre-commit-check) config;
           inherit (config) package configFile;
-          script = ''
-            ${pkgs.lib.getExe package} run --all-files --config ${configFile}
-          '';
         in
-        pkgs.writeShellScriptBin "pre-commit-run" script
+        pkgs.writeShellScriptBin "pre-commit-run" ''
+          ${pkgs.lib.getExe package} run --all-files --config ${configFile}
+        ''
       );
 
       checks = eachSystem (_system: {
@@ -90,16 +56,13 @@
           hooks = {
             nixfmt.enable = true;
             nil.enable = true;
-            deadnix.enable = false;
-            statix.enable = false;
+            deadnix.enable = true;
+            statix.enable = true;
           };
         };
       });
     };
 
-  /**
-    IMPORTS
-  */
   inputs = {
     # Core Nix ecosystem
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
@@ -108,7 +71,10 @@
     # System management
     home-manager = {
       url = "github:nix-community/home-manager";
-      # url = "github:nix-community/home-manager/release-25.05";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    nix-darwin = {
+      url = "github:LnL7/nix-darwin";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -140,7 +106,7 @@
     # Hyprland window manager
     hyprland = {
       url = "github:hyprwm/Hyprland";
-      # inputs.nixpkgs.follows = "nixpkgs";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
     hyprland-plugins = {
       url = "github:hyprwm/hyprland-plugins";
@@ -156,7 +122,10 @@
     };
 
     # Utility flakes
-    catppuccin.url = "github:catppuccin/nix";
+    catppuccin = {
+      url = "github:catppuccin/nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     npins = {
       url = "github:andir/npins";
       flake = false;
@@ -168,11 +137,10 @@
     };
 
     # Personal Repositories
-    # Authenticate via ssh and use shallow clone
     nix-secrets = {
       url = "git+ssh://git@gitlab.com/k1ng4401/nix-secrets.git?ref=main&shallow=1";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    stub-flake.url = "github:k1ng440/stub-flake"; # A completely empty flake
+    stub-flake.url = "github:k1ng440/stub-flake";
   };
 }
