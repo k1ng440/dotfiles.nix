@@ -24,8 +24,10 @@ let
     right = "r";
     up = "u";
     down = "d";
-    k = up;
+    h = left;
     j = down;
+    k = up;
+    l = right;
   };
   noctalia =
     cmd:
