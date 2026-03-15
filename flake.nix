@@ -1,72 +1,24 @@
 {
   description = "k1ng's NixOS, nix-darwin and Home Manager Configuration";
+
   outputs =
     inputs:
-    let
-      inherit (inputs.nixpkgs) lib;
-      overlays = import ./overlays { inherit inputs; };
-      npins = import ./npins;
-      eachSystem = lib.genAttrs (import inputs.systems);
-
-      mkHost = import ./lib/mkHost.nix {
-        inherit inputs overlays npins;
-        inherit (inputs) nixpkgs nix-darwin;
-        inherit (inputs.self) outputs;
-      };
-
-      mkHostConfigs =
-        hosts: isNixOS:
-        lib.listToAttrs (
-          lib.map (host: {
-            name = host;
-            value = mkHost host isNixOS;
-          }) hosts
-        );
-
-      readHosts = folder: lib.attrNames (builtins.readDir ./hosts/${folder});
-    in
-    {
-      inherit overlays;
-      nixosConfigurations = mkHostConfigs (readHosts "nixos") true;
-      darwinConfigurations = mkHostConfigs (readHosts "darwin") false;
-
-      devShells = eachSystem (
-        _system:
-        import ./shell.nix {
-          pkgs = inputs.nixpkgs.legacyPackages.${_system};
-          checks = inputs.self.checks.${_system};
-        }
-      );
-
-      formatter = eachSystem (
-        _system:
-        let
-          pkgs = inputs.nixpkgs.legacyPackages.${_system};
-          inherit (inputs.self.checks.${_system}.pre-commit-check) config;
-          inherit (config) package configFile;
-        in
-        pkgs.writeShellScriptBin "pre-commit-run" ''
-          ${pkgs.lib.getExe package} run --all-files --config ${configFile}
-        ''
-      );
-
-      checks = eachSystem (_system: {
-        pre-commit-check = inputs.pre-commit-hooks.lib.${_system}.run {
-          src = ./.;
-          hooks = {
-            nixfmt.enable = true;
-            nil.enable = true;
-            deadnix.enable = true;
-            statix.enable = true;
-          };
-        };
-      });
+    inputs.flake-parts.lib.mkFlake { inherit inputs; } {
+      systems = import inputs.systems;
+      imports = [
+        ./parts/hosts.nix
+        ./parts/devshell.nix
+        ./parts/checks.nix
+      ];
     };
 
   inputs = {
     # Core Nix ecosystem
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
+
+    # Flake parts
+    flake-parts.url = "github:hercules-ci/flake-parts";
 
     # System management
     home-manager = {
