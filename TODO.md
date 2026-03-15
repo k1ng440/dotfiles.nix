@@ -11,7 +11,7 @@
 - [ ]  Setup and configure [UPSMON]
 - [ ] Hardware Acceleration Nvidia
   - [x] Install and configure [nvidia-vaapi-driver](https://github.com/elFarto/nvidia-vaapi-driver)
-  - [ ] Configure Firefox and test
+  - [x] Configure Firefox and test (confirmed with vainfo)
   - [ ] Configure ffmpeg and test
 - [x] Screenshot (flameshot maybe?)
 - [x] Install and configure screensaver / lock screen

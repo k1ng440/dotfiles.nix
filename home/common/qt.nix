@@ -6,7 +6,6 @@
 }:
 {
   home.packages = [
-    pkgs.catppuccin-kvantum
     pkgs.kdePackages.breeze
     pkgs.kdePackages.plasma-integration
   ];
@@ -27,6 +26,4 @@
       };
     };
   };
-
-  catppuccin.kvantum.enable = !machine.windowManager.kde.enable;
 }

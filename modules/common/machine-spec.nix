@@ -366,49 +366,6 @@ in
       };
     };
 
-    # === Style & Theme Configuration ===
-    style = {
-      catppuccin = {
-        enable = mkOption {
-          type = types.bool;
-          default = true;
-          description = "Enable Catppuccin theme";
-        };
-
-        flavor = mkOption {
-          type = types.enum [
-            "latte"
-            "frappe"
-            "macchiato"
-            "mocha"
-          ];
-          default = "mocha";
-          description = "Catppuccin flavor";
-        };
-
-        accent = mkOption {
-          type = types.enum [
-            "rosewater"
-            "flamingo"
-            "pink"
-            "mauve"
-            "red"
-            "maroon"
-            "peach"
-            "yellow"
-            "green"
-            "teal"
-            "sky"
-            "sapphire"
-            "blue"
-            "lavender"
-          ];
-          default = "lavender";
-          description = "Catppuccin accent color";
-        };
-      };
-    };
-
     # === Window Manager Configuration ===
     windowManager = {
       hyprland = {

@@ -44,8 +44,6 @@
 
   environment = {
     sessionVariables = {
-      # fix hw acceleration and native wayland on losslesscut
-      __EGL_VENDOR_LIBRARY_FILENAMES = "/run/opengl-driver/share/glvnd/egl_vendor.d/10_nvidia.json";
       CUDA_CACHE_PATH = "$XDG_CACHE_HOME/nv";
       # disable vsync
       __GL_SYNC_TO_VBLANK = "0";
@@ -60,8 +58,9 @@
       NVD_BACKEND = "direct";
       # EGL_PLATFORM = "wayland";
       __GLX_VENDOR_LIBRARY_NAME = "nvidia";
-      MOZ_DRM_DEVICE = "/dev/dri/renderD128";
+      MOZ_DRM_DEVICE = "/dev/dri/by-path/pci-0000:0b:00.0-render";
     };
+
     # fix high vram usage on discord and hyprland. match with the wrapper procnames
     etc."nvidia/nvidia-application-profiles-rc.d/50-limit-free-buffer-pool.json".text =
       builtins.toJSON

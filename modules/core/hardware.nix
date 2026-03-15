@@ -1,7 +1,11 @@
-{ pkgs, lib, ... }:
 {
-  services.power-profiles-daemon.enable = lib.mkDefault false;
-  services.auto-cpufreq.enable = lib.mkDefault true;
+  pkgs,
+  config,
+  ...
+}:
+{
+  services.power-profiles-daemon.enable = config.machine.hostType == "workstation";
+  services.auto-cpufreq.enable = config.machine.hostType == "mobile";
 
   hardware = {
     graphics.enable = true;

@@ -8,6 +8,8 @@ let
     "browser.warnOnQuitShortcut" = false;
     "browser.tabs.loadInBackground" = true; # Load tabs automatically
     "media.ffmpeg.vaapi.enabled" = true; # Enable hardware acceleration
+    "media.rdd-ffmpeg.enabled" = true;
+    "media.av1.enabled" = true; # Enabled as vainfo confirms AV1Profile0 support
     "layers.acceleration.force-enabled" = true;
     "gfx.webrender.all" = true;
     "ui.systemUsesDarkTheme" = true;

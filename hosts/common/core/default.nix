@@ -12,7 +12,6 @@ let
 in
 {
   imports = lib.flatten [
-    inputs.catppuccin.${platformModules}.catppuccin
     inputs.sops-nix.${platformModules}.sops
 
     (map lib.custom.relativeToRoot [

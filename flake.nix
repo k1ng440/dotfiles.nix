@@ -77,15 +77,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # Utility flakes
-    catppuccin = {
-      url = "github:catppuccin/nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     npins = {
       url = "github:andir/npins";
       flake = false;
     };
+
     systems.url = "github:nix-systems/default";
     nix-index-database = {
       url = "github:nix-community/nix-index-database";
