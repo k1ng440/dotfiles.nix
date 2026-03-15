@@ -76,6 +76,8 @@ in
       inherit (config.users.users.${config.machine.username}) group;
     in
     ''
-      mkdir -p ${ageFolder} && chown -R ${user}:${group} ${config.machine.home}/.config
+      mkdir -p ${ageFolder}
+      chown ${user}:${group} ${config.machine.home}/.config || true
+      chown -R ${user}:${group} ${config.machine.home}/.config/sops
     '';
 }

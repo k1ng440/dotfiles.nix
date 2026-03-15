@@ -32,6 +32,7 @@
       "vm.max_map_count" = 2147483642;
     };
 
+    tmp.cleanOnBoot = true;
   };
 
   programs.appimage = {

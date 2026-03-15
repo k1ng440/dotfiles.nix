@@ -1,7 +1,4 @@
+{ lib, ... }:
 {
-  imports = [
-    ./machine-spec.nix
-    ./monitors.nix
-    ./catppuccin.nix
-  ];
+  imports = lib.custom.scanPaths ./.;
 }

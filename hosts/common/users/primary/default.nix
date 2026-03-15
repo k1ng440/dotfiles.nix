@@ -1,6 +1,4 @@
 {
-  self,
-  inputs,
   pkgs,
   config,
   lib,
@@ -60,29 +58,4 @@ in
     "d /home/${config.machine.username}/.ssh 0750 ${config.machine.username} ${config.machine.username} -"
     "d /home/${config.machine.username}/.ssh/sockets 0750 ${config.machine.username} ${config.machine.username} -"
   ];
-
-  # Home manager configuration - evaluated lazily
-  home-manager =
-    lib.mkIf
-      (
-        inputs ? "home-manager"
-        && !config.machine.computed.isMinimal
-        && builtins.pathExists (
-          lib.custom.relativeToRoot "home/${config.machine.username}/${config.machine.hostname}.nix"
-        )
-      )
-      {
-        backupFileExtension = "backup";
-        useGlobalPkgs = true;
-        useUserPackages = true;
-        extraSpecialArgs = {
-          inherit self pkgs inputs;
-          inherit (config) machine;
-        };
-        users.${config.machine.username} = {
-          imports = [
-            (lib.custom.relativeToRoot "home/${config.machine.username}/${config.machine.hostname}.nix")
-          ];
-        };
-      };
 }

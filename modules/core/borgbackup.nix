@@ -71,8 +71,14 @@ let
 
   # Prepends basePath to relative patterns; absolute patterns (starting with /) are passed through unchanged.
   mkExcludePaths =
-    basePath: patterns:
-    map (pattern: if lib.hasPrefix "/" pattern then pattern else "${basePath}/${pattern}") patterns;
+    paths: patterns:
+    let
+      pathList = if builtins.isList paths then paths else [ paths ];
+    in
+    lib.concatMap (
+      basePath:
+      map (pattern: if lib.hasPrefix "/" pattern then pattern else "${basePath}/${pattern}") patterns
+    ) pathList;
 
   mkBorgJob =
     {
@@ -106,21 +112,30 @@ let
 
 in
 {
-  environment.systemPackages = with pkgs; [ borgbackup ];
+  config = lib.mkIf machine.backup.enable {
+    environment.systemPackages = [
+      pkgs.borgbackup
+      (import ./borg-helper.nix {
+        inherit pkgs config;
+        inherit (config) machine;
+        repo = repos.kong;
+      })
+    ];
 
-  services.borgbackup.jobs = {
-    home-primary = mkBorgJob {
-      name = "${machine.hostname}/${machine.username}-home";
-      repo = repos.kong;
-      paths = "/home/${machine.username}/";
-      passphraseFile = config.sops.secrets."borgbackup/encryption_key".path;
-      excludeCategories = [
-        "cache"
-        "build"
-        "userSpecific"
-      ];
-      overrides = {
-        user = machine.username;
+    services.borgbackup.jobs = {
+      home-primary = mkBorgJob {
+        name = "${machine.hostname}/${machine.username}-home";
+        repo = repos.kong;
+        paths = machine.backup.paths.include;
+        passphraseFile = config.sops.secrets."borgbackup/encryption_key".path;
+        excludeCategories = [
+          "cache"
+          "build"
+          "userSpecific"
+        ];
+        overrides = {
+          user = machine.username;
+        };
       };
     };
   };

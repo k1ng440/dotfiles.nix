@@ -8,11 +8,15 @@
     builtins.map (f: (path + "/${f}")) (
       builtins.attrNames (
         lib.attrsets.filterAttrs (
-          path: _type:
-          (_type == "directory") # include directories
+          name: _type:
+          let
+            isDefaultNix = name == "default.nix";
+            isHelper = lib.strings.hasSuffix "-helper.nix" name;
+            shouldIgnore = isDefaultNix || isHelper;
+          in
+          (_type == "directory" && builtins.pathExists (path + "/${name}/default.nix")) # include directories with default.nix
           || (
-            (path != "default.nix") # ignore default.nix
-            && (lib.strings.hasSuffix ".nix" path) # include .nix files
+            !shouldIgnore && (lib.strings.hasSuffix ".nix" name) # include .nix files
           )
         ) (builtins.readDir path)
       )

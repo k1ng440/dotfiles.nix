@@ -1,17 +1,4 @@
-{ ... }:
+{ lib, ... }:
 {
-  imports = [
-    ./boot.nix
-    ./greetd.nix
-    ./hardware.nix
-    ./networking.nix
-    ./packages.nix
-    ./security.nix
-    ./services.nix
-    ./system.nix
-    ./xdg-portal.nix
-    ./applications.nix
-    ./udev.nix
-    ./cloudflare-warp.nix
-  ];
+  imports = lib.custom.scanPaths ./.;
 }

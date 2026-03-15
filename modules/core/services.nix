@@ -12,14 +12,13 @@
     dbus.implementation = "broker";
     upower.enable = true;
 
-    # TODO: Only enable this on truested networks.
     avahi = {
-      enable = true;
+      enable = !config.machine.computed.isMinimal;
       nssmdns4 = true;
       publish = {
         enable = true;
         addresses = true;
-        workstation = true;
+        workstation = config.machine.hostType == "workstation";
       };
     };
 

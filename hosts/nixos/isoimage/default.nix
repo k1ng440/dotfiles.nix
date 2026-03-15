@@ -1,5 +1,6 @@
 {
   pkgs,
+  lib,
   modulesPath,
   ...
 }:
@@ -34,7 +35,7 @@ in
   ];
 
   networking.hostName = "nixos-installer";
-  networking.useDHCP = true;
+  networking.useDHCP = lib.mkDefault true;
   services.openssh.enable = true;
 
   environment.etc."motd".text = ''

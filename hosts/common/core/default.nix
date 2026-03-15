@@ -2,10 +2,8 @@
   lib,
   pkgs,
   inputs,
-  outputs,
   isNixOS,
   config,
-  npins,
   ...
 }:
 let
@@ -14,8 +12,7 @@ let
 in
 {
   imports = lib.flatten [
-    inputs.catppuccin.nixosModules.catppuccin
-    inputs.home-manager.${platformModules}.home-manager
+    inputs.catppuccin.${platformModules}.catppuccin
     inputs.sops-nix.${platformModules}.sops
 
     (map lib.custom.relativeToRoot [
@@ -59,74 +56,4 @@ in
   ];
 
   networking.hostName = config.machine.hostname;
-
-  # Configure Home manager
-  home-manager = {
-    useGlobalPkgs = true;
-    backupFileExtension = "backup";
-    extraSpecialArgs = {
-      inherit (config) machine;
-      inherit
-        npins
-        inputs
-        outputs
-        isNixOS
-        ;
-      isHomeManager = true;
-    };
-  };
-
-  # Overlays
-  nixpkgs = {
-    overlays = [
-      outputs.overlays.default
-    ];
-    config = {
-      allowUnfree = true;
-    };
-  };
-
-  nix = {
-    registry = lib.mapAttrs (_: value: { flake = value; }) inputs;
-    nixPath = lib.mapAttrsToList (key: value: "${key}=${value.to.path}") config.nix.registry;
-
-    # Optimize storage and automatic scheduled GC running
-    settings.auto-optimise-store = true;
-    optimise.automatic = true;
-
-    settings = {
-      # See https://jackson.dev/post/nix-reasonable-defaults/
-      connect-timeout = 5;
-      log-lines = 25;
-      min-free = 128000000; # 128MB
-      max-free = 1000000000; # 1GB
-
-      trusted-users = [ "@wheel" ];
-      warn-dirty = false;
-      allow-import-from-derivation = true;
-
-      experimental-features = [
-        "nix-command"
-        "flakes"
-        "pipe-operators"
-      ];
-
-      /*
-        * substituter's priority can be set by adding query parameter: ?priority=xxx
-        * NOTE: The lower the number, the higher the priority.
-        *
-      */
-      substituters = [
-        "https://cache.nixos.org"
-        "https://nix-community.cachix.org"
-        # "https://hyprland.cachix.org"
-      ];
-
-      trusted-public-keys = [
-        "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
-        "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
-        # "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
-      ];
-    };
-  };
 }

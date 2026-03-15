@@ -31,7 +31,6 @@
     ./hardware-configuration.nix
     ./configurations.nix
     ./host-packages.nix
-    ./borgbackup.nix
     ./firejail.nix
   ];
 
@@ -40,6 +39,7 @@
     hostname = "xenomorph";
     username = "k1ng";
     userUid = 1000;
+    backup.enable = true;
     platform = {
       isVirtualMachine = false;
       isLinux = true;
