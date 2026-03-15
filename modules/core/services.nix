@@ -1,4 +1,4 @@
-{ pkgs, config, ... }:
+{ config, ... }:
 {
   # Services to start
   services = {

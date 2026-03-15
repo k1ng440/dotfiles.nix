@@ -1,4 +1,4 @@
-{ pkgs, lib, ... }:
+{ pkgs, ... }:
 {
   environment.systemPackages = [
     pkgs.brscan4
@@ -23,7 +23,9 @@
       defaultShared = true;
       openFirewall = true;
       drivers = [
-          (pkgs.writeTextDir "share/cups/model/Brother_DCP-T510W.ppd" (builtins.readFile ./Brother_DCP-T510W.ppd))
+        (pkgs.writeTextDir "share/cups/model/Brother_DCP-T510W.ppd" (
+          builtins.readFile ./Brother_DCP-T510W.ppd
+        ))
       ];
     };
   };

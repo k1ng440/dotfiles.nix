@@ -9,7 +9,6 @@
 let
   mod = "SUPER";
   wpctl = lib.getExe' pkgs.wireplumber "wpctl";
-  brightnessctl = lib.getExe' pkgs.brightnessctl "brightnessctl";
   playerctl = lib.getExe' pkgs.playerctl "playerctl";
   wlogout = lib.getExe' pkgs.wlogout "wlogout";
   hyprlock = lib.getExe' pkgs.hyprlock "hyprlock";
@@ -189,11 +188,6 @@ in
       ++ (map (n: "${mod}, ${n}, workspace, ${n}") workspaces)
       # Move Window to Workspaces
       ++ (map (n: "${mod} SHIFT, ${n}, movetoworkspace, ${n}") workspaces)
-      # Special Workspace
-      ++ [
-        # "${mod}, S, togglespecialworkspace, magic"
-        # "${mod} SHIFT, S, movetoworkspace, special:magic"
-      ]
       # Lock screen / Logout / Reload
       ++ [
         "${mod} ALT, L, exec, ${wpctl} set-mute @DEFAULT_AUDIO_SINK@ 0 && ${hyprlock}"

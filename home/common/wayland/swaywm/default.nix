@@ -7,8 +7,6 @@
 }:
 let
   mod = "Mod4";
-  wpctl = lib.getExe' pkgs.wireplumber "wpctl";
-  brightnessctl = lib.getExe' pkgs.brightnessctl "brightnessctl";
   playerctl = lib.getExe' pkgs.playerctl "playerctl";
   logout = lib.getExe' pkgs.nwg-bar "nwg-bar";
   hyprlock = lib.getExe' pkgs.hyprlock "hyprlock";

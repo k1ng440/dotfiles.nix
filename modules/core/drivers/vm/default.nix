@@ -1,5 +1,4 @@
-{ _ }:
-{
+_: {
   services = {
     qemuGuest.enable = true;
     spice-vdagentd.enable = true;

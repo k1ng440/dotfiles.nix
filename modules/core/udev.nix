@@ -1,5 +1,4 @@
-{ ... }:
-{
+_: {
   services.udev.extraRules = ''
     # Logitech USB Receiver (Mouse)
     ACTION=="add", SUBSYSTEM=="usb", ATTR{idVendor}=="046d", ATTR{idProduct}=="c547", TEST=="power/control", ATTR{power/control}="on"

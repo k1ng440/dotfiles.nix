@@ -16,36 +16,37 @@ in
   ];
 
   config = mkIf machine.windowManager.kde.enable {
-    xdg.configFile."autostart/org.fcitx.Fcitx5.desktop".text = ''
-      [Desktop Entry]
-      Exec=fcitx5
-      Icon=fcitx
-      Name=Fcitx 5
-      Type=Application
-      X-KDE-Autostart-enabled=false
-    '';
+    xdg.configFile = {
+      "autostart/org.fcitx.Fcitx5.desktop".text = ''
+        [Desktop Entry]
+        Exec=fcitx5
+        Icon=fcitx
+        Name=Fcitx 5
+        Type=Application
+        X-KDE-Autostart-enabled=false
+      '';
 
-    xdg.configFile."autostart/blueman.desktop".text = ''
-      [Desktop Entry]
-      Exec=blueman-applet
-      Icon=blueman
-      Name=Blueman Applet
-      Type=Application
-      NotShowIn=KDE;
-    '';
+      "autostart/blueman.desktop".text = ''
+        [Desktop Entry]
+        Exec=blueman-applet
+        Icon=blueman
+        Name=Blueman Applet
+        Type=Application
+        NotShowIn=KDE;
+      '';
 
-    xdg.configFile."autostart/nm-applet.desktop".text = ''
-      [Desktop Entry]
-      Exec=nm-applet
-      Icon=network-workgroup
-      Name=Network-manager Applet
-      Type=Application
-      NotShowIn=KDE;
-    '';
+      "autostart/nm-applet.desktop".text = ''
+        [Desktop Entry]
+        Exec=nm-applet
+        Icon=network-workgroup
+        Name=Network-manager Applet
+        Type=Application
+        NotShowIn=KDE;
+      '';
+    };
 
     home.packages = [
       pkgs.kdePackages.krohnkite
-
     ];
 
     programs.plasma = {
@@ -54,72 +55,82 @@ in
 
       session.sessionRestore.restoreOpenApplicationsOnLogin = "startWithEmptySession";
 
-      configFile.kwinrc = {
-        Compositing = {
-          AllowTearing = true;
-          Latency = 0; # Force lowest latency
+      configFile = {
+        kwinrc = {
+          Compositing = {
+            AllowTearing = true;
+            Latency = 0; # Force lowest latency
+          };
+          Wayland.VirtualKeyboardLib = "org.fcitx.Fcitx5";
+          Desktops = {
+            SeparateScreenDesktops = true;
+          };
+          Plugins = {
+            krohnkiteEnabled = true;
+          };
+          Script-krohnkite = {
+            enableFloating = true;
+            screenGapBottom = 5;
+            screenGapLeft = 5;
+            screenGapRight = 5;
+            screenGapTop = 5;
+            tileLayoutGap = 5;
+            tileGap = 8;
+          };
+          Effect-overview = {
+            BorderActivate = 9;
+          };
+          NightColor = {
+            Active = true;
+            Mode = "Location";
+          };
+          ModifierOnlyShortcuts.Meta = "org.kde.kglobalaccel,/component/kwin,org.kde.kglobalaccel.Component,invokeShortcut,Overview";
         };
-        Wayland.VirtualKeyboardLib = "org.fcitx.Fcitx5";
-        Desktops = {
-          SeparateScreenDesktops = true;
-        };
-        Plugins = {
-          krohnkiteEnabled = true;
-        };
-        Script-krohnkite = {
-          enableFloating = true;
-          screenGapBottom = 5;
-          screenGapLeft = 5;
-          screenGapRight = 5;
-          screenGapTop = 5;
-          tileLayoutGap = 5;
-          tileGap = 8;
-        };
-        Effect-overview = {
-          BorderActivate = 9;
-        };
-        NightColor = {
-          Active = true;
-          Mode = "Location";
-        };
-      };
 
-      configFile.dolphinrc = {
-        General = {
-          ShowFullPath = true;
+        dolphinrc = {
+          General = {
+            ShowFullPath = true;
+          };
+          MainWindow = {
+            MenuBar = "Disabled";
+            ToolbarsWidgetsProperty = "Disabled";
+          };
         };
-        MainWindow = {
-          MenuBar = "Disabled";
-          ToolbarsWidgetsProperty = "Disabled";
-        };
-      };
 
-      configFile."plasma-org.kde.plasma.desktop-appletsrc" = {
-        "Containments/1/Wallpaper/org.kde.slideshow/General" = {
-          SlidePaths = wallpaperDir;
-          SlideInterval = 300;
+        "plasma-org.kde.plasma.desktop-appletsrc" = {
+          "Containments/1/Wallpaper/org.kde.slideshow/General" = {
+            SlidePaths = wallpaperDir;
+            SlideInterval = 300;
+          };
+          "Containments/1" = {
+            wallpaperplugin = "org.kde.slideshow";
+          };
         };
-        "Containments/1" = {
-          wallpaperplugin = "org.kde.slideshow";
-        };
-      };
 
-      configFile.ksplashrc.KSplash.Theme = "None";
+        ksplashrc.KSplash.Theme = "None";
 
-      configFile.kwinrc.ModifierOnlyShortcuts.Meta = "org.kde.kglobalaccel,/component/kwin,org.kde.kglobalaccel.Component,invokeShortcut,Overview";
+        spectaclerc = {
+          General = {
+            launchAction = "DoNotTakeScreenshot";
+            showOnClick = true;
+            showMessageOnSave = true;
+          };
+          GuiConfig = {
+            captureMode = 0;
+            quitAfterSaveCopy = true;
+          };
+          Save = {
+            saveFilenameFormat = "Screenshot_%Y%M%D_%H%M%S";
+          };
+        };
 
-      configFile.spectaclerc = {
-        General = {
-          launchAction = "DoNotTakeScreenshot";
-          showOnClick = true;
-          showMessageOnSave = true;
-        };
-        GuiConfig = {
-          captureMode = 0;
-          quitAfterSaveCopy = true;
-        };
-        Save = {
-          saveFilenameFormat = "Screenshot_%Y%M%D_%H%M%S";
+        kcminputrc = {
+          # Mouse settings
+          Mouse.PointerAccelerationProfile = 1; # None/Flat
+
+          # Libinput Touchpad settings (global defaults often used)
+          "Libinput/Touchpad".NaturalScroll = true;
+          "Libinput/Touchpad".DisableWhileTyping = false;
         };
       };
 
@@ -208,15 +219,6 @@ in
           repeatDelay = 200;
           repeatRate = 50;
         };
-      };
-
-      configFile.kcminputrc = {
-        # Mouse settings
-        Mouse.PointerAccelerationProfile = 1; # None/Flat
-
-        # Libinput Touchpad settings (global defaults often used)
-        "Libinput/Touchpad".NaturalScroll = true;
-        "Libinput/Touchpad".DisableWhileTyping = false;
       };
 
       shortcuts = {

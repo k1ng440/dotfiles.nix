@@ -25,7 +25,7 @@ let
 in
 {
   services.hypridle = {
-    enable = config.machine.windowManager.hyprland.enable;
+    inherit (config.machine.windowManager.hyprland) enable;
     settings = {
       general = {
         lock_cmd = "${pkgs.hyprlock}/bin/hyprlock";

@@ -11,7 +11,7 @@
       mkHost = import ./lib/mkHost.nix {
         inherit inputs overlays npins;
         inherit (inputs) nixpkgs nix-darwin;
-        outputs = inputs.self.outputs;
+        inherit (inputs.self) outputs;
       };
 
       mkHostConfigs =

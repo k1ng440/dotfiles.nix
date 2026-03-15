@@ -33,11 +33,8 @@ systemFunc {
   modules = [
     ../hosts/${if isNixOS then "nixos" else "darwin"}/${host}
     ../modules/hosts/${if isNixOS then "nixos" else "darwin"}/unfree.nix
-    (
-      { ... }:
-      {
-        nixpkgs.overlays = lib.flatten (lib.attrValues overlays);
-      }
-    )
+    (_: {
+      nixpkgs.overlays = lib.flatten (lib.attrValues overlays);
+    })
   ];
 }

@@ -28,8 +28,8 @@ in
     executable = true;
   };
 
-  systemd = {
-    user.services.swww-daemon = lib.mkIf enableSwww {
+  systemd.user = lib.mkIf enableSwww {
+    services.swww-daemon = {
       Unit = {
         Description = "swww wallpaper daemon";
         After = [ "graphical-session.target" ];
@@ -49,7 +49,7 @@ in
       };
     };
 
-    user.services.wallpaper-cycler = lib.mkIf enableSwww {
+    services.wallpaper-cycler = {
       Unit = {
         Description = "Cycle wallpapers with swww";
         After = [ "swww-daemon.service" ];
@@ -64,7 +64,7 @@ in
       };
     };
 
-    user.timers.wallpaper-cycler = lib.mkIf enableSwww {
+    timers.wallpaper-cycler = {
       Unit = {
         Description = "Timer for cycling wallpapers";
       };

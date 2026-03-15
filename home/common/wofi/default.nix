@@ -1,5 +1,4 @@
-{ config, ... }:
-{
+_: {
   programs.wofi = {
     enable = true;
     settings = {

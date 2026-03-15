@@ -6,27 +6,31 @@
 }:
 {
   config = lib.mkIf config.machine.windowManager.kde.enable {
-    services.xserver.enable = true;
+    services = {
+      xserver = {
+        enable = true;
+        videoDrivers = lib.mkIf (lib.elem "nvidia-gpu" config.machine.capabilities) [
+          "nvidia"
+        ];
+      };
 
-    services.displayManager.plasma-login-manager = {
-      enable = true;
-      settings.General.DisplayServer = "x11-user";
+      displayManager = {
+        plasma-login-manager = {
+          enable = true;
+          settings.General.DisplayServer = "x11-user";
+        };
+
+        autoLogin = {
+          enable = true;
+          user = config.machine.username;
+        };
+      };
+
+      desktopManager.plasma6.enable = true;
+
+      # Disable greetd when KDE is enabled because we use SDDM
+      greetd.enable = lib.mkForce false;
     };
-
-    services.displayManager.autoLogin = {
-      enable = true;
-      user = config.machine.username;
-    };
-
-    services.desktopManager.plasma6.enable = true;
-
-    # Disable greetd when KDE is enabled because we use SDDM
-    services.greetd.enable = lib.mkForce false;
-
-    # Fix for KDE on NVIDIA if applicable
-    services.xserver.videoDrivers = lib.mkIf (lib.elem "nvidia-gpu" config.machine.capabilities) [
-      "nvidia"
-    ];
 
     environment.systemPackages = with pkgs; [
       kdePackages.kate

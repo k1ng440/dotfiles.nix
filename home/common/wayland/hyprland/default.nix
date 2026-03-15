@@ -1,4 +1,4 @@
-{ pkgs, config, ... }:
+{ ... }:
 {
   imports = [
     ./animations-end4.nix

@@ -1,4 +1,4 @@
-{ config, machine, ... }:
+{ machine, ... }:
 {
   programs.wlogout = {
     enable = !machine.computed.isFullDE;

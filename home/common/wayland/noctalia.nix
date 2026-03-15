@@ -1,14 +1,12 @@
 {
   lib,
-  outputs,
   pkgs,
-  config,
   machine,
   ...
 }:
 {
   programs.noctalia-shell = {
-    enable = machine.windowManager.hyprland.noctalia.enable;
+    inherit (machine.windowManager.hyprland.noctalia) enable;
     package = pkgs.noctalia-shell-git-main;
   };
 

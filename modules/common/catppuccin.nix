@@ -14,9 +14,9 @@ in
 
   config = {
     catppuccin = {
-      enable = cfg.enable;
-      flavor = cfg.flavor;
-      accent = cfg.accent;
+      inherit (cfg) enable;
+      inherit (cfg) flavor;
+      inherit (cfg) accent;
 
       cache.enable = true;
       nvim.enable = false;

@@ -1,5 +1,4 @@
-{ ... }:
-{
+_: {
   xdg.configFile."brave-flags.conf".text = ''
     --ozone-platform=wayland
     --ozone-platform-hint=wayland

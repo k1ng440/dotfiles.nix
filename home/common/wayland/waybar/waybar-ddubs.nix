@@ -67,7 +67,7 @@ in
 
               groupedWorkspaces = builtins.groupBy (pair: pair.name) workspaceMonitorPairs;
             in
-            lib.mapAttrs (workspaceName: pairs: map (pair: pair.monitor) pairs) groupedWorkspaces;
+            lib.mapAttrs (_: pairs: map (pair: pair.monitor) pairs) groupedWorkspaces;
         };
 
         "sway/window" = {

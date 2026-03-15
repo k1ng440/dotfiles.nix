@@ -1,4 +1,4 @@
-{ _, ... }:
+_:
 let
   browser = "firefox.desktop";
   file-manager = "thunar.desktop";

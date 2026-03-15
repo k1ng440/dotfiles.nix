@@ -95,8 +95,8 @@
   services.samba.enable = true;
   fileSystems =
     let
-      uid = config.users.users.${config.machine.username}.uid;
-      gid = config.users.groups.${config.machine.username}.gid;
+      inherit (config.users.users.${config.machine.username}) uid;
+      inherit (config.users.groups.${config.machine.username}) gid;
       smb_automount_opts = "x-systemd.automount,noauto,x-systemd.idle-timeout=60,x-systemd.device-timeout=5s,x-systemd.mount-timeout=5s,uid=${toString uid},gid=${toString gid}";
     in
     {
