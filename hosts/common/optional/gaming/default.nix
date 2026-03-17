@@ -21,6 +21,10 @@ in
       dedicatedServer.openFirewall = true;
       gamescopeSession.enable = true;
       extraCompatPackages = [ pkgs.proton-ge-bin ];
+      extraPackages = with pkgs; [
+        gamemode
+        pkgsi686Linux.gamemode
+      ];
       protontricks = {
         enable = true;
       };
@@ -36,6 +40,7 @@ in
     # gamemoderun %command%
     gamemode = {
       enable = true;
+      enableRenice = true;
       settings = {
         #see gamemode man page for settings info
         general = {
@@ -66,5 +71,6 @@ in
     libva
     libva-utils
     pkgs.unstable.lutris
+    pkgsi686Linux.gamemode
   ];
 }
