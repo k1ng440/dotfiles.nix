@@ -25,13 +25,6 @@
           "inputFieldDots, 1, 2, linear"
         ];
       };
-      background = [
-        {
-          path = "${config.home.homeDirectory}/Pictures/Wallpapers/wallpapers/018.jpg";
-          blur_passes = 2;
-          blur_size = 4;
-        }
-      ];
       image = [
         {
           path = "${config.home.homeDirectory}/.config/face.jpg";
@@ -53,14 +46,9 @@
         dots_spacing = 0.55;
         dots_center = true;
         dots_rounding = -1;
-        outer_color = "rgba(30, 30, 30, 0.7)";
-        inner_color = "rgba(50, 50, 50, 0.5)";
-        font_color = "rgba(200, 200, 200, 1.0)";
         fade_on_empty = false;
         placeholder_text = "";
         hide_input = false;
-        check_color = "rgba(204, 136, 34, 0)";
-        fail_color = "rgba(204, 34, 34, 0)";
         fail_text = "$FAIL <b>($ATTEMPTS)</b>";
         capslock_color = -1;
         numlock_color = -1;

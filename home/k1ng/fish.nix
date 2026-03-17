@@ -1,6 +1,7 @@
 {
   lib,
   pkgs,
+  config,
   ...
 }:
 let
@@ -39,7 +40,7 @@ in
     };
     shellInit =
       let
-        theme = import ../common/theme.nix { };
+        theme = import ../common/theme.nix { inherit config; };
         inherit (theme) colors;
         # Strip '#' for fish color commands
         c = lib.mapAttrs (_: v: lib.removePrefix "#" v) colors;

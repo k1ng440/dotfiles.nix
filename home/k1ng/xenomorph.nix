@@ -164,8 +164,6 @@
     in
     {
       enable = true;
-      theme = spicePkgs.themes.sleek;
-      colorScheme = "RosePine";
       enabledExtensions = with spicePkgs.extensions; [
         fullAppDisplay
         shuffle

@@ -95,7 +95,7 @@ in
         "uwsm app -- systemctl --user start hyprpolkitagent"
         (
           if machine.windowManager.hyprland.noctalia.enable then
-            "noctalia-start"
+            "uwsm app -- noctalia-start"
           else
             "killall -q waybar;sleep .5 && uwsm app -- waybar"
         )
@@ -122,7 +122,7 @@ in
 
       general =
         let
-          theme = import ../../theme.nix { };
+          theme = import ../../theme.nix { inherit config; };
           inherit (theme) colors;
           strip = lib.removePrefix "#";
         in
@@ -134,8 +134,8 @@ in
           gaps_out = 10;
           border_size = 2;
           resize_on_border = true;
-          "col.active_border" = "rgb(${strip colors.iris}) rgb(${strip colors.rose}) 45deg";
-          "col.inactive_border" = "rgb(${strip colors.overlay})";
+          "col.active_border" = lib.mkForce "rgb(${strip colors.iris}) rgb(${strip colors.rose}) 45deg";
+          "col.inactive_border" = lib.mkForce "rgb(${strip colors.overlay})";
         };
 
       # https://wiki.hyprland.org/Configuring/Variables/#misc
@@ -183,7 +183,6 @@ in
           enabled = true;
           range = 4;
           render_power = 3;
-          color = "rgba(1a1a1aee)";
         };
       };
 

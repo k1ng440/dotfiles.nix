@@ -19,4 +19,8 @@
       };
     };
   };
+
+  environment.etc."uwsm/env".text = lib.mkIf config.machine.windowManager.enabled ''
+    EDITOR=nvim
+  '';
 }

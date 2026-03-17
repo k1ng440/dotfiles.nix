@@ -16,13 +16,9 @@
 
   qt = {
     enable = true;
+    # Stylix handles styles but we keep the KDE vs Kvantum logic
     style.name = if machine.windowManager.kde.enable then "breeze" else "kvantum";
     platformTheme.name = if machine.windowManager.kde.enable then "kde" else "qtct";
-    platformTheme.package =
-      if machine.windowManager.kde.enable then
-        pkgs.kdePackages.plasma-integration
-      else
-        pkgs.kdePackages.qt6ct;
 
     qt5ctSettings = {
       Appearance = {
@@ -38,10 +34,4 @@
       };
     };
   };
-
-  # Configure Kvantum to use Rose Pine
-  xdg.configFile."Kvantum/kvantum.kvconfig".text = ''
-    [General]
-    theme=RosePine
-  '';
 }

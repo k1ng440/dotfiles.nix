@@ -15,8 +15,6 @@ _: {
       frame_timing = true;
 
       # Visuals
-      background_alpha = "0.4";
-      font_size = 24;
       text_outline = true;
       text_outline_thickness = 1.0;
 

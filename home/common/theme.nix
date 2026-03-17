@@ -1,21 +1,21 @@
-_: {
-  # Rosé Pine Color Palette
-  # See https://rosepinetheme.com/palette/
+{ config, ... }:
+{
+  # Bridge Stylix colors to the old theme format for gradual migration
   colors = {
-    base = "#191724";
-    surface = "#1f1d2e";
-    overlay = "#26233a";
-    muted = "#6e6a86";
-    subtle = "#908caa";
-    text = "#e0def4";
-    love = "#eb6f92";
-    gold = "#f6c177";
-    rose = "#ebbcba";
-    pine = "#31748f";
-    foam = "#9ccfd8";
-    iris = "#c4a7e7";
-    highlight-low = "#21202e";
-    highlight-med = "#403d52";
-    highlight-high = "#524f67";
+    base = "#${config.lib.stylix.colors.base00}";
+    surface = "#${config.lib.stylix.colors.base01}";
+    overlay = "#${config.lib.stylix.colors.base02}";
+    muted = "#${config.lib.stylix.colors.base03}";
+    subtle = "#${config.lib.stylix.colors.base04}";
+    text = "#${config.lib.stylix.colors.base05}";
+    love = "#${config.lib.stylix.colors.base08}";
+    gold = "#${config.lib.stylix.colors.base0A}";
+    rose = "#${config.lib.stylix.colors.base0E}"; # Base16 rose is often 0E (magenta/pink)
+    pine = "#${config.lib.stylix.colors.base0D}"; # Base16 pine is often 0D (blue)
+    foam = "#${config.lib.stylix.colors.base0C}"; # Base16 foam is often 0C (cyan)
+    iris = "#${config.lib.stylix.colors.base07}"; # Base16 iris as 07 (silver/whiteish) or 06
+    highlight-low = "#${config.lib.stylix.colors.base01}";
+    highlight-med = "#${config.lib.stylix.colors.base02}";
+    highlight-high = "#${config.lib.stylix.colors.base03}";
   };
 }

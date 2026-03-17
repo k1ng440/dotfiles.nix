@@ -22,7 +22,7 @@
       theme =
         let
           inherit (config.lib.formats.rasi) mkLiteral;
-          theme = import ../theme.nix { };
+          theme = import ../theme.nix { inherit config; };
           inherit (theme) colors;
         in
         {

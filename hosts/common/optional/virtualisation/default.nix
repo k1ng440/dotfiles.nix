@@ -1,6 +1,7 @@
 { pkgs, ... }:
 {
   # Only enable either docker or podman -- Not both
+  hardware.nvidia-container-toolkit.enable = true;
   virtualisation = {
     libvirtd.enable = true;
     libvirtd.qemu = {
@@ -8,7 +9,6 @@
     };
     docker = {
       enable = true;
-      enableNvidia = true;
       daemon.settings = {
       };
     };

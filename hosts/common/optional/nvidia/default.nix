@@ -94,33 +94,21 @@
   };
 
   systemd.services = {
-    # makes kexec work with nvidia GPUs.
-    nvidia-kexec = {
-      unitConfig = {
-        Description = "Unload Nvidia before kexec";
-        Documentation = "man:modprobe(8)";
-        DefaultDependencies = "no";
-        After = "umount.target";
-        Before = "kexec.target";
-      };
-      serviceConfig = {
-        Type = "oneshot";
-        ExecStart = "${lib.getExe' pkgs.kmod "modprobe"} -r nvidia_drm";
-      };
-      wantedBy = [ "kexec.target" ];
-    };
-
     hyprland-suspend = lib.mkIf config.machine.windowManager.hyprland.enable {
       description = "Suspend Hyprland";
       before = [
         "systemd-suspend.service"
         "systemd-hibernate.service"
         "systemd-hybrid-sleep.service"
+        "nvidia-suspend.service"
+        "nvidia-hibernate.service"
       ];
       wantedBy = [
         "suspend.target"
         "hibernate.target"
         "hybrid-sleep.target"
+        "systemd-suspend.service"
+        "systemd-hibernate.service"
       ];
       serviceConfig = {
         Type = "oneshot";
@@ -134,11 +122,14 @@
         "systemd-suspend.service"
         "systemd-hibernate.service"
         "systemd-hybrid-sleep.service"
+        "nvidia-resume.service"
       ];
       wantedBy = [
         "suspend.target"
         "hibernate.target"
         "hybrid-sleep.target"
+        "systemd-suspend.service"
+        "systemd-hibernate.service"
       ];
       serviceConfig = {
         Type = "oneshot";

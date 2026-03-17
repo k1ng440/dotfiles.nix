@@ -9,9 +9,9 @@
     gnucash
     mpv
     font-manager
-    # galculator
+    gnome-calculator
     mission-center
-    #thunderbird
+    thunderbird
     discord
     signal-desktop
     wofi

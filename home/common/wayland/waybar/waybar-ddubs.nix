@@ -282,7 +282,7 @@ in
     ];
     style =
       let
-        theme = import ../../theme.nix { };
+        theme = import ../../theme.nix { inherit config; };
         inherit (theme) colors;
 
         background = colors.base;

@@ -3,15 +3,11 @@
 { pkgs, ... }:
 {
   imports = [
-    ./cursor.nix
     ./emoji.nix
     ./git.nix
     ./kitty.nix
     ./starship.nix
     ./virtmanager.nix
-    ./cursor.nix
-    ./qt.nix
-    ./gtk.nix
     ./rofi
     ./wofi
     ./wayland
@@ -19,6 +15,8 @@
     ./gaming
     ./scripts
     ./mime.nix
+    ./qt.nix
+    ./gtk.nix
     ./user-directories.nix
     ./terminal-applications.nix
     ./desktop-entries.nix
