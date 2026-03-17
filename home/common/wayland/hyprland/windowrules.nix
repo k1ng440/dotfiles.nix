@@ -147,7 +147,7 @@ _: {
         "center on, match:class steam, match:title Steam"
         "tag -default-opacity, match:class steam.*"
         "opacity 1 1, match:class steam.*"
-        "size 1100 700, match:class steam, match:title Steam"
+        "size 1690 800, match:class steam, match:title Steam"
         "size 460 800, match:class steam, match:title Friends List"
         "idle_inhibit fullscreen, match:class steam"
 

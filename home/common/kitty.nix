@@ -3,6 +3,7 @@
   programs.kitty = {
     enable = true;
     package = pkgs.kitty;
+    themeFile = "rose-pine";
     shellIntegration.enableFishIntegration = true;
     enableGitIntegration = true;
     settings = {

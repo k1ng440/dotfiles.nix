@@ -77,5 +77,39 @@ in
       categories = [ "Game" ];
       type = "Application";
     };
+    zoom-launcher = {
+      name = "Zoom Launcher";
+      exec = "zoom-launcher %U";
+      terminal = false;
+      categories = [ "Network" ];
+      mimeType = [
+        "x-scheme-handler/zoommtg"
+        "x-scheme-handler/zoomus"
+      ];
+    };
+    gemini = {
+      name = "Gemini";
+      genericName = "AI Assistant";
+      exec = "launch-webapp https://gemini.google.com";
+      icon = "google-gemini"; # Generic icon name
+      terminal = false;
+      categories = [ "Network" ];
+    };
+    claude = {
+      name = "Claude";
+      genericName = "AI Assistant";
+      exec = "launch-webapp https://claude.ai";
+      icon = "claude"; # Generic icon name
+      terminal = false;
+      categories = [ "Network" ];
+    };
+    whatsapp = {
+      name = "WhatsApp";
+      genericName = "Messaging App";
+      exec = "launch-webapp https://web.whatsapp.com";
+      icon = "whatsapp"; # Generic icon name
+      terminal = false;
+      categories = [ "Network" ];
+    };
   };
 }

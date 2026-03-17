@@ -2,6 +2,7 @@
   inputs,
   lib,
   config,
+  pkgs,
   ...
 }:
 {
@@ -10,6 +11,7 @@
     inputs.nix-index-database.homeModules.nix-index
     inputs.hyprland.homeManagerModules.default
     inputs.noctalia.homeModules.default
+    inputs.spicetify-nix.homeManagerModules.default
 
     ../../modules/common
     ../common
@@ -32,7 +34,6 @@
     ];
     sessionVariables = {
       FLAKE = "$HOME/src/nix/nix-config";
-      SHELL = "bash";
       EDITOR = "nvim";
       MANPAGER = "sh -c 'col --no-backspaces --spaces | bat --language man'";
       MANROFFOPT = "-c";
@@ -49,6 +50,48 @@
   # See modules/home-manager/monitors.nix
   monitors = [
     {
+      name = "DP-3";
+      width = 3440;
+      height = 1440;
+      refresh_rate = 120;
+      vrr = 1;
+      primary = true;
+      workspaces = [
+        {
+          name = "1";
+          persistent = true;
+          default = true;
+          layout = "master";
+          layout_orientation = "left";
+        }
+        {
+          name = "2";
+          persistent = true;
+          default = false;
+          layout = "master";
+          layout_orientation = "left";
+          on_start = [
+            "spotify"
+          ];
+        }
+        {
+          name = "3";
+          persistent = true;
+          default = false;
+          layout = "master";
+          layout_orientation = "left";
+          on_start = [ "vesktop" ];
+        }
+        {
+          name = "4";
+          persistent = true;
+          default = false;
+          layout = "master";
+          layout_orientation = "left";
+        }
+      ];
+    }
+    {
       name = "DP-1";
       width = 3440;
       height = 1440;
@@ -62,67 +105,21 @@
           persistent = true;
           default = true;
           layout = "master";
-          layout_orientation = "left";
+          layout_orientation = "right";
         }
         {
           name = "6";
           persistent = true;
           default = false;
           layout = "master";
-          layout_orientation = "left";
+          layout_orientation = "right";
         }
         {
           name = "7";
           persistent = true;
           default = false;
           layout = "master";
-          layout_orientation = "left";
-        }
-      ];
-    }
-    {
-      name = "DP-3";
-      width = 3440;
-      height = 1440;
-      refresh_rate = 120;
-      vrr = 1;
-      primary = true;
-      workspaces = [
-        {
-          name = "1";
-          persistent = true;
-          default = true;
-          layout = "master";
-        }
-        {
-          name = "2";
-          persistent = true;
-          default = false;
-          layout = "master";
-          on_start = [
-            "spotify"
-          ];
-        }
-        {
-          name = "3";
-          persistent = true;
-          default = false;
-          layout = "master";
-          on_start = [ "discord" ];
-        }
-        {
-          name = "4";
-          persistent = true;
-          default = false;
-          layout = "master";
-        }
-        {
-          name = "special:";
-          persistent = true;
-          default = true;
-          on_start = [
-            "MOZ_ENABLE_WAYLAND=1 thunderbird"
-          ];
+          layout_orientation = "right";
         }
       ];
     }
@@ -142,6 +139,13 @@
           layout = "master";
           on_start = [ ];
         }
+        {
+          name = "9";
+          persistent = true;
+          default = false;
+          layout = "master";
+          on_start = [ ];
+        }
       ];
     }
   ];
@@ -153,4 +157,19 @@
     latitude = 23.8;
     longitude = 90.41;
   };
+
+  programs.spicetify =
+    let
+      spicePkgs = inputs.spicetify-nix.legacyPackages.${pkgs.stdenv.hostPlatform.system};
+    in
+    {
+      enable = true;
+      theme = spicePkgs.themes.sleek;
+      colorScheme = "RosePine";
+      enabledExtensions = with spicePkgs.extensions; [
+        fullAppDisplay
+        shuffle
+        hidePodcasts
+      ];
+    };
 }

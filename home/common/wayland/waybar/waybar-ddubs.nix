@@ -282,18 +282,21 @@ in
     ];
     style =
       let
-        background = "#1d2021";
-        foreground = "#d5c4a1";
-        active-background = background;
-        active-foreground = "#fb4934";
+        theme = import ../../theme.nix { };
+        inherit (theme) colors;
+
+        background = colors.base;
+        foreground = colors.text;
+        active-background = colors.overlay;
+        active-foreground = colors.rose;
 
         # Additional variables for borders and styling
-        border-color = "#504945";
-        workspace-background = "#3c3836";
-        muted-color = "#665c54";
-        highlight-color = "#d5c4a1";
-        shadow-color = "#665c54";
-        accent-color = "#b8bb26";
+        border-color = colors.highlight-med;
+        workspace-background = colors.surface;
+        muted-color = colors.muted;
+        highlight-color = colors.iris;
+        shadow-color = colors.highlight-low;
+        accent-color = colors.foam;
       in
       lib.concatStrings [
         ''

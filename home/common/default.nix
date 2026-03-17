@@ -16,6 +16,7 @@
     ./wofi
     ./wayland
     ./fastfetch
+    ./gaming
     ./scripts
     ./mime.nix
     ./user-directories.nix

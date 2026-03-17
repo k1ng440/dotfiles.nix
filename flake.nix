@@ -49,6 +49,11 @@
       inputs.home-manager.follows = "home-manager";
     };
 
+    spicetify-nix = {
+      url = "github:Gerg-L/spicetify-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     # Development tools
     treefmt-nix = {
       url = "github:numtide/treefmt-nix";

@@ -1,11 +1,16 @@
-{ config, pkgs, ... }:
+{
+  pkgs,
+  machine,
+  ...
+}:
 let
   dpmsScript = pkgs.writeShellScript "dpms-control" ''
     if pgrep -x "Hyprland" > /dev/null; then
       if [ "$1" = "off" ]; then
-        hyprctl dispatch dpms off
+        ${pkgs.hyprland}/bin/hyprctl dispatch dpms off
       else
-        hyprctl dispatch dpms on
+        ${pkgs.procps}/bin/pkill -f -CONT Hyprland || true
+        ${pkgs.hyprland}/bin/hyprctl dispatch dpms on || true
       fi
     elif pgrep -x "sway" > /dev/null; then
       if [ "$1" = "off" ]; then
@@ -22,15 +27,20 @@ let
       fi
     fi
   '';
+
+  lockCmd =
+    if machine.windowManager.hyprland.noctalia.enable then
+      "noctalia-shell ipc call lockScreen lock"
+    else
+      "${pkgs.hyprlock}/bin/hyprlock";
 in
 {
   services.hypridle = {
-    inherit (config.machine.windowManager.hyprland) enable;
+    enable = machine.windowManager.hyprland.enable || machine.windowManager.sway.enable;
     settings = {
       general = {
-        lock_cmd = "${pkgs.hyprlock}/bin/hyprlock";
-        before_sleep_cmd = "${pkgs.hyprlock}/bin/hyprlock";
-
+        lock_cmd = lockCmd;
+        before_sleep_cmd = lockCmd;
         after_sleep_cmd = "${dpmsScript} on";
         ignore_dbus_inhibit = false;
         ignore_systemd_inhibit = false;
@@ -38,26 +48,27 @@ in
 
       /*
         - Lock screen after 5 minutes without turning off the screen.
-        - Turn off the screen after 7 minutes and turn on when activity is detected.
-        - Suspend the system after 10 minutes to save power.
+        - Turn off the screen after 10 minutes and turn on when activity is detected.
+        - Suspend the system after 20 minutes to save power.
       */
 
       listener = [
         # Lock the screen
         {
           timeout = 300;
-          on-timeout = "${pkgs.hyprlock}/bin/hyprlock";
+          on-timeout = lockCmd;
         }
         # Turn off screen
         {
-          timeout = 420;
+          timeout = 600;
           on-timeout = "${dpmsScript} off";
           on-resume = "${dpmsScript} on";
         }
         # Suspend the system
         {
-          timeout = 600;
+          timeout = 1200;
           on-timeout = "systemctl suspend";
+          on-resume = "${dpmsScript} on";
         }
       ];
     };

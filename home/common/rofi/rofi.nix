@@ -12,7 +12,7 @@
       extraConfig = {
         modi = "drun,filebrowser,run";
         show-icons = true;
-        icon-theme = "Papirus";
+        icon-theme = "rose-pine";
         font = "Berkeley Mono, Berkeley Mono Variable, Symbols Nerd Font, monospace";
         drun-display-format = "{icon} {name}";
         display-drun = " Apps";
@@ -22,18 +22,20 @@
       theme =
         let
           inherit (config.lib.formats.rasi) mkLiteral;
+          theme = import ../theme.nix { };
+          inherit (theme) colors;
         in
         {
           "*" = {
-            bg = mkLiteral "#1d2021";
-            bg-alt = mkLiteral "#504945";
-            foreground = mkLiteral "#fbf1c7";
-            selected = mkLiteral "#665c54";
-            active = mkLiteral "#665c54";
-            text-selected = mkLiteral "#fbf1c7";
-            text-color = mkLiteral "#fbf1c7";
-            border-color = mkLiteral "#bdae93";
-            urgent = mkLiteral "#d3869b";
+            bg = mkLiteral colors.base;
+            bg-alt = mkLiteral colors.overlay;
+            foreground = mkLiteral colors.text;
+            selected = mkLiteral colors.iris;
+            active = mkLiteral colors.pine;
+            text-selected = mkLiteral colors.base;
+            text-color = mkLiteral colors.text;
+            border-color = mkLiteral colors.highlight-med;
+            urgent = mkLiteral colors.love;
           };
           "window" = {
             transparency = "real";

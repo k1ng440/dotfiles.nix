@@ -13,6 +13,7 @@
     mission-center
     #thunderbird
     discord
+    signal-desktop
     wofi
   ];
 }

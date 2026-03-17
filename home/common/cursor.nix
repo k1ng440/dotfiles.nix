@@ -5,8 +5,8 @@
   ...
 }:
 let
-  cursorName = "BreezeX-Dark";
-  cursorPkg = pkgs.breezex-cursor;
+  cursorName = "BreezeX-RosePine-Linux";
+  cursorPkg = pkgs.rose-pine-cursor;
   cursorSize = 28;
 in
 {

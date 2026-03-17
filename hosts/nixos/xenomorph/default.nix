@@ -12,6 +12,7 @@
       "hosts/common/core"
       "hosts/common/optional/nvidia"
       "hosts/common/optional/audio"
+      "hosts/common/optional/services/openrgb.nix"
       "hosts/common/optional/fonts"
       "hosts/common/optional/wayland"
       # "hosts/common/optional/solaar"

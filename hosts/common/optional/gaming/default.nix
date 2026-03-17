@@ -1,4 +1,18 @@
-{ pkgs, ... }:
+{
+  pkgs,
+  config,
+  lib,
+  ...
+}:
+let
+  kdegamemode = import (lib.custom.relativeToRoot "home/common/scripts/kdegamemode.nix") {
+    inherit pkgs;
+  };
+  hyprgamemode = import (lib.custom.relativeToRoot "home/common/wayland/hyprland/hyprgamemode.nix") {
+    inherit pkgs kdegamemode;
+    inherit (config) machine;
+  };
+in
 {
   programs = {
     steam = {
@@ -27,15 +41,12 @@
         general = {
           softrealtime = "auto";
           inhibit_screensaver = 1;
-          renice = 15;
-        };
-        gpu = {
-          apply_gpu_optimisations = "accept-responsibility";
-          gpu_device = 1; # The DRM device number on the system (usually 0), ie. the number in /sys/class/drm/card0/
+          renice = 0;
         };
         custom = {
-          start = "hyprgamemode on || kdegamemode on";
-          end = "hyprgamemode off || kdegamemode off";
+          # Using a single store path to avoid 256-character truncation in gamemode.ini
+          start = "${hyprgamemode}/bin/hyprgamemode on";
+          end = "${hyprgamemode}/bin/hyprgamemode off";
         };
       };
     };
@@ -46,7 +57,6 @@
   };
 
   environment.systemPackages = with pkgs; [
-    mangohud
     bottles
     vulkan-tools
     corefonts

@@ -14,7 +14,7 @@
     cowsay # Great Fun Terminal Program
     duf # Utility For Viewing Disk Usage In Terminal
     eza # Beautiful ls Replacement
-    ffmpeg # Terminal Video / Audio Editing
+    ffmpeg-full # Terminal Video / Audio Editing
     file-roller # Archive Manager
     gedit # Simple Graphical Text Editor
     gimp # Great Photo Editor

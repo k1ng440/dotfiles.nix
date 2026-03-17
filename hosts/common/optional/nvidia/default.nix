@@ -15,21 +15,20 @@
 
   hardware = {
     nvidia = {
-      open = true;
+      open = false;
       gsp.enable = config.hardware.nvidia.open;
       nvidiaSettings = true;
       prime.sync.enable = lib.mkForce false;
       modesetting.enable = true;
       powerManagement.enable = true;
-      powerManagement.finegrained = false;
       videoAcceleration = true;
-      package = config.boot.kernelPackages.nvidiaPackages.mkDriver {
-        version = "595.45.04";
-        sha256_64bit = "sha256-zUllSSRsuio7dSkcbBTuxF+dN12d6jEPE0WgGvVOj14=";
-        openSha256 = "sha256-uqNfImwTKhK8gncUdP1TPp0D6Gog4MSeIJMZQiJWDoE=";
-        settingsSha256 = "sha256-Y45pryyM+6ZTJyRaRF3LMKaiIWxB5gF5gGEEcQVr9nA=";
-        persistencedSha256 = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
-      };
+      # package = config.boot.kernelPackages.nvidiaPackages.mkDriver {
+      #   version = "595.45.04";
+      #   sha256_64bit = "sha256-zUllSSRsuio7dSkcbBTuxF+dN12d6jEPE0WgGvVOj14=";
+      #   openSha256 = "sha256-uqNfImwTKhK8gncUdP1TPp0D6Gog4MSeIJMZQiJWDoE=";
+      #   settingsSha256 = "sha256-Y45pryyM+6ZTJyRaRF3LMKaiIWxB5gF5gGEEcQVr9nA=";
+      #   persistencedSha256 = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+      # };
     };
     nvidia-container-toolkit = {
       enable = true;
@@ -55,9 +54,10 @@
       GBM_BACKEND = "nvidia-drm";
       MOZ_DISABLE_RDD_SANDBOX = "1";
       LIBVA_DRIVER_NAME = "nvidia";
-      NVD_BACKEND = "direct";
-      # EGL_PLATFORM = "wayland";
       __GLX_VENDOR_LIBRARY_NAME = "nvidia";
+      NVD_BACKEND = "direct";
+      EGL_PLATFORM = "wayland";
+      MOZ_ENABLE_WAYLAND = "1";
       MOZ_DRM_DEVICE = "/dev/dri/by-path/pci-0000:0b:00.0-render";
     };
 
@@ -86,14 +86,16 @@
                 "librewolf"
                 ".librewolf-wrapped"
                 ".librewolf-wrapped_"
+                "firefox"
+                ".firefox-wrapped"
                 "losslesscut"
               ];
         };
   };
 
-  systemd = {
+  systemd.services = {
     # makes kexec work with nvidia GPUs.
-    services.nvidia-kexec = {
+    nvidia-kexec = {
       unitConfig = {
         Description = "Unload Nvidia before kexec";
         Documentation = "man:modprobe(8)";
@@ -106,6 +108,46 @@
         ExecStart = "${lib.getExe' pkgs.kmod "modprobe"} -r nvidia_drm";
       };
       wantedBy = [ "kexec.target" ];
+    };
+
+    hyprland-suspend = lib.mkIf config.machine.windowManager.hyprland.enable {
+      description = "Suspend Hyprland";
+      before = [
+        "systemd-suspend.service"
+        "systemd-hibernate.service"
+        "systemd-hybrid-sleep.service"
+      ];
+      wantedBy = [
+        "suspend.target"
+        "hibernate.target"
+        "hybrid-sleep.target"
+      ];
+      serviceConfig = {
+        Type = "oneshot";
+        ExecStart = "${pkgs.procps}/bin/pkill -f -STOP Hyprland";
+      };
+    };
+
+    hyprland-resume = lib.mkIf config.machine.windowManager.hyprland.enable {
+      description = "Resume Hyprland";
+      after = [
+        "systemd-suspend.service"
+        "systemd-hibernate.service"
+        "systemd-hybrid-sleep.service"
+      ];
+      wantedBy = [
+        "suspend.target"
+        "hibernate.target"
+        "hybrid-sleep.target"
+      ];
+      serviceConfig = {
+        Type = "oneshot";
+        ExecStart = [
+          "${pkgs.procps}/bin/pkill -f -CONT Hyprland"
+          "${pkgs.coreutils}/bin/sleep 2"
+          "${pkgs.sudo}/bin/sudo -u ${config.machine.username} env XDG_RUNTIME_DIR=/run/user/${toString config.machine.userUid} ${pkgs.hyprland}/bin/hyprctl dispatch dpms on"
+        ];
+      };
     };
   };
 
@@ -123,7 +165,6 @@
         "nvidia_modeset.disable_vrr_memclk_switch=1" # stop really high memclk when vrr is in use.
         "nvidia.NVreg_EnableResizableBar=1" # enable reBAR
         "nvidia.NVreg_RegistryDwords=RmEnableAggressiveVblank=1" # low-latency stuff
-        "nvidia.NVreg_PreserveVideoMemoryAllocations=1"
         "mem_sleep_default=s2idle"
         "nvidia.NVreg_EnableS0ixPowerManagement=1"
         "nvidia.NVreg_S0ixPowerManagementVideoMemoryThreshold=512"

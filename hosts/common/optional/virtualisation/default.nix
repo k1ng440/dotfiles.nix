@@ -8,8 +8,8 @@
     };
     docker = {
       enable = true;
+      enableNvidia = true;
       daemon.settings = {
-
       };
     };
     podman.enable = false;

@@ -6,23 +6,26 @@ let
     "browser.tabs.tabMinWidth" = 75; # Make tabs able to be smaller to prevent scrolling
     "browser.aboutConfig.showWarning" = false; # No warning when going to config
     "browser.warnOnQuitShortcut" = false;
-    "browser.tabs.loadInBackground" = true; # Load tabs automatically
-    "media.ffmpeg.vaapi.enabled" = true; # Enable hardware acceleration
-    "media.rdd-ffmpeg.enabled" = true;
-    "media.av1.enabled" = true; # Enabled as vainfo confirms AV1Profile0 support
-    "layers.acceleration.force-enabled" = true;
-    "gfx.webrender.all" = true;
+    # "browser.tabs.loadInBackground" = true; # Load tabs automatically
+    # "media.ffmpeg.vaapi.enabled" = true;
+    # "media.rdd-ffmpeg.enabled" = true;
+    # "media.rdd-vpx.enabled" = true;
+    # "media.rdd-process.enabled" = true;
+    # "media.ffvpx.enabled" = false;
+    # "media.ffmpeg.hevc.enabled" = true;
+    # "media.navigator.mediadatadecoder_vpx_enabled" = true;
+    # "media.av1.enabled" = false;
     "ui.systemUsesDarkTheme" = true;
-    "extensions.autoDisableScopes" = 0; # Automatically enable extensions
+    "extensions.autoDisableScopes" = 0;
     "extensions.update.enabled" = false;
-    "widget.use-xdg-desktop-portal.file-picker" = 1; # Use new gtk file picker instead of legacy one
+    "widget.use-xdg-desktop-portal.file-picker" = 1;
     "widget.dmabuf.force-enabled" = 1;
   };
 in
 {
   programs.firefox = {
     enable = true;
-    package = pkgs.firefox-bin;
+    package = pkgs.firefox;
 
     # Refer to https://mozilla.github.io/policy-templates or `about:policies#documentation` in firefox
     policies = {
@@ -42,9 +45,12 @@ in
         Cryptomining = true;
         Fingerprinting = true;
         EmailTracking = true;
-        # Exceptions = ["https://example.com"]
+        # Exceptions = [
+        #   "https://www.twitch.tv"
+        #   "https://player.twitch.tv"
+        # ];
       };
-      ExtensionUpdate = false;
+      ExtensionUpdate = true;
 
       # To add additional extensions, find it on addons.mozilla.org, find
       # the short ID in the url (like https://addons.mozilla.org/en-US/firefox/addon/!SHORT_ID!/)

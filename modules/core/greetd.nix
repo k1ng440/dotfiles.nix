@@ -31,9 +31,9 @@
             user = "k1ng";
             command =
               if config.machine.windowManager.hyprland.enable then
-                "run-hyprland"
+                "uwsm start hyprland-uwsm.desktop"
               else if config.machine.windowManager.sway.enable then
-                "run-sway"
+                "uwsm start sway.desktop"
               else if config.machine.windowManager.gnome.enable then
                 "dbus-run-session -- gnome-session"
               else if config.machine.windowManager.kde.enable then

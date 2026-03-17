@@ -7,6 +7,7 @@
       addons = with pkgs; [
         fcitx5-mozc
         fcitx5-gtk
+        fcitx5-rose-pine
       ];
 
       settings = {
@@ -31,6 +32,10 @@
             ModifierOnlyKeyTimeout = 250;
             TriggerInputMethod = "Control+Space";
           };
+        };
+
+        ui = {
+          Theme = "rose-pine";
         };
       };
     };

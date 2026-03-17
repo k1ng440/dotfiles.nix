@@ -15,6 +15,7 @@
       bottom # System monitor with interactive UI
       bat # Syntax-highlighting file viewer
       nh # Nix helper tool
+      lazydocker # Terminal UI for Docker
       bmon # Modern Unix `iftop`
       chafa # Terminal image viewer
       cpufetch # Terminal CPU info
@@ -52,10 +53,11 @@
       nmap
       tcpdump
       _7zz
+      gum
     ]
     ++ lib.optionals machine.windowManager.enabled [
       woeusb-ng
-      spotify
+      vesktop
       yubikey-manager
       libreoffice-fresh # office
       obs-studio
@@ -72,5 +74,6 @@
       pkgs.nodejs_24
       # self.packages.${pkgs.stdenv.hostPlatform.system}.stremio
       wireshark
+      vlc
     ];
 }

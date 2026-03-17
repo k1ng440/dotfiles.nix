@@ -4,6 +4,7 @@ let
 in
 {
   home.packages = [
+    (import ./noctalia-start.nix { inherit pkgs; })
     (import ./noctalia-restart.nix { inherit pkgs; })
     (import ./emopicker9000.nix { inherit pkgs; })
     (import ./keybinds.nix { inherit pkgs; })
@@ -16,6 +17,9 @@ in
     (import ./screenshootin.nix { inherit pkgs; })
     (import ./pwvucontrol-toggle.nix { inherit pkgs; })
     (import ./kdegamemode.nix { inherit pkgs; })
+    (import ./launch-webapp.nix { inherit pkgs; })
+    (import ./zoom-launcher.nix { inherit pkgs; })
+    (import ./hypr-suspend-fix.nix { inherit pkgs; })
 
     # Dependencies
     pkgs.hyprshot

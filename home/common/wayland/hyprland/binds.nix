@@ -13,7 +13,7 @@ let
   wlogout = lib.getExe' pkgs.wlogout "wlogout";
   hyprlock = lib.getExe' pkgs.hyprlock "hyprlock";
   terminal = "kitty";
-  fileManager = "thunar";
+  fileManager = "uwsm app -- thunar";
   workspaces = builtins.concatLists [
     (map toString (lib.range 1 9))
     (map (i: "F" + toString i) (lib.range 1 12))
@@ -49,157 +49,168 @@ in
     ];
 
     # Repeat Binds
-    binde = [
+    binded = [
       # Zoom
-      "${mod}, Z, exec, pypr zoom ++0.5"
-      "${mod} SHIFT, Z, exec, pypr zoom"
+      "${mod}, Z, Zoom In, exec, pypr zoom ++0.5"
+      "${mod} SHIFT, Z, Reset Zoom, exec, pypr zoom"
 
       # Resize active window
-      "CTRL ${mod} SHIFT, h, resizeactive,-5 0"
-      "CTRL ${mod} SHIFT, j, resizeactive,0 5"
-      "CTRL ${mod} SHIFT, k, resizeactive,0 -5"
-      "CTRL ${mod} SHIFT, l, resizeactive,5 0"
+      "CTRL ${mod} SHIFT, h, Resize Left, resizeactive,-5 0"
+      "CTRL ${mod} SHIFT, j, Resize Down, resizeactive,0 5"
+      "CTRL ${mod} SHIFT, k, Resize Up, resizeactive,0 -5"
+      "CTRL ${mod} SHIFT, l, Resize Right, resizeactive,5 0"
 
-      "${mod}, minus, resizeactive, -100 0"
-      "${mod}, equal, resizeactive, 100 0"
-      "${mod} SHIFT, minus, resizeactive, 0 -100"
-      "${mod} SHIFT, equal, resizeactive, 0 100"
+      "${mod}, minus, Shrink Width, resizeactive, -100 0"
+      "${mod}, equal, Grow Width, resizeactive, 100 0"
+      "${mod} SHIFT, minus, Shrink Height, resizeactive, 0 -100"
+      "${mod} SHIFT, equal, Grow Height, resizeactive, 0 100"
     ];
 
-    bindel =
+    bindeld =
       if machine.windowManager.hyprland.noctalia.enable then
         [
           # Volume
-          ", XF86AudioRaiseVolume, exec, ${noctalia "volume increase"}"
-          ", XF86AudioLowerVolume, exec, ${noctalia "volume decrease"}"
+          ", XF86AudioRaiseVolume, Increase Volume, exec, ${noctalia "volume increase"}"
+          ", XF86AudioLowerVolume, Decrease Volume, exec, ${noctalia "volume decrease"}"
 
           # Brightness
-          ", XF86MonBrightnessDown, exec, ${noctalia "brightness decrease"}"
-          ", XF86MonBrightnessUp, exec, ${noctalia "brightness increase"}"
+          ", XF86MonBrightnessDown, Decrease Brightness, exec, ${noctalia "brightness decrease"}"
+          ", XF86MonBrightnessUp, Increase Brightness, exec, ${noctalia "brightness increase"}"
         ]
       else
         [
           # Volume
-          ", XF86AudioRaiseVolume, exec, swayosd-client --output-volume raise"
-          ", XF86AudioLowerVolume, exec, swayosd-client --output-volume lower"
+          ", XF86AudioRaiseVolume, Increase Volume, exec, swayosd-client --output-volume raise"
+          ", XF86AudioLowerVolume, Decrease Volume, exec, swayosd-client --output-volume lower"
 
           # Brightness
-          ", XF86MonBrightnessDown, exec, hyprctl hyprsunset gamma -10"
-          ", XF86MonBrightnessUp, exec, hyprctl hyprsunset gamma +10"
+          ", XF86MonBrightnessDown, Decrease Brightness, exec, hyprctl hyprsunset gamma -10"
+          ", XF86MonBrightnessUp, Increase Brightness, exec, hyprctl hyprsunset gamma +10"
         ];
 
     # Locked Binds (Work even when screen is locked)
-    bindl =
+    bindld =
       if machine.windowManager.hyprland.noctalia.enable then
         [
-          ", XF86AudioMute, exec, ${noctalia "volume muteOutput"}"
-          ", XF86AudioMicMute, exec, ${wpctl} set-source-mute @DEFAULT_SOURCE@ toggle"
+          ", XF86AudioMute, Mute Audio, exec, ${noctalia "volume muteOutput"}"
+          ", XF86AudioMicMute, Mute Microphone, exec, ${wpctl} set-source-mute @DEFAULT_SOURCE@ toggle"
         ]
       else
         [
-          ", XF86AudioMute, exec, swayosd-client --output-volume mute-toggle"
-          ", XF86AudioMicMute, exec, swayosd-client --input-volume mute-toggle"
+          ", XF86AudioMute, Mute Audio, exec, swayosd-client --output-volume mute-toggle"
+          ", XF86AudioMicMute, Mute Microphone, exec, swayosd-client --input-volume mute-toggle"
         ];
 
-    bind =
+    bindd =
       lib.flatten [
         # Media Control
-        ", XF86AudioPlay, exec, '${playerctl} --ignore-player=firefox,chromium,brave play-pause'"
-        ", XF86AudioNext, exec, '${playerctl} --ignore-player=firefox,chromium,brave next'"
-        ", XF86AudioPrev, exec, '${playerctl} --ignore-player=firefox,chromium,brave previous'"
+        ", XF86AudioPlay, Play/Pause Media, exec, '${playerctl} --ignore-player=firefox,chromium,brave play-pause'"
+        ", XF86AudioNext, Next Media, exec, '${playerctl} --ignore-player=firefox,chromium,brave next'"
+        ", XF86AudioPrev, Previous Media, exec, '${playerctl} --ignore-player=firefox,chromium,brave previous'"
 
         (
           if machine.windowManager.hyprland.noctalia.enable then
             [
-              "${mod}, space, exec, ${noctalia "launcher toggle"}"
-              "${mod}, D, exec, ${noctalia "launcher toggle"}"
-              "${mod}, N, exec, ${noctalia "control-center toggle"}"
-              "${mod}, Tab, exec, ${noctalia "overview toggle"}"
-              "${mod}, R, exec, ${noctalia "launcher toggle"}"
-              "${mod}, V, exec, ${noctalia "plugin:clipper togglePanel"}"
-              "${mod} SHIFT, E, exec, ${noctalia "plugin:power-menu togglePanel"}"
+              "${mod}, space, Toggle Launcher, exec, ${noctalia "launcher toggle"}"
+              "${mod}, D, Toggle Launcher, exec, ${noctalia "launcher toggle"}"
+              "${mod}, N, Toggle Control Center, exec, ${noctalia "control-center toggle"}"
+              "${mod}, Tab, Toggle Overview, exec, ${noctalia "overview toggle"}"
+              "${mod}, R, Toggle Launcher, exec, ${noctalia "launcher toggle"}"
+              "${mod}, V, Toggle Clipper, exec, ${noctalia "plugin:clipper togglePanel"}"
+              "${mod} SHIFT, E, Toggle Power Menu, exec, ${noctalia "plugin:power-menu togglePanel"}"
             ]
           else
             [
-              "${mod}, space, exec, rofi -show drun"
-              "${mod}, D, exec, rofi -show drun"
-              "${mod}, R, exec, fuzzel"
-              "${mod}, V, exec, cliphist list | wofi -dmenu | cliphist decode | wl-copy && wl-paste --no-newline | xargs -I {} wtype {}"
-              "${mod} SHIFT, E, exec, ${wlogout}"
+              "${mod}, space, App Launcher, exec, rofi -show drun"
+              "${mod}, D, App Launcher, exec, rofi -show drun"
+              "${mod}, R, App Launcher, exec, fuzzel"
+              "${mod}, V, Clipboard Manager, exec, cliphist list | wofi -dmenu | cliphist decode | wl-copy && wl-paste --no-newline | xargs -I {} wtype {}"
+              "${mod} SHIFT, E, Logout Menu, exec, ${wlogout}"
             ]
         )
 
         # "${mod}, Tab, workspace, previous"
-        "${mod} SHIFT, C, centerwindow" # Center floating windows
-        "${mod}, grave, exec, pypr toggle term" # Toggle pyprland terminal scratchpad
-        "${mod}, m, exec, pypr toggle music" # Toggle music scratchpad
+        "${mod} SHIFT, C, Center Window, centerwindow" # Center floating windows
+        "${mod}, grave, Toggle Scratchpad Terminal, exec, pypr toggle term" # Toggle pyprland terminal scratchpad
+        "${mod}, m, Toggle Scratchpad Music, exec, pypr toggle music" # Toggle music scratchpad
 
-        "${mod}, comma, workspace, -1" # Previous workspace
-        "${mod}, period, workspace, +1" # Next workspace
+        "${mod}, comma, Previous Workspace, workspace, -1" # Previous workspace
+        "${mod}, period, Next Workspace, workspace, +1" # Next workspace
 
         # Group
-        "${mod}, W, togglegroup"
+        "${mod}, W, Toggle Group, togglegroup"
         # "${mod}, G, layoutmsg, togglesplit"
 
         # Circle Window
-        "ALT, Tab, cyclenext"
+        "ALT, Tab, Cycle Next Window, cyclenext"
 
         # Full Screen
-        "${mod} SHIFT, F, fullscreenstate,2 -1" # `internal client`, where `internal` and `client` can be -1 - current, 0 - none, 1 - maximize, 2 - fullscreen, 3 - maximize and fullscreen
+        "${mod} SHIFT, F, Toggle Fullscreen, fullscreenstate,2 -1" # `internal client`, where `internal` and `client` can be -1 - current, 0 - none, 1 - maximize, 2 - fullscreen, 3 - maximize and fullscreen
 
         # Float
-        "${mod}, F, togglefloating" # Float toggle
+        "${mod}, F, Toggle Floating, togglefloating" # Float toggle
 
-        "${mod}, P, pseudo" # toggle pseudotile
+        "${mod}, P, Toggle Pseudo Tile, pseudo" # toggle pseudotile
 
         # Apps
-        "${mod} ALT, P, exec, chromium --profile-directory=Default --app=https://www.perplexity.ai"
-        "${mod} ALT, G, exec, chromium --profile-directory=Default --app=https://gemini.google.com"
+        "${mod} ALT, G, Gemini AI, exec, launch-webapp https://gemini.google.com"
+        "${mod} ALT, C, Claude AI, exec, launch-webapp https://claude.ai"
 
         # Split
         # "${mod} ALT, S, togglesplit" # Toggle split
 
         # Kill active / focus window
-        "${mod} SHIFT, Q, killactive"
-        "${mod} SHIFT, C, forcekillactive"
-        "${mod}, C, killactive"
+        "${mod} SHIFT, Q, Kill Window, killactive"
+        "${mod} SHIFT, C, Force Kill Window, forcekillactive"
+        "${mod}, C, Kill Window, killactive"
 
         # Toggle between dwindle and master layout
-        "${mod} SHIFT, apostrophe, exec, hyprctl keyword general:layout \"$(hyprctl getoption general:layout | grep -q 'dwindle' && echo 'master' || echo 'dwindle')\""
+        "${mod} SHIFT, apostrophe, Toggle Layout, exec, hyprctl keyword general:layout \"$(hyprctl getoption general:layout | grep -q 'dwindle' && echo 'master' || echo 'dwindle')\""
 
         # Reload Hyprland
-        "CTRL ALT, Delete, exec, hyprctl 'dispatch exit'"
+        "CTRL ALT, Delete, Exit Hyprland, exec, hyprctl 'dispatch exit'"
 
         # Switch Keyboard Layout
-        "ALT, Shift_L, exec, hyprctl switchxkblayout"
+        "ALT, Shift_L, Switch Keyboard Layout, exec, hyprctl switchxkblayout"
 
         # Lock mouse to current window
-        "${mod}, Escape, exec, hyprctl keyword \"input:cursor_lock_to_window\" 1"
+        "${mod}, Escape, Lock Cursor to Window, exec, hyprctl keyword \"input:cursor_lock_to_window\" 1"
         # Unlock mouse
-        "${mod} SHIFT, Escape, exec, hyprctl keyword \"input:cursor_lock_to_window\" 0"
+        "${mod} SHIFT, Escape, Unlock Cursor from Window, exec, hyprctl keyword \"input:cursor_lock_to_window\" 0"
       ]
       # Move focus from active window to window in specified direction (UP/k, Down/j, Left/h, Right/l)
-      ++ (lib.mapAttrsToList (key: direction: "${mod}, ${key}, movefocus,${direction}") directions)
+      ++ (lib.mapAttrsToList (
+        key: direction: "${mod}, ${key}, Move Focus ${direction}, movefocus,${direction}"
+      ) directions)
       # Move to workspace
-      ++ (map (n: "${mod} ALT, ${n}, movetoworkspacesilent, ${n}") workspaces)
+      ++ (map (
+        n: "${mod} ALT, ${n}, Move Window to Workspace ${n} (silent), movetoworkspacesilent, ${n}"
+      ) workspaces)
       # Swap windows
-      ++ (lib.mapAttrsToList (key: direction: "${mod} SHIFT, ${key}, movewindow,${direction}") directions)
+      ++ (lib.mapAttrsToList (
+        key: direction: "${mod} SHIFT, ${key}, Move Window ${direction}, movewindow,${direction}"
+      ) directions)
       # Switch Workspaces
-      ++ (map (n: "${mod}, ${n}, workspace, ${n}") workspaces)
+      ++ (map (n: "${mod}, ${n}, Switch to Workspace ${n}, workspace, ${n}") workspaces)
       # Move Window to Workspaces
-      ++ (map (n: "${mod} SHIFT, ${n}, movetoworkspace, ${n}") workspaces)
+      ++ (map (n: "${mod} SHIFT, ${n}, Move Window to Workspace ${n}, movetoworkspace, ${n}") workspaces)
       # Lock screen / Logout / Reload
       ++ [
-        "${mod} ALT, L, exec, ${wpctl} set-mute @DEFAULT_AUDIO_SINK@ 0 && ${hyprlock}"
-        "${mod} ALT, R, exec, reload"
+        "${mod} ALT, L, Lock Screen, exec, ${wpctl} set-mute @DEFAULT_AUDIO_SINK@ 0 && ${
+          if machine.windowManager.hyprland.noctalia.enable then
+            "noctalia-shell ipc call lockScreen lock"
+          else
+            hyprlock
+        }"
+        "${mod} ALT, R, Reload Config, exec, reload"
       ]
       # Applications
       ++ [
-        "${mod}, Q, exec, ${terminal}" # Terminal
-        "${mod}, E, exec, ${fileManager}"
-        ", Print, exec, screenshootin" # Print Screen
-        "${mod}, F1, exec, hyprgamemode" # Toggle Gamemode
-        "${mod} SHIFT, P, exec, hyprpicker -a" # Color picker
+        "${mod}, Q, Open Terminal, exec, ${terminal}" # Terminal
+        "${mod}, E, Open File Manager, exec, ${fileManager}"
+        ", Print, Screenshot, exec, screenshootin" # Print Screen
+        "${mod}, F1, Toggle Gamemode, exec, hyprgamemode" # Toggle Gamemode
+        "${mod} SHIFT, P, Color Picker, exec, hyprpicker -a" # Color picker
       ];
   };
 }

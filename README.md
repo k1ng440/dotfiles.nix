@@ -22,6 +22,9 @@ not worth encrypting.
 
 - [NixOS Wiki](https://wiki.nixos.org).
 - [Manual](https://nixos.org/manual/nixos/stable/index.html)
+- [Home Manager]
+  - [Manual](https://nix-community.github.io/home-manager/)
+  - [Options](https://home-manager-options.extranix.com/)
 
 - Videos / Tutorials:
 

@@ -33,8 +33,8 @@
     })
 
     (lib.mkIf config.machine.windowManager.hyprland.enable {
-      XDG_CURRENT_DESKTOP = "hyprland";
-      XDG_SESSION_DESKTOP = "hyprland";
+      # XDG_CURRENT_DESKTOP = "hyprland";
+      # XDG_SESSION_DESKTOP = "hyprland";
     })
 
     (lib.mkIf config.machine.windowManager.gnome.enable {

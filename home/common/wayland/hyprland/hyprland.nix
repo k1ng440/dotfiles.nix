@@ -13,7 +13,7 @@ let
     + lib.optionalString w.persistent ", persistent:true"
     + lib.optionalString w.default ", default:true"
     + lib.optionalString (w.layout != null) ", layout:${w.layout}"
-    + lib.optionalString (w.layout_orientation != null) ", orientation:${w.layout_orientation}"
+    # + lib.optionalString (w.layout_orientation != null) ", layoutopt:orientation:${w.layout_orientation}"
     + lib.optionalString (w.on_created_empty != null) ", on-created-empty:${w.on_created_empty}";
 
   onStartPrograms = lib.flatten (
@@ -63,38 +63,45 @@ in
         "QP_QPA_PLATFORM,wayland;xcb"
       ];
 
-      monitor = map (
-        m:
-        "${m.name},${
-          if m.enabled then
-            "${toString m.width}x${toString m.height}@${toString m.refresh_rate}"
-            + ",${toString m.x}x${toString m.y},1"
-            + ",transform,${toString m.transform}"
-            + ",vrr,${toString m.vrr}"
-          else
-            "disable"
-        }"
-      ) config.monitors;
+      binds = {
+        scroll_event_delay = 50;
+        hide_special_on_workspace_change = false;
+        allow_workspace_cycles = false;
+        workspace_back_and_forth = false;
+        window_direction_monitor_fallback = false;
+      };
+
+      monitor =
+        (map (
+          m:
+          "${m.name},${
+            if m.enabled then
+              "${toString m.width}x${toString m.height}@${toString m.refresh_rate}"
+              + ",${toString m.x}x${toString m.y},1"
+              + ",transform,${toString m.transform}"
+              + ",vrr,${toString m.vrr}"
+            else
+              "disable"
+          }"
+        ) config.monitors)
+        ++ [ " , preferred, auto, 1" ];
 
       # Workspace
       workspace = lib.flatten (map (m: map (w: formatWorkspace m w) m.workspaces) config.monitors);
 
       exec-once = [
-        "dbus-update-activation-environment --all --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
-        "systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP QT_PLUGIN_PATH QT_QPA_PLATFORM QT_STYLE_OVERRIDE PATH"
-        "systemctl --user start hyprpolkitagent"
+        "uwsm app -- systemctl --user start hyprpolkitagent"
         (
           if machine.windowManager.hyprland.noctalia.enable then
-            "noctalia-shell"
+            "noctalia-start"
           else
-            "killall -q waybar;sleep .5 && waybar"
+            "killall -q waybar;sleep .5 && uwsm app -- waybar"
         )
-        "nm-applet --indicator"
-        "pypr &"
-        "sleep 2 && wallsetter"
-        "wl-paste --type text --watch cliphist store"
-        "wl-paste --type image --watch cliphist store"
-
+        "uwsm app -- nm-applet --indicator"
+        "uwsm app -- pypr"
+        "sleep 2 && uwsm app -- wallsetter"
+        "wl-paste --type text --watch uwsm app -- cliphist store"
+        "wl-paste --type image --watch uwsm app -- cliphist store"
       ]
       ++ onStartPrograms;
 
@@ -111,17 +118,23 @@ in
         force_no_accel = true;
       };
 
-      general = {
-        "$modifier" = "SUPER";
-        allow_tearing = true;
-        layout = "dwindle";
-        gaps_in = 4;
-        gaps_out = 8;
-        border_size = 2;
-        resize_on_border = true;
-        "col.active_border" = "rgb(fb4934) rgb(8ec07c) 45deg";
-        "col.inactive_border" = "rgb(3c3836)";
-      };
+      general =
+        let
+          theme = import ../../theme.nix { };
+          inherit (theme) colors;
+          strip = lib.removePrefix "#";
+        in
+        {
+          "$modifier" = "SUPER";
+          allow_tearing = true;
+          layout = "dwindle";
+          gaps_in = 5;
+          gaps_out = 10;
+          border_size = 2;
+          resize_on_border = true;
+          "col.active_border" = "rgb(${strip colors.iris}) rgb(${strip colors.rose}) 45deg";
+          "col.inactive_border" = "rgb(${strip colors.overlay})";
+        };
 
       # https://wiki.hyprland.org/Configuring/Variables/#misc
       misc = {
@@ -129,7 +142,7 @@ in
         allow_session_lock_restore = 1;
         force_default_wallpaper = 0;
         layers_hog_keyboard_focus = true;
-        initial_workspace_tracking = 0;
+        initial_workspace_tracking = 1;
         mouse_move_enables_dpms = true;
         key_press_enables_dpms = true;
         disable_hyprland_logo = true;
@@ -137,7 +150,7 @@ in
         enable_swallow = false;
         focus_on_activate = true;
         vfr = true;
-        vrr = 0;
+        vrr = 1;
       };
 
       master = {
@@ -152,7 +165,7 @@ in
       };
 
       decoration = {
-        rounding = 1;
+        rounding = 20;
         rounding_power = 2;
         active_opacity = "1.0";
         inactive_opacity = "1.0";
@@ -166,8 +179,8 @@ in
 
         shadow = {
           enabled = true;
-          range = 5;
-          render_power = 4;
+          range = 4;
+          render_power = 3;
           color = "rgba(1a1a1aee)";
         };
       };

@@ -10,11 +10,11 @@ let
   playerctl = lib.getExe' pkgs.playerctl "playerctl";
   logout = lib.getExe' pkgs.nwg-bar "nwg-bar";
   hyprlock = lib.getExe' pkgs.hyprlock "hyprlock";
-  terminal = "kitty";
-  fileManager = "thunar";
+  terminal = "uwsm app -- kitty";
+  fileManager = "uwsm app -- thunar";
   menu = pkgs.writeShellScript "rofi-menu.sh" ''
     		monitor="$(swaymsg -t get_outputs | jq '.[] | select(.focused) | .name' -r)"
-    		${pkgs.rofi}/bin/rofi -show drun -modi drun -monitor "$monitor" $@
+    		uwsm app -- ${pkgs.rofi}/bin/rofi -show drun -modi drun -monitor "$monitor" $@
     	'';
 in
 {
@@ -83,9 +83,9 @@ in
           {
             command = "exec dbus-update-activation-environment WAYLAND_DISPLAY DISPLAY XDG_CURRENT_DESKTOP SWAYSOCK I3SOCK XCURSOR_SIZE XCURSOR_THEME";
           }
-          { command = "exec nm-applet --indicator"; }
-          { command = "exec wl-paste --type text --watch cliphist store"; }
-          { command = "exec wl-paste --type image --watch cliphist store"; }
+          { command = "exec uwsm app -- nm-applet --indicator"; }
+          { command = "exec uwsm app -- wl-paste --type text --watch cliphist store"; }
+          { command = "exec uwsm app -- wl-paste --type image --watch cliphist store"; }
           {
             command = "systemctl --user start sway-session.target";
             always = true;
