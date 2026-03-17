@@ -60,7 +60,9 @@ in
       env = [
         "QT_IM_MODULE,fcitx"
         "XMODIFIERS,@im=fcitx"
-        "QP_QPA_PLATFORM,wayland;xcb"
+        "QT_QPA_PLATFORM,wayland;xcb"
+        "GDK_BACKEND,wayland,x11"
+        "GTK_THEME,rose-pine-moon"
       ];
 
       binds = {

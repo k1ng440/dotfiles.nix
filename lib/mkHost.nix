@@ -36,5 +36,6 @@ systemFunc {
     (_: {
       nixpkgs.overlays = lib.flatten (lib.attrValues overlays);
     })
-  ];
+  ]
+  ++ lib.optionals isNixOS [ inputs.nix-flatpak.nixosModules.nix-flatpak ];
 }

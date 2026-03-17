@@ -89,7 +89,6 @@
       qjackctl
       carla
       easyeffects
-      lsp-plugins
     ];
   };
 }

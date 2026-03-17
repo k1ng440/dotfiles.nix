@@ -51,8 +51,8 @@
 
     "org/gnome/desktop/interface" = {
       color-scheme = "prefer-dark";
-      gtk-theme = "rose-pine";
-      icon-theme = "rose-pine";
+      gtk-theme = "rose-pine-moon";
+      icon-theme = "rose-pine-moon";
       cursor-theme = "BreezeX-RosePine-Linux";
     };
   };

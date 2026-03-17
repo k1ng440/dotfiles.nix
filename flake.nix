@@ -33,6 +33,7 @@
       url = "github:LnL7/nix-darwin";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nix-flatpak.url = "github:gmodena/nix-flatpak/?ref=latest";
 
     # Hardware
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";

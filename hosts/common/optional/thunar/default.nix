@@ -12,6 +12,8 @@
     ];
   };
 
+  programs.xfconf.enable = true;
+
   environment.systemPackages = with pkgs; [
     ffmpegthumbnailer
     tumbler
