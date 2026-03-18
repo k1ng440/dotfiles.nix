@@ -142,7 +142,8 @@ in
         # "${mod}, G, layoutmsg, togglesplit"
 
         # Circle Window
-        "ALT, Tab, Cycle Next Window, cyclenext"
+        "ALT, Tab, Next Window, exec, snappy-switcher next"
+        "ALT SHIFT, Tab, Previous Window, exec, snappy-switcher prev"
 
         # Full Screen
         "${mod} SHIFT, F, Toggle Fullscreen, fullscreenstate,2 -1" # `internal client`, where `internal` and `client` can be -1 - current, 0 - none, 1 - maximize, 2 - fullscreen, 3 - maximize and fullscreen

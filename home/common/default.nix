@@ -21,5 +21,6 @@ _: {
     ./desktop-entries.nix
     ./wine.nix
     ./thunar.nix
+    ./uwsm.nix
   ];
 }

@@ -5,6 +5,7 @@
 }:
 {
   # GTK minimal configuration (Stylix handles theme/font/cursor)
+  stylix.targets.gtk.enable = true;
   gtk = {
     enable = true;
     iconTheme = {
@@ -26,4 +27,6 @@
 
   # Help Thunar/XFCE apps save settings
   xfconf.enable = true;
+
+  home.packages = [ pkgs.libadwaita ];
 }

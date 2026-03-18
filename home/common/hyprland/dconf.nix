@@ -21,5 +21,9 @@ _: {
     "org/xfce/thunar" = {
       "last-remote-desktop-command" = "kitty";
     };
+
+    "org/gnome/desktop/interface" = {
+      color-scheme = "prefer-dark";
+    };
   };
 }

@@ -57,14 +57,6 @@ in
       variables = [ "--all" ];
     };
     settings = {
-      env = [
-        "QT_IM_MODULE,fcitx"
-        "XMODIFIERS,@im=fcitx"
-        "QT_QPA_PLATFORM,wayland;xcb"
-        "GDK_BACKEND,wayland,x11"
-        "GTK_THEME,rose-pine-moon"
-      ];
-
       binds = {
         scroll_event_delay = 50;
         hide_special_on_workspace_change = false;
@@ -101,6 +93,7 @@ in
         )
         "uwsm app -- nm-applet --indicator"
         "uwsm app -- pypr"
+        "uwsm app -- snappy-switcher --daemon"
         "sleep 2 && uwsm app -- wallsetter"
         "wl-paste --type text --watch uwsm app -- cliphist store"
         "wl-paste --type image --watch uwsm app -- cliphist store"

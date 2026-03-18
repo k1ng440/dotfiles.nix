@@ -1,5 +1,6 @@
 {
   pkgs,
+  inputs,
   ...
 }:
 {
@@ -26,6 +27,7 @@
   ];
 
   home.packages = with pkgs; [
+    inputs.snappy-switcher.packages.${pkgs.stdenv.hostPlatform.system}.default
     dex # Program to generate and execute DesktopEntry files of the Application type
     xrandr
     swayosd

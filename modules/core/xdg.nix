@@ -7,6 +7,8 @@
 {
   config = lib.mkIf config.machine.windowManager.hyprland.enable {
     xdg = {
+      icons.enable = true;
+      mime.enable = true;
       autostart.enable = true;
       portal = {
         enable = true;
@@ -32,6 +34,7 @@
     environment.systemPackages = with pkgs; [
       glib
       xdg-utils
+      gdk-pixbuf
     ];
   };
 }

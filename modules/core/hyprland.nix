@@ -25,13 +25,7 @@
     );
 
     environment.sessionVariables = {
-      NIXOS_OZONE_WL = "1";
-      QT_STYLE_OVERRIDE = "Fusion";
       XDG_CONFIG_HOME = "$HOME/.config";
-      GTK_USE_PORTAL = "1";
-      _JAVA_AWT_WM_NONREPARENTING = "1";
-      XDG_SESSION_TYPE = "wayland";
-      QT_QPA_PLATFORM = "wayland";
     };
 
     environment.systemPackages = with pkgs; [
