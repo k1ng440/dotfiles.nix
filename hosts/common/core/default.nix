@@ -1,31 +1,18 @@
 {
   lib,
-  pkgs,
   inputs,
   isNixOS,
-  config,
   ...
 }:
 let
   platform = if isNixOS then "nixos" else "darwin";
-  platformModules = "${platform}Modules";
 in
 {
   imports = lib.flatten [
-    inputs.sops-nix.${platformModules}.sops
-
     (map lib.custom.relativeToRoot [
-      "modules/common"
-      "modules/hosts/${platform}"
-
       "hosts/common/core/${platform}.nix"
       "hosts/common/core/sops.nix"
       "hosts/common/core/ssh.nix"
-      "hosts/common/core/i18n.nix"
-      "hosts/common/core/time.nix"
-
-      "hosts/common/users/primary"
-      "hosts/common/users/primary/${platform}.nix"
     ])
   ];
 
@@ -47,12 +34,4 @@ in
         if hasSecrets then (inputs.nix-secrets.email or "contact@iampavel.dev") else "contact@iampavel.dev";
       networking = { };
     };
-
-  environment.systemPackages = [
-    pkgs.just
-    pkgs.openssh
-    pkgs.findutils
-  ];
-
-  networking.hostName = config.machine.hostname;
 }

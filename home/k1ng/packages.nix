@@ -55,7 +55,7 @@
       _7zz
       gum
     ]
-    ++ lib.optionals machine.windowManager.enabled [
+    ++ lib.optionals machine.windowManager.hyprland.enable [
       woeusb-ng
       vesktop
       yubikey-manager

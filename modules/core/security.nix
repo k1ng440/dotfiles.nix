@@ -24,9 +24,6 @@
         });
       '';
     };
-    pam.services.swaylock = {
-      text = "auth include login ";
-    };
 
     apparmor = {
       enable = config.machine.security.selinux;

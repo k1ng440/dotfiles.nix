@@ -22,9 +22,7 @@
 
   services = {
     greetd = {
-      enable = lib.mkDefault (
-        !config.machine.windowManager.gnome.enable && !config.machine.windowManager.kde.enable
-      );
+      enable = lib.mkDefault config.machine.windowManager.hyprland.enable;
       settings =
         let
           start = {
@@ -32,12 +30,6 @@
             command =
               if config.machine.windowManager.hyprland.enable then
                 "uwsm start hyprland-uwsm.desktop"
-              else if config.machine.windowManager.sway.enable then
-                "uwsm start sway.desktop"
-              else if config.machine.windowManager.gnome.enable then
-                "dbus-run-session -- gnome-session"
-              else if config.machine.windowManager.kde.enable then
-                "dbus-run-session -- startplasma-wayland"
               else
                 "${pkgs.bashInteractive}/bin/bash";
           };

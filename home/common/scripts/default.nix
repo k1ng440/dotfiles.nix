@@ -16,7 +16,6 @@ in
     (import ./rofi-launcher.nix { inherit pkgs; })
     (import ./screenshootin.nix { inherit pkgs; })
     (import ./pwvucontrol-toggle.nix { inherit pkgs; })
-    (import ./kdegamemode.nix { inherit pkgs; })
     (import ./launch-webapp.nix { inherit pkgs; })
     (import ./zoom-launcher.nix { inherit pkgs; })
     (import ./hypr-suspend-fix.nix { inherit pkgs; })

@@ -198,6 +198,12 @@ in
       useYubikey = mkEnableOption "YubiKey hardware security key support";
     };
 
+    # === Desktop Configuration ===
+    desktop = {
+      thunar = mkEnableOption "Thunar file manager";
+      localsend = mkEnableOption "LocalSend file sharing";
+    };
+
     # === Networking ===
     networking = mkOption {
       type = types.submodule {
@@ -357,15 +363,6 @@ in
       };
     };
 
-    # === Visual & Desktop Configuration ===
-    desktop = {
-      monitorsXml = mkOption {
-        type = types.nullOr types.lines;
-        default = null;
-        description = "Content of monitors.xml for GDM/GNOME";
-      };
-    };
-
     # === Window Manager Configuration ===
     windowManager = {
       hyprland = {
@@ -374,41 +371,30 @@ in
           enable = mkEnableOption "Noctalia shell for Hyprland";
         };
       };
-
-      sway = {
-        enable = mkEnableOption "Sway window manager";
-      };
-
-      gnome = {
-        enable = mkEnableOption "GNOME desktop environment";
-      };
-
-      kde = {
-        enable = mkEnableOption "KDE Plasma desktop environment";
-      };
-
-      # Computed option
-      enabled = mkOption {
-        type = types.bool;
-        description = "Whether any window manager is enabled";
-        default =
-          config.machine.windowManager.hyprland.enable
-          || config.machine.windowManager.sway.enable
-          || config.machine.windowManager.gnome.enable
-          || config.machine.windowManager.kde.enable;
-        readOnly = true;
-      };
     };
 
     security = {
       hardened = mkEnableOption "security hardening profiles";
       firewall = mkEnableOption "strict firewall rules";
       selinux = mkEnableOption "SELinux/AppArmor mandatory access control";
+      antivirus = mkEnableOption "ClamAV antivirus scanning";
+    };
+
+    services = {
+      syncthing = mkEnableOption "Syncthing file synchronization";
+      openrgb = mkEnableOption "OpenRGB hardware lighting control";
+      wine = mkEnableOption "Wine compatibility layer";
+      printing = mkEnableOption "Printing support";
+      ai = {
+        ollama = mkEnableOption "Ollama AI server";
+        open-webui = mkEnableOption "Open WebUI for Ollama";
+      };
     };
 
     boot = {
       secureBoot = mkEnableOption "UEFI Secure Boot";
       encryptedRoot = mkEnableOption "full disk encryption";
+      quietBoot = mkEnableOption "quiet boot with Plymouth";
       bootloader = mkOption {
         type = types.enum [
           "systemd-boot"
@@ -669,24 +655,6 @@ in
         default = config.machine.work != null && config.machine.work.enabled;
         readOnly = true;
       };
-
-      useWindowManager = mkOption {
-        type = types.bool;
-        description = "Whether to use a window manager";
-        default =
-          config.machine.windowManager.hyprland.enable
-          || config.machine.windowManager.sway.enable
-          || config.machine.windowManager.gnome.enable
-          || config.machine.windowManager.kde.enable;
-        readOnly = true;
-      };
-
-      isFullDE = mkOption {
-        type = types.bool;
-        description = "Whether a full desktop environment (like GNOME or KDE) is enabled";
-        default = config.machine.windowManager.gnome.enable || config.machine.windowManager.kde.enable;
-        readOnly = true;
-      };
     };
   };
 
@@ -713,23 +681,11 @@ in
 
         # Window manager mutual exclusion
         {
-          assertion =
-            (if wmConfig.hyprland.enable then 1 else 0)
-            + (if wmConfig.sway.enable then 1 else 0)
-            + (if wmConfig.gnome.enable then 1 else 0)
-            + (if wmConfig.kde.enable then 1 else 0) <= 1;
+          assertion = (if wmConfig.hyprland.enable then 1 else 0) <= 1;
           message = ''
-            Cannot enable multiple window managers simultaneously.
+            Only Hyprland is supported.
             Current configuration:
               - machine.windowManager.hyprland.enable = ${toString wmConfig.hyprland.enable}
-              - machine.windowManager.sway.enable = ${toString wmConfig.sway.enable}
-              - machine.windowManager.gnome.enable = ${toString wmConfig.gnome.enable}
-              - machine.windowManager.kde.enable = ${toString wmConfig.kde.enable}
-
-            Please choose only one compositor/desktop:
-              - For modern features and animations: enable only Hyprland
-              - For stability and i3 compatibility: enable only Sway
-              - For full desktop experience: enable only GNOME or KDE Plasma
           '';
         }
 
@@ -747,7 +703,7 @@ in
 
         # Server configuration validation
         {
-          assertion = !hostSpec.computed.isServer || !hostSpec.desktop.useWindowManager;
+          assertion = !hostSpec.computed.isServer || !hostSpec.windowManager.hyprland.enable;
           message = "Server hosts should not use window managers";
         }
 

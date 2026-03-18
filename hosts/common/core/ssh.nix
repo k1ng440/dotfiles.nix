@@ -6,6 +6,10 @@
   ...
 }:
 {
+  environment.systemPackages = [
+    pkgs.openssh
+  ];
+
   services.gnome.gcr-ssh-agent.enable = false;
   programs.ssh = lib.optionalAttrs pkgs.stdenv.isLinux {
     startAgent = true;
@@ -24,6 +28,7 @@
         github.com ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBEmKSENjQEezOmxkZMy7opKgwFB9nkt5YRrYMjNuG5N87uRgg6CLrbo5wAdT/y6v0mKV0U2w0WZ2YB/++Tpockg=
         github.com ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOMqqnkVzrm0SdG6UOoqKLsabgH5C9okWi0dh2l9GKJl
         gitlab.com ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAfuCHKVTjquxvt6CM6tdG4SLp1Btn/nOeHHE5UOzRdf
+        kong ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFT5d6/hSD9J7NHL7oOgbj0cjrl94AW4OBaXzhuZVGzA
       '')
     ]
     ++ lib.optional (!config.machine.computed.isMinimal) (

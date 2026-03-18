@@ -7,25 +7,8 @@
 {
   imports = lib.flatten [
     (map lib.custom.relativeToRoot [
-      "modules/hosts/nixos"
-      "modules/core"
       "hosts/common/core"
-      "hosts/common/optional/nvidia"
-      "hosts/common/optional/audio"
-      "hosts/common/optional/services/openrgb.nix"
-      "hosts/common/optional/fonts"
-      "hosts/common/optional/wayland"
       # "hosts/common/optional/solaar"
-      "hosts/common/optional/thunar"
-      "hosts/common/optional/virtualisation"
-      "hosts/common/optional/gaming"
-      "hosts/common/optional/wine"
-      "hosts/common/optional/ai"
-      "hosts/common/optional/security"
-      "hosts/common/optional/applications.nix"
-      "hosts/common/optional/printing.nix"
-      "hosts/common/optional/plymouth.nix"
-      "hosts/common/optional/localsend.nix"
     ])
 
     inputs.nixos-hardware.nixosModules.common-cpu-amd-zenpower
@@ -45,6 +28,22 @@
       isVirtualMachine = false;
       isLinux = true;
     };
+    boot = {
+      bootloader = "systemd-boot";
+      quietBoot = true;
+    };
+    desktop = {
+      thunar = true;
+      localsend = true;
+    };
+    security = {
+      antivirus = true;
+    };
+    services = {
+      openrgb = true;
+      wine = true;
+      printing = true;
+    };
     networking = {
       cloudflare-warp = true;
       ports = {
@@ -59,13 +58,10 @@
       };
     };
     windowManager = {
-      sway.enable = false;
       hyprland = {
         enable = true;
         noctalia.enable = true;
       };
-      gnome.enable = false;
-      kde.enable = false;
     };
     capabilities = [
       "gpu"

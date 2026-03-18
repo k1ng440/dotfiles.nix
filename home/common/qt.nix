@@ -1,7 +1,6 @@
 {
   pkgs,
   config,
-  machine,
   ...
 }:
 {
@@ -16,9 +15,9 @@
 
   qt = {
     enable = true;
-    # Stylix handles styles but we keep the KDE vs Kvantum logic
-    style.name = if machine.windowManager.kde.enable then "breeze" else "kvantum";
-    platformTheme.name = if machine.windowManager.kde.enable then "kde" else "qtct";
+    # Stylix handles styles but we keep the Kvantum logic
+    style.name = "kvantum";
+    platformTheme.name = "qtct";
 
     qt5ctSettings = {
       Appearance = {

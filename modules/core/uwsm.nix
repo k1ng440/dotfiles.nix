@@ -1,26 +1,17 @@
 {
   config,
   lib,
-  pkgs,
   ...
 }:
 {
   # Enable Universal Wayland Session Manager
   programs.uwsm = {
-    enable = lib.mkIf config.machine.windowManager.enabled true;
-    waylandCompositors = lib.mkIf config.machine.windowManager.sway.enable {
-      sway = {
-        prettyName = "Sway";
-        comment = "Sway managed by UWSM";
-        binPath = "${pkgs.sway}/bin/sway";
-        extraArgs = lib.optionals (lib.elem "nvidia-gpu" config.machine.capabilities) [
-          "--unsupported-gpu"
-        ];
-      };
-    };
+    enable = lib.mkIf config.machine.windowManager.hyprland.enable true;
   };
 
-  environment.etc."uwsm/env".text = lib.mkIf config.machine.windowManager.enabled ''
-    EDITOR=nvim
-  '';
+  environment.etc."uwsm/env" = lib.mkIf config.machine.windowManager.hyprland.enable {
+    text = ''
+      EDITOR=nvim
+    '';
+  };
 }

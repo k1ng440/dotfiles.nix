@@ -45,5 +45,7 @@
     wget # Tool For Fetching Files With Links
     yazi # TUI File Manager
     net-tools
+    just
+    findutils
   ];
 }

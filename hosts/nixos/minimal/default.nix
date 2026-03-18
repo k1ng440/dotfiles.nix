@@ -14,8 +14,6 @@
 
   imports = lib.flatten [
     (map lib.custom.relativeToRoot [
-      "modules/hosts/nixos"
-      "modules/core"
       "hosts/common/core"
     ])
     ./configurations.nix

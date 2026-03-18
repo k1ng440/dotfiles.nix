@@ -16,7 +16,7 @@
     ../../modules/common
     ../common
     ./development
-    ./desktops
+    ./applications
     ./nvim
     ./lazygit
     ./browsers

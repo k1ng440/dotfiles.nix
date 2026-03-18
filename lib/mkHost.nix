@@ -32,11 +32,10 @@ systemFunc {
   };
   modules = [
     ../hosts/${if isNixOS then "nixos" else "darwin"}/${host}
-    ../modules/hosts/${if isNixOS then "nixos" else "darwin"}/unfree.nix
-    (if isNixOS then inputs.stylix.nixosModules.stylix else inputs.stylix.darwinModules.stylix)
+    ../modules
+    ../modules/external.nix
     (_: {
       nixpkgs.overlays = lib.flatten (lib.attrValues overlays);
     })
-  ]
-  ++ lib.optionals isNixOS [ inputs.nix-flatpak.nixosModules.nix-flatpak ];
+  ];
 }
