@@ -10,9 +10,9 @@
     pkgs.openssh
   ];
 
-  services.gnome.gcr-ssh-agent.enable = false;
+  services.gnome.gcr-ssh-agent.enable = true;
   programs.ssh = lib.optionalAttrs pkgs.stdenv.isLinux {
-    startAgent = true;
+    startAgent = false;
     enableAskPassword = true;
     askPassword = pkgs.lib.mkForce "${pkgs.kdePackages.ksshaskpass.out}/bin/ksshaskpass";
 

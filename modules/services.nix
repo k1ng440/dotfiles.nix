@@ -1,5 +1,9 @@
 { config, ... }:
 {
+
+  # For gnome keyring
+  programs.seahorse.enable = true;
+
   # Services to start
   services = {
     libinput.enable = true; # Input Handling

@@ -737,10 +737,10 @@
         ]
       },
       "locked": {
-        "lastModified": 1760048745,
-        "narHash": "sha256-B6MH/4944GPmq7DM6aY2a1tEnyuyNazGO8nyTJroOqk=",
+        "lastModified": 1773913753,
+        "narHash": "sha256-xVAyAiFtMw6uwn+chCLdIpo0NDLxWG+D9FgyHKCakM4=",
         "ref": "main",
-        "rev": "ffac193177d9626046d510791d61416095c4deef",
+        "rev": "12d5be8202dc912fb7fdf7a9ac746e1fc7659482",
         "shallow": true,
         "type": "git",
         "url": "ssh://git@gitlab.com/k1ng4401/nix-secrets.git"

@@ -11,6 +11,8 @@ in
   sops.secrets = {
     "keys/atuin" = {
       sopsFile = "${sopsFolder}/shared.yaml";
+      # owner = config.machine.username;
+      # inherit (config.users.users.${config.machine.username}) group;
     };
   };
 
@@ -19,11 +21,11 @@ in
     enableBashIntegration = true;
     enableFishIntegration = true;
     enableZshIntegration = true;
-    flags = [ "--disable-up-arrow" ];
+    # flags = [ "--disable-up-arrow" ];
     package = pkgs.atuin;
     settings = {
-      auto_sync = true;
-      dialect = "uk";
+      auto_sync = false;
+      dialect = "us";
       key_path = config.sops.secrets."keys/atuin".path;
       show_preview = true;
       style = "compact";

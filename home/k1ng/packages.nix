@@ -25,7 +25,7 @@
       dconf2nix # Nix code from Dconf files
       doggo # Modern Unix `dig`
       fastfetch # Modern Unix system info
-      fd # Modern Unix `find`
+      fd # Fast file finder
       file # Terminal file info
       frogmouth # Terminal markdown viewer
       girouette # Modern Unix weather
@@ -45,6 +45,7 @@
       timer # Terminal timer
       usbutils # Terminal USB info
       gocryptfs # Encryption
+      keychain # SSH agent and passphrase manager
 
       age # modern and secure file encryption tool
       sops # Simple and flexible tool for managing secrets

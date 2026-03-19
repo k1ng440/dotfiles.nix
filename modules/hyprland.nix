@@ -17,6 +17,7 @@
 
     environment.sessionVariables = {
       XDG_CONFIG_HOME = "$HOME/.config";
+      SSH_AUTH_SOCK = "/run/user/1000/gcr/ssh";
     };
   };
 }
