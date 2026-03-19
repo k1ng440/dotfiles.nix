@@ -97,6 +97,9 @@ in
         "sleep 2 && uwsm app -- wallsetter"
         "wl-paste --type text --watch uwsm app -- cliphist store"
         "wl-paste --type image --watch uwsm app -- cliphist store"
+
+        "systemctl --user import-environment $(env | cut -d'=' -f 1)"
+        "dbus-update-activation-environment --systemd --all"
       ]
       ++ onStartPrograms;
 
@@ -192,13 +195,30 @@ in
       };
 
       layerrule = [
-        "no_anim on, match:namespace selection"
         {
-          name = "noctalia";
+          name = "no_anim_for_hyprpicker";
+          "match:namespace" = "hyprpicker";
+          no_anim = "on";
+        }
+        {
+          name = "no_anim_for_selection";
+          "match:namespace" = "selection";
+          no_anim = "on";
+        }
+        {
+          name = "no_anim_for_noctalia_launcher";
+          "match:namespace" = "noctalia-launcher-overlay-.*$";
+          ignore_alpha = 0.5;
+          blur = "on";
+          blur_popups = "on";
+          no_anim = "on";
+        }
+        {
+          name = "noctalia_background";
           "match:namespace" = "noctalia-background-.*$";
           ignore_alpha = 0.5;
-          blur = true;
-          blur_popups = true;
+          blur = "on";
+          blur_popups = "on";
         }
       ];
     };

@@ -1,5 +1,6 @@
 {
   config,
+  options,
   pkgs,
   ...
 }:
@@ -8,7 +9,7 @@
     hostName = "${config.machine.hostname}";
     networkmanager.enable = true;
     enableIPv6 = true;
-    timeServers = [
+    timeServers = options.networking.timeServers.default ++ [
       "time.google.com"
       "time.cloudflare.com"
       "pool.ntp.org"

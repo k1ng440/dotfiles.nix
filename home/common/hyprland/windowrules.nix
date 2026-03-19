@@ -42,6 +42,7 @@ _: {
 
         # --- Positioning ---
         "workspace 3 silent, match:initial_class ^(discord)$"
+        "workspace 3 silent, match:initial_class ^(vesktop)$"
         "center on, match:class ^([Ff]erdium)$"
         "float on, match:class ^([Ww]aypaper)$"
         "center on, match:class ^(pavucontrol|org.pulseaudio.pavucontrol)$"

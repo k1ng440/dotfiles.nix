@@ -11,6 +11,10 @@
     gnome.gnome-keyring.enable = true;
     dbus.implementation = "broker";
     upower.enable = true;
+    devmon.enable = true; # Automatic device mounting
+    udisks2.enable = true;
+    power-profiles-daemon.enable = true;
+    accounts-daemon.enable = true;
 
     avahi = {
       enable = !config.machine.computed.isMinimal;

@@ -9,11 +9,14 @@
     gnucash
     mpv
     font-manager
-    gnome-calculator
     mission-center
     thunderbird
-    discord
     signal-desktop
     wofi
+    gnome-calculator
+    gnome-calendar
+    gnome-system-monitor
+    gnome-weather
+    gnome-clocks
   ];
 }

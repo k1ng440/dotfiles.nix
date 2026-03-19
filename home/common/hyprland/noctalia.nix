@@ -7,7 +7,7 @@
 {
   programs.noctalia-shell = {
     inherit (machine.windowManager.hyprland.noctalia) enable;
-    package = pkgs.noctalia-shell-git-main;
+    package = pkgs.noctalia-shell;
   };
 
   xdg.configFile = lib.mkIf machine.windowManager.hyprland.noctalia.enable {

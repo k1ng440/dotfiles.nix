@@ -6,8 +6,6 @@
 }:
 {
   config = lib.mkIf (lib.elem "virtualization" config.machine.capabilities) {
-    # Only enable either docker or podman -- Not both
-    hardware.nvidia-container-toolkit.enable = true;
     virtualisation = {
       libvirtd.enable = true;
       libvirtd.qemu = {

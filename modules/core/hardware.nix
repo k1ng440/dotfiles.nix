@@ -1,12 +1,8 @@
 {
   pkgs,
-  config,
   ...
 }:
 {
-  services.power-profiles-daemon.enable = config.machine.hostType == "workstation";
-  services.auto-cpufreq.enable = config.machine.hostType == "mobile";
-
   hardware = {
     graphics.enable = true;
     graphics.enable32Bit = true;

@@ -16,13 +16,20 @@
 
     hardware = {
       nvidia = {
-        open = false;
+        open = true;
         gsp.enable = config.hardware.nvidia.open;
-        nvidiaSettings = true;
+        nvidiaSettings = false; # gui app
         prime.sync.enable = lib.mkForce false;
         modesetting.enable = true;
         powerManagement.enable = true;
         videoAcceleration = true;
+        package = config.boot.kernelPackages.nvidiaPackages.mkDriver {
+          version = "595.45.04";
+          sha256_64bit = "sha256-zUllSSRsuio7dSkcbBTuxF+dN12d6jEPE0WgGvVOj14=";
+          openSha256 = "sha256-uqNfImwTKhK8gncUdP1TPp0D6Gog4MSeIJMZQiJWDoE=";
+          settingsSha256 = "sha256-Y45pryyM+6ZTJyRaRF3LMKaiIWxB5gF5gGEEcQVr9nA=";
+          persistencedSha256 = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+        };
       };
       nvidia-container-toolkit = {
         enable = true;
@@ -37,12 +44,11 @@
 
     environment = {
       sessionVariables = {
+        # Reduce idle power usage caused by CUDA contexts (NVDEC/NVENC, etc.).
+        # CUDA_DISABLE_PERF_BOOST = "1";
         CUDA_CACHE_PATH = "$XDG_CACHE_HOME/nv";
-        # disable vsync
         __GL_SYNC_TO_VBLANK = "0";
-        # enable gsync / vrr support
         __GL_VRR_ALLOWED = "1";
-        # lowest frame buffering -> lower latency
         __GL_MaxFramesAllowed = "1";
 
         GBM_BACKEND = "nvidia-drm";
@@ -54,6 +60,27 @@
         MOZ_ENABLE_WAYLAND = "1";
         MOZ_DRM_DEVICE = "/dev/dri/by-path/pci-0000:0b:00.0-render";
       };
+
+      # etc."nvidia/nvidia-application-profiles-rc.d/cuda-no-stable-perf-limit.json".text = builtins.toJSON {
+      #   profiles = [{ name = "CudaNoStablePerfLimit"; settings = [ "0x166c5e" 0 ]; }];
+      #   rules = [{
+      #     pattern = {
+      #       op = "or";
+      #       sub = map (proc: { pattern = { feature = "procname"; matches = proc; }; }) [
+      #         "obs"
+      #         "Discord"
+      #         "discord"
+      #         "DiscordCanary"
+      #         "vesktop"
+      #         "simplescreenrecorder"
+      #         "gpu-screen-recorder"
+      #         "spectacle"
+      #         "webcord"
+      #       ];
+      #     };
+      #     profile = "CudaNoStablePerfLimit";
+      #   }];
+      # };
 
       # fix high vram usage on discord and hyprland. match with the wrapper procnames
       etc."nvidia/nvidia-application-profiles-rc.d/50-limit-free-buffer-pool.json".text =
@@ -71,6 +98,8 @@
                 [
                   "Hyprland"
                   ".Hyprland-wrapped"
+                  "vesktop"
+                  ".Vesktop-wrapped"
                   "Discord"
                   ".Discord-wrapped"
                   "DiscordCanary"
@@ -130,7 +159,7 @@
           ExecStart = [
             "${pkgs.procps}/bin/pkill -f -CONT Hyprland"
             "${pkgs.coreutils}/bin/sleep 2"
-            "${pkgs.sudo}/bin/sudo -u ${config.machine.username} env XDG_RUNTIME_DIR=/run/user/${toString config.machine.userUid} ${pkgs.hyprland}/bin/hyprctl dispatch dpms on"
+            "${pkgs.bash}/bin/bash -c 'HYPRLAND_INSTANCE_SIGNATURE=$(ls -1t /run/user/${toString config.machine.userUid}/hypr | head -n 1) XDG_RUNTIME_DIR=/run/user/${toString config.machine.userUid} ${pkgs.hyprland}/bin/hyprctl dispatch dpms on'"
           ];
         };
       };

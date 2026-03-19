@@ -47,5 +47,6 @@
     net-tools
     just
     findutils
+    libsecret
   ];
 }

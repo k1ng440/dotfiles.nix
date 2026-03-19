@@ -16,14 +16,6 @@
       };
     };
 
-    # Noctalia shell (quickshell) requires power-profiles-daemon
-    services.power-profiles-daemon.enable = lib.mkIf config.machine.windowManager.hyprland.noctalia.enable (
-      lib.mkForce true
-    );
-    services.auto-cpufreq.enable = lib.mkIf config.machine.windowManager.hyprland.noctalia.enable (
-      lib.mkForce false
-    );
-
     environment.sessionVariables = {
       XDG_CONFIG_HOME = "$HOME/.config";
     };

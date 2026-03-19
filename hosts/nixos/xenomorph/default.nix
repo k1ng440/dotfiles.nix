@@ -88,7 +88,6 @@
     android-studio.enable = false;
   };
 
-  services.gvfs.enable = true;
   services.samba.enable = true;
   fileSystems =
     let
