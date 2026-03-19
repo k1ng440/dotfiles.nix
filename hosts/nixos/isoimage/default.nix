@@ -49,7 +49,7 @@ in
     users.nixos = {
       isNormalUser = true;
       extraGroups = [ "wheel" ];
-      shell = pkgs.bash;
+      shell = pkgs.fish;
       openssh.authorizedKeys.keys = sshKeys;
     };
   };

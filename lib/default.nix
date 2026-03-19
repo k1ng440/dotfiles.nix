@@ -20,7 +20,5 @@
           ) (builtins.readDir dir)
         );
     in
-    builtins.map (f: (path + "/${f}")) (
-      lib.lists.remove "user" (lib.lists.remove "flatpak" (scanDir path))
-    );
+    builtins.map (f: (path + "/${f}")) (lib.lists.remove "user" (scanDir path));
 }

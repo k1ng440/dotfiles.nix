@@ -12,7 +12,6 @@
     ])
 
     inputs.nixos-hardware.nixosModules.common-cpu-amd-zenpower
-    inputs.home-manager.nixosModules.home-manager
     ./hardware-configuration.nix
     ./configurations.nix
     ./host-packages.nix

@@ -1,5 +1,4 @@
 {
-  pkgs,
   lib,
   config,
   ...
@@ -19,9 +18,5 @@
     environment.sessionVariables = {
       XDG_CONFIG_HOME = "$HOME/.config";
     };
-
-    environment.systemPackages = with pkgs; [
-      kitty
-    ];
   };
 }
