@@ -5,7 +5,7 @@
   ...
 }:
 {
-  options.hostConfig.android-studio = {
+  options.machine.android-studio = {
     enable = lib.mkOption {
       type = lib.types.bool;
       default = false;

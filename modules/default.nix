@@ -1,11 +1,4 @@
-{ isNixOS, ... }:
-let
-  platform = if isNixOS then "nixos" else "darwin";
-in
+{ lib, ... }:
 {
-  imports = [
-    ./common
-    ./core
-    ./hosts/${platform}
-  ];
+  imports = lib.custom.scanPaths ./.;
 }
