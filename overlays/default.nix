@@ -19,6 +19,7 @@ let
   custom-packages = final: _prev: {
     stremio = final.callPackage ../packages/stremio.nix { };
     breezex-cursor = final.callPackage ../packages/breezex-cursor.nix { };
+    hyprcap = final.callPackage ../packages/hyprcap.nix { };
     # noctalia-shell-git-main = final.callPackage ../packages/noctalia-shell.nix {
     #   quickshell = inputs.noctalia-qs.packages.${final.stdenv.hostPlatform.system}.default;
     # };

@@ -11,6 +11,7 @@ in
   programs.fish = {
     enable = true;
     shellAliases = {
+      ".." = "cd ..";
       banner = lib.mkIf isLinux "${pkgs.figlet}/bin/figlet";
       banner-color = lib.mkIf isLinux "${pkgs.figlet}/bin/figlet $argv | ${pkgs.dotacat}/bin/dotacat";
       brg = "${pkgs.bat-extras.batgrep}/bin/batgrep";
@@ -37,6 +38,19 @@ in
       tree = "${pkgs.eza}/bin/eza --tree";
       qr = "curl -F-=\<- qrenco.de";
       netcount = "netstat -ntu | tail -n +3 | awk '{print $5}' | sed 's/:[0-9]*$//' | sort | uniq -c | sort -rn";
+      shutdown = "systemctl poweroff";
+
+      # Git
+      gs = "git status";
+      ga = "git add";
+      gc = "git commit -m";
+      gp = "git push";
+      gpl = "git pull";
+      gst = "git stash";
+      gsp = "git stash; git pull";
+      gfo = "git fetch origin";
+      gcheck = "git checkout";
+      gcredential = "git config credential.helper store";
     };
     shellInit =
       let

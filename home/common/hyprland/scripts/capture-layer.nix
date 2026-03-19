@@ -16,6 +16,7 @@ let
     last_state=$(hyprctl layers)
     snapshots+=("$last_state")
 
+    echo $last_state
     echo "Monitoring layers... Press any key to stop and show results."
 
     while ! read -t 0.1 -n 1; do

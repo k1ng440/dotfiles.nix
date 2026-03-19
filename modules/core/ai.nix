@@ -9,8 +9,7 @@
     (lib.mkIf config.machine.services.ai.ollama {
       services.ollama = {
         enable = true;
-        package = pkgs.unstable.ollama-cuda;
-        acceleration = lib.mkIf (lib.elem "nvidia-gpu" config.machine.capabilities) "cuda";
+        package = pkgs.ollama-cuda;
         environmentVariables = {
           OLLAMA_ORIGINS = "chrome-extension://*,moz-extension://*,safari-web-extension://*";
           OLLAMA_LLM_LIBRARY = "cuda_v12";

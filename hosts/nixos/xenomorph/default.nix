@@ -43,6 +43,9 @@
       openrgb = true;
       wine = true;
       printing = true;
+      ai = {
+        ollama = true;
+      };
     };
     networking = {
       cloudflare-warp = true;

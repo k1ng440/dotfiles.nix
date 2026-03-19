@@ -5,7 +5,7 @@
 }:
 {
   imports = [
-    ./animations-end4.nix
+    ./animation-smooth.nix
     ./binds.nix
     ./hyprland.nix
     ./pyprland.nix

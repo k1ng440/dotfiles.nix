@@ -70,7 +70,8 @@
       # thunderbird-bin
       anki-bin
       shairport-sync
-      pkgs.unstable.gemini-cli
+      gemini-cli
+      opencode
       pkgs.nodejs_24
       # self.packages.${pkgs.stdenv.hostPlatform.system}.stremio
       wireshark

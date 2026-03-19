@@ -93,7 +93,7 @@ in
         )
         "uwsm app -- nm-applet --indicator"
         "uwsm app -- pypr"
-        "uwsm app -- snappy-switcher --daemon"
+        "snappy-switcher --daemon"
         "sleep 2 && uwsm app -- wallsetter"
         "wl-paste --type text --watch uwsm app -- cliphist store"
         "wl-paste --type image --watch uwsm app -- cliphist store"

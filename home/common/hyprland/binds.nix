@@ -209,9 +209,14 @@ in
       ++ [
         "${mod}, Q, Open Terminal, exec, ${terminal}" # Terminal
         "${mod}, E, Open File Manager, exec, ${fileManager}"
-        ", Print, Screenshot, exec, screenshootin" # Print Screen
         "${mod}, F1, Toggle Gamemode, exec, hyprgamemode" # Toggle Gamemode
         "${mod} SHIFT, P, Color Picker, exec, hyprpicker -a" # Color picker
+
+        # Screenshot
+        ", Print, Screenshot Region, exec, hyprcap shot region -w -c -z"
+        "SHIFT, Print, Record Region, exec, hyprcap rec region -w"
+        "CTRL, Print, Stop Recording, exec, hyprcap rec-stop"
+        "ALT, Print, Screenshot Window, exec, hyprcap shot window:active -wcz"
       ];
   };
 }

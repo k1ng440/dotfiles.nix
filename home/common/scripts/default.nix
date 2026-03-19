@@ -22,6 +22,7 @@ in
 
     # Dependencies
     pkgs.hyprshot
+    pkgs.hyprcap
     pkgs.satty
     pkgs.slurp
   ];
