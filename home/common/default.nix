@@ -13,6 +13,7 @@ _: {
     ./fastfetch
     ./gaming
     ./scripts
+    ./kdeconnect.nix
     ./mime.nix
     ./qt.nix
     ./gtk.nix
@@ -22,5 +23,6 @@ _: {
     ./wine.nix
     ./thunar.nix
     ./uwsm.nix
+    ./stylix.nix
   ];
 }

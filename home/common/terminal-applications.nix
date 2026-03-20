@@ -84,11 +84,36 @@
 
     zoxide = {
       enable = true;
+      enableFishIntegration = true;
       enableZshIntegration = true;
       enableBashIntegration = true;
       options = [
         "--cmd cd"
       ];
+    };
+
+    eza = {
+      enable = true;
+      enableFishIntegration = true;
+      icons = "auto";
+      extraOptions = [
+        "--group-directories-first"
+        "--header"
+      ];
+    };
+
+    yazi = {
+      enable = true;
+      enableFishIntegration = true;
+      shellWrapperName = "y";
+      settings = {
+        manager = {
+          show_hidden = true;
+          sort_by = "mtime";
+          sort_dir_first = true;
+          sort_reverse = true;
+        };
+      };
     };
   };
 }

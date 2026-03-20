@@ -381,6 +381,7 @@ in
     };
 
     services = {
+      kdeconnect = mkEnableOption "KDE Connect support";
       syncthing = mkEnableOption "Syncthing file synchronization";
       openrgb = mkEnableOption "OpenRGB hardware lighting control";
       wine = mkEnableOption "Wine compatibility layer";

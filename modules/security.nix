@@ -5,10 +5,14 @@
 }:
 {
   security = {
-    pam.services = {
-      greetd.enableGnomeKeyring = true;
-      greetd-password.enableGnomeKeyring = true;
-      login.enableGnomeKeyring = true;
+    pam = {
+      sshAgentAuth.enable = true;
+      services = {
+        sudo.sshAgentAuth = true;
+        greetd.enableGnomeKeyring = true;
+        greetd-password.enableGnomeKeyring = true;
+        login.enableGnomeKeyring = true;
+      };
     };
 
     rtkit.enable = true;

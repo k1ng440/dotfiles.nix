@@ -46,6 +46,8 @@
       usbutils # Terminal USB info
       gocryptfs # Encryption
       keychain # SSH agent and passphrase manager
+      dust # Modern Unix `du`
+      ouch # Modern Unix `tar`/`zip`
 
       age # modern and secure file encryption tool
       sops # Simple and flexible tool for managing secrets

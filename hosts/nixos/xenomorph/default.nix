@@ -41,6 +41,7 @@
       antivirus = true;
     };
     services = {
+      kdeconnect = true;
       openrgb = true;
       wine = true;
       printing = true;
