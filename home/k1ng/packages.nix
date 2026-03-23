@@ -45,7 +45,6 @@
       timer # Terminal timer
       usbutils # Terminal USB info
       gocryptfs # Encryption
-      keychain # SSH agent and passphrase manager
       dust # Modern Unix `du`
       ouch # Modern Unix `tar`/`zip`
 
@@ -73,11 +72,14 @@
       # thunderbird-bin
       anki-bin
       shairport-sync
-      gemini-cli
-      opencode
       pkgs.nodejs_24
       # self.packages.${pkgs.stdenv.hostPlatform.system}.stremio
       wireshark
       vlc
+      (pkgs.writeShellScriptBin "gemini" ''
+        exec npx https://github.com/google-gemini/gemini-cli "$@"
+      '')
+      opencode
+      telegram-desktop
     ];
 }

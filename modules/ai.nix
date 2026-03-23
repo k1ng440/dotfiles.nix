@@ -10,8 +10,9 @@
       services.ollama = {
         enable = true;
         package = pkgs.ollama-cuda;
+        host = "0.0.0.0";
         environmentVariables = {
-          OLLAMA_ORIGINS = "chrome-extension://*,moz-extension://*,safari-web-extension://*";
+          OLLAMA_ORIGINS = "http://localhost:*,http://127.0.0.1:*,chrome-extension://*,moz-extension://*,safari-web-extension://*";
           OLLAMA_LLM_LIBRARY = "cuda_v12";
           OLLAMA_KV_CACHE_TYPE = "q4_0";
           OLLAMA_FLASH_ATTENTION = "1";

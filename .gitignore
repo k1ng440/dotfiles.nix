@@ -14,3 +14,6 @@ _nixos/**
 
 
 nohup.out
+
+.gemini/
+gha-creds-*.json

@@ -24,6 +24,7 @@
     ./fzf.nix
     ./fish.nix
     ./atuin.nix
+    ./ssh.nix
   ];
 
   sops = {

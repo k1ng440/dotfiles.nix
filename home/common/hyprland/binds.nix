@@ -165,7 +165,7 @@ in
         "${mod} SHIFT, C, Force Kill Window, forcekillactive"
         "${mod}, C, Kill Window, killactive"
 
-        # Toggle between dwindle and master layout
+        # Toggle between dwindle and master layout globally
         "${mod} SHIFT, apostrophe, Toggle Layout, exec, hyprctl keyword general:layout \"$(hyprctl getoption general:layout | grep -q 'dwindle' && echo 'master' || echo 'dwindle')\""
 
         # Reload Hyprland

@@ -48,5 +48,6 @@
     just
     findutils
     libsecret
+    doppler
   ];
 }

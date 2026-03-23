@@ -19,6 +19,7 @@ in
     (import ./launch-webapp.nix { inherit pkgs; })
     (import ./zoom-launcher.nix { inherit pkgs; })
     (import ./hypr-suspend-fix.nix { inherit pkgs; })
+    (import ./replace-string.nix { inherit pkgs; })
 
     # Dependencies
     pkgs.hyprshot

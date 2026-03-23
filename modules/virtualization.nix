@@ -14,6 +14,9 @@
       docker = {
         enable = true;
         daemon.settings = {
+          features = {
+            cdi = true;
+          };
         };
       };
       podman.enable = false;

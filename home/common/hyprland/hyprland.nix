@@ -36,6 +36,7 @@ in
     hyprpicker
     bitwarden-cli
     tesseract
+    jq
   ];
 
   systemd.user.targets.hyprland-session.Unit.Wants = [

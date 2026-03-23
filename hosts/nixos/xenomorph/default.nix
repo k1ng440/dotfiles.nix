@@ -140,4 +140,6 @@
         options = [ "${smb_automount_opts},credentials=${config.sops.secrets."samba/hass".path}" ];
       };
     };
+
+  networking.firewall.allowedTCPPorts = [ 11434 ];
 }

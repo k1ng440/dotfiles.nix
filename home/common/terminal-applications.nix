@@ -27,6 +27,10 @@
         vim_keys = true;
         rounded_corners = true;
         proc_tree = true;
+        proc_sorting = "cpu lazy";
+        proc_command = false;
+        proc_gpu_info = true;
+        shown_boxes = "cpu mem net proc gpu0";
         show_gpu_info = "on";
         show_uptime = true;
         show_coretemp = true;
