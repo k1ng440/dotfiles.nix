@@ -34,5 +34,8 @@
         };
       };
     })
+    (lib.mkIf config.machine.services.ai.wan2gp {
+      environment.systemPackages = [ pkgs.wan2gp ];
+    })
   ];
 }

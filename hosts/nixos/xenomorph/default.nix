@@ -47,6 +47,7 @@
       printing = true;
       ai = {
         ollama = true;
+        wan2gp = true;
       };
     };
     networking = {

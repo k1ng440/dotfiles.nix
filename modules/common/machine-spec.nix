@@ -389,6 +389,7 @@ in
       ai = {
         ollama = mkEnableOption "Ollama AI server";
         open-webui = mkEnableOption "Open WebUI for Ollama";
+        wan2gp = mkEnableOption "Wan2GP AI Video Generator";
       };
     };
 

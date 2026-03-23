@@ -17,6 +17,7 @@ let
   };
 
   custom-packages = final: _prev: {
+    wan2gp = final.callPackage ../packages/wan2gp.nix { };
     stremio = final.callPackage ../packages/stremio.nix { };
     breezex-cursor = final.callPackage ../packages/breezex-cursor.nix { };
     hyprcap = final.callPackage ../packages/hyprcap.nix { };
