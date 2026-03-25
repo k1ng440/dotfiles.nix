@@ -2,6 +2,7 @@
 {
   home.packages = with pkgs; [
     subversionClient
+    gcc
     pre-commit
     gnumake # make
     # nix-init

@@ -116,55 +116,6 @@
           };
     };
 
-    systemd.services = {
-      hyprland-suspend = lib.mkIf config.machine.windowManager.hyprland.enable {
-        description = "Suspend Hyprland";
-        before = [
-          "systemd-suspend.service"
-          "systemd-hibernate.service"
-          "systemd-hybrid-sleep.service"
-          "nvidia-suspend.service"
-          "nvidia-hibernate.service"
-        ];
-        wantedBy = [
-          "suspend.target"
-          "hibernate.target"
-          "hybrid-sleep.target"
-          "systemd-suspend.service"
-          "systemd-hibernate.service"
-        ];
-        serviceConfig = {
-          Type = "oneshot";
-          ExecStart = "${pkgs.procps}/bin/pkill -f -STOP Hyprland";
-        };
-      };
-
-      hyprland-resume = lib.mkIf config.machine.windowManager.hyprland.enable {
-        description = "Resume Hyprland";
-        after = [
-          "systemd-suspend.service"
-          "systemd-hibernate.service"
-          "systemd-hybrid-sleep.service"
-          "nvidia-resume.service"
-        ];
-        wantedBy = [
-          "suspend.target"
-          "hibernate.target"
-          "hybrid-sleep.target"
-          "systemd-suspend.service"
-          "systemd-hibernate.service"
-        ];
-        serviceConfig = {
-          Type = "oneshot";
-          ExecStart = [
-            "${pkgs.procps}/bin/pkill -f -CONT Hyprland"
-            "${pkgs.coreutils}/bin/sleep 2"
-            "${pkgs.bash}/bin/bash -c 'HYPRLAND_INSTANCE_SIGNATURE=$(ls -1t /run/user/${toString config.machine.userUid}/hypr | head -n 1) XDG_RUNTIME_DIR=/run/user/${toString config.machine.userUid} ${pkgs.hyprland}/bin/hyprctl dispatch dpms on'"
-          ];
-        };
-      };
-    };
-
     boot = {
       initrd.kernelModules = [
         "nvidia"

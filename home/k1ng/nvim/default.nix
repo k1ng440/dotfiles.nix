@@ -39,6 +39,7 @@ in
       shfmt
       luajitPackages.jsregexp
       vscode-langservers-extracted
+      gopls
     ];
   };
 
