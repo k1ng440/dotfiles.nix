@@ -371,6 +371,12 @@ in
           enable = mkEnableOption "Noctalia shell for Hyprland";
         };
       };
+      niri = {
+        enable = mkEnableOption "Niri window manager";
+        noctalia = {
+          enable = mkEnableOption "Noctalia shell for Hyprland";
+        };
+      };
     };
 
     security = {
@@ -683,11 +689,13 @@ in
 
         # Window manager mutual exclusion
         {
-          assertion = (if wmConfig.hyprland.enable then 1 else 0) <= 1;
+          assertion =
+            (if wmConfig.hyprland.enable then 1 else 0) + (if wmConfig.niri.enable then 1 else 0) <= 1;
           message = ''
-            Only Hyprland is supported.
+            Only one window manager can be enabled at a time.
             Current configuration:
               - machine.windowManager.hyprland.enable = ${toString wmConfig.hyprland.enable}
+              - machine.windowManager.niri.enable = ${toString wmConfig.niri.enable}
           '';
         }
 
@@ -705,7 +713,9 @@ in
 
         # Server configuration validation
         {
-          assertion = !hostSpec.computed.isServer || !hostSpec.windowManager.hyprland.enable;
+          assertion =
+            !hostSpec.computed.isServer
+            || (!hostSpec.windowManager.hyprland.enable || !hostSpec.windowManager.niri.enable);
           message = "Server hosts should not use window managers";
         }
 

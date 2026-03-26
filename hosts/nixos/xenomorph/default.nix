@@ -65,6 +65,10 @@
     };
     windowManager = {
       hyprland = {
+        enable = false;
+        noctalia.enable = false;
+      };
+      niri = {
         enable = true;
         noctalia.enable = true;
       };

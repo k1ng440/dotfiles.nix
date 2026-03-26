@@ -8,7 +8,11 @@
 {
 
   config =
-    lib.mkIf (config.machine.windowManager.hyprland.enable && !config.machine.computed.isMinimal)
+    lib.mkIf
+      (
+        (config.machine.windowManager.hyprland.enable || config.machine.windowManager.niri.enable)
+        && !config.machine.computed.isMinimal
+      )
       {
         fonts.packages = with pkgs; [
           dejavu_fonts

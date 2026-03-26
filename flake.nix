@@ -35,6 +35,13 @@
     };
     nix-flatpak.url = "github:gmodena/nix-flatpak/?ref=latest";
 
+    niri-unstable.url = "github:YaLTeR/niri";
+    niri = {
+      url = "github:sodiboo/niri-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.niri-unstable.follows = "niri-unstable";
+    };
+
     # Hardware
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
 

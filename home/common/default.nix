@@ -7,8 +7,6 @@ _: {
     ./kitty.nix
     ./starship.nix
     ./virtmanager.nix
-    ./rofi
-    ./wofi
     ./hyprland
     ./fastfetch
     ./gaming

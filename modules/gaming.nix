@@ -4,12 +4,6 @@
   lib,
   ...
 }:
-let
-  hyprgamemode = import (lib.custom.relativeToRoot "home/common/hyprland/hyprgamemode.nix") {
-    inherit pkgs;
-    inherit (config) machine;
-  };
-in
 {
   config = lib.mkIf (lib.elem "gaming" config.machine.capabilities) {
     programs = {
@@ -47,9 +41,6 @@ in
             renice = 0;
           };
           custom = {
-            # Using a single store path to avoid 256-character truncation in gamemode.ini
-            start = "${hyprgamemode}/bin/hyprgamemode on";
-            end = "${hyprgamemode}/bin/hyprgamemode off";
           };
         };
       };

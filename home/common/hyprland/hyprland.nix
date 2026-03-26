@@ -119,8 +119,6 @@ in
 
       general =
         let
-          theme = import ../theme.nix { inherit config; };
-          inherit (theme) colors;
           strip = lib.removePrefix "#";
         in
         {
@@ -131,8 +129,6 @@ in
           gaps_out = 10;
           border_size = 2;
           resize_on_border = true;
-          "col.active_border" = lib.mkForce "rgb(${strip colors.iris}) rgb(${strip colors.rose}) 45deg";
-          "col.inactive_border" = lib.mkForce "rgb(${strip colors.overlay})";
         };
 
       # https://wiki.hyprland.org/Configuring/Variables/#misc

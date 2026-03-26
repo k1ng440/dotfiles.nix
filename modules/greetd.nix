@@ -22,13 +22,17 @@
 
   services = {
     greetd = {
-      enable = lib.mkDefault config.machine.windowManager.hyprland.enable;
+      enable = lib.mkDefault (
+        config.machine.windowManager.hyprland.enable || config.machine.windowManager.niri.enable
+      );
       settings =
         let
           start = {
             user = "k1ng";
             command =
-              if config.machine.windowManager.hyprland.enable then
+              if config.machine.windowManager.niri.enable then
+                "niri-session"
+              else if config.machine.windowManager.hyprland.enable then
                 "uwsm start hyprland-uwsm.desktop"
               else
                 "${pkgs.bashInteractive}/bin/bash";
