@@ -1,4 +1,5 @@
-{ lib, ... }: {
+{ lib, ... }:
+{
   flake.modules.nixos.core =
     { config, ... }:
     let

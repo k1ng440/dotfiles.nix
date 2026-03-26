@@ -2,9 +2,12 @@
   description = "k1ng's NixOS, nix-darwin and Home Manager Configuration";
 
   outputs =
-    inputs@{ flake-parts, ... }: let
+    inputs@{ flake-parts, ... }:
+    let
       inherit (inputs.nixpkgs.lib.fileset) toList fileFilter;
-      import-tree = path: toList (fileFilter (file: file.hasExt "nix" && !(inputs.nixpkgs.lib.hasPrefix "_" file.name)) path);
+      import-tree =
+        path:
+        toList (fileFilter (file: file.hasExt "nix" && !(inputs.nixpkgs.lib.hasPrefix "_" file.name)) path);
     in
     flake-parts.lib.mkFlake { inherit inputs; } {
       systems = [

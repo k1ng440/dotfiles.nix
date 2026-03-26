@@ -94,5 +94,5 @@
         carla
         easyeffects
       ];
-  };
+    };
 }
