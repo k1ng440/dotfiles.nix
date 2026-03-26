@@ -25,10 +25,10 @@
         owner = config.users.users.${user}.name;
         inherit (config.users.users.${user}) group;
         # We need to ensure the entire directory structure is that of the user...
-        path = "${config.machine.home}/.config/sops/age/keys.txt";
+        path = "${config.users.users.${user}.home}/.config/sops/age/keys.txt";
       };
       # extract password/username to /run/secrets-for-users/ so it can be used to create the user
-      "passwords/${config.machine.username}" = {
+      "passwords/${user}" = {
         sopsFile = "${sopsFolder}/shared.yaml";
         neededForUsers = true;
       };
@@ -60,6 +60,7 @@
         group = user;
         mode = "0600";
       };
+
     }
     ];
 
@@ -68,15 +69,12 @@
     # FIXME(sops): We might not need this depending on how https://github.com/Mic92/sops-nix/issues/381 is fixed
     system.activationScripts.sopsSetAgeKeyOwnership =
       let
-      ageFolder = "${config.machine.home}/.config/sops/age";
-    user = config.users.users.${config.machine.username}.name;
-    inherit (config.users.users.${config.machine.username}) group;
-    in
+        ageFolder = "${config.users.users.${user}.home}/.config/sops/age";
+        # user = config.users.users.${user}.name;
+        # inherit (config.users.users.${user}) group;
+      in
       ''
       mkdir -p ${ageFolder}
-    chown ${user}:${group} ${config.machine.home}/.config || true
-      chown -R ${user}:${group} ${config.machine.home}/.config/sops
       '';
   };
 }
-

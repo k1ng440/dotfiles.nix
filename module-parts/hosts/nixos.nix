@@ -33,6 +33,7 @@ let
         {
           config.custom.constants = rec {
             inherit host isVm user;
+            home = "/home/${user}";
             isLaptop = false;
             projects = "/persist/home/${user}/Projects";
             dots = "${projects}/dotfiles";
