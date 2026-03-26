@@ -14,7 +14,6 @@
         "x86_64-linux"
       ];
       imports = import-tree ./module-parts ++ [
-        ./parts/hosts.nix
         ./parts/devshell.nix
         ./parts/checks.nix
       ];

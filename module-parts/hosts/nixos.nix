@@ -4,6 +4,8 @@
   ...
 }:
 let
+  npins = import ../../npins;
+
   mkNixos =
     host:
     {
@@ -16,6 +18,16 @@ let
       inherit system;
 
       nixpkgsPatcher.inputs = inputs; # for nixpkgs-patcher to patch
+
+      specialArgs = {
+        inherit
+          inputs
+          isVm
+          user
+          npins
+          ;
+        outputs = config.flake;
+      };
 
       modules = [
         {

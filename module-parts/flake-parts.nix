@@ -21,9 +21,10 @@
         inherit system;
         config.allowUnfree = true;
         overlays = [
-          self.overlays.pkgsCustom
-          self.overlays.pkgsPatches
-          self.overlays.writeShellApplicationCompletions
+          self.overlays.default
+          # self.overlays.pkgsCustom
+          # self.overlays.pkgsPatches
+          # self.overlays.writeShellApplicationCompletions
         ];
       };
     in
@@ -31,11 +32,12 @@
       # initialize the pkgs for perSystem to be the patched nixpkgs
       _module.args = { inherit pkgs; };
 
-      formatter = pkgs.nixfmt;
+      formatter = lib.mkDefault pkgs.nixfmt;
     };
 
   flake = {
-    # expose top level flake options
+    config.overlays = import ../overlays { inherit inputs; };
+
     options = {
       patches = lib.mkOption {
         type = lib.types.anything;
