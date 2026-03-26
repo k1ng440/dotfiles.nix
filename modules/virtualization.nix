@@ -11,14 +11,6 @@
       libvirtd.qemu = {
         swtpm.enable = true;
       };
-      docker = {
-        enable = true;
-        daemon.settings = {
-          features = {
-            cdi = true;
-          };
-        };
-      };
       podman.enable = false;
       spiceUSBRedirection.enable = true;
     };

@@ -12,7 +12,7 @@
     ])
 
     inputs.nixos-hardware.nixosModules.common-cpu-amd-zenpower
-    ./hardware-configuration.nix
+    # ./hardware-configuration.nix
     ./configurations.nix
     ./host-packages.nix
     ./firejail.nix

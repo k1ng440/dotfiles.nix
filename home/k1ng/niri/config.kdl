@@ -31,25 +31,29 @@ input {
 }
 
 // https://niri-wm.github.io/niri/Configuration:-Outputs
-output "DP-1" {
-  mode "3440x1440@120.000"
-  transform "normal"
-  // position x=1280 y=0
-  position x=3440 y=0
-}
-
-output "DP-3" {
-  mode "3440x1440@59.973"
-  transform "normal"
-  // position x=1280 y=0
-  position x=0 y=0
-}
-
 output "HDMI-A-1" {
   mode "1920x1080@60.000"
   transform "normal"
-  position x=3440 y=-1440
+  position x=3440 y=0
 }
+
+output "DP-1" {
+  variable-refresh-rate
+  mode "3440x1440@120.000"
+  transform "normal"
+  // position x=1280 y=0
+  position x=3440 y=1080
+  focus-at-startup
+}
+
+output "DP-3" {
+  variable-refresh-rate
+  mode "3440x1440@59.973"
+  transform "normal"
+  // position x=1280 y=0
+  position x=0 y=1080
+}
+
 
 // Settings that influence how windows are positioned and sized.
 // Find more information on the wiki:
