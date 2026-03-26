@@ -45,6 +45,7 @@
             enable = true;
             devices = [ "nodev" ];
             efiSupport = true;
+            gfxmodeEfi = "1024x768"; # Extremely slow otherwise
             theme = pkgs.custom.distro-grub-themes-nixos;
           };
           timeout = 3;

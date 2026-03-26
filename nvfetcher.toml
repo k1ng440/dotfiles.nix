@@ -1,0 +1,37 @@
+[mango]
+# src.git = "https://github.com/mangowm/mango"
+src.github_tag = "mangowm/mango"
+fetch.github = "mangowm/mango"
+
+[mpv-deletefile]
+src.git = "https://github.com/zenyd/mpv-scripts"
+fetch.github = "zenyd/mpv-scripts"
+
+[mpv-sub-select]
+src.git = "https://github.com/CogentRedTester/mpv-sub-select"
+fetch.github = "CogentRedTester/mpv-sub-select"
+
+[yazi-plugins]
+src.git = "https://github.com/yazi-rs/plugins"
+fetch.github = "yazi-rs/plugins"
+
+[yazi-time-travel]
+src.git = "https://github.com/iynaix/time-travel.yazi"
+fetch.github = "iynaix/time-travel.yazi"
+
+[niri]
+src.git = "https://github.com/YaLTeR/niri"
+src.branch = "wip/branch"
+fetch.github = "YaLTeR/niri"
+
+[yt-dlp]
+src.github_tag = "yt-dlp/yt-dlp"
+fetch.github = "yt-dlp/yt-dlp"
+
+[helium]
+src.github_tag = "imputnet/helium-linux"
+fetch.url = "https://github.com/imputnet/helium-linux/releases/download/$ver/helium-$ver-x86_64.AppImage"
+
+[rofi-themes]
+src.git = "https://github.com/adi1090x/rofi"
+fetch.github = "adi1090x/rofi"

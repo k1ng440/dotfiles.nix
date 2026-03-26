@@ -17,6 +17,10 @@
         ./parts/devshell.nix
         ./parts/checks.nix
       ];
+
+      perSystem = {
+        _module.args.npins = import ./npins;
+      };
     };
 
   inputs = {
@@ -41,7 +45,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nix-flatpak.url = "github:gmodena/nix-flatpak/?ref=latest";
-
+    wrappers = {
+      url = "github:Lassulus/wrappers";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     niri-unstable.url = "github:YaLTeR/niri";
     niri = {
       url = "github:sodiboo/niri-flake";

@@ -1,12 +1,10 @@
 {
   npins,
-  inputs,
   pkgs,
   lib,
   ...
 }:
 let
-  pkgsUnstable = inputs.nixpkgs-unstable.legacyPackages.${pkgs.stdenv.hostPlatform.system};
   makePluginFromPin =
     name: pin:
     pkgs.vimUtils.buildVimPlugin {
@@ -60,12 +58,12 @@ let
     (lib.mapAttrs makePluginFromPin)
     (lib.mapAttrs applyOptional)
   ];
-  nvim-treesitter-grammars = pkgsUnstable.symlinkJoin {
+  nvim-treesitter-grammars = pkgs.symlinkJoin {
     name = "nvim-treesitter-grammars";
     paths = pkgs.vimPlugins.nvim-treesitter.withAllGrammars.dependencies;
   };
 in
-with pkgsUnstable.vimPlugins;
+with pkgs.vimPlugins;
 [
   plenary-nvim
   nvim-treesitter-grammars

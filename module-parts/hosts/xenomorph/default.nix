@@ -7,6 +7,9 @@
     in
     {
       imports = with top.config.flake.modules.nixos; [
+        gui
+        wm
+
         inputs.nixos-hardware.nixosModules.common-cpu-amd-zenpower
         hardware_nvidiagpu
         hardware_ledger
@@ -16,58 +19,119 @@
         services_flatpak
         services_virtualisation
         gui_fonts
-        wm_niri
+        programs_kitty
+        programs_steam
+        neovim
       ];
 
-      config = {
-        custom.constants.hostname = "xenomorph";
-        services.samba.enable = true;
-        fileSystems =
-          let
-            inherit (config.users.users.${user}) uid;
-            inherit (config.users.groups.${user}) gid;
-            smb_automount_opts = "x-systemd.automount,noauto,x-systemd.idle-timeout=60,x-systemd.device-timeout=5s,x-systemd.mount-timeout=5s,uid=${toString uid},gid=${toString gid}";
-          in
-          {
-            "/mnt/sn550" = {
-              device = "/dev/disk/by-uuid/02DCA7E7DCA7D2E9";
-              fsType = "ntfs-3g";
-              options = [
-                "rw"
-                "uid=${toString uid}"
+      custom = {
+        hardware = {
+          monitors = [
+            {
+              name = "DP-1";
+              width = 3440;
+              height = 1440;
+              # niri / mango wants this to be exact down to the decimals
+              refreshRate = "120.000";
+              vrr = false;
+              x = 3440;
+              y = 2160;
+              workspaces = [
+                1
+                2
+                3
+                4
+                5
               ];
-            };
+              hdr = false; # toggle to use hdr
+            }
+            {
+              name = "DP-3";
+              width = 3440;
+              height = 1440;
+              x = 0;
+              y = 2160;
+              transform = 1;
+              workspaces = [
+                6
+                7
+              ];
+              defaultWorkspace = 6;
+              refreshRate = "59.973";
+            }
+            {
+              name = "HDMI-A-1";
+              width = 3840;
+              height = 2160;
+              x = 3440;
+              y = 0;
+              scale = 2.0;
+              workspaces = [
+                8
+                9
+                10
+              ];
+              defaultWorkspace = 8;
+              refreshRate = "30.000";
+            }
+          ];
+        };
+        lock.enable = false;
 
-            "/mnt/kong/media" = {
-              device = "//kong.lan/media";
-              fsType = "cifs";
-              options = [ "${smb_automount_opts},credentials=${config.sops.secrets."samba/kong".path}" ];
-            };
-
-            "/mnt/kong/photos" = {
-              device = "//kong.lan/photos";
-              fsType = "cifs";
-              options = [ "${smb_automount_opts},credentials=${config.sops.secrets."samba/kong".path}" ];
-            };
-
-            "/mnt/kong/backup" = {
-              device = "//kong.lan/backup";
-              fsType = "cifs";
-              options = [ "${smb_automount_opts},credentials=${config.sops.secrets."samba/kong".path}" ];
-            };
-
-            "/mnt/kong/torrents" = {
-              device = "//kong.lan/torrents";
-              fsType = "cifs";
-              options = [ "${smb_automount_opts},credentials=${config.sops.secrets."samba/kong".path}" ];
-            };
-
-            "/mnt/hass" = {
-              device = "//192.168.0.6/config";
-              fsType = "cifs";
-              options = [ "${smb_automount_opts},credentials=${config.sops.secrets."samba/hass".path}" ];
-            };
+        programs = {
+          btop.extraSettings = {
+            custom_gpu_name0 = "AMD Radeon RX 9070XT";
           };
+        };
       };
+
+      custom.constants.hostname = "xenomorph";
+      services.samba.enable = true;
+      fileSystems =
+        let
+          inherit (config.users.users.${user}) uid;
+          inherit (config.users.groups.${user}) gid;
+          smb_automount_opts = "x-systemd.automount,noauto,x-systemd.idle-timeout=60,x-systemd.device-timeout=5s,x-systemd.mount-timeout=5s,uid=${toString uid},gid=${toString gid}";
+        in
+        {
+          "/mnt/sn550" = {
+            device = "/dev/disk/by-uuid/02DCA7E7DCA7D2E9";
+            fsType = "ntfs-3g";
+            options = [
+              "rw"
+              "uid=${toString uid}"
+            ];
+          };
+
+          "/mnt/kong/media" = {
+            device = "//kong.lan/media";
+            fsType = "cifs";
+            options = [ "${smb_automount_opts},credentials=${config.sops.secrets."samba/kong".path}" ];
+          };
+
+          "/mnt/kong/photos" = {
+            device = "//kong.lan/photos";
+            fsType = "cifs";
+            options = [ "${smb_automount_opts},credentials=${config.sops.secrets."samba/kong".path}" ];
+          };
+
+          "/mnt/kong/backup" = {
+            device = "//kong.lan/backup";
+            fsType = "cifs";
+            options = [ "${smb_automount_opts},credentials=${config.sops.secrets."samba/kong".path}" ];
+          };
+
+          "/mnt/kong/torrents" = {
+            device = "//kong.lan/torrents";
+            fsType = "cifs";
+            options = [ "${smb_automount_opts},credentials=${config.sops.secrets."samba/kong".path}" ];
+          };
+
+          "/mnt/hass" = {
+            device = "//192.168.0.6/config";
+            fsType = "cifs";
+            options = [ "${smb_automount_opts},credentials=${config.sops.secrets."samba/hass".path}" ];
+          };
+        };
     };
 }

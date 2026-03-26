@@ -150,7 +150,6 @@
         runtimeInputs = [
           pkgs.noctalia-shell
           pkgs.custom.noctalia-ipc # needed for wallpaper
-          config.custom.programs.dotfiles-rs
         ];
         text = /* sh */ ''
           noctalia-shell &
@@ -238,13 +237,6 @@
         };
 
       custom = {
-        # start noctalia after the WM is ready
-        startup = lib.mkBefore [
-          {
-            spawn = [ (lib.getExe noctalia-start) ];
-          }
-        ];
-
         programs = {
           # setup blur for hyprland
           hyprland.settings = {

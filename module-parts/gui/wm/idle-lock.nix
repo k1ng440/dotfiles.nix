@@ -49,6 +49,24 @@
           # handle laptop lid
           bindl = lib.mkIf isLaptop [ ",switch:Lid Switch, exec, ${lib.getExe lock}" ];
         };
+
+        niri.settings = {
+          binds = {
+            "Mod+Shift+Ctrl+x".spawn = [
+              (lib.getExe lock)
+            ];
+          };
+
+          switch-events = {
+            lid-open = {
+              spawn = lib.getExe lock;
+            };
+          };
+        };
+
+        # mango.settings = {
+        #   bind = [ "$mod+SHIFT+CTRL, x, spawn, ${lib.getExe lock}" ];
+        # };
       };
     };
 }

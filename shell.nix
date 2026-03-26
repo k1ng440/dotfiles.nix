@@ -31,6 +31,7 @@ let
           git
           just
           npins
+          nvfetcher
           pre-commit
           deadnix
           sops
@@ -39,6 +40,8 @@ let
           age
           ssh-to-age
           jq
+          nodejs_24
+          fzf
           ;
       })
       ++ [

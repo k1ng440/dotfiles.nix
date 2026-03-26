@@ -22,9 +22,9 @@
         config.allowUnfree = true;
         overlays = [
           self.overlays.default
-          # self.overlays.pkgsCustom
-          # self.overlays.pkgsPatches
-          # self.overlays.writeShellApplicationCompletions
+          self.overlays.pkgsCustom
+          self.overlays.pkgsPatches
+          self.overlays.writeShellApplicationCompletions
         ];
       };
     in

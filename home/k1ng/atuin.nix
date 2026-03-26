@@ -17,7 +17,7 @@ in
   };
 
   programs.atuin = {
-    enable = true;
+    enable = false;
     enableBashIntegration = true;
     enableFishIntegration = true;
     enableZshIntegration = true;

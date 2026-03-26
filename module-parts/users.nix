@@ -14,52 +14,51 @@
         };
       };
 
-      config = lib.mkMerge
-      [
+      config = lib.mkMerge [
         {
           users = {
             mutableUsers = false;
-            groups.${user} = {};
+            groups.${user} = { };
 
             users = {
               root = {
                 initialPassword = "password";
-                hashedPasswordFile = "/persist/etc/shadow/root";
+                # hashedPasswordFile = "/persist/etc/shadow/root";
               };
               ${user} = {
                 home = "/home/${user}";
                 isNormalUser = true;
                 group = user;
                 initialPassword = "password";
-                hashedPasswordFile = "/persist/etc/shadow/${user}";
+                # hashedPasswordFile = "/persist/etc/shadow/${user}";
                 extraGroups = lib.flatten [
                   "wheel"
-                    (builtins.filter (group: builtins.hasAttr group config.users.groups) [
-                     "audio"
-                     "video"
-                     "docker"
-                     "git"
-                     "networkmanager"
-                     "scanner"
-                     "lp"
-                     "adbusers"
-                     "kvm"
-                     "libvirtd"
-                     "seat"
-                     "pcscd"
-                    ])
+                  (builtins.filter (group: builtins.hasAttr group config.users.groups) [
+                    "audio"
+                    "video"
+                    "docker"
+                    "git"
+                    "networkmanager"
+                    "scanner"
+                    "lp"
+                    "adbusers"
+                    "kvm"
+                    "libvirtd"
+                    "seat"
+                    "pcscd"
+                  ])
                 ];
               };
             };
           };
         }
         {
-          # sops.secrets = {
-          #   "passwords/${user}" = {
-          #     sopsFile = "${builtins.toString inputs.nix-secrets + "/sops"}/shared.yaml";
-          #     neededForUsers = true;
-          #   };
-          # };
+          sops.secrets = {
+            "passwords/${user}" = {
+              sopsFile = "${builtins.toString inputs.nix-secrets + "/sops"}/shared.yaml";
+              neededForUsers = true;
+            };
+          };
 
           users.users = {
             root.hashedPasswordFile = lib.mkForce config.sops.secrets."passwords/${user}".path;
