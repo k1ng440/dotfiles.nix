@@ -1,6 +1,6 @@
 { inputs, lib, ... }:
 {
-  flake.modules.nixos.gui_font =
+  flake.modules.nixos.gui_fonts =
   { pkgs, ... }:
   {
     options.custom = {

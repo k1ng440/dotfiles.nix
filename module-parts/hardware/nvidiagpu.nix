@@ -7,6 +7,10 @@
       ...
     }:
     {
+      nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
+        "nvidia-x11"
+      ];
+
       services.xserver.videoDrivers = lib.mkForce [ "nvidia" ];
 
       environment.systemPackages = with pkgs; [
@@ -37,6 +41,8 @@
           package = pkgs.nvidia-container-toolkit;
         };
         graphics = {
+          enable = true;
+          enable32Bit = true;
           extraPackages = with pkgs; [
             nvidia-vaapi-driver # VAAPI
           ];

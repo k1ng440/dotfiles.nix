@@ -1,4 +1,4 @@
-{ lib, inputs, ... }@top:
+{ inputs, ... }@top:
 {
   flake.modules.nixos.host_xenomorph =
     { config, pkgs, ... }:
@@ -9,9 +9,17 @@
       imports = with top.config.flake.modules.nixos; [
         inputs.nixos-hardware.nixosModules.common-cpu-amd-zenpower
         hardware_nvidiagpu
+        hardware_ledger
+        hardware_linux-firmware
+        hardware_qmk
         services_docker
+        services_flatpak
+        services_virtualisation
+        gui_fonts
+        wm_niri
       ];
 
+      config.custom.constants.hostname = "xenomorph";
       services.samba.enable = true;
       fileSystems =
         let

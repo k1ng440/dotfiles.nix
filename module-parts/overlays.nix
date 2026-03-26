@@ -86,6 +86,7 @@
         self.overlays.nixpkgsStable
         self.overlays.pkgsPatches
         self.overlays.writeShellApplicationCompletions
+        inputs.niri.overlays.niri
       ];
     };
   };

@@ -10,6 +10,9 @@
     {
       imports = [ (modulesPath + "/installer/scan/not-detected.nix") ];
 
+      # For more information, see `man configuration.nix` or https://nixos.org/manual/nixos/stable/options#opt-system.stateVersion .
+      system.stateVersion = "24.11"; # Did you read the comment?
+
       boot = {
         initrd = {
           availableKernelModules = [
@@ -30,22 +33,25 @@
       };
 
       fileSystems = {
-        "/" = {
-          device = "/dev/disk/by-uuid/bfacc08f-cca5-4698-a3be-20a723202545";
-          fsType = "btrfs";
-          options = [ "subvol=root" ];
-        };
+        # see impermanence.nix
+        # "/" = {
+        #   device = "/dev/disk/by-uuid/bfacc08f-cca5-4698-a3be-20a723202545";
+        #   fsType = "btrfs";
+        #   options = [ "subvol=root" ];
+        # };
 
         "/nix" = {
           device = "/dev/disk/by-uuid/bfacc08f-cca5-4698-a3be-20a723202545";
           fsType = "btrfs";
           options = [ "subvol=nix" ];
+          neededForBoot = true;
         };
 
         "/home" = {
           device = "/dev/disk/by-uuid/bfacc08f-cca5-4698-a3be-20a723202545";
           fsType = "btrfs";
           options = [ "subvol=home" ];
+          neededForBoot = true;
         };
 
         "/.swapvol" = {
@@ -61,6 +67,27 @@
             "fmask=0077"
             "dmask=0077"
           ];
+        };
+
+        # TODO: Enable this
+        # "/tmp" = {
+        #   device = "/dev/disk/by-uuid/bfacc08f-cca5-4698-a3be-20a723202545";
+        #   fsType = "btrfs";
+        #   options = [ "subvol=tmp" ];
+        # };
+
+        "/persist" = {
+          device = "/dev/disk/by-uuid/bfacc08f-cca5-4698-a3be-20a723202545";
+          fsType = "btrfs";
+          options = [ "subvol=persist" ];
+          neededForBoot = true;
+        };
+
+        "/cache" = {
+          device = "/dev/disk/by-uuid/bfacc08f-cca5-4698-a3be-20a723202545";
+          fsType = "btrfs";
+          options = [ "subvol=cache" ];
+          neededForBoot = true;
         };
       };
 
