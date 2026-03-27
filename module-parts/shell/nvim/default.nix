@@ -5,7 +5,6 @@
       pkgs,
       lib,
       npins,
-      config,
       ...
     }:
     let
@@ -115,8 +114,7 @@
         enable = true;
         viAlias = true;
         vimAlias = true;
-        package =
-          inputs.nixpkgs-unstable.legacyPackages.${pkgs.stdenv.hostPlatform.system}.neovim-unwrapped;
+        package = pkgs.neovim-unwrapped;
         configure.packages.myVimPackage.start = allPlugins;
       };
 
@@ -132,10 +130,13 @@
         gopls
       ];
 
-      hj.files = {
-        ".config/nvim".source = ./config;
-        # TODO: Fix this
-        # ".config/intelephense/license.txt".source = "${home}/nix-config/secrets/intelephense-license.txt";
+      hjem.users.k1ng.xdg.config.files = {
+        "nvim".source = ./config;
       };
+      # hj.files = {
+      #   ".config/nvim".source = ./config;
+      #   # TODO: Fix this
+      #   # ".config/intelephense/license.txt".source = "${home}/nix-config/secrets/intelephense-license.txt";
+      # };
     };
 }

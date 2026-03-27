@@ -1,0 +1,43 @@
+# Better repl with preloaded functions and libs already loaded
+# https://bmcgee.ie/posts/2023/01/nix-and-its-slow-feedback-loop/#how-you-should-use-the-repl
+{
+  # host is passed down from the repl via a --arg argument, defaulting to the current host
+  host ? "xenomorph",
+  ...
+}:
+let
+  user = "k1ng";
+  flake = builtins.getFlake (toString ./.);
+  inherit (flake.inputs.nixpkgs) lib;
+in
+(
+  flake.nixosConfigurations
+  |> lib.attrNames
+  |> lib.filter (n: !(lib.hasInfix "-" n))
+  |> map (
+    name:
+    let
+      cfg = flake.nixosConfigurations.${name}.config;
+    in
+    {
+      # utility variables for each host
+      "${name}" = cfg;
+      "${name}o" = cfg.custom;
+    }
+  )
+  |> lib.mergeAttrsList
+)
+// rec {
+  inherit lib;
+  inherit (flake) inputs;
+  inherit flake host user;
+  self = flake;
+
+  # default host
+  inherit (flake.nixosConfigurations.${host}) pkgs;
+  c = flake.nixosConfigurations.${host}.config;
+  config = c;
+  co = c.custom;
+
+  # your code here
+}

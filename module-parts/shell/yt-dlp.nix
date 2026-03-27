@@ -38,7 +38,7 @@ in
     {
       nixpkgs.overlays = [
         (_: _prev: {
-          yt-dlp = pkgs.custom.yt-dlp;
+          inherit (pkgs.custom) yt-dlp;
         })
       ];
 

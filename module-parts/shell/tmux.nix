@@ -7,7 +7,7 @@
   perSystem =
     { pkgs, ... }:
     let
-      # implementation for loading plugins from home-manager:
+      # Implementation for loading plugins from home-manager:
       # https://github.com/nix-community/home-manager/blob/master/modules/programs/tmux.nix
       tmuxPlugin = p: "run-shell ${if lib.types.package.check p then p.rtp else p.plugin.rtp}";
       tmuxConf = # tmux
@@ -101,7 +101,7 @@
     {
       nixpkgs.overlays = [
         (_: _prev: {
-          tmux = pkgs.custom.tmux;
+          inherit (pkgs.custom) tmux;
         })
       ];
 

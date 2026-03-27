@@ -15,7 +15,7 @@
           killall,
           jq,
         }:
-        # wrapped noctalia ipc to automatically kill outdated instances of noctalia-shell and restart
+        # Wrapped noctalia IPC to automatically kill outdated instances of noctalia-shell and restart
         writeShellApplication {
           name = "noctalia-ipc";
           runtimeInputs = [
@@ -59,9 +59,9 @@
             (o: {
               patches = [
                 ./face-aware-crop.patch
-                # write plugin settings to ~/.cache/noctalia instead so git doesn't fail to clone to a non-empty directory
+                # Write plugin settings to ~/.cache/noctalia instead so git doesn't fail to clone to a non-empty directory
                 ./plugin-settings-location.patch
-                # battery and volume widgets that use the primary color instead of white
+                # Battery and volume widgets that use the primary color instead of white
                 ./mprimary-battery.patch
                 # remove transparency from zathura template
                 ./zathura-transparency.patch

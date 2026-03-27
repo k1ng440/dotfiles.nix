@@ -7,9 +7,11 @@
       ...
     }:
     {
-      nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
-        "nvidia-x11"
-      ];
+      nixpkgs.config.allowUnfreePredicate =
+        pkg:
+        builtins.elem (lib.getName pkg) [
+          "nvidia-x11"
+        ];
 
       services.xserver.videoDrivers = lib.mkForce [ "nvidia" ];
 

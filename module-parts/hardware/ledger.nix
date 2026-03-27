@@ -1,6 +1,5 @@
 {
-  flake.modules.nixos.hardware_ledger =
-    _ : {
-      hardware.ledger.enable = true;
-    };
+  flake.modules.nixos.hardware_ledger = _: {
+    hardware.ledger.enable = true;
+  };
 }

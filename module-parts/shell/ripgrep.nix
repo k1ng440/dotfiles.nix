@@ -33,7 +33,7 @@
     {
       nixpkgs.overlays = [
         (_: _prev: {
-          ripgrep = pkgs.custom.ripgrep;
+          inherit (pkgs.custom) ripgrip;
         })
       ];
 

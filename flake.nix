@@ -13,10 +13,7 @@
       systems = [
         "x86_64-linux"
       ];
-      imports = import-tree ./module-parts ++ [
-        ./parts/devshell.nix
-        ./parts/checks.nix
-      ];
+      imports = import-tree ./module-parts;
 
       perSystem = {
         _module.args.npins = import ./npins;
@@ -31,6 +28,11 @@
     hjem = {
       url = "github:feel-co/hjem";
       inputs.nixpkgs.follows = "nixpkgs";
+    };
+    hjem-rum = {
+      url = "github:snugnug/hjem-rum";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.hjem.follows = "hjem";
     };
     impermanence = {
       url = "github:nix-community/impermanence";
@@ -67,6 +69,11 @@
 
     stylix.url = "github:danth/stylix";
 
+    nvf = {
+      url = "github:NotAShelf/nvf";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     spicetify-nix = {
       url = "github:Gerg-L/spicetify-nix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -75,10 +82,6 @@
     # Development tools
     treefmt-nix = {
       url = "github:numtide/treefmt-nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    pre-commit-hooks = {
-      url = "github:cachix/git-hooks.nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 

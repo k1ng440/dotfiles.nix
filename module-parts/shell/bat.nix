@@ -43,7 +43,7 @@
     {
       nixpkgs.overlays = [
         (_: _prev: {
-          bat = pkgs.custom.bat;
+          inherit (pkgs.custom) bat;
         })
       ];
 

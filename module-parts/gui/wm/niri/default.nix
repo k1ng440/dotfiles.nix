@@ -102,6 +102,8 @@
         };
       };
 
+      hj.xdg.config.files."niri/config.kdl".source = ./config.kdl;
+
       xdg.portal = {
         config = {
           niri = {

@@ -53,7 +53,7 @@
     {
       nixpkgs.overlays = [
         (_: _prev: {
-          eza = pkgs.custom.eza;
+          inherit (pkgs.custom) eza;
         })
       ];
 

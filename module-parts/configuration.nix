@@ -3,10 +3,10 @@
   flake.modules.nixos.core =
     { config, pkgs, ... }:
     let
-      inherit (config.custom.constants) host;
+      inherit (config.custom.constants) hostname;
     in
     {
-      networking.hostName = builtins.trace host host;
+      networking.hostName = builtins.trace hostname hostname;
       networking.networkmanager.enable = true;
       time.timeZone = "Asia/Dhaka";
       console = {

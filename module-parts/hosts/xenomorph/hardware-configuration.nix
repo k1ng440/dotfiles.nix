@@ -2,7 +2,6 @@
   flake.modules.nixos.host_xenomorph =
     {
       config,
-      pkgs,
       lib,
       modulesPath,
       ...
@@ -31,11 +30,11 @@
 
       fileSystems = {
         # see impermanence.nix
-        # "/" = {
-        #   device = "/dev/disk/by-uuid/bfacc08f-cca5-4698-a3be-20a723202545";
-        #   fsType = "btrfs";
-        #   options = [ "subvol=root" ];
-        # };
+        "/" = {
+          device = "/dev/disk/by-uuid/bfacc08f-cca5-4698-a3be-20a723202545";
+          fsType = "btrfs";
+          options = [ "subvol=root" ];
+        };
 
         "/nix" = {
           device = "/dev/disk/by-uuid/bfacc08f-cca5-4698-a3be-20a723202545";
@@ -66,7 +65,6 @@
           ];
         };
 
-        # TODO: Enable this
         # "/tmp" = {
         #   device = "/dev/disk/by-uuid/bfacc08f-cca5-4698-a3be-20a723202545";
         #   fsType = "btrfs";

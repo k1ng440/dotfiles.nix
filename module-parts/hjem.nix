@@ -14,6 +14,9 @@
         hjem = {
           clobberByDefault = true;
           linker = inputs.hjem.packages.${pkgs.stdenv.hostPlatform.system}.smfh;
+          extraModules = [
+            inputs.hjem-rum.hjemModules.default
+          ];
           users = {
             ${user} = {
               enable = true;

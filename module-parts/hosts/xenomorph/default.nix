@@ -1,9 +1,9 @@
 { inputs, ... }@top:
 {
   flake.modules.nixos.host_xenomorph =
-    { config, pkgs, ... }:
+    { config, ... }:
     let
-      inherit (config.custom.constants) projects isVm user;
+      inherit (config.custom.constants) user;
     in
     {
       imports = with top.config.flake.modules.nixos; [
@@ -21,7 +21,6 @@
         gui_fonts
         programs_kitty
         programs_steam
-        neovim
       ];
 
       custom = {
@@ -33,9 +32,9 @@
               height = 1440;
               # niri / mango wants this to be exact down to the decimals
               refreshRate = "120.000";
-              vrr = false;
+              vrr = true;
               x = 3440;
-              y = 2160;
+              y = 1080;
               workspaces = [
                 1
                 2
@@ -43,36 +42,40 @@
                 4
                 5
               ];
-              hdr = false; # toggle to use hdr
+              hdr = false;
             }
             {
               name = "DP-3";
               width = 3440;
               height = 1440;
+              refreshRate = "59.973";
+              vrr = true;
               x = 0;
-              y = 2160;
-              transform = 1;
+              y = 1080;
+              transform = 0;
               workspaces = [
                 6
                 7
               ];
               defaultWorkspace = 6;
-              refreshRate = "59.973";
+              hdr = false;
             }
             {
               name = "HDMI-A-1";
-              width = 3840;
-              height = 2160;
+              width = 1920;
+              height = 1080;
+              refreshRate = "60.000";
+              vrr = false;
               x = 3440;
               y = 0;
-              scale = 2.0;
+              scale = 1.0;
               workspaces = [
                 8
                 9
                 10
               ];
               defaultWorkspace = 8;
-              refreshRate = "30.000";
+              hdr = false;
             }
           ];
         };
@@ -80,7 +83,7 @@
 
         programs = {
           btop.extraSettings = {
-            custom_gpu_name0 = "AMD Radeon RX 9070XT";
+            custom_gpu_name0 = "Nvidia RTX 3080";
           };
         };
       };

@@ -20,7 +20,7 @@
     {
       nixpkgs.overlays = [
         (_: _prev: {
-          moor = pkgs.custom.moor;
+          inherit (pkgs.custom) moor;
         })
       ];
 
