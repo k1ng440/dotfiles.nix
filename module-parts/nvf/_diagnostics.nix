@@ -1,5 +1,5 @@
 _: {
-  vim.luaConfigRC.diagnostics = ''
+  vim.luaConfigRC.diagnostics = /* lua */ ''
     vim.schedule(function()
       local diagnostic_signs = {
         [vim.diagnostic.severity.ERROR] = '',

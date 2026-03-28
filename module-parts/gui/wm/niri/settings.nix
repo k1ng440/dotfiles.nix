@@ -74,21 +74,23 @@
             always-center-single-column = null;
           };
 
+          window-rules = [
+            {
+              draw-border-with-background = false;
+              geometry-corner-radius = 8.0;
+              clip-to-geometry = true;
+            }
+            {
+              matches = [ { is-active = false; } ];
+              opacity = 0.90;
+            }
+          ];
+
           # use blurred overview from noctalia
           layer-rules = [
             {
               matches = [ { namespace = "^noctalia-overview*"; } ];
               place-within-backdrop = true;
-            }
-          ];
-
-          window-rules = [
-            {
-              draw-border-with-background = false;
-              # rounded corners for all windows
-              geometry-corner-radius = 4;
-              clip-to-geometry = true;
-              open-maximized-to-edges = false;
             }
           ];
 
@@ -135,11 +137,12 @@
                 rules = "";
                 variant = "";
               };
-              repeat-delay = 600;
-              repeat-rate = 25;
+              repeat-delay = 200;
+              repeat-rate = 50;
               track-layout = "global";
               numlock = null;
             };
+            mouse.accel-profile = "flat";
             touchpad = {
               tap = null;
               dwt = null;
@@ -219,7 +222,6 @@
             path = lib.getExe pkgs.xwayland-satellite;
           };
 
-          # final include right at the end of the file
           extraConfig = lib.mkMerge [
             # don't use the workspaces key in setting as attrset keys are unordered and it becomes 1, 10, 2, 3...
             (
@@ -234,7 +236,7 @@
               )
               |> lib.concatLines
             )
-            # always source original config.kdl at the end
+            # Always source original config.kdl at the end
             (lib.mkAfter ''
               include optional=true "${config.hj.xdg.config.directory}/niri/config.kdl";
             '')

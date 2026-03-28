@@ -6,6 +6,18 @@
   dockerTools,
 }:
 {
+  breezex-cursor = {
+    pname = "breezex-cursor";
+    version = "5db7bc67873193b6fe837983c6401803df4f4408";
+    src = fetchFromGitHub {
+      owner = "ful1e5";
+      repo = "BreezeX_Cursor";
+      rev = "5db7bc67873193b6fe837983c6401803df4f4408";
+      fetchSubmodules = false;
+      sha256 = "sha256-2eACaOo6kWHZrMQ1QTIRrWKOTfJqaCm6tsWRy0AjRb8=";
+    };
+    date = "2024-07-27";
+  };
   helium = {
     pname = "helium";
     version = "0.10.7.1";

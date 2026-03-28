@@ -6,7 +6,7 @@
       custom.programs.hyprland.settings = {
         exec-once = [
           # stop fucking with my cursors
-          "hyprctl setcursor ${"Simp1e-Tokyo-Night"} ${toString 28}"
+          "hyprctl setcursor ${config.custom.gtk.cursor.name} ${toString config.custom.gtk.cursor.size}"
           "hyprctl dispatch workspace 1"
         ]
         # generate from startup options

@@ -21,6 +21,7 @@
         gui_fonts
         programs_kitty
         programs_steam
+        programs_vesktop
       ];
 
       custom = {

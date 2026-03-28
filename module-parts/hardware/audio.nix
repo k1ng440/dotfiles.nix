@@ -1,7 +1,7 @@
 { lib, ... }:
 {
   flake.modules.nixos.core =
-    { config, pkgs, ... }:
+    { pkgs, ... }:
     {
 
       security.rtkit.enable = true;
@@ -89,10 +89,7 @@
 
       environment.systemPackages = with pkgs; [
         pwvucontrol
-        alsa-utils
-        qjackctl
-        carla
-        easyeffects
+        pamixer
       ];
     };
 }

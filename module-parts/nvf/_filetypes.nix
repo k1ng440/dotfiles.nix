@@ -1,5 +1,5 @@
 _: {
-  vim.luaConfigRC.filetypes = ''
+  vim.luaConfigRC.filetypes = /* lua */ ''
     vim.filetype.add({
       extension = {
         rasi = 'rasi',

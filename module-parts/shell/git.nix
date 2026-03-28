@@ -23,7 +23,7 @@
           git checkout "$BRANCH"
         '';
       };
-      # create a new branch and push it to origin
+      # Create a new branch and push it to origin
       gbc = pkgs.writeShellApplication {
         name = "gbc";
         text = /* sh */ ''
@@ -57,7 +57,7 @@
           complete -F __git_remote_branches grd
         '';
       };
-      # searches git history, can never remember this stupid thing
+      # Searches git history, can never remember this stupid thing
       # 2nd argument is target path and subsequent arguments are passed through
       grg = pkgs.writeShellApplication {
         name = "grg";

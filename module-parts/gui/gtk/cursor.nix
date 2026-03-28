@@ -8,13 +8,13 @@
           cursor = {
             package = lib.mkOption {
               type = lib.types.package;
-              default = pkgs.simp1e-cursors;
+              default = pkgs.breezex-cursor;
               description = "Package providing the cursor theme.";
             };
 
             name = lib.mkOption {
               type = lib.types.str;
-              default = "Simp1e-Tokyo-Night";
+              default = "BreezeX-Dark";
               description = "The cursor name within the package.";
             };
 

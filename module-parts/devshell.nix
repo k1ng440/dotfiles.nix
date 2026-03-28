@@ -28,6 +28,7 @@
             nixd
             nixfmt
             pre-commit
+            nvfetcher
           ]
           ++ [
             wlr-randr # used to get display info

@@ -1,4 +1,25 @@
 {
+    "breezex-cursor": {
+        "cargoLock": null,
+        "date": "2024-07-27",
+        "extract": null,
+        "name": "breezex-cursor",
+        "passthru": null,
+        "pinned": false,
+        "src": {
+            "deepClone": false,
+            "fetchSubmodules": false,
+            "leaveDotGit": false,
+            "name": null,
+            "owner": "ful1e5",
+            "repo": "BreezeX_Cursor",
+            "rev": "5db7bc67873193b6fe837983c6401803df4f4408",
+            "sha256": "sha256-2eACaOo6kWHZrMQ1QTIRrWKOTfJqaCm6tsWRy0AjRb8=",
+            "sparseCheckout": [],
+            "type": "github"
+        },
+        "version": "5db7bc67873193b6fe837983c6401803df4f4408"
+    },
     "helium": {
         "cargoLock": null,
         "date": null,

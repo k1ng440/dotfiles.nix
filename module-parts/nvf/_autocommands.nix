@@ -1,5 +1,5 @@
 _: {
-  vim.luaConfigRC.autocommands = ''
+  vim.luaConfigRC.autocommands = /* lua */ ''
     local function augroup(name)
       return vim.api.nvim_create_augroup('nvimtrap_' .. name, { clear = true })
     end

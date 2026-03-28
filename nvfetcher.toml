@@ -35,3 +35,7 @@ fetch.url = "https://github.com/imputnet/helium-linux/releases/download/$ver/hel
 [rofi-themes]
 src.git = "https://github.com/adi1090x/rofi"
 fetch.github = "adi1090x/rofi"
+
+[breezex-cursor]
+src.git = "https://github.com/ful1e5/BreezeX_Cursor"
+fetch.github = "ful1e5/BreezeX_Cursor"
