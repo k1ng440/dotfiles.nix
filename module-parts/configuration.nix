@@ -3,14 +3,14 @@
   flake.modules.nixos.core =
     { config, pkgs, ... }:
     let
-      inherit (config.custom.constants) hostname;
+      inherit (config.custom.constants) host;
     in
     {
-      networking.hostName = builtins.trace hostname hostname;
+      networking.hostName = builtins.trace host host;
       networking.networkmanager.enable = true;
       time.timeZone = "Asia/Dhaka";
       console = {
-        # seems to break virtual-console service because it can't find the font
+        # Seems to break virtual-console service because it can't find the font
         # https://github.com/NixOS/nixpkgs/issues/257904
         # font = "${pkgs.terminus_font}/share/consolefonts/ter-u28n.psf.gz";
         useXkbConfig = true; # use xkb.options in tty.
@@ -38,7 +38,6 @@
           layout = "us";
           variant = "";
         };
-        # bye bye xterm
         excludePackages = [ pkgs.xterm ];
       };
 

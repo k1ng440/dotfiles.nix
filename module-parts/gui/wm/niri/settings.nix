@@ -4,7 +4,7 @@
     { config, pkgs, ... }:
     let
       inherit (config.custom.constants) host;
-      gap = if host == "desktop" then 8 else 4;
+      gap = if host == "xenomorph" then 8 else 4;
       strut = gap + 12;
     in
     {
@@ -21,7 +21,7 @@
             };
             focus-ring = {
               width = 2;
-              # overwritten by wallpaper script later
+              # Overwritten by wallpaper script later
               active-gradient._attrs = {
                 angle = 45;
                 from = "#89B4FA";
@@ -77,12 +77,9 @@
           window-rules = [
             {
               draw-border-with-background = false;
-              geometry-corner-radius = 8.0;
+              geometry-corner-radius = 4;
               clip-to-geometry = true;
-            }
-            {
-              matches = [ { is-active = false; } ];
-              opacity = 0.90;
+              open-maximized-to-edges = false;
             }
           ];
 
@@ -150,7 +147,7 @@
             focus-follows-mouse._attrs = {
               max-scroll-amount = "95%";
             };
-            workspace-auto-back-and-forth = null;
+            # workspace-auto-back-and-forth = null;
             disable-power-key-handling = null;
           };
 
@@ -223,7 +220,7 @@
           };
 
           extraConfig = lib.mkMerge [
-            # don't use the workspaces key in setting as attrset keys are unordered and it becomes 1, 10, 2, 3...
+            # Don't use the workspaces key in setting as attrset keys are unordered and it becomes 1, 10, 2, 3...
             (
               config.custom.hardware.monitors
               |> self.libCustom.mapWorkspaces (

@@ -18,7 +18,9 @@
 
       # add flake.packages as pkgs.custom
       pkgsCustom = _: prev: {
-        custom = withSystem prev.stdenv.hostPlatform.system ({ config, ... }: config.packages);
+        custom =
+          (prev.custom or { })
+          // (withSystem prev.stdenv.hostPlatform.system ({ config, ... }: config.packages));
       };
 
       # misc patches to packages in pkgs

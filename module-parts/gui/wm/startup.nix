@@ -55,9 +55,8 @@
 
   flake.modules.nixos.wm =
     # generic functionality for all WMs
-    { config, pkgs, ... }:
+    { config, ... }:
     let
-      inherit (config.custom.constants) host;
       # ensure setting terminal title using --title or exec with -e works
       termExe =
         assert config.custom.programs.terminal.package.pname == "ghostty";
@@ -66,33 +65,12 @@
     {
       custom = {
         startup = [
-          {
-            app-id = "helium";
-            spawn = [
-              (lib.getExe (
-                pkgs.writeShellApplication {
-                  name = "init-helium";
-                  runtimeInputs = [
-                    pkgs.custom.helium
-                  ];
-                  text = ''
-                    helium --profile-directory=Default &
-                    sleep 1; helium --incognito &
-                    # no-op if not niri
-                    sleep 5; niri-resize-workspace 1
-                  '';
-                }
-              ))
-            ];
-            workspace = 1;
-          }
-
           # file manager
           {
             app-id = "nemo";
             # NOTE: nemo seems ignore --class and --name flags?
             spawn = [ "nemo" ];
-            workspace = 4;
+            workspace = 3;
           }
 
           # terminal
@@ -104,61 +82,11 @@
               termExe
               "--class=${app-id}"
             ];
-            workspace = 7;
+            workspace = 2;
             niriArgs = {
               open-maximized = true;
             };
           }
-
-          # librewolf for discord
-          {
-            app-id = "librewolf";
-            spawn = [ "librewolf" ];
-            workspace = 9;
-            niriArgs = {
-              open-maximized = true;
-            };
-          }
-
-          # download related
-          rec {
-            enable = host == "desktop";
-            app-id = "${config.custom.programs.terminal.app-id}-dl";
-            spawn = [
-              termExe
-              "--class=${app-id}"
-            ];
-            workspace = 8;
-          }
-          rec {
-            enable = host == "desktop";
-            app-id = "${config.custom.programs.terminal.app-id}-yt.txt";
-            spawn = [
-              termExe
-              "--class=${app-id}"
-              "-e"
-              "nvim"
-              "${config.hj.directory}/Desktop/yt.txt"
-            ];
-            workspace = 8;
-          }
-          /*
-            # fix gparted "cannot open display: :0" error
-            {
-              spawn = [
-                (lib.getExe pkgs.xorg.xhost)
-                "+local:${user}"
-              ];
-            }
-
-            # fix Authorization required, but no authorization protocol specified error
-            {
-              spawn = [
-                (lib.getExe pkgs.xorg.xhost)
-                "si:localuser:root"
-              ];
-            }
-          */
         ];
       };
     };

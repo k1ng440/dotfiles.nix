@@ -6,7 +6,6 @@ _: {
       file-manager = "nemo.desktop";
       video-player = "mpv.desktop";
       audio-player = "mpv.desktop";
-      image-viewer = "imv.desktop";
       pdf-viewer = "org.kde.okular.desktop";
     in
     {
@@ -19,18 +18,6 @@ _: {
         };
 
         mime.defaultApplications = {
-          # Image
-          "image/" = [ image-viewer ];
-          "image/png" = [ image-viewer ];
-          "image/jpeg" = [ image-viewer ];
-          "image/jpg" = [ image-viewer ];
-          "image/gif" = [ image-viewer ];
-          "image/webp" = [ image-viewer ];
-          "image/svg+xml" = [ image-viewer ];
-          "image/bmp" = [ image-viewer ];
-          "image/tiff" = [ image-viewer ];
-          "image/x-xcf" = [ image-viewer ];
-
           # Video
           "video/*" = [ video-player ];
           "video/mp4" = [ video-player ];

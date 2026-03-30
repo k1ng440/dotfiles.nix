@@ -35,8 +35,8 @@ let
             inherit host isVm user;
             home = "/home/${user}";
             isLaptop = false;
-            projects = "/persist/home/${user}/Projects";
-            dots = "${projects}/dotfiles";
+            dots = "${home}/nix/nix-config";
+            projects = "${home}/Projects";
           };
         }
         config.flake.modules.nixos."host_${host}"

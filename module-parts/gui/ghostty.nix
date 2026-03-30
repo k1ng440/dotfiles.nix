@@ -21,7 +21,7 @@ let
         example = lib.literalExpression ''
           {
             theme = "catppuccin-mocha";
-            font-size = 10;
+            font-size = 12;
             keybind = [
               "ctrl+h=goto_split:left"
               "ctrl+l=goto_split:right"
@@ -40,7 +40,7 @@ in
   flake.wrapperModules.ghostty = inputs.wrappers.lib.wrapModule (
     { config, wlib, ... }:
     let
-      # adapted from home-manager:
+      # Adapted from home-manager:
       # https://github.com/nix-community/home-manager/blob/master/modules/programs/ghostty.nix
       toGhosttyConf =
         (config.pkgs.formats.keyValue {
@@ -48,6 +48,7 @@ in
           mkKeyValue = lib.generators.mkKeyValueDefault { } " = ";
         }).generate
           "ghostty-config";
+
       baseGhosttyConf = {
         alpha-blending = "linear-corrected";
         app-notifications = "no-clipboard-copy";
@@ -55,7 +56,7 @@ in
         confirm-close-surface = false;
         copy-on-select = "clipboard";
         cursor-style = "bar";
-        font-size = 10;
+        font-size = 14;
         window-decoration = false;
         window-padding-x = 12;
         window-padding-y = 12;
@@ -121,12 +122,12 @@ in
             (self.wrapperModules.ghostty.apply {
               pkgs = prev;
               extraSettings = {
-                # set as default interactive shell, also set $SHELL for nix shell to pick up
+                # Set as default interactive shell, also set $SHELL for nix shell to pick up
                 command = "SHELL=${lib.getExe pkgs.fish} fish";
                 font-family = config.custom.fonts.monospace;
                 font-feature = "zero";
                 font-style = "Medium";
-                # load dynamically generated colors by noctalia
+                # Load dynamically generated colors by noctalia
                 config-file = "?${config.hj.xdg.config.directory}/ghostty/themes/noctalia";
               }
               // config.custom.programs.ghostty.extraSettings;

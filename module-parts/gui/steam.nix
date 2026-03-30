@@ -1,4 +1,4 @@
-{
+_: {
   flake.modules.nixos.programs_steam =
     { config, pkgs, ... }:
     {
@@ -6,7 +6,7 @@
         enable = true;
         remotePlay.openFirewall = true;
         dedicatedServer.openFirewall = true;
-        gamescopeSession.enable = true;
+        gamescopeSession.enable = false;
         extraCompatPackages = [ pkgs.proton-ge-bin ];
         extraPackages = with pkgs; [
           gamemode
@@ -15,11 +15,30 @@
         protontricks = {
           enable = true;
         };
-        # get rid of ~/.steam directory:
+        # Get rid of ~/.steam directory:
         # https://github.com/ValveSoftware/steam-for-linux/issues/1890#issuecomment-2367103614
         package = pkgs.steam.override {
+          extraPkgs =
+            pkgs: with pkgs; [
+              libXcursor
+              libXi
+              libXinerama
+              libXScrnSaver
+              libpng
+              libpulseaudio
+              libvorbis
+              stdenv.cc.cc.lib
+              libkrb5
+              keyutils
+            ];
+          extraEnv = {
+            OBS_VKCAPTURE = "1";
+            RADV_TEX_ANISO = "16";
+          };
           extraBwrapArgs = [
             "--bind /persist/${config.hj.directory} $HOME"
+            "--bind /run/user /run/user" # <-- add this
+            "--bind /run/wrappers /run/wrappers"
             "--unsetenv XDG_CACHE_HOME"
             "--unsetenv XDG_CONFIG_HOME"
             "--unsetenv XDG_DATA_HOME"
@@ -46,6 +65,12 @@
           custom = {
           };
         };
+      };
+
+      services.ananicy = {
+        enable = true;
+        package = pkgs.ananicy-cpp;
+        rulesProvider = pkgs.ananicy-rules-cachyos;
       };
 
       environment.sessionVariables = {

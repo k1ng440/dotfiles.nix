@@ -15,16 +15,27 @@
         hardware_ledger
         hardware_linux-firmware
         hardware_qmk
+        hardware_Brother_DCP-T510W
         services_docker
         services_flatpak
         services_virtualisation
+        programs_kdeconnect
+        services_clamav
+        hardware_yubikey
         gui_fonts
         programs_kitty
         programs_steam
         programs_vesktop
+        programs_anki
+        programs_thunderbird
+        shell_lazygit
+        programs_neovim
+        programs_obsidian
+
       ];
 
       custom = {
+        # constants.host = "xenomorph";
         hardware = {
           monitors = [
             {
@@ -89,7 +100,6 @@
         };
       };
 
-      custom.constants.hostname = "xenomorph";
       services.samba.enable = true;
       fileSystems =
         let

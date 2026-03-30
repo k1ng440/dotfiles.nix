@@ -9,8 +9,8 @@
     }:
     let
       sopsFolder = builtins.toString inputs.nix-secrets + "/sops";
-      inherit (config.custom.constants) user hostname;
-      # script to bootstrap a new install
+      inherit (config.custom.constants) user host;
+      # Script to bootstrap a new install
       install-remote-secrets = pkgs.writeShellApplication {
         name = "install-remote-secrets";
         runtimeInputs = [ pkgs.rsync ];
@@ -24,19 +24,19 @@
             target="/mnt${persistHome}"
 
             while true; do
-                read -rp "Use /mnt? [y/n] " yn
-                case $yn in
-                  [Yy]*)
-                    echo "y";
-                    target="/mnt${persistHome}"
-                    break;;
-                  [Nn]*)
-                    echo "n";
-                    target="${persistHome}"
-                    break;;
-                  *)
-                    echo "Please answer yes or no.";;
-                esac
+              read -rp "Use /mnt? [y/n] " yn
+              case $yn in
+                [Yy]*)
+                  echo "y";
+                  target="/mnt${persistHome}"
+                  break;;
+                [Nn]*)
+                  echo "n";
+                  target="${persistHome}"
+                  break;;
+                *)
+                  echo "Please answer yes or no.";;
+              esac
             done
 
             read -rp "Enter user on remote host: [nixos] " user
@@ -49,10 +49,10 @@
     in
     {
       sops = {
-        defaultSopsFile = "${sopsFolder}/${hostname}.yaml";
+        defaultSopsFile = "${sopsFolder}/${host}.yaml";
         validateSopsFiles = false;
         age = {
-          # automatically import host SSH keys as age keys
+          # Automatically import host SSH keys as age keys
           sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
           keyFile = "/var/lib/sops-nix/key.txt";
           generateKey = true;
@@ -61,15 +61,15 @@
 
       sops.secrets = lib.mkMerge [
         {
-          # These age keys are are unique for the user on each host and are generated on their own (i.e. they are not derived
-          # from an ssh key).
+          # These age keys are unique for the user on each host and are generated on their own (i.e. they are not derived
+          # from a ssh key).
           "keys/age" = {
             owner = config.users.users.${user}.name;
             inherit (config.users.users.${user}) group;
             # We need to ensure the entire directory structure is that of the user...
             path = "${config.users.users.${user}.home}/.config/sops/age/keys.txt";
           };
-          # extract password/username to /run/secrets-for-users/ so it can be used to create the user
+          # Extract password/username to /run/secrets-for-users/ so it can be used to create the user
           "passwords/${user}" = {
             sopsFile = "${sopsFolder}/shared.yaml";
             neededForUsers = true;
@@ -125,13 +125,9 @@
       ];
 
       custom.persist = {
-        root = {
-          directories = [
-            "/var/lib/sops-nix/"
-          ];
-          files = [
-          ];
-        };
+        root.directories = [
+          "/var/lib/sops-nix/"
+        ];
         home.directories = [
           # ".config/sops"
         ];

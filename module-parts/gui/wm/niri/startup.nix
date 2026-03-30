@@ -29,15 +29,15 @@
         ++ [
           # Focus default workspace for each monitor
           {
-            spawn-at-startup = lib.mkAfter (
-              map (mon: [
-                "niri"
-                "msg"
-                "action"
-                "focus-workspace"
-                "${toString mon.defaultWorkspace}"
-              ]) (lib.reverseList config.custom.hardware.monitors)
-            );
+            # spawn-at-startup = lib.mkAfter (
+            #   map (mon: [
+            #     "niri"
+            #     "msg"
+            #     "action"
+            #     "focus-workspace"
+            #     "${toString mon.defaultWorkspace}"
+            #   ]) (lib.reverseList config.custom.hardware.monitors)
+            # );
           }
         ]
       );
@@ -50,7 +50,7 @@
           unitConfig = {
             Description = "Niri compositor session";
             BindsTo = [ "niri.service" ];
-            # start the other services here after the WM has already started (push vs pull)
+            # Start the other services here after the WM has already started (push vs pull)
             Wants = [ "niri.service" ] ++ config.custom.startupServices;
             Before = config.custom.startupServices;
             After = [ "niri.service" ];

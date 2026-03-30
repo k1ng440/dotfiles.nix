@@ -82,8 +82,8 @@
           fi
 
           # check if repo is forked and sync with upstream if it is
-          if gh repo view "iynaix/$REPO_NAME" >/dev/null 2>&1; then
-              gh repo sync "iynaix/$REPO_NAME" -b "$BRANCH"
+          if gh repo view "k1ng440/$REPO_NAME" >/dev/null 2>&1; then
+              gh repo sync "k1ng440/$REPO_NAME" -b "$BRANCH"
           fi
           git pull origin "$BRANCH"
         '';
@@ -132,14 +132,14 @@
               push = {
                 default = "simple";
               };
-              # reuse record resolution: git automatically resolves conflicts using the recorded resolution
+              # Reuse record resolution: git automatically resolves conflicts using the recorded resolution
               rerere = {
                 enabled = true;
                 autoUpdate = true;
               };
               user = {
-                name = "Lin Xianyi";
-                email = "iynaix@gmail.com";
+                name = "Asaduzzaman Pavel";
+                email = "contact@iampavel.dev";
               };
             };
           };
@@ -153,6 +153,7 @@
           gaa = "git add --all";
           gb = "git branch";
           gbrd = "git push origin -d";
+          gbr = /* sh */ "git branch -a | fzf | tr -d '[:space:]' | xargs -r git checkout";
           gcaam = "git add --all && git commit --amend";
           gcam = "git commit --amend";
           gco = "git checkout";
@@ -173,9 +174,9 @@
           gri = "git rebase --interactive";
           gst = "git status -s -b && echo && git log | head -n 1";
           gsub = "git submodule update --init --recursive";
-          # access github page for the repo we are currently in
+          # Access github page for the repo we are currently in
           github = "open `git remote -v | grep github.com | grep fetch | head -1 | awk '{print $2}' | sed 's/git:/http:/git'`";
-          # cleanup leftover files from merges
+          # Cleanup leftover files from merges
           mergeclean = "find . -type f -name '*.orig' -exec rm -f {} ;";
         };
 

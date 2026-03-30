@@ -10,7 +10,6 @@
   systems = [
     "x86_64-linux"
     "aarch64-linux"
-    "x86_64-darwin"
     "aarch64-darwin"
   ];
 
@@ -29,7 +28,7 @@
       };
     in
     {
-      # initialize the pkgs for perSystem to be the patched nixpkgs
+      # Initialize the pkgs for perSystem to be the patched nixpkgs
       _module.args = { inherit pkgs; };
 
       formatter = lib.mkDefault pkgs.nixfmt;

@@ -19,34 +19,42 @@
       programs = {
         fish = {
           enable = true;
-          # seems like shell abbreviations take precedence over aliases
+          # Seems like shell abbreviations take precedence over aliases
           shellAbbrs = config.environment.shellAliases // {
             ehistory = ''nvim "${config.hj.xdg.data.directory}/fish/fish_history"'';
+
+            # fzf + neovim
+            vf = /* sh */ "fzf --preview 'bat --color=always {}' --preview-window=right:60% | xargs -r nvim";
+            fkill = /* sh */ "ps aux | fzf --header-lines=1 | awk '{print $2}' | xargs -r kill -9";
           };
-          shellInit =
-            /* fish */ ''
-              # shut up welcome message
-              set fish_greeting
+          shellInit = /* fish */ ''
+            set fish_greeting
+            function fish_user_key_bindings
+                fish_default_key_bindings -M insert
+                fish_vi_key_bindings --no-erase insert
+            end
+            fish_vi_key_bindings
+            source ${fish-completion-sync}/init.fish
 
-              # use vi key bindings with hybrid emacs keybindings
-              function fish_user_key_bindings
-                  fish_default_key_bindings -M insert
-                  fish_vi_key_bindings --no-erase insert
-              end
+            function glog
+                git log --oneline | fzf \
+                    --preview 'git show --color=always {1}' \
+                    --bind 'enter:execute(git show {1} | nvim -)'
+            end
 
-              # setup vi mode
-              fish_vi_key_bindings
+            function vr
+                set file (nvim --headless +'lua io.write(table.concat(vim.v.oldfiles, "\n"))' +qa 2>/dev/null \
+                    | fzf --preview 'bat --color=always {}')
+                test -n "$file" && nvim "$file"
+            end
 
-              # setup fish-completion-sync
-              source ${fish-completion-sync}/init.fish
-            ''
-            # sponge options
-            + ''
-              # set options for plugins
-              set sponge_regex_patterns 'password|passwd|^kill'
+            function fd
+                set dir (find . -type d | fzf --preview 'ls -la {}')
+                test -n "$dir" && cd "$dir"
+            end
 
-              # bind --mode default \t complete-and-search
-            '';
+            set sponge_regex_patterns 'password|passwd|^kill'
+          '';
         };
       };
 

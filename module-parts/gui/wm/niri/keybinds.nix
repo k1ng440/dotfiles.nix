@@ -110,6 +110,18 @@
               "helium --incognito &"
             ];
 
+            # --- Monitor Navigation (Alt + hjkl) ---
+            "Mod+Alt+H".focus-monitor-left = null;
+            "Mod+Alt+J".focus-monitor-down = null;
+            "Mod+Alt+K".focus-monitor-up = null;
+            "Mod+Alt+L".focus-monitor-right = null;
+
+            # --- Monitor Movement (Alt + Shift + hjkl) ---
+            "Mod+Alt+Shift+H".move-column-to-monitor-left = null;
+            "Mod+Alt+Shift+J".move-column-to-monitor-down = null;
+            "Mod+Alt+Shift+K".move-column-to-monitor-up = null;
+            "Mod+Alt+Shift+L".move-column-to-monitor-right = null;
+
             # --- Monitor Navigation (Alt + Arrows) ---
             "Mod+Alt+Left".focus-monitor-left = null;
             "Mod+Alt+Down".focus-monitor-down = null;
@@ -178,6 +190,24 @@
             "Mod+Ctrl+C".center-visible-columns = null;
 
             "Mod+T".toggle-column-tabbed-display = null;
+
+            # --- Screenshot ---
+            "Print".spawn = [ "screenshot-tool" ];
+            "Shift+Print".spawn = [
+              "screenshot-tool"
+              "--mode"
+              "clipboard"
+            ];
+            "Ctrl+Print".spawn = [
+              "screenshot-tool"
+              "--mode"
+              "save"
+            ];
+            "Alt+Print".spawn = [
+              "screenshot-tool"
+              "--mode"
+              "edit"
+            ];
           }
           // lib.mergeAttrsList (
             lib.flatten (

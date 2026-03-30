@@ -17,7 +17,7 @@
     in
     {
       packages = {
-        # fix some ugly styling for nemo in tokyonight
+        # Fix some ugly styling for nemo in tokyonight
         tokyonight-gtk-theme =
           (pkgs.tokyonight-gtk-theme.override {
             colorVariants = [ "dark" ];
@@ -26,8 +26,6 @@
           }).overrideAttrs
             (o: {
               patches = (o.patches or [ ]) ++ [ ./tokyonight-style.patch ];
-
-              # make it impossible to have a light theme XD
               postInstall = (o.postInstall or "") + ''
                 rm -rf $out/share/themes/*Light*
 
@@ -123,7 +121,7 @@
       custom.programs.noctalia.colors.templates = {
         "gtk-theme" = {
           post_hook = ''${lib.getExe pkgs.custom.tokyonight-dynamic-gtk-theme} "{{ colors.primary.default.hex }}" "{{ colors.on_primary.default.hex | set_alpha 0.8 }}"'';
-          # dummy values so noctalia doesn't complain
+          # Dummy values so noctalia doesn't complain
           input_path = "${config.hj.xdg.config.directory}/user-dirs.conf";
           output_path = "/dev/null";
         };

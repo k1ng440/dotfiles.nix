@@ -1,4 +1,3 @@
-// General Floating Apps
 window-rule {
     match app-id=r"^org\.gnome\.Calculator$"
     match app-id="^pavucontrol$"
@@ -11,17 +10,18 @@ window-rule {
     match app-id=r"^org\.gnome\.FileRoller$"
     match app-id="^gnome-disks$"
     match app-id="^seahorse$"
-    match app-id="^xdg-desktop-portal-gtk$"
+    match app-id="^swayimg$"
+    match app-id=r"^com\.gabm\.satty$"
 
     open-floating true
 }
 
-// Media apps: opaque and floating
 window-rule {
     match app-id="^mpv$"
     match app-id="^vlc$"
     match app-id="^imv$"
     match app-id="^zoom$"
+    match app-id="^feh$"
     match app-id=r"^com\.obsproject\.Studio$"
     match title=".*YouTube.*"
     match title=".*Twitch.*"
@@ -30,14 +30,12 @@ window-rule {
     open-floating true
 }
 
-// Steam main rules
 window-rule {
     match app-id="^steam$"
 
     opacity 1.0
 }
 
-// Floating Steam windows
 window-rule {
     match app-id="^steam$" title="^Friends List$"
     match app-id="^steam$" title="^Steam - News$"
@@ -46,11 +44,31 @@ window-rule {
     open-floating true
 }
 
-// Picture-in-Picture
 window-rule {
     match title="^Picture-in-Picture$"
-    match app-id="^firefox$" title="^Picture-in-Picture$"
-    match app-id="^helium$" title="^Picture-in-Picture$"
+    match title="^Picture in picture$"
 
     open-floating true
+    default-column-width { fixed 480; }
+    default-window-height { fixed 270; }
+    default-floating-position x=32 y=32 relative-to="bottom-right"
+}
+
+window-rule {
+    match app-id="^xdg-desktop-portal-gtk$"
+    match title="^Open File$"
+    match title="^Save File$"
+    match title="^Open Folder$"
+
+    open-floating true
+    default-column-width { fixed 900; }
+    default-window-height { fixed 600; }
+}
+
+window-rule {
+    match app-id="^pavucontrol$"
+
+    open-floating true
+    default-column-width { fixed 800; }
+    default-window-height { fixed 600; }
 }

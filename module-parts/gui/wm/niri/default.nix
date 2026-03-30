@@ -46,7 +46,7 @@
                     --replace-fail 'ExecStart=niri' "ExecStart=$out/bin/niri"
                 '';
 
-                # creating an overlay for buildRustPackage overlay (NOTE: this is an IFD)
+                # Creating an overlay for buildRustPackage overlay (NOTE: this is an IFD)
                 # https://discourse.nixos.org/t/is-it-possible-to-override-cargosha256-in-buildrustpackage/4393/3
                 cargoDeps = pkgs.rustPlatform.importCargoLock {
                   lockFile = "${source.src}/Cargo.lock";
@@ -82,7 +82,7 @@
         useNautilus = false;
       };
 
-      # restart niri with new settings on rebuild
+      # Reload niri
       system.userActivationScripts = {
         niri-reload-config = {
           text = lib.getExe (
@@ -118,7 +118,7 @@
         };
 
         print-config = {
-          # use cat as kdlfmt tries to write the file in the nix store
+          # Use cat as kdlfmt tries to write the file in the nix store
           niri = /* sh */ ''cat "${niriWrapped.env."NIRI_CONFIG"}" | ${lib.getExe pkgs.kdlfmt} format - | moor --lang kdl'';
         };
       };

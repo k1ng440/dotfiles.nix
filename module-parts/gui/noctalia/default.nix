@@ -114,7 +114,7 @@
   flake.modules.nixos.core = {
     options.custom = {
       programs.noctalia = {
-        # reducer functions are used instead of plain attrsets, as attrsets cannot be merged together to override
+        # Reducer functions are used instead of plain attrsets, as attrsets cannot be merged together to override
         # lists at arbitrary indexes
         settingsReducers = lib.mkOption {
           type = lib.types.listOf (
@@ -170,14 +170,12 @@
       hj.xdg =
         let
           official = "https://github.com/noctalia-dev/noctalia-plugins";
-          my-plugins = "https://github.com/iynaix/noctalia-plugins-iynaix";
-          my-plugins-hash = my-plugins |> builtins.hashString "sha256" |> builtins.substring 0 6;
         in
         {
           config.files = {
             "noctalia/settings.json" = {
               generator = lib.strings.toJSON;
-              # create settings by applying reducers
+              # Create settings by applying reducers
               value =
                 config.custom.programs.noctalia.settingsReducers
                 |> lib.foldl' (curr: reducer: reducer curr) defaultSettings;
@@ -190,11 +188,6 @@
                     enabled = true;
                     name = "Official Noctalia Plugins";
                     url = official;
-                  }
-                  {
-                    enabled = true;
-                    name = "Iynaix's Noctalia Plugins";
-                    url = my-plugins;
                   }
                 ];
                 states = {
@@ -215,30 +208,25 @@
                     enabled = true;
                     sourceUrl = official;
                   };
-                  # third party plugins
-                  "${my-plugins-hash}:projects-provider" = {
+                  kde-connect = {
                     enabled = true;
-                    sourceUrl = my-plugins;
+                    sourceUrl = official;
                   };
+                  # third party plugins
                 };
                 version = 2;
               };
             };
           };
           cache.files = {
-            "noctalia/plugins/${my-plugins-hash}:projects-provider-settings.json" = {
-              generator = lib.strings.toJSON;
-              value = {
-                projectDir = config.custom.constants.projects;
-                openCommand = "codium %s";
-              };
-            };
           };
         };
 
       custom = {
+        startup = lib.mkBefore [ { spawn = [ (lib.getExe noctalia-start) ]; } ];
+
         programs = {
-          # setup blur for hyprland
+          # Setup blur for hyprland
           hyprland.settings = {
             layerrule = [
               "match:namespace noctalia-background-.*$, ignore_alpha 0.5, blur on"
@@ -260,7 +248,6 @@
             window-rules = [
               {
                 matches = [ { app-id = "^dev.noctalia.noctalia-qs$"; } ];
-
                 background-effect = {
                   blur = true;
                 };
@@ -272,6 +259,10 @@
             noctalia = /* sh */ ''noctalia-shell ipc call state all | ${lib.getExe pkgs.jq} -S ".settings" | moor'';
           };
         };
+      };
+
+      hj.files = {
+        ".face".source = ./face.jpg;
       };
 
       environment.systemPackages = [
@@ -292,7 +283,7 @@
             ".config/noctalia"
           ];
 
-          # wallpapers.json contains the last set wallpaper
+          # Wallpapers.json contains the last set wallpaper
           cache.directories = [
             ".cache/noctalia"
           ];
