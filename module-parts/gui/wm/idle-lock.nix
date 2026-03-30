@@ -30,7 +30,7 @@
 
       # lock on idle
       custom.programs = {
-        # disable suspend and lockscreen if host doesn't lock
+        # Disable suspend and lockscreen if host doesn't lock
         noctalia.settingsReducers = lib.mkIf (!config.custom.lock.enable) [
           (
             prev:

@@ -1,3 +1,5 @@
+# k1ng's nixos config
+
 > [!CAUTION]
 > These dotfiles are heavily tailored to my needs and will likely not work out
 > of the box on your machine. Installing them without inspecting them first is
@@ -22,9 +24,6 @@ not worth encrypting.
 
 - [NixOS Wiki](https://wiki.nixos.org).
 - [Manual](https://nixos.org/manual/nixos/stable/index.html)
-- [Home Manager]
-  - [Manual](https://nix-community.github.io/home-manager/)
-  - [Options](https://home-manager-options.extranix.com/)
 
 - Videos / Tutorials:
 
@@ -36,11 +35,13 @@ not worth encrypting.
   - [Linux Gaming Setup - Vimjoyer](https://www.youtube.com/watch?v=qlfm3MEbqYA)
 
 - articles:
+
   - [Nix by example](https://medium.com/@MrJamesFisher/nix-by-example-a0063a1a4c55)
   - [Secret Management](https://unmovedcentre.com/posts/secrets-management)
 
 - Inspired by other's configurations:
+
+  - [iynaix](http://github.com/iynaix)
   - [Zaney](https://gitlab.com/Zaney/zaneyos)
   - [Andrew Kvalheim](https://codeberg.org/AndrewKvalheim/configuration)
   - [berbieche](https://github.com/berbiche/dotfiles)
-  - [EmergentMind](https://github.com/EmergentMind/nix-config)
