@@ -66,11 +66,23 @@
         };
       };
 
-      custom.persist = {
-        home.directories = [
-          configPath
-          cachePath
-        ];
+      custom = {
+        programs = {
+          which-key = {
+            menus = {
+              f = {
+                desc = "Firefox";
+                cmd = "firefox";
+              };
+            };
+          };
+        };
+        persist = {
+          home.directories = [
+            configPath
+            cachePath
+          ];
+        };
       };
     };
 }

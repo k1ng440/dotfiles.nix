@@ -1221,22 +1221,6 @@
         "type": "github"
       }
     },
-    "npins": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1774132141,
-        "narHash": "sha256-HqfftzCWvcXZ/NY3yegWsaWYAH761/p4fU2IJvrvPro=",
-        "owner": "andir",
-        "repo": "npins",
-        "rev": "c77829b17a45f48bc252297244f0920b61c406a2",
-        "type": "github"
-      },
-      "original": {
-        "owner": "andir",
-        "repo": "npins",
-        "type": "github"
-      }
-    },
     "nur": {
       "inputs": {
         "flake-parts": [
@@ -1331,7 +1315,6 @@
         "nixpkgs-unstable": "nixpkgs-unstable",
         "noctalia": "noctalia",
         "noctalia-qs": "noctalia-qs_2",
-        "npins": "npins",
         "nvf": "nvf",
         "snappy-switcher": "snappy-switcher",
         "sops-nix": "sops-nix",

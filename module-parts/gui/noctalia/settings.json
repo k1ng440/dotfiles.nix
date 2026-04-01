@@ -72,6 +72,7 @@
       ],
       "right": [
         {
+          "defaultSettings": {},
           "id": "plugin:kde-connect"
         },
         {
@@ -631,6 +632,38 @@
       {
         "enabled": true,
         "id": "gtk"
+      },
+      {
+        "enabled": true,
+        "id": "rofi.rasi"
+      },
+      {
+        "enabled": true,
+        "id": "rofi-menu.rasi"
+      },
+      {
+        "enabled": true,
+        "id": "rofi-menu-noinput.rasi"
+      },
+      {
+        "enabled": true,
+        "id": "qt"
+      },
+      {
+        "enabled": true,
+        "id": "zed"
+      },
+      {
+        "enabled": true,
+        "id": "telegram"
+      },
+      {
+        "enabled": true,
+        "id": "spicetify"
+      },
+      {
+        "enabled": true,
+        "id": "fuzzel"
       }
     ],
     "enableUserTheming": true

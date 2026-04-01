@@ -14,10 +14,6 @@
         "x86_64-linux"
       ];
       imports = import-tree ./module-parts;
-
-      perSystem = {
-        _module.args.npins = import ./npins;
-      };
     };
 
   inputs = {
@@ -105,11 +101,6 @@
     noctalia-qs = {
       url = "github:noctalia-dev/noctalia-qs";
       inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    npins = {
-      url = "github:andir/npins";
-      flake = false;
     };
 
     systems.url = "github:nix-systems/default";

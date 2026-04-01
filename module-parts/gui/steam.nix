@@ -1,6 +1,11 @@
 _: {
   flake.modules.nixos.programs_steam =
-    { config, pkgs, ... }:
+    {
+      config,
+      lib,
+      pkgs,
+      ...
+    }:
     {
       programs.steam = {
         enable = true;
@@ -77,12 +82,24 @@ _: {
         STEAM_EXTRA_COMPAT_TOOLS_PATHS = "\${HOME}/.steam/root/compatibilitytools.d";
       };
 
-      custom.persist = {
-        home.directories = [
-          ".local/share/applications" # desktop files from steam
-          ".local/share/icons/hicolor" # icons from steam
-          ".local/share/Steam"
-        ];
+      custom = {
+        programs = {
+          which-key = {
+            menus = {
+              s = {
+                desc = "Steam";
+                cmd = lib.getExe pkgs.steam;
+              };
+            };
+          };
+        };
+        persist = {
+          home.directories = [
+            ".local/share/applications" # desktop files from steam
+            ".local/share/icons/hicolor" # icons from steam
+            ".local/share/Steam"
+          ];
+        };
       };
     };
 }

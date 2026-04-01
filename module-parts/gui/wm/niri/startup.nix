@@ -1,7 +1,7 @@
 { lib, ... }:
 {
   flake.modules.nixos.wm =
-    { config, ... }:
+    { pkgs, config, ... }:
     {
       custom.programs.niri.settings = lib.mkMerge (
         (
@@ -26,6 +26,13 @@
             );
           })
         )
+        ++ [
+          {
+            spawn-at-startup = lib.mkBefore [
+              "${lib.getExe' pkgs.dbus "dbus-update-activation-environment"} --systemd DISPLAY WAYLAND_DISPLAY XDG_CURRENT_DESKTOP && systemctl --user niri-session.target"
+            ];
+          }
+        ]
         ++ [
           # Focus default workspace for each monitor
           {

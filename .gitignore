@@ -16,4 +16,5 @@ _nixos/**
 nohup.out
 
 .gemini/
+GEMINI.md
 gha-creds-*.json

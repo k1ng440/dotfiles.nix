@@ -17,6 +17,7 @@ _: {
           };
         };
 
+        mime.enable = true;
         mime.defaultApplications = {
           # Video
           "video/*" = [ video-player ];
@@ -51,14 +52,13 @@ _: {
           "application/x-tar" = "org.gnome.FileRoller.desktop";
 
           # Browser
-          "default-web-browser" = [ browser ];
-          "text/html" = [ browser ];
-          "x-scheme-handler/http" = [ browser ];
-          "x-scheme-handler/https" = [ browser ];
+          "text/html" = browser;
+          "x-scheme-handler/http" = browser;
+          "x-scheme-handler/https" = browser;
+          "x-scheme-handler/about" = browser;
+          "x-scheme-handler/unknown" = browser;
           "x-scheme-handler/ftp" = [ browser ];
           "x-scheme-handler/chrome" = [ browser ];
-          "x-scheme-handler/about" = [ browser ];
-          "x-scheme-handler/unknown" = [ browser ];
           "application/x-extension-htm" = [ browser ];
           "application/x-extension-html" = [ browser ];
           "application/x-extension-shtml" = [ browser ];

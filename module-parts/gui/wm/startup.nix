@@ -53,41 +53,19 @@
 
   };
 
-  flake.modules.nixos.wm =
-    # generic functionality for all WMs
-    { config, ... }:
-    let
-      # ensure setting terminal title using --title or exec with -e works
-      termExe =
-        assert config.custom.programs.terminal.package.pname == "ghostty";
-        "ghostty";
-    in
-    {
-      custom = {
-        startup = [
-          # file manager
-          {
-            app-id = "nemo";
-            # NOTE: nemo seems ignore --class and --name flags?
-            spawn = [ "nemo" ];
-            workspace = 3;
-          }
-
-          # terminal
-          # NOTE: use --class instead of --title to fix ghostty not properly setting initialTitle:
-          # https://github.com/ghostty-org/ghostty/discussions/8804
-          rec {
-            app-id = "${config.custom.programs.terminal.app-id}-vertical";
-            spawn = [
-              termExe
-              "--class=${app-id}"
-            ];
-            workspace = 2;
-            niriArgs = {
-              open-maximized = true;
-            };
-          }
-        ];
-      };
-    };
+  # flake.modules.nixos.wm =
+  # generic functionality for all WMs
+  # { config, ... }:
+  # let
+  # ensure setting terminal title using --title or exec with -e works
+  # termExe =
+  #   assert config.custom.programs.terminal.package.pname == "ghostty";
+  #   "ghostty";
+  # in
+  # {
+  #   custom = {
+  #     startup = [
+  #     ];
+  #   };
+  # };
 }

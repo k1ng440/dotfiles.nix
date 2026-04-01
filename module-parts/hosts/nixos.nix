@@ -4,8 +4,6 @@
   ...
 }:
 let
-  npins = import ../../npins;
-
   mkNixos =
     host:
     {
@@ -24,7 +22,6 @@ let
           inputs
           isVm
           user
-          npins
           ;
         outputs = config.flake;
       };

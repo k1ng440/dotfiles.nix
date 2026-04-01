@@ -91,31 +91,43 @@
         "match:initial_class helium, match:initial_title (.*)(wants to save)$, float on, size <50% <50%"
       ];
 
-      custom.startup = [
-        {
-          app-id = "helium";
-          spawn = [
-            (lib.getExe (
-              pkgs.writeShellApplication {
-                name = "init-helium";
-                runtimeInputs = [
-                  pkgs.helium
-                ];
-                text = ''
-                  helium --profile-directory=Default &
-                '';
-              }
-            ))
-          ];
-          workspace = 1;
-        }
-      ];
+      # custom.startup = [
+      #   {
+      #     app-id = "helium";
+      #     spawn = [
+      #       (lib.getExe (
+      #         pkgs.writeShellApplication {
+      #           name = "init-helium";
+      #           runtimeInputs = [
+      #             pkgs.helium
+      #           ];
+      #           text = ''
+      #             helium --profile-directory=Default &
+      #           '';
+      #         }
+      #       ))
+      #     ];
+      #     workspace = 1;
+      #   }
+      # ];
 
-      custom.persist = {
-        home.directories = [
-          ".cache/net.imput.helium"
-          ".config/net.imput.helium"
-        ];
+      custom = {
+        programs = {
+          which-key = {
+            menus = {
+              h = {
+                desc = "Helium";
+                cmd = lib.getExe pkgs.helium;
+              };
+            };
+          };
+        };
+        persist = {
+          home.directories = [
+            ".cache/net.imput.helium"
+            ".config/net.imput.helium"
+          ];
+        };
       };
     };
 }

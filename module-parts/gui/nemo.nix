@@ -9,7 +9,11 @@
         nemo-fileroller
         nemo-with-extensions
         webp-pixbuf-loader
+        gvfs
       ];
+
+      services.gvfs.enable = true; # For mounting remote/virtual filesystems
+      services.udisks2.enable = true; # For mounting physical drives
 
       # Add a custom "open in terminal" option to the context menu
       hj.xdg.data.files."nemo/actions/open-in-ghostty.nemo_action".text = ''
@@ -72,8 +76,14 @@
         ];
       };
 
-      custom.persist = {
-        home = {
+      custom = {
+        programs.which-key.menus = {
+          n = {
+            desc = "Nemo File Manager";
+            cmd = "nemo";
+          };
+        };
+        persist.home = {
           directories = [
             # Folder preferences such as view mode and sort order
             ".local/share/gvfs-metadata"

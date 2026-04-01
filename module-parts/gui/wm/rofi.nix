@@ -57,7 +57,7 @@
         let
           themeStyles = /* css */ ''
             *   {
-                background:     {{colors.surface.default.hex | set_alpha 0.6 }};
+                background:     {{colors.surface.default.hex | set_alpha: 0.6 }};
                 background-alt: {{colors.surface_dim.default.hex}};
                 foreground:     {{colors.on_surface.default.hex}};
                 selected:       {{colors.primary.default.hex}};
@@ -149,44 +149,71 @@
           }
         ];
 
-        noctalia.colors.templates = {
-          # default launcher
-          "rofi.rasi" = {
-            input_path = patchRasi "rofi.rasi" launcherPath ''
-              inputbar { background-color: transparent; }
-              element normal.normal { background-color: transparent; }
-            '';
-            output_path = "${config.hj.xdg.config.directory}/rofi/rofi.rasi";
-          };
-
-          # generic single column rofi menu
-          "rofi-menu.rasi" = {
-            input_path = patchRasi "rofi-menu.rasi" launcherPath ''
-              listview { columns: 1; }
-              prompt { enabled: false; }
-              textbox-prompt-colon { enabled: false; }
-            '';
-            output_path = "${config.hj.xdg.config.directory}/rofi/rofi-menu.rasi";
-          };
-
-          "rofi-menu-noinput.rasi" = {
-            input_path = patchRasi "rofi-menu-noinput.rasi" launcherPath ''
-              listview { columns: 1; }
-              * { width: 1000; }
-              window { height: 625; }
-              mainbox {
-                  children: [listview,message];
+        noctalia = {
+          settingsReducers = [
+            (
+              prev:
+              prev
+              // {
+                templates = prev.templates // {
+                  activeTemplates = prev.templates.activeTemplates ++ [
+                    {
+                      enabled = true;
+                      id = "rofi.rasi";
+                    }
+                    {
+                      enabled = true;
+                      id = "rofi-menu.rasi";
+                    }
+                    {
+                      enabled = true;
+                      id = "rofi-menu-noinput.rasi";
+                    }
+                  ];
+                };
               }
-              message {
-                padding:                     15px;
-                border:                      0px solid;
-                border-radius:               0px;
-                border-color:                @selected;
-                /* background-color is set in style overrides */
-                text-color:                  @foreground;
-              }
-            '';
-            output_path = "${config.hj.xdg.config.directory}/rofi/rofi-menu-noinput.rasi";
+            )
+          ];
+
+          colors.templates = {
+            # default launcher
+            "rofi.rasi" = {
+              input_path = patchRasi "rofi.rasi" launcherPath ''
+                inputbar { background-color: transparent; }
+                element normal.normal { background-color: transparent; }
+              '';
+              output_path = "${config.hj.xdg.config.directory}/rofi/rofi.rasi";
+            };
+
+            # generic single column rofi menu
+            "rofi-menu.rasi" = {
+              input_path = patchRasi "rofi-menu.rasi" launcherPath ''
+                listview { columns: 1; }
+                prompt { enabled: false; }
+                textbox-prompt-colon { enabled: false; }
+              '';
+              output_path = "${config.hj.xdg.config.directory}/rofi/rofi-menu.rasi";
+            };
+
+            "rofi-menu-noinput.rasi" = {
+              input_path = patchRasi "rofi-menu-noinput.rasi" launcherPath ''
+                listview { columns: 1; }
+                * { width: 1000; }
+                window { height: 625; }
+                mainbox {
+                    children: [listview,message];
+                }
+                message {
+                  padding:                     15px;
+                  border:                      0px solid;
+                  border-radius:               0px;
+                  border-color:                @selected;
+                  /* background-color is set in style overrides */
+                  text-color:                  @foreground;
+                }
+              '';
+              output_path = "${config.hj.xdg.config.directory}/rofi/rofi-menu-noinput.rasi";
+            };
           };
         };
       };

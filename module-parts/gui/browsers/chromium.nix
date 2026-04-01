@@ -1,6 +1,6 @@
 {
   flake.modules.nixos.gui =
-    { pkgs, ... }:
+    { lib, pkgs, ... }:
     {
       environment.systemPackages = [ pkgs.chromium ];
 
@@ -20,14 +20,27 @@
           "nffaoalbilbmmfgbnbgppjihopabppdk" # Video Speed Controller
           "fcphghnknhkimeagdglkljinmpbagone" # YouTube Auto HD
           "jiaopdjbehhjgokpphdfgmapkobbnmjp" # Youtube-shorts block
+          "fadndhdgpmmaapbmfcknlfgcflmmmieb" # FrankerFaceZ - twitch
         ];
       };
 
-      custom.persist = {
-        home.directories = [
-          ".cache/chromium"
-          ".config/chromium"
-        ];
+      custom = {
+        programs = {
+          which-key = {
+            menus = {
+              c = {
+                desc = "Chromium";
+                cmd = lib.getExe pkgs.chromium;
+              };
+            };
+          };
+        };
+        persist = {
+          home.directories = [
+            ".cache/chromium"
+            ".config/chromium"
+          ];
+        };
       };
     };
 }

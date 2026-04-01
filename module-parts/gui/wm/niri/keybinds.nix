@@ -180,8 +180,8 @@
               focus-workspace-up = null;
               _attrs.cooldown-ms = 150;
             };
-            "Mod+WheelScrollRight".focus-column-right-or-first = null;
-            "Mod+WheelScrollLeft".focus-column-left-or-last = null;
+            "Mod+WheelScrollRight".focus-column-right = null;
+            "Mod+WheelScrollLeft".focus-column-left = null;
 
             "Mod+BracketLeft".consume-or-expel-window-left = null;
             "Mod+BracketRight".consume-or-expel-window-right = null;

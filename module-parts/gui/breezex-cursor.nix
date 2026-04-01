@@ -39,5 +39,10 @@ _: {
         })
       ];
       environment.systemPackages = [ pkgs.custom.breezex-cursor ];
+
+      custom.gtk.cursor = {
+        package = pkgs.custom.breezex-cursor;
+        name = "BreezeX-Dark";
+      };
     };
 }

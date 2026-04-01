@@ -28,10 +28,15 @@
         programs_vesktop
         programs_anki
         programs_thunderbird
+        programs_localsend
         shell_lazygit
         programs_neovim
         programs_obsidian
-
+        programs_authenticators
+        programs_whichkey
+        programs_tor-browser
+        programs_whatsapp
+        programs_telegram
       ];
 
       custom = {
@@ -45,8 +50,9 @@
               # niri / mango wants this to be exact down to the decimals
               refreshRate = "120.000";
               vrr = true;
-              x = 3440;
-              y = 1080;
+              x = 1440;
+              # y = 1080;
+              y = 3440 - (1440 + 200);
               workspaces = [
                 1
                 2
@@ -63,8 +69,10 @@
               refreshRate = "59.973";
               vrr = true;
               x = 0;
-              y = 1080;
-              transform = 0;
+              y = 0;
+              # y = 1080;
+              transform = 3;
+              isVertical = true;
               workspaces = [
                 6
                 7
@@ -72,23 +80,23 @@
               defaultWorkspace = 6;
               hdr = false;
             }
-            {
-              name = "HDMI-A-1";
-              width = 1920;
-              height = 1080;
-              refreshRate = "60.000";
-              vrr = false;
-              x = 3440;
-              y = 0;
-              scale = 1.0;
-              workspaces = [
-                8
-                9
-                10
-              ];
-              defaultWorkspace = 8;
-              hdr = false;
-            }
+            # {
+            #   name = "HDMI-A-1";
+            #   width = 1920;
+            #   height = 1080;
+            #   refreshRate = "60.000";
+            #   vrr = false;
+            #   x = 3440;
+            #   y = 0;
+            #   scale = 1.0;
+            #   workspaces = [
+            #     8
+            #     9
+            #     10
+            #   ];
+            #   defaultWorkspace = 8;
+            #   hdr = false;
+            # }
           ];
         };
         lock.enable = false;

@@ -1,5 +1,5 @@
 {
-  flake.modules.nixos.programs_zoom =
+  flake.modules.nixos.programs_fuzzel =
     { pkgs, ... }:
     {
       environment.systemPackages = [ pkgs.fuzzel ];

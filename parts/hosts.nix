@@ -2,10 +2,9 @@
 let
   inherit (inputs.nixpkgs) lib;
   overlays = import ../overlays { inherit inputs; };
-  npins = import ../npins;
 
   mkHost = import ../lib/mkHost.nix {
-    inherit inputs overlays npins;
+    inherit inputs overlays;
     inherit (inputs) nixpkgs nix-darwin;
     inherit (self) outputs;
   };

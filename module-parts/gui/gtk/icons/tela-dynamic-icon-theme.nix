@@ -96,9 +96,9 @@
     { config, pkgs, ... }:
     {
       environment.systemPackages = [
-        # use base tela icon theme that will be replaced by dynamic one at startup
+        # Use base tela icon theme that will be replaced by dynamic one at startup
         config.custom.gtk.iconTheme.package
-        # associate nix files with nix icon
+        # Associate nix files with nix icon
         (pkgs.writeTextFile {
           name = "nix-mimetype";
           destination = "/share/mime/packages/nix.xml";

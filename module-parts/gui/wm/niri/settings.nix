@@ -97,24 +97,34 @@
             |> lib.imap1 (
               i: d:
               let
-                rotation = toString (lib.mod (d.transform * 90) 360);
-                flipped = d.transform > 3;
-                isVertical = d.transform == 1 || d.transform == 3;
+                # Normalizes rotation to 0, 90, 180, 270
+                rotationVal = lib.mod (d.transform * 90) 360;
+                rotationStr = toString rotationVal;
+
+                # 4-7 are typically the 'flipped' variants in DRM/Wayland
+                flipped = d.transform >= 4;
+
+                # Vertical if rotated 90 or 270 (1, 3, 5, 7)
+                isVertical = lib.mod d.transform 2 != 0;
+
+                transformName = "${lib.optionalString flipped "flipped-"}${
+                  if rotationStr == "0" then "normal" else rotationStr
+                }";
               in
               {
                 inherit (d) name;
                 value = {
                   inherit (d) scale;
                   mode = "${toString d.width}x${toString d.height}";
-                  transform = "${lib.optionalString flipped "flipped-"}${
-                    if rotation == "0" then "normal" else rotation
-                  }";
-                  position._attrs = {
-                    inherit (d) x y;
-                  };
+                  transform = transformName;
+                  position._attrs = { inherit (d) x y; };
                 }
-                // lib.optionalAttrs (i == 1) { focus-at-startup = null; }
-                // lib.optionalAttrs d.vrr { variable-refresh-rate = null; }
+                // lib.optionalAttrs (i == 1) {
+                  focus-at-startup = null;
+                }
+                // lib.optionalAttrs (d.vrr or false) {
+                  variable-refresh-rate = null;
+                }
                 // lib.optionalAttrs isVertical {
                   layout = {
                     default-column-width = {
@@ -145,7 +155,7 @@
               dwt = null;
             };
             focus-follows-mouse._attrs = {
-              max-scroll-amount = "95%";
+              max-scroll-amount = "85%";
             };
             # workspace-auto-back-and-forth = null;
             disable-power-key-handling = null;
@@ -236,6 +246,7 @@
             # Always source original config.kdl at the end
             (lib.mkAfter ''
               include optional=true "${config.hj.xdg.config.directory}/niri/config.kdl";
+              include optional=true "${config.hj.xdg.config.directory}/niri/noctalia.kdl";
             '')
           ];
         };

@@ -4,7 +4,6 @@
   nixpkgs,
   nix-darwin,
   overlays,
-  npins,
 }:
 let
   inherit (nixpkgs) lib;
@@ -19,7 +18,6 @@ systemFunc {
       inputs
       outputs
       isNixOS
-      npins
       ;
     inherit (inputs) self;
     isHomeManager = false;

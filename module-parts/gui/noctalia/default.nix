@@ -123,7 +123,14 @@
               check = lib.isFunction;
             }
           );
-          default = [ ];
+          default = [
+            (
+              prev:
+              lib.recursiveUpdate prev {
+                hooks.enabled = true;
+              }
+            )
+          ];
           description = "Reducers that will be applied to a copy of desktop's settings.json";
         };
       };
