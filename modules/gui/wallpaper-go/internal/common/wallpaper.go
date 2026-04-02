@@ -128,23 +128,20 @@ func RandomFromDir(dir string) string {
 }
 
 type HistoryEntry struct {
-	Path string
-	Time time.Time
+	Path   string
+	Time   time.Time
+	Status string // "set" or "deleted"
 }
 
 func History() ([]HistoryEntry, error) {
 	f, err := os.Open(DefaultConfig.HistoryCsvPath)
 	if err != nil {
+		if os.IsNotExist(err) {
+			return nil, nil
+		}
 		return nil, err
 	}
 	defer f.Close()
-
-	wallDir := Dir()
-	entries, _ := os.ReadDir(wallDir)
-	wallFiles := make(map[string]bool)
-	for _, entry := range entries {
-		wallFiles[entry.Name()] = true
-	}
 
 	r := csv.NewReader(f)
 	r.FieldsPerRecord = -1
@@ -153,6 +150,7 @@ func History() ([]HistoryEntry, error) {
 		return nil, err
 	}
 
+	wallDir := Dir()
 	var history []HistoryEntry
 	for _, record := range records {
 		if len(record) < 2 {
@@ -161,18 +159,20 @@ func History() ([]HistoryEntry, error) {
 		fname := record[0]
 		dtStr := record[1]
 
-		if !wallFiles[fname] {
-			continue
-		}
-
 		dt, err := time.Parse(time.RFC3339, dtStr)
 		if err != nil {
 			continue
 		}
 
+		status := "set"
+		if len(record) >= 3 {
+			status = record[2]
+		}
+
 		history = append(history, HistoryEntry{
-			Path: filepath.Join(wallDir, fname),
-			Time: dt,
+			Path:   filepath.Join(wallDir, fname),
+			Time:   dt,
+			Status: status,
 		})
 	}
 
@@ -181,6 +181,30 @@ func History() ([]HistoryEntry, error) {
 	})
 
 	return history, nil
+}
+
+func SaveHistory(history []HistoryEntry) error {
+	f, err := os.Create(DefaultConfig.HistoryCsvPath)
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+
+	w := csv.NewWriter(f)
+	defer w.Flush()
+
+	for _, h := range history {
+		fname := filepath.Base(h.Path)
+		record := []string{
+			fname,
+			h.Time.Format(time.RFC3339),
+			h.Status,
+		}
+		if err := w.Write(record); err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
 type Geometry struct {

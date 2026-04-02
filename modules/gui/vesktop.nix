@@ -61,7 +61,7 @@
           BetterSettings.enabled = false;
           BetterUploadButton.enabled = false;
           BiggerStreamPreview.enabled = false;
-          BlurNSFW.enabled = false;
+          BlurNSFW.enabled = true;
           CallTimer.enabled = true;
           ClearURLs.enabled = true;
           ClientTheme.enabled = false;

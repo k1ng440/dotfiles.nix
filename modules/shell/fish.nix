@@ -32,14 +32,33 @@
             function fish_user_key_bindings
                 fish_default_key_bindings -M insert
                 fish_vi_key_bindings --no-erase insert
+                bind -M insert ! bind_bang
+                bind -M insert '$' bind_dollar
             end
             fish_vi_key_bindings
             source ${fish-completion-sync}/init.fish
 
-            function last_history_item
-                echo $history[1]
+            function bind_bang
+                switch (commandline -t)
+                    case "!"
+                        commandline -t -- $history[1]
+                        commandline -f repaint
+                    case "*"
+                        commandline -i !
+                end
             end
-            abbr -a !! --position anywhere --function last_history_item
+
+            function bind_dollar
+                switch (commandline -t)
+                    case "!"
+                        commandline -t ""
+                        commandline -f backward-delete-char
+                        commandline -i -- (string split ' ' -- $history[1])[-1]
+                        commandline -f repaint
+                    case "*"
+                        commandline -i '$'
+                end
+            end
 
             function glog
                 git log --oneline | fzf \

@@ -2,7 +2,6 @@ package main
 
 import (
 	"bufio"
-	"crypto/sha256"
 	"encoding/json"
 	"fmt"
 	"image"
@@ -63,6 +62,27 @@ func filterByFaces(images []string, args *WallpaperFilterArgs) []string {
 	return filtered
 }
 
+func isRecentlySet(wallpaperPath string, duration time.Duration) bool {
+	history, _ := common.History()
+	cutoff := common.LocalNow().Add(-duration)
+	for _, h := range history {
+		if h.Status == "set" && h.Path == wallpaperPath {
+			return h.Time.After(cutoff)
+		}
+	}
+	return false
+}
+
+func getLastSetTime(wallpaperPath string) time.Time {
+	history, _ := common.History()
+	for _, h := range history {
+		if h.Status == "set" && h.Path == wallpaperPath {
+			return h.Time
+		}
+	}
+	return time.Time{}
+}
+
 func runRoot(cmd *cobra.Command, args []string, reload, skipHistory, skipWallpaper bool, filterArgs *WallpaperFilterArgs) error {
 	var wallpaper string
 	if reload {
@@ -98,7 +118,7 @@ func runRoot(cmd *cobra.Command, args []string, reload, skipHistory, skipWallpap
 
 func getRandomWallpaper(imageOrDir string, filterArgs *WallpaperFilterArgs) string {
 	if imageOrDir == "-" {
-		// handle stdin
+		// handle standard input
 		buf, err := io.ReadAll(os.Stdin)
 		if err != nil {
 			log.Fatalf("unable to read stdin: %v", err)
@@ -134,7 +154,17 @@ func getRandomWallpaper(imageOrDir string, filterArgs *WallpaperFilterArgs) stri
 			if len(wallpapers) == 0 {
 				log.Fatal("no wallpapers found matching filters")
 			}
-			return wallpapers[rand.IntN(len(wallpapers))]
+
+			rand.Shuffle(len(wallpapers), func(i, j int) {
+				wallpapers[i], wallpapers[j] = wallpapers[j], wallpapers[i]
+			})
+
+			for _, img := range wallpapers {
+				if !isRecentlySet(img, 2*time.Hour) {
+					return img
+				}
+			}
+			return wallpapers[0]
 		}
 		abs, _ := filepath.Abs(imageOrDir)
 		return abs
@@ -149,47 +179,52 @@ func getRandomWallpaper(imageOrDir string, filterArgs *WallpaperFilterArgs) stri
 		}
 		return ""
 	}
-	return wallpapers[rand.IntN(len(wallpapers))]
+
+	rand.Shuffle(len(wallpapers), func(i, j int) {
+		wallpapers[i], wallpapers[j] = wallpapers[j], wallpapers[i]
+	})
+
+	for _, img := range wallpapers {
+		if !isRecentlySet(img, 2*time.Hour) {
+			return img
+		}
+	}
+	return wallpapers[0]
 }
 
 func writeWallpaperHistory(wallpaperPath string) {
+	absPath, err := filepath.Abs(wallpaperPath)
+	if err != nil {
+		absPath = wallpaperPath
+	}
+	absPath = filepath.Clean(absPath)
+
 	wallDir := common.Dir()
-	if filepath.Dir(wallpaperPath) != wallDir {
+	if filepath.Dir(absPath) != wallDir {
 		return
 	}
 
 	history, _ := common.History()
-	foundRecent := false
-	for i := 0; i < len(history) && i < 3; i++ {
-		if history[i].Path == wallpaperPath {
-			foundRecent = true
-			break
-		}
-	}
 
-	if !foundRecent {
-		history = append([]common.HistoryEntry{{Path: wallpaperPath, Time: common.LocalNow()}}, history...)
-	}
+	history = append([]common.HistoryEntry{{
+		Path:   absPath,
+		Time:   common.LocalNow(),
+		Status: "set",
+	}}, history...)
 
 	seen := make(map[string]bool)
 	var newHistory []common.HistoryEntry
 	for _, h := range history {
-		if !seen[h.Path] {
-			seen[h.Path] = true
+		// Only keep the most recent entry for each path+status combination
+		key := h.Status + ":" + h.Path
+		if !seen[key] {
+			seen[key] = true
 			newHistory = append(newHistory, h)
 		}
 	}
 
-	f, err := os.Create(common.DefaultConfig.HistoryCsvPath)
-	if err != nil {
-		log.Printf("could not create wallpapers_history.csv: %v", err)
-		return
-	}
-	defer f.Close()
-
-	for _, h := range newHistory {
-		fname := filepath.Base(h.Path)
-		fmt.Fprintf(f, "%s,%s\n", fname, h.Time.Format(time.RFC3339))
+	if err := common.SaveHistory(newHistory); err != nil {
+		log.Printf("could not save history: %v", err)
 	}
 }
 
@@ -221,11 +256,42 @@ func runRm(cmd *cobra.Command, args []string) error {
 	input = strings.TrimSpace(input)
 
 	if strings.ToLower(input) == "y" {
+		absCurrent, err := filepath.Abs(current)
+		if err != nil {
+			absCurrent = current
+		}
+		absCurrent = filepath.Clean(absCurrent)
+
+		history, _ := common.History()
+
+		// Add to history with deleted status
+		history = append([]common.HistoryEntry{{
+			Path:   absCurrent,
+			Time:   common.LocalNow(),
+			Status: "deleted",
+		}}, history...)
+
 		if err := common.Set(nextWall); err != nil {
 			return err
 		}
 		writeWallpaperHistory(nextWall)
-		return os.Remove(current)
+
+		// Deduplicate and save the updated history (including the deletion)
+		seen := make(map[string]bool)
+		var newHistory []common.HistoryEntry
+		for _, h := range history {
+			key := h.Status + ":" + h.Path
+			if !seen[key] {
+				seen[key] = true
+				newHistory = append(newHistory, h)
+			}
+		}
+
+		if err := common.SaveHistory(newHistory); err != nil {
+			log.Printf("could not save history: %v", err)
+		}
+
+		return os.Remove(absCurrent)
 	}
 	return nil
 }
@@ -240,9 +306,19 @@ func runHistory(cmd *cobra.Command, args_ []string, args *WallpaperFilterArgs) e
 	if err != nil {
 		return err
 	}
+
+	wallDir := common.Dir()
+	entries, _ := os.ReadDir(wallDir)
+	wallFiles := make(map[string]bool)
+	for _, entry := range entries {
+		wallFiles[entry.Name()] = true
+	}
+
 	var paths []string
 	for _, h := range history {
-		paths = append(paths, h.Path)
+		if h.Status == "set" && wallFiles[filepath.Base(h.Path)] {
+			paths = append(paths, h.Path)
+		}
 	}
 	paths = filterByFaces(paths, args)
 
@@ -441,11 +517,7 @@ func runThumbnails(cmd *cobra.Command, args []string, force bool) error {
 
 	images, _ := common.FilterImages(common.Dir())
 	for _, img := range images {
-		info, _ := os.Stat(img)
-		mtime := info.ModTime().Unix()
-		hashStr := fmt.Sprintf("%s@384x384@%d", img, mtime)
-		hash := sha256.Sum256([]byte(hashStr))
-		thumbPath := filepath.Join(thumbDir, fmt.Sprintf("%x.png", hash))
+		thumbPath := filepath.Join(thumbDir, fmt.Sprintf("%s.png", filepath.Base(img)))
 
 		if _, err := os.Stat(thumbPath); os.IsNotExist(err) || force {
 			fmt.Printf("Generating thumbnail for %s\n", img)
@@ -499,11 +571,35 @@ func runMetadata(cmd *cobra.Command, args []string) error {
 func runEdit(cmd *cobra.Command, args []string) error { fmt.Println("Not implemented"); return nil }
 func runAdd(cmd *cobra.Command, args []string) error  { fmt.Println("Not implemented"); return nil }
 
+func fetchWallhavenPage(apiUrl string) (*WallhavenResponse, error) {
+	fmt.Printf("Fetching wallpapers from Wallhaven API: %s\n", apiUrl)
+	resp, err := http.Get(apiUrl)
+	if err != nil {
+		return nil, fmt.Errorf("failed to fetch from Wallhaven API: %w", err)
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("Wallhaven API returned status code %d", resp.StatusCode)
+	}
+
+	var whResp WallhavenResponse
+	if err := json.NewDecoder(resp.Body).Decode(&whResp); err != nil {
+		return nil, fmt.Errorf("failed to decode JSON response: %w", err)
+	}
+	return &whResp, nil
+}
+
 type WallhavenResponse struct {
 	Data []struct {
 		Path string `json:"path"`
 		Id   string `json:"id"`
 	} `json:"data"`
+	Meta struct {
+		CurrentPage int `json:"current_page"`
+		LastPage    int `json:"last_page"`
+		Total       int `json:"total"`
+	} `json:"meta"`
 }
 
 func runWallhaven(cmd *cobra.Command, args []string, query string, colors string, atleast string, ratios string, filterArgs *WallpaperFilterArgs) error {
@@ -513,13 +609,13 @@ func runWallhaven(cmd *cobra.Command, args []string, query string, colors string
 	}
 
 	q := u.Query()
-	q.Set("categories", "110")
+	q.Set("categories", "010") // general|anime|people = 111
 	q.Set("purity", "100")
 	q.Set("atleast", atleast)
 	q.Set("ratios", ratios)
-	q.Set("topRange", "1M")
-	q.Set("sorting", "toplist")
+	q.Set("sorting", "random")
 	q.Set("order", "desc")
+  q.Set("seed", common.GenerateSeed(6))
 
 	if query != "" {
 		q.Set("q", query)
@@ -538,24 +634,39 @@ func runWallhaven(cmd *cobra.Command, args []string, query string, colors string
 	u.RawQuery = q.Encode()
 	apiUrl := u.String()
 
-	fmt.Printf("Fetching wallpapers from Wallhaven API: %s\n", apiUrl)
-	resp, err := http.Get(apiUrl)
+	whResp, err := fetchWallhavenPage(apiUrl)
 	if err != nil {
-		return fmt.Errorf("failed to fetch from Wallhaven API: %w", err)
-	}
-	defer resp.Body.Close()
-
-	if resp.StatusCode != http.StatusOK {
-		return fmt.Errorf("Wallhaven API returned status code %d", resp.StatusCode)
+		return err
 	}
 
-	var whResp WallhavenResponse
-	if err := json.NewDecoder(resp.Body).Decode(&whResp); err != nil {
-		return fmt.Errorf("failed to decode JSON response: %w", err)
+	if whResp.Meta.LastPage > 1 {
+		maxPage := min(whResp.Meta.LastPage, 5)
+		randomPage := rand.IntN(maxPage) + 1
+		if randomPage != 1 {
+			q.Set("page", fmt.Sprint(randomPage))
+			u.RawQuery = q.Encode()
+			apiUrl = u.String()
+			whResp, err = fetchWallhavenPage(apiUrl)
+			if err != nil {
+				return err
+			}
+		}
 	}
 
 	if len(whResp.Data) == 0 {
 		return fmt.Errorf("no wallpapers found on Wallhaven with the given criteria")
+	}
+
+	history, _ := common.History()
+	deletedIds := make(map[string]bool)
+	for _, h := range history {
+		if h.Status == "deleted" {
+			fname := filepath.Base(h.Path)
+			if after, ok :=strings.CutPrefix(fname, "wallhaven-"); ok  {
+				id := strings.Split(after, ".")[0]
+				deletedIds[id] = true
+			}
+		}
 	}
 
 	// Shuffle results to pick a random one
@@ -563,12 +674,53 @@ func runWallhaven(cmd *cobra.Command, args []string, query string, colors string
 		whResp.Data[i], whResp.Data[j] = whResp.Data[j], whResp.Data[i]
 	})
 
+	var fallbackPath string
+	oldestSetTime := common.LocalNow()
+
 	for _, item := range whResp.Data {
+		// 0. Blacklist check by ID
+		if deletedIds[item.Id] {
+			fmt.Printf("Wallhaven ID %s is blacklisted (previously deleted). Skipping.\n", item.Id)
+			continue
+		}
+
 		filename := filepath.Base(item.Path)
 		destPath := filepath.Join(common.Dir(), filename)
+		absDestPath, _ := filepath.Abs(destPath)
+		absDestPath = filepath.Clean(absDestPath)
 
-		// Download if not exists
-		if _, err := os.Stat(destPath); os.IsNotExist(err) {
+		// 1. ID-based check: see if we already have this wallhaven ID in any file
+		idPrefix := "wallhaven-" + item.Id
+		alreadyHave := false
+		skipItem := false
+		images, _ := common.FilterImages(common.Dir())
+		for _, img := range images {
+			if strings.Contains(filepath.Base(img), idPrefix) {
+				absImg, _ := filepath.Abs(img)
+				absImg = filepath.Clean(absImg)
+
+				if isRecentlySet(absImg, 2*time.Hour) {
+					lastTime := getLastSetTime(absImg)
+					if lastTime.Before(oldestSetTime) {
+						oldestSetTime = lastTime
+						fallbackPath = absImg
+					}
+					fmt.Printf("Wallhaven ID %s (found locally) was set recently. Keeping as fallback.\n", item.Id)
+					skipItem = true
+					break
+				}
+				fmt.Printf("Already have Wallhaven ID %s: %s\n", item.Id, filepath.Base(img))
+				absDestPath = absImg
+				alreadyHave = true
+				break
+			}
+		}
+
+		if skipItem {
+			continue
+		}
+
+		if !alreadyHave {
 			fmt.Printf("Downloading %s...\n", filename)
 			imgResp, err := http.Get(item.Path)
 			if err != nil {
@@ -582,9 +734,9 @@ func runWallhaven(cmd *cobra.Command, args []string, query string, colors string
 				continue
 			}
 
-			out, err := os.Create(destPath)
+			out, err := os.Create(absDestPath)
 			if err != nil {
-				fmt.Fprintf(os.Stderr, "Failed to create file %s: %v\n", destPath, err)
+				fmt.Fprintf(os.Stderr, "Failed to create file %s: %v\n", absDestPath, err)
 				imgResp.Body.Close()
 				continue
 			}
@@ -594,30 +746,37 @@ func runWallhaven(cmd *cobra.Command, args []string, query string, colors string
 			imgResp.Body.Close()
 
 			if err != nil {
-				fmt.Fprintf(os.Stderr, "Failed to write file %s: %v\n", destPath, err)
-				_ = os.Remove(destPath)
+				fmt.Fprintf(os.Stderr, "Failed to write file %s: %v\n", absDestPath, err)
+				_ = os.Remove(absDestPath)
 				continue
 			}
-		} else {
-			fmt.Printf("Using existing file: %s\n", filename)
 		}
 
 		// Face Filtering (only if flags are set)
 		if filterArgs != nil && (filterArgs.NoFaces || filterArgs.SingleFace || filterArgs.MultipleFaces || filterArgs.Faces > 0) {
-			filtered := filterByFaces([]string{destPath}, filterArgs)
+			filtered := filterByFaces([]string{absDestPath}, filterArgs)
 			if len(filtered) == 0 {
 				fmt.Printf("File %s does not match face filters. Deleting and trying another.\n", filename)
-				_ = os.Remove(destPath)
+				_ = os.Remove(absDestPath)
 				continue
 			}
 		}
 
 		// Success! Set the wallpaper
-		if err := common.Set(destPath); err != nil {
+		if err := common.Set(absDestPath); err != nil {
 			return fmt.Errorf("failed to set wallpaper: %w", err)
 		}
-		writeWallpaperHistory(destPath)
+		writeWallpaperHistory(absDestPath)
 		fmt.Printf("Applied wallpaper: %s\n", filename)
+		return nil
+	}
+
+	if fallbackPath != "" {
+		fmt.Printf("All results are on cooldown. Picking oldest used: %s\n", filepath.Base(fallbackPath))
+		if err := common.Set(fallbackPath); err != nil {
+			return fmt.Errorf("failed to set fallback wallpaper: %w", err)
+		}
+		writeWallpaperHistory(fallbackPath)
 		return nil
 	}
 
