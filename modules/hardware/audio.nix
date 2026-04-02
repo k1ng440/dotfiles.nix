@@ -1,0 +1,95 @@
+{ lib, ... }:
+{
+  flake.modules.nixos.core =
+    { pkgs, ... }:
+    {
+
+      security.rtkit.enable = true;
+      services = {
+        pulseaudio.enable = lib.mkDefault false;
+        pipewire = {
+          enable = true;
+          raopOpenFirewall = true;
+          package = pkgs.pipewire;
+          alsa.enable = true;
+          alsa.support32Bit = true;
+          pulse.enable = true;
+          jack.enable = true;
+          extraConfig.pipewire."92-low-latency" = {
+            "context.properties" = {
+              "default.clock.rate" = 44100;
+              "default.clock.quantum" = 512;
+              "default.clock.min-quantum" = 512;
+              "default.clock.max-quantum" = 512;
+            };
+          };
+        };
+
+        # * Airplay
+        pipewire.extraConfig.pipewire = {
+          "10-airplay" = {
+            "context.modules" = [ { name = "libpipewire-module-raop-discover"; } ];
+          };
+        };
+
+        # * null-sinks
+        pipewire.extraConfig.pipewire."91-null-sinks" = {
+          "context.objects" = [
+            {
+              # A default dummy driver. This handles nodes marked with the "node.always-driver"
+              # properyty when no other driver is currently active. JACK clients need this.
+              factory = "spa-node-factory";
+              args = {
+                "factory.name" = "support.node.driver";
+                "node.name" = "Dummy-Driver";
+                "priority.driver" = 8000;
+              };
+            }
+            {
+              factory = "adapter";
+              args = {
+                "factory.name" = "support.null-audio-sink";
+                "node.name" = "Microphone-Proxy";
+                "node.description" = "Microphone";
+                "media.class" = "Audio/Source/Virtual";
+                "audio.position" = "MONO";
+              };
+            }
+            {
+              factory = "adapter";
+              args = {
+                "factory.name" = "support.null-audio-sink";
+                "node.name" = "Main-Output-Proxy";
+                "node.description" = "Main Output";
+                "media.class" = "Audio/Sink";
+                "audio.position" = "FL,FR";
+              };
+            }
+          ];
+        };
+
+        # * Yamaha USB
+        pipewire.wireplumber.configPackages = [
+          (pkgs.writeTextDir "share/wireplumber/main.lua.d/99-alsa-lowlatency.lua" ''
+            alsa_monitor.rules = {
+              {
+                matches = {{{ "node.name", "matches", "alsa_output.usb-Yamaha_Corporation_Steinberg_UR22C-00.analog-stereo" }}};
+                apply_properties = {
+                  ["audio.format"] = "S32LE",
+                  ["audio.rate"] = "96000",
+                  ["api.alsa.period-size"] = 128,
+                  ["api.alsa.disable-batch"] = true,
+                },
+              },
+            }
+          '')
+        ];
+        playerctld.enable = true;
+      };
+
+      environment.systemPackages = with pkgs; [
+        pwvucontrol
+        pamixer
+      ];
+    };
+}

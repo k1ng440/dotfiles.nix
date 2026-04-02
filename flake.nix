@@ -13,7 +13,7 @@
       systems = [
         "x86_64-linux"
       ];
-      imports = import-tree ./module-parts;
+      imports = import-tree ./modules;
     };
 
   inputs = {
