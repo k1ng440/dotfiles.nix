@@ -56,6 +56,7 @@ func newRootCmd() *cobra.Command {
 	rootCmd.AddCommand(newThumbnailsCmd())
 	rootCmd.AddCommand(newMetadataCmd())
 	rootCmd.AddCommand(newGenerateCmd())
+	rootCmd.AddCommand(newWallhavenCmd())
 
 	return rootCmd
 }
@@ -156,7 +157,7 @@ func newEditCmd() *cobra.Command {
 	return &cobra.Command{
 		Use:     "edit [IMAGE]",
 		Aliases: []string{"recrop"},
-		Short:   "Edit and reload the current wallpaper with wallfacer",
+		Short:   "Edit and reload the current wallpaper with the wallpaper tool",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return runEdit(cmd, args)
 		},
@@ -240,4 +241,27 @@ func newMetadataCmd() *cobra.Command {
 			return runMetadata(cmd, args)
 		},
 	}
+}
+
+func newWallhavenCmd() *cobra.Command {
+	var query string
+	var colors string
+	var atleast string
+	var ratios string
+	filterArgs := &WallpaperFilterArgs{}
+
+	cmd := &cobra.Command{
+		Use:     "wallhaven",
+		Aliases: []string{"wh"},
+		Short:   "Download a random wallpaper from Wallhaven and set it",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return runWallhaven(cmd, args, query, colors, atleast, ratios, filterArgs)
+		},
+	}
+	cmd.Flags().StringVarP(&query, "query", "q", "", "Search query for Wallhaven (the 'q' parameter)")
+	cmd.Flags().StringVar(&colors, "colors", "", "Search for specific colors (e.g. 000000,999999)")
+	cmd.Flags().StringVar(&atleast, "atleast", "3440x1440", "Minimum resolution (e.g. 1920x1080)")
+	cmd.Flags().StringVar(&ratios, "ratios", "21x9", "Aspect ratios (e.g. 16x9,16x10)")
+	addFilterFlags(cmd, filterArgs)
+	return cmd
 }

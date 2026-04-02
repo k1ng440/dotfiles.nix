@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"crypto/sha256"
+	"encoding/json"
 	"fmt"
 	"image"
 	_ "image/gif"
@@ -11,6 +12,8 @@ import (
 	"io"
 	"log"
 	"math/rand/v2"
+	"net/http"
+	"net/url"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -495,3 +498,129 @@ func runMetadata(cmd *cobra.Command, args []string) error {
 
 func runEdit(cmd *cobra.Command, args []string) error { fmt.Println("Not implemented"); return nil }
 func runAdd(cmd *cobra.Command, args []string) error  { fmt.Println("Not implemented"); return nil }
+
+type WallhavenResponse struct {
+	Data []struct {
+		Path string `json:"path"`
+		Id   string `json:"id"`
+	} `json:"data"`
+}
+
+func runWallhaven(cmd *cobra.Command, args []string, query string, colors string, atleast string, ratios string, filterArgs *WallpaperFilterArgs) error {
+	u, err := url.Parse("https://wallhaven.cc/api/v1/search")
+	if err != nil {
+		return err
+	}
+
+	q := u.Query()
+	q.Set("categories", "110")
+	q.Set("purity", "100")
+	q.Set("atleast", atleast)
+	q.Set("ratios", ratios)
+	q.Set("topRange", "1M")
+	q.Set("sorting", "toplist")
+	q.Set("order", "desc")
+
+	if query != "" {
+		q.Set("q", query)
+	}
+	if colors != "" {
+		q.Set("colors", colors)
+	} else {
+		q.Set("colors", "000000")
+	}
+
+	apiKey := os.Getenv("WALLHAVEN_API_KEY")
+	if apiKey != "" {
+		q.Set("apikey", apiKey)
+	}
+
+	u.RawQuery = q.Encode()
+	apiUrl := u.String()
+
+	fmt.Printf("Fetching wallpapers from Wallhaven API: %s\n", apiUrl)
+	resp, err := http.Get(apiUrl)
+	if err != nil {
+		return fmt.Errorf("failed to fetch from Wallhaven API: %w", err)
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		return fmt.Errorf("Wallhaven API returned status code %d", resp.StatusCode)
+	}
+
+	var whResp WallhavenResponse
+	if err := json.NewDecoder(resp.Body).Decode(&whResp); err != nil {
+		return fmt.Errorf("failed to decode JSON response: %w", err)
+	}
+
+	if len(whResp.Data) == 0 {
+		return fmt.Errorf("no wallpapers found on Wallhaven with the given criteria")
+	}
+
+	// Shuffle results to pick a random one
+	rand.Shuffle(len(whResp.Data), func(i, j int) {
+		whResp.Data[i], whResp.Data[j] = whResp.Data[j], whResp.Data[i]
+	})
+
+	for _, item := range whResp.Data {
+		filename := filepath.Base(item.Path)
+		destPath := filepath.Join(common.Dir(), filename)
+
+		// Download if not exists
+		if _, err := os.Stat(destPath); os.IsNotExist(err) {
+			fmt.Printf("Downloading %s...\n", filename)
+			imgResp, err := http.Get(item.Path)
+			if err != nil {
+				fmt.Fprintf(os.Stderr, "Failed to download %s: %v\n", item.Path, err)
+				continue
+			}
+
+			if imgResp.StatusCode != http.StatusOK {
+				fmt.Fprintf(os.Stderr, "Failed to download %s, status code: %d\n", item.Path, imgResp.StatusCode)
+				imgResp.Body.Close()
+				continue
+			}
+
+			out, err := os.Create(destPath)
+			if err != nil {
+				fmt.Fprintf(os.Stderr, "Failed to create file %s: %v\n", destPath, err)
+				imgResp.Body.Close()
+				continue
+			}
+
+			_, err = io.Copy(out, imgResp.Body)
+			out.Close()
+			imgResp.Body.Close()
+
+			if err != nil {
+				fmt.Fprintf(os.Stderr, "Failed to write file %s: %v\n", destPath, err)
+				_ = os.Remove(destPath)
+				continue
+			}
+		} else {
+			fmt.Printf("Using existing file: %s\n", filename)
+		}
+
+		// Face Filtering (only if flags are set)
+		if filterArgs != nil && (filterArgs.NoFaces || filterArgs.SingleFace || filterArgs.MultipleFaces || filterArgs.Faces > 0) {
+			filtered := filterByFaces([]string{destPath}, filterArgs)
+			if len(filtered) == 0 {
+				fmt.Printf("File %s does not match face filters. Deleting and trying another.\n", filename)
+				_ = os.Remove(destPath)
+				continue
+			}
+		}
+
+		// Success! Set the wallpaper
+		if err := common.Set(destPath); err != nil {
+			return fmt.Errorf("failed to set wallpaper: %w", err)
+		}
+		writeWallpaperHistory(destPath)
+		fmt.Printf("Applied wallpaper: %s\n", filename)
+		return nil
+	}
+
+	return fmt.Errorf("no wallpapers matched the filters after checking all available results")
+}
+

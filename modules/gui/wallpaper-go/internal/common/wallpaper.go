@@ -221,7 +221,7 @@ type WallInfo struct {
 }
 
 func GetWallInfo(path string) (*WallInfo, error) {
-	cmd := exec.Command("exiftool", "-json", "-Xmp:wallfacer:*", path)
+	cmd := exec.Command("exiftool", "-json", "-Xmp:wallpaper:*", path)
 	out, err := cmd.Output()
 	if err != nil {
 		return nil, fmt.Errorf("exiftool failed: %w", err)

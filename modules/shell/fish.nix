@@ -36,6 +36,11 @@
             fish_vi_key_bindings
             source ${fish-completion-sync}/init.fish
 
+            function last_history_item
+                echo $history[1]
+            end
+            abbr -a !! --position anywhere --function last_history_item
+
             function glog
                 git log --oneline | fzf \
                     --preview 'git show --color=always {1}' \
@@ -53,7 +58,23 @@
                 test -n "$dir" && cd "$dir"
             end
 
-            set sponge_regex_patterns 'password|passwd|^kill'
+            function fmake
+                if not test -f Makefile
+                    echo "No Makefile found in current directory"
+                    return 1
+                end
+                set -l target (grep -E '^[a-zA-Z0-9_-]+:' Makefile | cut -d: -f1 | fzf --header 'Run make target')
+                test -n "$target"; and make $target
+            end
+
+            function frg
+                set -l result (rg --line-number --column --no-heading --color=always --smart-case "$argv" | fzf --ansi --delimiter : --preview 'bat --color=always --highlight-line {2} {1}' --preview-window 'up,60%,border-bottom,+{2}+3/3')
+                if test -n "$result"
+                    set -l file (echo $result | cut -d: -f1)
+                    set -l line (echo $result | cut -d: -f2)
+                    nvim +$line $file
+                end
+            end
           '';
         };
       };
@@ -65,8 +86,6 @@
         pathsToLink = [ "/share/fish" ];
 
         systemPackages = [
-          # do not add failed commands to history
-          pkgs.fishPlugins.sponge
           fish-completion-sync
         ];
       };
