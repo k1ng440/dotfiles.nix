@@ -40,12 +40,9 @@
 
         nix-index.enable = true;
 
-        # run unpatched binaries on nixos
+        # Run unpatched binaries on nixos
         nix-ld.enable = true;
       };
-
-      # i dgaf
-      nixpkgs.config.allowUnfree = true;
 
       nix =
         let

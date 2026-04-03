@@ -97,6 +97,11 @@
             };
             "Mod+Shift+Home".move-column-to-first = null;
             "Mod+Shift+End".move-column-to-last = null;
+            "Mod+Shift+Tab".spawn = [
+              "sh"
+              "-c"
+              "niri msg action focus-column-right; niri msg action move-column-to-last; niri msg action focus-window-previous"
+            ];
 
             # --- Browser (Helium) ---
             "Mod+W".spawn = [

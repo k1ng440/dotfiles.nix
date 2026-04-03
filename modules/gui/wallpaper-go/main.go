@@ -83,7 +83,7 @@ func getLastSetTime(wallpaperPath string) time.Time {
 	return time.Time{}
 }
 
-func runRoot(cmd *cobra.Command, args []string, reload, skipHistory, skipWallpaper bool, filterArgs *WallpaperFilterArgs) error {
+func runRoot(_ *cobra.Command, args []string, reload, skipHistory, skipWallpaper bool, filterArgs *WallpaperFilterArgs) error {
 	var wallpaper string
 	if reload {
 		var err error
@@ -200,7 +200,7 @@ func writeWallpaperHistory(wallpaperPath string) {
 	absPath = filepath.Clean(absPath)
 
 	wallDir := common.Dir()
-	if filepath.Dir(absPath) != wallDir {
+	if !strings.HasPrefix(filepath.Dir(absPath), wallDir) {
 		return
 	}
 
