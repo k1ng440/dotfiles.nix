@@ -213,6 +213,14 @@
               "--mode"
               "edit"
             ];
+            "Mod+Apostrophe".spawn = [
+              "wallpaper"
+              "select"
+            ];
+            "Mod+alt+Apostrophe".spawn = [
+              "wallpaper"
+              "wallhaven"
+            ];
           }
           // lib.mergeAttrsList (
             lib.flatten (

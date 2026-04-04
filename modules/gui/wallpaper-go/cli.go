@@ -132,7 +132,7 @@ func newSelectCmd() *cobra.Command {
 	args := &WallpaperFilterArgs{}
 	cmd := &cobra.Command{
 		Use:     "select",
-		Aliases: []string{"selector", "rofi", "pqiv"},
+		Aliases: []string{"selector", "pqiv"},
 		Short:   "Show wallpaper selector with pqiv",
 		RunE: func(cmd *cobra.Command, args_ []string) error {
 			return runSelect(cmd, args_, args)

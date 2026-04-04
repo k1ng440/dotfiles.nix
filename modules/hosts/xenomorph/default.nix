@@ -26,6 +26,7 @@
         programs_kitty
         programs_steam
         programs_vesktop
+        programs_spicetify
         programs_anki
         programs_thunderbird
         programs_localsend
