@@ -17,4 +17,5 @@ nohup.out
 
 .gemini/
 GEMINI.md
+AGENTS.md
 gha-creds-*.json

@@ -1,11 +1,20 @@
 {
   flake.modules.nixos.programs_thunderbird =
-    { pkgs, ... }:
+    { pkgs, lib, ... }:
     {
       environment.systemPackages = [ pkgs.thunderbird-bin ];
 
-      custom.persist = {
-        home.directories = [ ".thunderbird" ];
+      custom = {
+        startup = [
+          {
+            app-id = "thunderbird";
+            spawn = [ (lib.getExe pkgs.thunderbird-bin) ];
+            workspace = 4;
+          }
+        ];
+        persist = {
+          home.directories = [ ".thunderbird" ];
+        };
       };
     };
 }

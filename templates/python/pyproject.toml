@@ -1,0 +1,13 @@
+[project]
+name = "my-python-app"
+version = "0.1.0"
+description = "My Python application"
+requires-python = ">=3.10"
+dependencies = []
+
+[project.scripts]
+my-python-app = "main:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"

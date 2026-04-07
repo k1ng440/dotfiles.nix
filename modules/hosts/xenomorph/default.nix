@@ -33,6 +33,7 @@
         shell_lazygit
         programs_neovim
         programs_obsidian
+        shell_opencode
         programs_authenticators
         programs_whichkey
         programs_tor-browser
@@ -50,7 +51,7 @@
               height = 1440;
               # niri / mango wants this to be exact down to the decimals
               refreshRate = "120.000";
-              vrr = true;
+              vrr = false;
               x = 1440;
               # y = 1080;
               y = 3440 - (1440 + 200);
@@ -68,7 +69,7 @@
               width = 3440;
               height = 1440;
               refreshRate = "59.973";
-              vrr = true;
+              vrr = false;
               x = 0;
               y = 0;
               # y = 1080;

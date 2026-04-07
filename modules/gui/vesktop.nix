@@ -1,11 +1,20 @@
 {
   flake.modules.nixos.programs_vesktop =
-    { pkgs, ... }:
+    { pkgs, lib, ... }:
     {
       environment.systemPackages = [ pkgs.vesktop ];
 
-      custom.persist = {
-        home.directories = [ ".config/vesktop" ];
+      custom = {
+        startup = [
+          {
+            app-id = "vesktop";
+            spawn = [ (lib.getExe pkgs.vesktop) ];
+            workspace = 2;
+          }
+        ];
+        persist = {
+          home.directories = [ ".config/vesktop" ];
+        };
       };
 
       hj.xdg.config.files."vesktop/settings/settings.json".text = builtins.toJSON {

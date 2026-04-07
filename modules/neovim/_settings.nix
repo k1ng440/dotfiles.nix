@@ -15,6 +15,10 @@
     };
 
     options = {
+      tabstop = 2;
+      shiftwidth = 2;
+      softtabstop = 2;
+      expandtab = true;
       foldcolumn = "0";
       foldlevel = 99;
       foldlevelstart = 99;
@@ -110,6 +114,7 @@
         enable = true;
         extensions.gopher-nvim.enable = true;
       };
+      svelte.enable = true;
     };
 
     comments = {

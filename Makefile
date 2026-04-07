@@ -1,6 +1,6 @@
 .SILENT: show-diff clean-cows
 
-host ?= $(cat /etc/hostname 2>/dev/null || echo xenomorph)
+host ?= $(shell cat /etc/hostname 2>/dev/null || echo xenomorph)
 
 repl:
 	nix --extra-experimental-features "nix-command flakes repl-flake" --show-trace repl --file repl.nix

@@ -26,6 +26,31 @@
             # fzf + neovim
             vf = /* sh */ "fzf --preview 'bat --color=always {}' --preview-window=right:60% | xargs -r nvim";
             fkill = /* sh */ "ps aux | fzf --header-lines=1 | awk '{print $2}' | xargs -r kill -9";
+
+            # Navigation
+            ".." = "cd ..";
+            "..." = "cd ../..";
+            "...." = "cd ../../..";
+            "-" = "cd -";
+
+            # Git shortcuts
+            gs = "git status";
+            ga = "git add";
+            gc = "git commit";
+            gp = "git push";
+            gl = "git log --oneline --graph -20";
+            gd = "git diff";
+
+            # History and process management
+            hg = "history | grep";
+            pg = "ps aux | grep -v grep | grep -i";
+            port = "netstat -tuln | grep";
+
+            # Archives
+            untar = "tar -xvf";
+
+            # ls variants
+            lsn = "ls -lv";
           };
           shellInit = /* fish */ ''
             set fish_greeting
@@ -93,6 +118,161 @@
                     set -l line (echo $result | cut -d: -f2)
                     nvim +$line $file
                 end
+            end
+
+            # Create directory and cd into it
+            function mkcd
+                mkdir -p $argv[1] && cd $argv[1]
+            end
+
+            # Extract any archive
+            function extract
+                if test -f $argv[1]
+                    switch $argv[1]
+                        case '*.tar.bz2'
+                            tar -xjf $argv[1]
+                        case '*.tar.gz'
+                            tar -xzf $argv[1]
+                        case '*.tar.xz'
+                            tar -xJf $argv[1]
+                        case '*.bz2'
+                            bunzip2 $argv[1]
+                        case '*.rar'
+                            unrar x $argv[1]
+                        case '*.gz'
+                            gunzip $argv[1]
+                        case '*.tar'
+                            tar -xf $argv[1]
+                        case '*.tbz2'
+                            tar -xjf $argv[1]
+                        case '*.tgz'
+                            tar -xzf $argv[1]
+                        case '*.zip'
+                            unzip $argv[1]
+                        case '*.Z'
+                            uncompress $argv[1]
+                        case '*.7z'
+                            7z x $argv[1]
+                        case '*'
+                            echo "Unknown archive: $argv[1]"
+                    end
+                else
+                    echo "'$argv[1]' is not a valid file"
+                end
+            end
+
+            # Find and edit files with fzf
+            function fe
+                set -l files (fzf --query="$argv[1]" --multi --select-1 --exit-0 | string split \n)
+                if test -n "$files"
+                    $EDITOR $files
+                end
+            end
+
+            # Quick HTTP server
+            function serve
+                set -l port (test -n "$argv[1]"; and echo $argv[1]; or echo 8000)
+                python3 -m http.server $port
+            end
+
+            # Create backup with timestamp
+            function backup
+                cp $argv[1] $argv[1].(date +%Y%m%d_%H%M%S).bak
+            end
+
+            # Tmux: attach or create session
+            function ta
+                if test -z "$argv[1]"
+                    tmux new-session -A -s main
+                else
+                    tmux new-session -A -s $argv[1]
+                end
+            end
+
+            # Tmux: create new session with current directory name
+            function tn
+                set -l session_name (test -n "$argv[1]"; and echo $argv[1]; or basename (pwd))
+                tmux new-session -d -s $session_name 2>/dev/null; or true
+                tmux attach -t $session_name
+            end
+
+            # Tmux: list and attach to session
+            function tl
+                tmux list-sessions -F "#S" 2>/dev/null | fzf --select-1 --exit-0 | read -l session
+                if test -n "$session"
+                    tmux attach -t $session
+                end
+            end
+
+            # Tmux: kill session
+            function tk
+                if test -z "$argv[1]"
+                    tmux list-sessions -F "#S" 2>/dev/null | fzf -m | read -l session
+                    if test -n "$session"
+                        tmux kill-session -t $session
+                    end
+                else
+                    tmux kill-session -t $argv[1]
+                end
+            end
+
+            # Checkout git branches with fzf
+            function fbr
+                git branch -a | grep -v HEAD | fzf | read -l branch
+                if test -n "$branch"
+                    set -l clean_branch (echo $branch | sed 's/.* //' | sed 's#remotes/[^/]*/##')
+                    git checkout $clean_branch
+                end
+            end
+
+            # Network utilities
+            function myip
+                curl -s https://ipinfo.io/ip
+            end
+
+            function ips
+                ip -br -c addr show
+            end
+
+            function ports
+                if test -n "$argv[1]"
+                    ss -tlnp | grep ":$argv[1]"
+                else
+                    ss -tlnp
+                end
+            end
+
+            function dns
+                dig +short $argv[1]
+            end
+
+            # Cross-platform clipboard copy
+            function copy
+                set -l input (test -n "$argv[1]"; and echo $argv[1]; or cat)
+
+                if command -q pbcopy
+                    echo -n $input | pbcopy
+                else if command -q wl-copy
+                    echo -n $input | wl-copy
+                else if command -q xclip
+                    echo -n $input | xclip -selection clipboard
+                else if command -q xsel
+                    echo -n $input | xsel --clipboard --input
+                else
+                    echo "No clipboard utility found. Install wl-copy, xclip, or xsel." >&2
+                    return 1
+                end
+            end
+
+            # Check disk space above threshold
+            function diskalert
+                set -l threshold (test -n "$argv[1]"; and echo $argv[1]; or echo 80)
+                df -h | awk -v threshold=$threshold 'NR>1 {
+                    gsub(/%/,"",$5)
+                    if ($5 > threshold) {
+                        print "WARNING: " $6 " is at " $5 "% capacity (" $3 " used of " $2 ")"
+                    }
+                }'
             end
           '';
         };

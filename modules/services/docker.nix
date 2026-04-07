@@ -3,6 +3,7 @@
     { pkgs, ... }:
     {
       environment.systemPackages = [ pkgs.distrobox ];
+      networking.firewall.trustedInterfaces = [ "docker0" ];
 
       virtualisation = {
         docker = {
