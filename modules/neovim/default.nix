@@ -30,7 +30,8 @@
             modules = lib.pipe ./. [
               builtins.readDir
               (lib.filterAttrs (
-                name: type: type == "regular" && lib.hasPrefix "_" name && lib.hasSuffix ".nix" name
+                name: type:
+                type == "regular" && lib.hasPrefix "_" name && lib.hasSuffix ".nix" name && name != "_helpers.nix"
               ))
               (lib.mapAttrsToList (name: _: ./. + "/${name}"))
             ];

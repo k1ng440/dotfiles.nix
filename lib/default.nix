@@ -23,7 +23,7 @@
     builtins.map (f: (path + "/${f}")) (lib.lists.remove "user" (scanDir path));
 
   # Safely extract secrets from optional flake inputs.
-  # It handles missing inputs, dot-notated attribute paths (e.g., "ssh.matchBlocks"),
+  # It handles missing inputs, dot-notated attribute paths (e.g. "ssh.matchBlocks"),
   # and automatically evaluates any functions found by passing 'lib' to them.
   getSecret =
     inputs: inputName: path: default:

@@ -143,6 +143,7 @@
             htop
             jq
             killall
+            lsof
             procs # better ps
             (lib.hiPrio procps) # for uptime
             sd # better sed
