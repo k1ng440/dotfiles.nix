@@ -9,7 +9,6 @@
         nemo-fileroller
         nemo-with-extensions
         webp-pixbuf-loader
-        gvfs
       ];
 
       services.gvfs.enable = true; # For mounting remote/virtual filesystems

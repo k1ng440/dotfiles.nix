@@ -27,14 +27,30 @@ in
     options.autoread = true;
 
     luaConfigRC.opencode-opts = /* lua */ ''
+      local function is_in_tmux()
+        local tmux = os.getenv("TMUX")
+        return tmux and tmux ~= ""
+      end
+
+      local function get_tmux_session_name()
+        if not is_in_tmux() then
+          return nil
+        end
+        local handle = io.popen("tmux display-message -p '#S' 2>/dev/null")
+        if handle then
+          local session_name = handle:read("*l")
+          handle:close()
+          if session_name and session_name ~= "" then
+            return session_name
+          end
+        end
+        return nil
+      end
+
       local function get_opencode_port()
-        -- Read from /tmp using session name derived from cwd
-        local session_name = vim.fn.fnamemodify(vim.fn.getcwd(), ':t')
-        local f = io.open("/tmp/.opencode.port." .. session_name, "r")
-        if f then
-          local port = f:read("*n")
-          f:close()
-          return port
+        local port = os.getenv("OPENCODE_PORT")
+        if port and port ~= "" then
+          return tonumber(port)
         end
         return nil
       end
@@ -51,7 +67,16 @@ in
             vim.notify("Opencode server is managed by tmux. Use 'tdev' to recreate the session.")
           end,
           toggle = function()
-            vim.fn.system("tmux select-pane -t " .. vim.fn.getcwd() .. ":0.1")
+            if not is_in_tmux() then
+              vim.notify("Not running inside tmux", vim.log.levels.WARN)
+              return
+            end
+            local session_name = get_tmux_session_name()
+            if not session_name then
+              vim.notify("Could not get tmux session name", vim.log.levels.WARN)
+              return
+            end
+            vim.fn.system("tmux select-pane -t " .. session_name .. ":0.1")
           end,
         },
       }
@@ -69,42 +94,43 @@ in
 
     keymaps = [
       (mkKeymapWithOpts [ "n" "v" ] "<leader>oa"
-        "function() require('opencode').ask('@this: ', { submit = true }) end"
+        /* lua */ "function() require('opencode').ask('@this: ', { submit = true }) end"
         {
           lua = true;
           desc = "[O]pencode [A]sk";
         }
       )
 
-      (mkKeymapWithOpts [ "n" "v" ] "<leader>os" "function() require('opencode').select() end" {
+      (mkKeymapWithOpts [ "n" "v" ] "<leader>os" /* lua */ "function() require('opencode').select() end" {
         lua = true;
         desc = "[O]pencode [S]elect";
       })
 
-      (mkKeymapWithOpts [ "n" "t" ] "<leader>ot" "function() require('opencode').toggle() end" {
+      (mkKeymapWithOpts [ "n" "t" ] "<leader>ot" /* lua */ "function() require('opencode').toggle() end" {
         lua = true;
         desc = "[O]pencode [T]oggle";
       })
 
-      (mkKeymapWithOpts "v" "go" "function() return require('opencode').operator('@this ') end" {
+      (mkKeymapWithOpts "v" "go" /* lua */ "function() return require('opencode').operator('@this ') end" {
         lua = true;
         expr = true;
         desc = "Add range to opencode";
       })
 
-      (mkKeymapWithOpts "n" "go" "function() return require('opencode').operator('@this ') end" {
+      (mkKeymapWithOpts "n" "go" /* lua */ "function() return require('opencode').operator('@this ') end" {
         lua = true;
         expr = true;
         desc = "Add range to opencode";
       })
 
-      (mkKeymapWithOpts "n" "goo" "function() return require('opencode').operator('@this ') .. '_' end" {
+      (mkKeymapWithOpts "n" "goo" /* lua */ "function() return require('opencode').operator('@this ') .. '_' end" {
         lua = true;
         expr = true;
         desc = "Add line to opencode";
       })
 
-      (mkKeymapWithOpts "n" "<S-C-u>" "function() require('opencode').command('session.half.page.up') end"
+      (mkKeymapWithOpts "n" "<S-C-u>"
+        /* lua */ "function() require('opencode').command('session.half.page.up') end"
         {
           lua = true;
           desc = "Scroll opencode up";
@@ -112,24 +138,24 @@ in
       )
 
       (mkKeymapWithOpts "n" "<S-C-d>"
-        "function() require('opencode').command('session.half.page.down') end"
+        /* lua */ "function() require('opencode').command('session.half.page.down') end"
         {
           lua = true;
           desc = "Scroll opencode down";
         }
       )
 
-      (mkKeymapWithOpts "n" "<leader>on" "function() require('opencode').command('session.new') end" {
+      (mkKeymapWithOpts "n" "<leader>on" /* lua */ "function() require('opencode').command('session.new') end" {
         lua = true;
         desc = "[O]pencode [N]ew session";
       })
 
-      (mkKeymapWithOpts "n" "<leader>ou" "function() require('opencode').command('session.undo') end" {
+      (mkKeymapWithOpts "n" "<leader>ou" /* lua */ "function() require('opencode').command('session.undo') end" {
         lua = true;
         desc = "[O]pencode [U]ndo";
       })
 
-      (mkKeymapWithOpts "n" "<leader>or" "function() require('opencode').command('session.redo') end" {
+      (mkKeymapWithOpts "n" "<leader>or" /* lua */ "function() require('opencode').command('session.redo') end" {
         lua = true;
         desc = "[O]pencode [R]edo";
       })
