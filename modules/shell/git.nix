@@ -10,7 +10,7 @@
         ".jj"
         "node_modules"
       ];
-      # checkout main / master, whichever exists
+      # Checkout main / master, whichever exists
       gmain = pkgs.writeShellApplication {
         name = "gmain";
         text = /* sh */ ''
@@ -178,6 +178,8 @@
           github = "open `git remote -v | grep github.com | grep fetch | head -1 | awk '{print $2}' | sed 's/git:/http:/git'`";
           # Cleanup leftover files from merges
           mergeclean = "find . -type f -name '*.orig' -exec rm -f {} ;";
+          # AI commit with opencode
+          gcm = "gcm";
         };
 
         # extra git functions

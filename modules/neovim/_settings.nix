@@ -52,6 +52,9 @@
       highlight.enable = true;
       addDefaultGrammars = true;
       context.enable = true;
+      grammars = with pkgs.vimPlugins.nvim-treesitter.grammarPlugins; [
+        scss
+      ];
       textobjects = {
         enable = true;
         setupOpts = {
@@ -108,13 +111,29 @@
       rust.enable = true;
       nix = {
         enable = true;
-
       };
       go = {
         enable = true;
         extensions.gopher-nvim.enable = true;
       };
-      svelte.enable = true;
+      svelte = {
+        enable = true;
+        lsp.enable = true;
+        treesitter.enable = true;
+        format.enable = true;
+      };
+      ts = {
+        enable = true;
+        lsp.enable = true;
+        treesitter.enable = true;
+        format.enable = true;
+      };
+      css = {
+        enable = true;
+        lsp.enable = true;
+        treesitter.enable = true;
+        format.enable = true;
+      };
     };
 
     comments = {
@@ -157,7 +176,10 @@
             "fallback"
           ];
         };
-        completion.documentation.auto_show = true;
+        completion = {
+          documentation.auto_show = true;
+          ghost_text.enabled = false; # Disable inline ghost text (annoying in opencode input)
+        };
       };
     };
 
@@ -203,6 +225,7 @@
 
     mini = {
       surround.enable = true;
+      sessions.enable = true;
     };
 
     git = {

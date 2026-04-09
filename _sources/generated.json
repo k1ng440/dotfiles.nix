@@ -8,11 +8,11 @@
         "pinned": false,
         "src": {
             "name": null,
-            "sha256": "sha256-+vmxXcg8TkR/GAiHKnjq4b04bGtQzErfJkOb4P4nZUk=",
+            "sha256": "sha256-pN/Iw1ANggDOxxFb2CN436qbcrs8/bDcEqjZC80grQs=",
             "type": "url",
-            "url": "https://github.com/imputnet/helium-linux/releases/download/0.10.7.1/helium-0.10.7.1-x86_64.AppImage"
+            "url": "https://github.com/imputnet/helium-linux/releases/download/0.10.8.1/helium-0.10.8.1-x86_64.AppImage"
         },
-        "version": "0.10.7.1"
+        "version": "0.10.8.1"
     },
     "mango": {
         "cargoLock": null,
@@ -79,7 +79,7 @@
     },
     "niri": {
         "cargoLock": null,
-        "date": "2026-03-22",
+        "date": "2026-04-05",
         "extract": null,
         "name": "niri",
         "passthru": null,
@@ -91,12 +91,12 @@
             "name": null,
             "owner": "YaLTeR",
             "repo": "niri",
-            "rev": "d06dd4b9e60fa07120c217aa095f3ed8caac99f2",
-            "sha256": "sha256-L/Ldq9G41Mj8WjWTuC+rePvWIx1A/tHdFpLbQmtrMSA=",
+            "rev": "e0db6df3e1eecb6dd1d034a435dab79cb71d10e3",
+            "sha256": "sha256-nvTnu0tEgvI6wg0jSORls/272RPtxxmVZ7iq7izA2KA=",
             "sparseCheckout": [],
             "type": "github"
         },
-        "version": "d06dd4b9e60fa07120c217aa095f3ed8caac99f2"
+        "version": "e0db6df3e1eecb6dd1d034a435dab79cb71d10e3"
     },
     "rofi-themes": {
         "cargoLock": null,
@@ -121,7 +121,7 @@
     },
     "yazi-plugins": {
         "cargoLock": null,
-        "date": "2026-02-27",
+        "date": "2026-04-08",
         "extract": null,
         "name": "yazi-plugins",
         "passthru": null,
@@ -133,12 +133,12 @@
             "name": null,
             "owner": "yazi-rs",
             "repo": "plugins",
-            "rev": "196281844b8cbcac658a59013e4805300c2d6126",
-            "sha256": "sha256-pAkBlodci4Yf+CTjhGuNtgLOTMNquty7xP0/HSeoLzE=",
+            "rev": "43c69783a674108472eadd5c1b81a3c4d9ff78b5",
+            "sha256": "sha256-gV9z3nniapKx3i+FP3MazGkusbwiyTgphP/JxrWVmKw=",
             "sparseCheckout": [],
             "type": "github"
         },
-        "version": "196281844b8cbcac658a59013e4805300c2d6126"
+        "version": "43c69783a674108472eadd5c1b81a3c4d9ff78b5"
     },
     "yazi-time-travel": {
         "cargoLock": null,

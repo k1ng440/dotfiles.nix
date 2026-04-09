@@ -22,6 +22,11 @@
                   description = "The window title of the program to start, for differentiating between multiple instances";
                   default = null;
                 };
+                delay = lib.mkOption {
+                  type = lib.types.int;
+                  description = "Delay in seconds before starting the program";
+                  default = 0;
+                };
                 spawn = lib.mkOption {
                   type = lib.types.listOf lib.types.str;
                   description = "Command to execute";

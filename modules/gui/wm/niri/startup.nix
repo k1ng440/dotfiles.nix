@@ -2,13 +2,26 @@
 {
   flake.modules.nixos.wm =
     { pkgs, config, ... }:
+    let
+      # Helper to add delay to spawn commands
+      mkSpawn =
+        startup:
+        if startup.delay > 0 then
+          [
+            "sh"
+            "-c"
+            "sleep ${toString startup.delay} && ${lib.escapeShellArgs startup.spawn}"
+          ]
+        else
+          startup.spawn;
+    in
     {
       custom.programs.niri.settings = lib.mkMerge (
         (
           config.custom.startup
           |> lib.filter (startup: startup.enable)
           |> map (startup: {
-            spawn-at-startup = [ startup.spawn ];
+            spawn-at-startup = [ (mkSpawn startup) ];
             window-rules = lib.optional (startup.app-id != null || startup.title != null) (
               {
                 matches = [
@@ -36,15 +49,15 @@
         ++ [
           # Focus default workspace for each monitor
           {
-            # spawn-at-startup = lib.mkAfter (
-            #   map (mon: [
-            #     "niri"
-            #     "msg"
-            #     "action"
-            #     "focus-workspace"
-            #     "${toString mon.defaultWorkspace}"
-            #   ]) (lib.reverseList config.custom.hardware.monitors)
-            # );
+            spawn-at-startup = lib.mkAfter (
+              map (mon: [
+                "niri"
+                "msg"
+                "action"
+                "focus-workspace"
+                "${toString mon.defaultWorkspace}"
+              ]) (lib.reverseList config.custom.hardware.monitors)
+            );
           }
         ]
       );

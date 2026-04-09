@@ -10,6 +10,7 @@
             app-id = "vesktop";
             spawn = [ (lib.getExe pkgs.vesktop) ];
             workspace = 2;
+            delay = 3;
           }
         ];
         persist = {

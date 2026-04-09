@@ -90,6 +90,47 @@ in
           end
         end,
       })
+
+      -- Alternative: Press <Tab> in opencode ask() to see completions manually
+      -- The shadow text you're seeing is opencode's context completion (@this, @buffer, etc.)
+      -- It's actually useful - just press <Tab> to complete or <Esc> to ignore
+
+      -- Handle opencode events for better UX
+      vim.api.nvim_create_autocmd("User", {
+        pattern = "OpencodeEvent:*",
+        callback = function(args)
+          local event = args.data.event
+
+          -- Show spinner/notification when opencode is working
+          if event.type == "session.request" then
+            vim.g.opencode_processing = true
+            vim.notify("Opencode is thinking...", vim.log.levels.INFO)
+          end
+
+          -- Clear indicator when done
+          if event.type == "session.idle" then
+            vim.g.opencode_processing = false
+            vim.notify("Opencode finished", vim.log.levels.INFO)
+          end
+
+          -- Auto-save current buffer before opencode makes edits
+          if event.type == "edit.request" then
+            local bufnr = vim.api.nvim_get_current_buf()
+            if vim.api.nvim_get_option_value("modified", { buf = bufnr }) then
+              vim.cmd("write")
+            end
+          end
+        end,
+      })
+
+      -- Auto-check for opencode edits when focus returns
+      vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter" }, {
+        callback = function()
+          if vim.g.opencode_processing then
+            vim.cmd("checktime")
+          end
+        end,
+      })
     '';
 
     keymaps = [
@@ -129,22 +170,6 @@ in
         desc = "Add line to opencode";
       })
 
-      (mkKeymapWithOpts "n" "<S-C-u>"
-        /* lua */ "function() require('opencode').command('session.half.page.up') end"
-        {
-          lua = true;
-          desc = "Scroll opencode up";
-        }
-      )
-
-      (mkKeymapWithOpts "n" "<S-C-d>"
-        /* lua */ "function() require('opencode').command('session.half.page.down') end"
-        {
-          lua = true;
-          desc = "Scroll opencode down";
-        }
-      )
-
       (mkKeymapWithOpts "n" "<leader>on" /* lua */ "function() require('opencode').command('session.new') end" {
         lua = true;
         desc = "[O]pencode [N]ew session";
@@ -159,6 +184,40 @@ in
         lua = true;
         desc = "[O]pencode [R]edo";
       })
+
+      (mkKeymapWithOpts [ "n" "v" ] "<leader>oe" /* lua */ "function() require('opencode').prompt('fix') end" {
+        lua = true;
+        desc = "[O]pencode [E]dit - Fix diagnostics";
+      })
+
+      (mkKeymapWithOpts [ "n" "v" ] "<leader>oi" /* lua */ "function() require('opencode').prompt('implement') end"
+        {
+          lua = true;
+          desc = "[O]pencode [I]mplement";
+        }
+      )
+
+      (mkKeymapWithOpts [ "n" "v" ] "<leader>oo" /* lua */ "function() require('opencode').prompt('optimize') end"
+        {
+          lua = true;
+          desc = "[O]pencode [O]ptimize";
+        }
+      )
+
+      (mkKeymapWithOpts [ "n" "v" ] "<leader>od" /* lua */ "function() require('opencode').prompt('document') end"
+        {
+          lua = true;
+          desc = "[O]pencode [D]ocument";
+        }
+      )
+
+      (mkKeymapWithOpts "n" "<leader>gc"
+        /* lua */ "function() require('opencode').ask('Write a conventional commit message for @diff. Format: <type>(<scope>): <description>. Types: feat, fix, refactor, docs, style, test, chore. Keep under 72 chars: ') end"
+        {
+          lua = true;
+          desc = "[G]it [C]ommit with opencode";
+        }
+      )
     ];
   };
 }

@@ -5,11 +5,11 @@ _: {
       # Development shell with pnpm and TypeScript tools
       devShells.default = pkgs.mkShell {
         packages = with pkgs; [
+          typescript
           nodejs
           pnpm
-          nodePackages.typescript
-          nodePackages.typescript-language-server
-          nodePackages.prettier
+          typescript-language-server
+          prettier
         ];
 
         shellHook = ''

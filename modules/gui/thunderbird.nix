@@ -10,6 +10,7 @@
             app-id = "thunderbird";
             spawn = [ (lib.getExe pkgs.thunderbird-bin) ];
             workspace = 4;
+            delay = 3;
           }
         ];
         persist = {

@@ -19,8 +19,14 @@
             vim-tmux-navigator
             yank
             tokyo-night-tmux
+            resurrect
+            continuum
           ]
         )}
+
+        # Rebind "last pane" to C-;
+        unbind -n C-\\
+        bind -n C-\; last-pane
 
         # Prefix Settings
         set -g prefix C-Space
@@ -81,9 +87,16 @@
         setw -g aggressive-resize on
         set -g detach-on-destroy off
         set -g set-titles on
+        set -g @resurrect-capture-pane-contents 'on'
+        set -g @continuum-restore 'on'
+
+        # Tokyo Night Tmux Theme Settings (removes the > indicator)
+        set -g @tokyo-night-tmux_window_id_style digital
+        set -g @tokyo-night-tmux_pane_id_style hsquare
+        set -g @tokyo-night-tmux_zoom_id_style dsquare
 
         # Status Bar & Theme
-        set -g status-position bottom
+        set -g status-position top
         set -g status-interval 5
         set -g status-left-length 30
         set -g status-right-length 50
@@ -91,6 +104,10 @@
         set -gw automatic-rename-format '#{b:pane_current_path}'
         set -g window-style "bg=terminal"
         set -g window-active-style "bg=terminal"
+
+        # Custom window status format (removes the > indicator)
+        set -g window-status-format " #I:#W "
+        set -g window-status-current-format " #I:#W "
       '';
     in
     {
