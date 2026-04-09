@@ -31,6 +31,7 @@
         programs_thunderbird
         programs_localsend
         shell_lazygit
+        shell_doppler
         programs_neovim
         programs_obsidian
         shell_opencode

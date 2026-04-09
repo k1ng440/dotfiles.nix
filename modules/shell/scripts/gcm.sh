@@ -63,6 +63,14 @@ echo -e "${BLUE}Staging files...${NC}"
 STAGED_COUNT=0
 SKIPPED_COUNT=0
 
+# Count already staged files (that aren't secrets)
+for file in $STAGED_FILES; do
+  if ! is_secret_file "$file"; then
+    ((STAGED_COUNT++)) || true
+  fi
+done
+
+# Stage new modified files
 for file in $MODIFIED_FILES; do
   if is_secret_file "$file"; then
     echo -e "  ${YELLOW}⚠ Skipped (secret):${NC} $file"

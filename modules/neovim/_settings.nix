@@ -134,6 +134,17 @@
         treesitter.enable = true;
         format.enable = true;
       };
+      json = {
+        enable = true;
+        lsp.enable = true;
+        treesitter.enable = true;
+        format.enable = true;
+      };
+      yaml = {
+        enable = true;
+        lsp.enable = true;
+        treesitter.enable = true;
+      };
     };
 
     comments = {

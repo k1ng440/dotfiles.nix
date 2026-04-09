@@ -104,12 +104,16 @@
 
       hj.xdg.config.files."niri/config.kdl".source = ./config.kdl;
 
+      xdg = {
+        autostart.enable = lib.mkDefault true;
+        menus.enable = lib.mkDefault true;
+        mime.enable = lib.mkDefault true;
+        icons.enable = lib.mkDefault true;
+      };
+
       xdg.portal = {
-        config = {
-          niri = {
-            "org.freedesktop.impl.portal.FileChooser" = "gtk";
-          };
-        };
+        extraPortals = [ pkgs.xdg-desktop-portal-gnome ];
+        configPackages = [ niriWrapped.wrapper ];
       };
 
       custom.programs = {
