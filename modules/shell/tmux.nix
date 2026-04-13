@@ -10,7 +10,9 @@
       # Implementation for loading plugins from home-manager:
       # https://github.com/nix-community/home-manager/blob/master/modules/programs/tmux.nix
       tmuxPlugin = p: "run-shell ${if lib.types.package.check p then p.rtp else p.plugin.rtp}";
-      tmuxConf = /* tmux */ ''
+
+      # Config content with placeholder for self-reference
+      tmuxConfRaw = /* tmux */ ''
         # Load Nix-managed plugins
         ${tmuxPlugin pkgs.tmuxPlugins.sensible}
         ${lib.concatMapStringsSep "\n" tmuxPlugin (
@@ -18,7 +20,8 @@
           [
             vim-tmux-navigator
             yank
-            tokyo-night-tmux
+            rose-pine
+            tmux-floax
             resurrect
             continuum
           ]
@@ -29,9 +32,12 @@
         bind -n C-\; last-pane
 
         # Prefix Settings
+        unbind C-b
         set -g prefix C-Space
-        set -g prefix2 C-b
-        bind -N "Send the prefix key" C-Space send-prefix
+        set -g prefix2 C-@
+        bind C-Space send-prefix
+        bind C-@ send-prefix
+        bind -N "Reload tmux config" R run-shell 'tmux source-file $(tmux display-message -p "#{config_files}" | cut -d"," -f1)' \; display-message "Config reloaded!"
 
         # Vi mode for copy
         setw -g mode-keys vi
@@ -71,6 +77,10 @@
         bind -n -N "Switch to window 8" M-8 select-window -t 8
         bind -n -N "Switch to window 9" M-9 select-window -t 9
 
+
+        # Synchronize Panes
+        bind C-a setw synchronize-panes \; display-message "Sync: #{?pane_synchronized,ON,OFF}"
+
         # General Settings
         set -g default-terminal "tmux-256color"
         set -ga terminal-overrides '*:Ss=\E[%p1%d q:Se=\E[ q'
@@ -90,24 +100,48 @@
         set -g @resurrect-capture-pane-contents 'on'
         set -g @continuum-restore 'on'
 
-        # Tokyo Night Tmux Theme Settings (removes the > indicator)
-        set -g @tokyo-night-tmux_window_id_style digital
-        set -g @tokyo-night-tmux_pane_id_style hsquare
-        set -g @tokyo-night-tmux_zoom_id_style dsquare
+        # Rose Pine Theme
+        set -g @rose_pine_variant 'moon'
+        set -g @rose_pine_host 'on'
+        set -g @rose_pine_date_time ""
+        set -g @rose_pine_user 'on'
+        set -g @rose_pine_directory 'on'
+        set -g @rose_pine_bar_bg_disable 'on'
+        set -g @rose_pine_only_windows 'on'
+        set -g @rose_pine_disable_active_window_icon 'on'
+        set -g @rose_pine_default_window_behavior 'on'
+        set -g @rose_pine_show_current_program 'off'
+        set -g @rose_pine_show_pane_directory 'off'
 
-        # Status Bar & Theme
+        # Status Bar - Minimal
         set -g status-position top
         set -g status-interval 5
         set -g status-left-length 30
         set -g status-right-length 50
         set -gw automatic-rename on
-        set -gw automatic-rename-format '#{b:pane_current_path}'
-        set -g window-style "bg=terminal"
-        set -g window-active-style "bg=terminal"
+        set -gw automatic-rename-format '#W'
+        set -g window-style 'bg=terminal'
+        set -g window-active-style 'bg=terminal'
 
-        # Custom window status format (removes the > indicator)
-        set -g window-status-format " #I:#W "
-        set -g window-status-current-format " #I:#W "
+        # tmux-floax
+        set -g @plugin 'omerxx/tmux-floax'
+        set -g @floax-bind 't'
+        set -g @floax-bind-menu 'T'
+        set -g @floax-width '88%'
+        set -g @floax-height '76%'
+        set -g @floax-border-color '#ff6f00'
+        set -g @floax-text-color '#c8d1dc'
+        set -g @floax-session-name 'popup-shell'
+        set -g @floax-title ' floax '
+        bind g if-shell "command -v lazygit >/dev/null 2>&1" \
+          "display-popup -E -x C -y C -w 88% -h 76% -T ' lazygit ' -d '#{pane_current_path}' 'lazygit'" \
+          "display-message 'lazygit not found in PATH'"
+
+        bind D if-shell "command -v lazydocker >/dev/null 2>&1" \
+          "display-popup -E -x C -y C -w 88% -h 76% -T ' lazydocker ' -d '#{pane_current_path}' 'lazydocker'" \
+          "display-message 'lazydocker not found in PATH'"
+
+
       '';
     in
     {
@@ -115,7 +149,7 @@
         inherit pkgs;
         package = pkgs.tmux;
         flags = {
-          "-f" = toString (pkgs.writeText "tmux.conf" tmuxConf);
+          "-f" = toString (pkgs.writeText "tmux.conf" tmuxConfRaw);
         };
       };
     };
@@ -134,7 +168,7 @@
       ];
 
       custom.programs.print-config = {
-        tmux = /* sh */ ''moor "${pkgs.tmux.flags."-f"}"'';
+        tmux = /* sh */ ''moor "${pkgs.custom.tmux.flags."-f"}"'';
       };
     };
 }

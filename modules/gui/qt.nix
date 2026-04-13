@@ -3,41 +3,56 @@
   perSystem =
     { pkgs, ... }:
     let
-      drv =
-        {
-          lib,
-          stdenv,
-          fetchFromGitHub,
-        }:
-        stdenv.mkDerivation {
-          pname = "tokyo-night-kvantum";
-          version = "0-unstable-2024-08-08";
+      # Template for dynamic Kvantum theme
+      kvantum-template = pkgs.runCommand "kvantum-template" { } /* sh */ ''
+        mkdir -p $out/share/Kvantum
 
-          src = fetchFromGitHub {
-            owner = "0xsch1zo";
-            repo = "Kvantum-Tokyo-Night";
-            rev = "82d104e0047fa7d2b777d2d05c3f22722419b9ee";
-            hash = "sha256-Uy/WthoQrDnEtrECe35oHCmszhWg38fmDP8fdoXQgTk=";
-          };
-          installPhase = ''
-            runHook preInstall
-            mkdir -p $out/share/Kvantum
-            cp -a Kvantum-Tokyo-Night $out/share/Kvantum
-            runHook postInstall
-          '';
+        # Use rose-pine-moon-iris as base template
+        cp -r ${pkgs.rose-pine-kvantum}/share/Kvantum/themes/rose-pine-moon-iris "$out/share/Kvantum/Noctalia-Template"
 
-          meta = {
-            description = "Tokyo Night Kvantum theme";
-            homepage = "https://github.com/0xsch1zo/Kvantum-Tokyo-Night";
-            license = lib.licenses.gpl3Only;
-            maintainers = with lib.maintainers; [ iynaix ];
-            mainProgram = "kvantum-tokyo-night";
-            platforms = lib.platforms.all;
-          };
-        };
+        # Make it writable for dynamic color replacement
+        chmod -R +w "$out/share/Kvantum/Noctalia-Template"
+
+        # Replace the accent color with a placeholder
+        find "$out/share/Kvantum/Noctalia-Template" -name "*.svg" -exec sed -i \
+          -e 's/#c4a7e7/#PLACEHOLDER_ACCENT/g' \
+          {} +
+      '';
     in
     {
-      packages.tokyo-night-kvantum = pkgs.callPackage drv { };
+      packages = {
+        inherit kvantum-template;
+
+        # Script to generate dynamic Kvantum theme from noctalia colors
+        dynamic-kvantum-theme = pkgs.writeShellApplication {
+          name = "dynamic-kvantum-theme";
+          runtimeInputs = [ ];
+          text = /* sh */ ''
+                        if [[ -z "''${1:-}" ]]; then
+                            echo "ERROR: A hex color is required. (e.g. #c4a7e7)"
+                            exit 1
+                        fi
+
+                        COLOR="''${1#\#}"
+                        THEME_NAME="Noctalia-''${COLOR}"
+                        THEME_DIR="$HOME/.config/Kvantum/$THEME_NAME"
+
+                        mkdir -p "$HOME/.config/Kvantum"
+                        rm -rf "$THEME_DIR"
+                        
+                        cp -r ${kvantum-template}/share/Kvantum/Noctalia-Template "$THEME_DIR"
+
+                        # Replace placeholder with actual color
+                        find "$THEME_DIR" -name "*.svg" -exec sed -i "s/#PLACEHOLDER_ACCENT/$1/g" {} +
+                        
+                        # Update the kvconfig file
+                        cat > "$THEME_DIR/$THEME_NAME.kvconfig" << EOF
+            [General]
+            theme=$THEME_NAME
+            EOF
+          '';
+        };
+      };
     };
 
   flake.modules.nixos.gui =
@@ -53,6 +68,8 @@
           qt6Packages.qt6ct
           qt6Packages.qtstyleplugin-kvantum
           qt6Packages.qtwayland
+          pkgs.rose-pine-kvantum
+          pkgs.custom.dynamic-kvantum-theme
         ];
       };
 
@@ -89,16 +106,20 @@
           "qt5ct.conf" = createQtctConf "qt5ct.conf" ''"${defaultFont},-1,5,50,0,0,0,0,0"'';
           "qt6ct.conf" =
             createQtctConf "qt6ct.conf" ''"${defaultFont},-1,5,400,0,0,0,0,0,0,0,0,0,0,1,Regular"'';
+
+          # Dynamic Kvantum theme
+          "kvantum-theme" = {
+            post_hook = ''${lib.getExe pkgs.custom.dynamic-kvantum-theme} "{{ colors.primary.default.hex }}"'';
+            input_path = "${config.hj.xdg.config.directory}/user-dirs.conf";
+            output_path = "/dev/null";
+          };
         };
 
       hj.xdg.config.files = {
-        "Kvantum/Kvantum-Tokyo-Night".source =
-          "${pkgs.custom.tokyo-night-kvantum}/share/Kvantum/Kvantum-Tokyo-Night";
-
         "Kvantum/kvantum.kvconfig" = {
           generator = lib.generators.toINI { };
           value = {
-            General.theme = "Kvantum-Tokyo-Night";
+            General.theme = "Noctalia-PLACEHOLDER";
           };
         };
       };

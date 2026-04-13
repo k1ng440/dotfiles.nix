@@ -1,6 +1,6 @@
 { lib, ... }:
 {
-  flake.modules.nixos.doppler =
+  flake.modules.nixos.shell_doppler =
     { pkgs, ... }:
     {
       environment.systemPackages = [ pkgs.doppler ];

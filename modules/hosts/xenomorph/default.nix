@@ -22,7 +22,6 @@
         programs_kdeconnect
         services_clamav
         hardware_yubikey
-        gui_fonts
         programs_kitty
         programs_steam
         programs_vesktop
@@ -40,6 +39,7 @@
         programs_tor-browser
         programs_whatsapp
         programs_telegram
+        programs_google-chrome
       ];
 
       custom = {
@@ -107,6 +107,10 @@
         programs = {
           btop.extraSettings = {
             custom_gpu_name0 = "Nvidia RTX 3080";
+          };
+          google-chrome = {
+            enable = true;
+            privacyMode = true;
           };
         };
       };

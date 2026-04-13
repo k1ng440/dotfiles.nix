@@ -124,7 +124,10 @@ in
               extraSettings = {
                 # Set as default interactive shell, also set $SHELL for nix shell to pick up
                 command = "SHELL=${lib.getExe pkgs.fish} fish";
-                font-family = config.custom.fonts.monospace;
+                font-family = [
+                  config.custom.fonts.monospace
+                  "Symbols Nerd Font Mono"
+                ];
                 font-feature = "zero";
                 font-style = "Medium";
                 # Load dynamically generated colors by noctalia

@@ -40,8 +40,8 @@
 
     theme = {
       enable = true;
-      style = "night";
-      name = "tokyonight";
+      name = "rose-pine";
+      style = "moon";
       transparent = true;
     };
 

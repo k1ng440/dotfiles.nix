@@ -4,6 +4,15 @@
     { pkgs, ... }:
     let
       sources = self.libCustom.nvFetcherSources pkgs;
+
+      # Rose Pine flavor for yazi
+      rose-pine-yazi = pkgs.fetchFromGitHub {
+        owner = "rose-pine";
+        repo = "yazi";
+        rev = "c89d745573d4fcfe0550fe6646f9f9ab1c0e51db";
+        sha256 = "0mmc12h56bjbxbrxis06vgz4pmmkbw0iisqkyk55m5wnb1fxvvgm";
+      };
+
       mkYaziPlugin = name: text: {
         "${name}" = toString (pkgs.writeTextDir "${name}.yazi/main.lua" text) + "/${name}.yazi";
       };
@@ -253,19 +262,22 @@
       ];
     in
     {
-      packages.yazi =
-        (pkgs.yazi.override {
-          inherit (baseYaziConf) initLua plugins settings;
-          extraPackages = with pkgs; [
-            unar
-            exiftool
-          ];
-        }).overrideAttrs
-          {
-            passthru = {
-              inherit (baseYaziConf) settings;
+      packages = {
+        inherit rose-pine-yazi;
+        yazi =
+          (pkgs.yazi.override {
+            inherit (baseYaziConf) initLua plugins settings;
+            extraPackages = with pkgs; [
+              unar
+              exiftool
+            ];
+          }).overrideAttrs
+            {
+              passthru = {
+                inherit (baseYaziConf) settings;
+              };
             };
-          };
+      };
     };
 
   flake.modules.nixos.core =

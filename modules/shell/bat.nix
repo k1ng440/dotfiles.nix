@@ -12,7 +12,7 @@
           inherit pkgs;
           package = pkgs.bat;
           flags = {
-            "--theme" = "base16";
+            "--theme" = "Dracula";
             "--style" = "grid";
           };
         };
