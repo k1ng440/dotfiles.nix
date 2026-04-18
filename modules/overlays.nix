@@ -43,6 +43,10 @@
         nitch = prev.nitch.overrideAttrs (o: {
           patches = (o.patches or [ ]) ++ [ ./patches/nitch-nix-pkgs-count.patch ];
         });
+
+        opencode = prev.opencode.overrideAttrs (o: {
+          patches = (o.patches or [ ]);
+        });
       };
 
       # writeShellApplication with support for completions

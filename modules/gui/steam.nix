@@ -39,6 +39,9 @@ _: {
           extraEnv = {
             OBS_VKCAPTURE = "1";
             RADV_TEX_ANISO = "16";
+            __GL_SHADER_DISK_CACHE_SKIP_CLEANUP = "1";
+            __GL_THREADED_OPTIMIZATIONS = "1";
+            DXVK_STATE_CACHE = "1";
           };
           extraBwrapArgs = [
             "--bind /persist/${config.hj.directory} $HOME"

@@ -86,7 +86,10 @@
             "Mod+End".focus-column-last = null;
             "Mod+grave".focus-window-previous = null;
             "Mod+Tab".focus-workspace-previous = null;
-            "Mod+O".toggle-overview = null;
+            "Mod+O" = {
+              toggle-overview = null;
+              _attrs.repeat = false;
+            };
             "Mod+Q" = {
               close-window = null;
               _attrs.repeat = false;

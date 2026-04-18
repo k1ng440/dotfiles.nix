@@ -222,7 +222,8 @@
           };
 
           overview = {
-            zoom = 0.4;
+            zoom = 0.6;
+            backdrop-color = "#1e1e2e";
           };
 
           xwayland-satellite = {

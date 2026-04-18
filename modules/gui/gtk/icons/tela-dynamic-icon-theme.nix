@@ -114,6 +114,13 @@
         })
       ];
 
+      # Set default icon theme before dynamic one takes over
+      custom.dconf.settings = {
+        "org/gnome/desktop/interface" = {
+          icon-theme = config.custom.gtk.iconTheme.name;
+        };
+      };
+
       # set dynamic icon theme with noctalia
       custom.programs.noctalia.colors.templates = {
         "gtk-icon-theme" = {

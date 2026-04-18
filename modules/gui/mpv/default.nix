@@ -146,6 +146,7 @@
             # no-border = true;
             save-position-on-quit = true;
             force-seekable = true;
+            demuxer-max-bytes = "150M";
             cursor-autohide = 100;
 
             vo = "gpu-next";
@@ -174,6 +175,7 @@
             sub-scale-with-window = false;
 
             screenshot-directory = "~/Pictures/Screenshots";
+            screenshot-format = "png";
 
             slang = "en,eng,english";
             alang = "jp,jpn,japanese,en,eng,english";
@@ -386,6 +388,7 @@
         environment.systemPackages = with pkgs; [
           ffmpeg
           mpv # overlay-ed above
+          plex-mpv-shim
         ];
 
         custom.programs.print-config =
@@ -401,7 +404,24 @@
         custom.persist = {
           home.directories = [
             ".local/state/mpv" # watch later
+            ".config/plex-mpv-shim"
           ];
+        };
+      }
+      {
+        # start plex-mpv-shim as user service
+        systemd.user.services.plex-mpv-shim = {
+          wantedBy = [ "graphical-session.target" ];
+          unitConfig = {
+            Description = "Plex MPV Shim";
+            PartOf = [ "graphical-session.target" ];
+            After = [ "graphical-session.target" ];
+          };
+          serviceConfig = {
+            Type = "simple";
+            ExecStart = "${lib.getExe pkgs.plex-mpv-shim}";
+            Restart = "on-failure";
+          };
         };
       }
     ];

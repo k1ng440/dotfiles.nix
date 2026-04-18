@@ -3,48 +3,83 @@
   perSystem =
     { pkgs, ... }:
     let
-      # Template for dynamic GTK theme generation
-      gtk-theme-template = pkgs.runCommand "gtk-theme-template" { } /* sh */ ''
+      tokyonight-theme = pkgs.tokyonight-gtk-theme.override {
+        colorVariants = [ "dark" ];
+        sizeVariants = [ "compact" ];
+        themeVariants = [ "default" ];
+      };
+      tokyonight-template = pkgs.runCommand "tokyonight-template" { } /* sh */ ''
         mkdir -p $out/share/themes
 
-        # Use rose-pine-gtk-theme as base template
-        src="${pkgs.rose-pine-gtk-theme}/share/themes/rose-pine-moon"
-        cp -rT "$src/" "$out/"
-
-        # Make it writable for dynamic color replacement
-        chmod -R +w "$out"
+        src="${tokyonight-theme}";
+        cp -RT "$src/share/themes/Tokyonight-Dark-Compact/" "$out/"
       '';
     in
     {
       packages = {
-        inherit gtk-theme-template;
+        # fix some ugly styling for nemo in tokyonight
+        tokyonight-gtk-theme =
+          (pkgs.tokyonight-gtk-theme.override {
+            colorVariants = [ "dark" ];
+            sizeVariants = [ "compact" ];
+            themeVariants = [ "all" ];
+          }).overrideAttrs
+            (o: {
+              patches = (o.patches or [ ]) ++ [ ./tokyonight-style.patch ];
 
-        # Script to generate dynamic GTK theme from noctalia colors
-        dynamic-gtk-theme = pkgs.writeShellApplication {
-          name = "dynamic-gtk-theme";
-          runtimeInputs = [ pkgs.dconf ];
+              # make it impossible to have a light theme XD
+              postInstall = (o.postInstall or "") + ''
+                rm -rf $out/share/themes/*Light*
+
+                for theme in "$out"/share/themes/*Dark*; do
+                  ln -s "$theme" "''${theme/Dark/Light}";
+                done
+              '';
+            });
+
+        tokyonight-dynamic-gtk-theme = pkgs.writeShellApplication {
+          name = "tokyonight-dynamic-gtk-theme";
+          runtimeInputs = [
+            pkgs.dconf
+          ];
           text = /* sh */ ''
             if [[ -z "''${1:-}" || -z "''${2:-}" ]]; then
-                echo "ERROR: Two hex colors required (primary, background)"
+                echo "ERROR: Two hex colors are required (e.g., #FF0000)."
                 exit 1
             fi
 
-            PRIMARY="''${1#\#}"
-            BG="''${2#\#}"
-            THEME_NAME="Noctalia-''${PRIMARY}-''${BG}"
+            # strip the leading #s
+            THEME_NAME="Tokyonight-''${1#\#}-''${2#\#}"
             THEME_DIR="/tmp/$THEME_NAME"
 
+            # uncomment for debugging
+            # rm -rf "$THEME_DIR"
+
             if [[ ! -d "$THEME_DIR" ]]; then
-              cp -r ${gtk-theme-template} "$THEME_DIR"
+              cp -r ${tokyonight-template} "$THEME_DIR"
               chmod -R +w "$THEME_DIR"
 
-              # Replace accent colors in CSS files
+              # replace the accents ($1) and on-accent ($2) colors
               find "$THEME_DIR" -name "*.css" -type f -exec sed -i \
-                -e "s/c4a7e7/$PRIMARY/g" \
-                -e "s/232136/$BG/g" \
+                -e "s/#27a1b9/$1/g" \
+                -e "s/rgba(26, 27, 38, 0.87)/$1/g" \
+                -e "s/#e1e2e7/$2/g" \
                 {} +
+              sed -i "s/Tokyonight-Dark-Compact/$THEME_NAME/g" "$THEME_DIR/index.theme"
 
-              sed -i "s/rose-pine-moon/$THEME_NAME/g" "$THEME_DIR/index.theme"
+              # add overrides at the end of the file
+              # wow this indentation is ass
+              cat <<-EOF | tee -a "$THEME_DIR/gtk-3.0/gtk.css" "$THEME_DIR/gtk-3.0/gtk-dark.css" > /dev/null
+            /* nemo selected item expander color */
+            treeview.view.expander:selected {
+              color: $1;
+            }
+
+            /* nemo selected item rename highlight color */
+            treeview entry.flat, treeview entry selection {
+              color: $2
+            }
+            EOF
             fi
 
             mkdir -p "$HOME/.local/share/themes"
@@ -63,14 +98,13 @@
           theme = {
             package = lib.mkOption {
               type = lib.types.package;
-              default = pkgs.rose-pine-gtk-theme;
+              default = pkgs.custom.tokyonight-gtk-theme;
               description = "Package providing the theme.";
             };
 
             name = lib.mkOption {
               type = lib.types.str;
-              # Default to rose-pine-moon until noctalia generates dynamic theme
-              default = "rose-pine-moon";
+              default = "Tokyonight-Dark-Compact";
               description = "The name of the theme within the package.";
             };
           };
@@ -82,15 +116,14 @@
     { config, pkgs, ... }:
     {
       environment.systemPackages = [
-        pkgs.rose-pine-gtk-theme
-        pkgs.custom.dynamic-gtk-theme
+        config.custom.gtk.theme.package
       ];
 
-      # set dynamic GTK theme with noctalia
+      # set dynamic icon theme with noctalia
       custom.programs.noctalia.colors.templates = {
         "gtk-theme" = {
-          post_hook = ''${lib.getExe pkgs.custom.dynamic-gtk-theme} "{{ colors.primary.default.hex }}" "{{ colors.background.default.hex }}"'';
-          # Dummy values so noctalia doesn't complain
+          post_hook = ''${lib.getExe pkgs.custom.tokyonight-dynamic-gtk-theme} "{{ colors.primary.default.hex }}" "{{ colors.on_primary.default.hex | set_alpha 0.8 }}"'';
+          # dummy values so noctalia doesn't complain
           input_path = "${config.hj.xdg.config.directory}/user-dirs.conf";
           output_path = "/dev/null";
         };

@@ -1,7 +1,7 @@
 { inputs, lib, ... }:
 {
   flake.modules.nixos.core =
-    { config, pkgs, ... }:
+    { pkgs, ... }:
     let
       gitignores = [
         ".direnv"
@@ -94,7 +94,7 @@
         programs = {
           git = {
             enable = true;
-
+            lfs.enable = true;
             config = {
               init = {
                 defaultBranch = "main";
@@ -232,11 +232,10 @@
       # git maintenance for large repos
       # https://blog.gitbutler.com/git-tips-2-new-stuff-in-git/#git-maintenance
       {
-        programs.git.config = {
-          maintenance = {
-            repo = "${config.custom.constants.projects}/nixpkgs";
-          };
-        };
+        # programs.git.config = {
+        # maintenance = {
+        # };
+        # };
       }
     ];
 }

@@ -6,7 +6,6 @@
         name = "gcm";
         runtimeInputs = [
           pkgs.git
-          pkgs.opencode
         ];
         text = builtins.readFile ./gcm.sh;
       };

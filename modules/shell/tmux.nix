@@ -12,7 +12,20 @@
       tmuxPlugin = p: "run-shell ${if lib.types.package.check p then p.rtp else p.plugin.rtp}";
 
       # Config content with placeholder for self-reference
-      tmuxConfRaw = /* tmux */ ''
+      tmuxConfRaw = /* sh */ ''
+        # Rose Pine Theme
+        set -g @rose_pine_variant 'moon'
+        set -g @rose_pine_host 'on'
+        set -g @rose_pine_date_time '%H:%M'
+        set -g @rose_pine_user 'on'
+        set -g @rose_pine_directory 'on'
+        set -g @rose_pine_bar_bg_disable 'on'
+        set -g @rose_pine_only_windows 'on'
+        set -g @rose_pine_disable_active_window_icon 'on'
+        set -g @rose_pine_default_window_behavior 'on'
+        set -g @rose_pine_show_current_program 'on'
+        set -g @rose_pine_show_pane_directory 'on'
+
         # Load Nix-managed plugins
         ${tmuxPlugin pkgs.tmuxPlugins.sensible}
         ${lib.concatMapStringsSep "\n" tmuxPlugin (
@@ -100,20 +113,8 @@
         set -g @resurrect-capture-pane-contents 'on'
         set -g @continuum-restore 'on'
 
-        # Rose Pine Theme
-        set -g @rose_pine_variant 'moon'
-        set -g @rose_pine_host 'on'
-        set -g @rose_pine_date_time ""
-        set -g @rose_pine_user 'on'
-        set -g @rose_pine_directory 'on'
-        set -g @rose_pine_bar_bg_disable 'on'
-        set -g @rose_pine_only_windows 'on'
-        set -g @rose_pine_disable_active_window_icon 'on'
-        set -g @rose_pine_default_window_behavior 'on'
-        set -g @rose_pine_show_current_program 'off'
-        set -g @rose_pine_show_pane_directory 'off'
 
-        # Status Bar - Minimal
+        # Status Bar
         set -g status-position top
         set -g status-interval 5
         set -g status-left-length 30

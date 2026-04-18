@@ -38,7 +38,7 @@
             (
               source
               // {
-                inherit (o) version; # needed for annoying version check
+                inherit (o) version patches; # needed for annoying version check
 
                 postPatch = ''
                   patchShebangs resources/niri-session
@@ -52,12 +52,6 @@
                   lockFile = "${source.src}/Cargo.lock";
                   allowBuiltinFetchGit = true;
                 };
-
-                patches = (o.patches or [ ]) ++ [
-                  # unmerged PR to fix this
-                  # https://github.com/YaLTeR/niri/pull/3004
-                  ./transparent-fullscreen.patch
-                ];
 
                 doCheck = false; # faster builds
               }

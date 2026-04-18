@@ -20,9 +20,8 @@ src.git = "https://github.com/iynaix/time-travel.yazi"
 fetch.github = "iynaix/time-travel.yazi"
 
 [niri]
-src.git = "https://github.com/YaLTeR/niri"
-src.branch = "wip/branch"
-fetch.github = "YaLTeR/niri"
+src.git = "https://github.com/niri-wm/niri"
+fetch.github = "niri-wm/niri"
 
 [yt-dlp]
 src.github_tag = "yt-dlp/yt-dlp"

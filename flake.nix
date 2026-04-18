@@ -109,6 +109,5 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     stub-flake.url = "github:k1ng440/stub-flake";
-    opencode.url = "github:anomalyco/opencode/v1.3.15";
   };
 }
