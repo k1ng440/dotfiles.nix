@@ -20,7 +20,7 @@ let
         default = { };
         example = lib.literalExpression ''
           {
-            theme = "catppuccin-mocha";
+            theme = "dankcolors";
             font-size = 12;
             keybind = [
               "ctrl+h=goto_split:left"
@@ -122,7 +122,7 @@ in
             (self.wrapperModules.ghostty.apply {
               pkgs = prev;
               extraSettings = {
-                # Set as default interactive shell, also set $SHELL for nix shell to pick up
+                theme = "dankcolors";
                 command = "SHELL=${lib.getExe pkgs.fish} fish";
                 font-family = [
                   config.custom.fonts.monospace
@@ -130,8 +130,7 @@ in
                 ];
                 font-feature = "zero";
                 font-style = "Medium";
-                # Load dynamically generated colors by noctalia
-                config-file = "?${config.hj.xdg.config.directory}/ghostty/themes/noctalia";
+                app-notifications = "no-clipboard-copy,no-config-reload";
               }
               // config.custom.programs.ghostty.extraSettings;
             }).wrapper;

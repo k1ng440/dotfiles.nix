@@ -415,10 +415,16 @@
           unitConfig = {
             Description = "Plex MPV Shim";
             PartOf = [ "graphical-session.target" ];
-            After = [ "graphical-session.target" ];
+            After = [
+              "niri.service"
+              "graphical-session.target"
+              "network-online.target"
+            ];
+            Wants = [ "network-online.target" ];
           };
           serviceConfig = {
             Type = "simple";
+            ExecStartPre = "${pkgs.coreutils}/bin/sleep 10";
             ExecStart = "${lib.getExe pkgs.plex-mpv-shim}";
             Restart = "on-failure";
           };

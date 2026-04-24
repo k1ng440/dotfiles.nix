@@ -55,7 +55,6 @@
         default = [ ];
       };
     };
-
   };
 
   # flake.modules.nixos.wm =

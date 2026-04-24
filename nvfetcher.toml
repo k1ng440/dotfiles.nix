@@ -34,3 +34,8 @@ fetch.url = "https://github.com/imputnet/helium-linux/releases/download/$ver/hel
 [rofi-themes]
 src.git = "https://github.com/adi1090x/rofi"
 fetch.github = "adi1090x/rofi"
+
+[karere]
+src.github = "tobagin/karere"
+fetch.github = "tobagin/karere"
+

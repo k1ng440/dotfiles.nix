@@ -8,10 +8,21 @@
 {
   helium = {
     pname = "helium";
-    version = "0.11.2.1";
+    version = "0.11.3.2";
     src = fetchurl {
-      url = "https://github.com/imputnet/helium-linux/releases/download/0.11.2.1/helium-0.11.2.1-x86_64.AppImage";
-      sha256 = "sha256-tGOgJSCGrGfkG2aE0VcGm2GH8ttiBQ602GftlWEHRHA=";
+      url = "https://github.com/imputnet/helium-linux/releases/download/0.11.3.2/helium-0.11.3.2-x86_64.AppImage";
+      sha256 = "sha256-5gdyKg12ZV2hpf0RL+eoJnawuW/J8NobiG+zEA0IOHA=";
+    };
+  };
+  karere = {
+    pname = "karere";
+    version = "v3.0.2";
+    src = fetchFromGitHub {
+      owner = "tobagin";
+      repo = "karere";
+      rev = "v3.0.2";
+      fetchSubmodules = false;
+      sha256 = "sha256-V1Cqc9leztK8TRBovPLwnq2AAsTq1l5MUPPA/x2rtls=";
     };
   };
   mango = {
@@ -51,15 +62,15 @@
   };
   niri = {
     pname = "niri";
-    version = "71d7fa9a61ef56d2afa1fd5523089b96c1c5fc0f";
+    version = "74d2b18603366b98ec9045ecf4a632422f472365";
     src = fetchFromGitHub {
       owner = "niri-wm";
       repo = "niri";
-      rev = "71d7fa9a61ef56d2afa1fd5523089b96c1c5fc0f";
+      rev = "74d2b18603366b98ec9045ecf4a632422f472365";
       fetchSubmodules = false;
-      sha256 = "sha256-D5ME/gcvzCqr2pqd8iw3Nx7v31CBdQLt5iFfF0PZKDw=";
+      sha256 = "sha256-mSxfoEs7DiDhMCBzprI/1K7UXzMISuGq0b7T06LVJXE=";
     };
-    date = "2026-04-15";
+    date = "2026-04-22";
   };
   rofi-themes = {
     pname = "rofi-themes";
@@ -75,15 +86,15 @@
   };
   yazi-plugins = {
     pname = "yazi-plugins";
-    version = "06b192110efe5c3338cacd490490906b639d73ea";
+    version = "ac82af3e10f9a32cecd9f87ac64b3f9de7c7aea7";
     src = fetchFromGitHub {
       owner = "yazi-rs";
       repo = "plugins";
-      rev = "06b192110efe5c3338cacd490490906b639d73ea";
+      rev = "ac82af3e10f9a32cecd9f87ac64b3f9de7c7aea7";
       fetchSubmodules = false;
-      sha256 = "sha256-fFVTxl9fgRJ0p0b55CfKfj0buKeWpbl8RBmXPawQNWE=";
+      sha256 = "sha256-svc7I2E+tVMEUWUvIS6i3oTGfLq13eaI61T0c1MQ8qQ=";
     };
-    date = "2026-04-15";
+    date = "2026-04-23";
   };
   yazi-time-travel = {
     pname = "yazi-time-travel";

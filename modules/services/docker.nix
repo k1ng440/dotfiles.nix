@@ -7,13 +7,35 @@
 
       virtualisation = {
         docker = {
-          enable = true;
-          daemon.settings = {
-            features = {
-              cdi = true;
+          enable = false;
+          rootless = {
+            enable = true;
+            setSocketVariable = true;
+            daemon.settings = {
+              storage-driver = "btrfs";
+              features.cdi = true;
+              pruning = {
+                enabled = true;
+                interval = "7d";
+              };
+              default-address-pools = [
+                {
+                  base = "172.27.0.0/16";
+                  size = 24;
+                }
+              ];
             };
           };
         };
+      };
+
+      systemd.user.services.docker = {
+        after = [
+          "network-online.target"
+          "nss-lookup.target"
+          "systemd-resolved.service"
+        ];
+        wants = [ "network-online.target" ];
       };
     };
 }

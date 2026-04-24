@@ -5,30 +5,27 @@
       inherit (config.custom.constants) user;
     in
     {
-      config = {
-        virtualisation = {
-          libvirtd.enable = true;
-          # following configuration is used only when building VMs with build-vm
-          vmVariant = {
-            virtualisation = {
-              memorySize = 1024 * 16;
-              cores = 8;
-            };
+      virtualisation = {
+        libvirtd = {
+          enable = true;
+          qemu = {
+            swtpm.enable = true;
+            vhostUserPackages = [ pkgs.virtiofsd ];
           };
         };
-        programs.virt-manager.enable = true;
-        # https://discourse.nixos.org/t/virt-manager-cannot-find-virtiofsd/26752/2
-        # add virtiofsd to filesystem xml
-        # <binary path="/run/current-system/sw/bin/virtiofsd"/>
-        environment.systemPackages = with pkgs; [ virtiofsd ];
-
-        users.users.${user}.extraGroups = [ "libvirtd" ];
-
-        # store VMs on zroot/cache
-        custom.persist = {
-          root = {
-            cache.directories = [ "/var/lib/libvirt" ];
+        vmVariant = {
+          virtualisation = {
+            memorySize = 1024 * 16;
+            cores = 8;
           };
+        };
+      };
+      services.spice-vdagentd.enable = true;
+      programs.virt-manager.enable = true;
+      users.users.${user}.extraGroups = [ "libvirtd" ];
+      custom.persist = {
+        root = {
+          cache.directories = [ "/var/lib/libvirt" ];
         };
       };
     };

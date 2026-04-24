@@ -13,6 +13,26 @@
             delay = 3;
           }
         ];
+        niri.settings.window-rules = [
+          {
+            matches = [
+              {
+                app-id = "^thunderbird$";
+                title = "^Write:|^Address Book";
+              }
+            ];
+            open-floating = true;
+          }
+          {
+            matches = [
+              {
+                app-id = "^thunderbird$";
+                title = "^Alert$|^Connection Error|^Login Failed|^Password Required|^Security Exception";
+              }
+            ];
+            open-floating = true;
+          }
+        ];
         persist = {
           home.directories = [ ".thunderbird" ];
         };

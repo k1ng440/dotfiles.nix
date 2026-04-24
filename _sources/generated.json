@@ -8,11 +8,32 @@
         "pinned": false,
         "src": {
             "name": null,
-            "sha256": "sha256-tGOgJSCGrGfkG2aE0VcGm2GH8ttiBQ602GftlWEHRHA=",
+            "sha256": "sha256-5gdyKg12ZV2hpf0RL+eoJnawuW/J8NobiG+zEA0IOHA=",
             "type": "url",
-            "url": "https://github.com/imputnet/helium-linux/releases/download/0.11.2.1/helium-0.11.2.1-x86_64.AppImage"
+            "url": "https://github.com/imputnet/helium-linux/releases/download/0.11.3.2/helium-0.11.3.2-x86_64.AppImage"
         },
-        "version": "0.11.2.1"
+        "version": "0.11.3.2"
+    },
+    "karere": {
+        "cargoLock": null,
+        "date": null,
+        "extract": null,
+        "name": "karere",
+        "passthru": null,
+        "pinned": false,
+        "src": {
+            "deepClone": false,
+            "fetchSubmodules": false,
+            "leaveDotGit": false,
+            "name": null,
+            "owner": "tobagin",
+            "repo": "karere",
+            "rev": "v3.0.2",
+            "sha256": "sha256-V1Cqc9leztK8TRBovPLwnq2AAsTq1l5MUPPA/x2rtls=",
+            "sparseCheckout": [],
+            "type": "github"
+        },
+        "version": "v3.0.2"
     },
     "mango": {
         "cargoLock": null,
@@ -79,7 +100,7 @@
     },
     "niri": {
         "cargoLock": null,
-        "date": "2026-04-15",
+        "date": "2026-04-22",
         "extract": null,
         "name": "niri",
         "passthru": null,
@@ -91,12 +112,12 @@
             "name": null,
             "owner": "niri-wm",
             "repo": "niri",
-            "rev": "71d7fa9a61ef56d2afa1fd5523089b96c1c5fc0f",
-            "sha256": "sha256-D5ME/gcvzCqr2pqd8iw3Nx7v31CBdQLt5iFfF0PZKDw=",
+            "rev": "74d2b18603366b98ec9045ecf4a632422f472365",
+            "sha256": "sha256-mSxfoEs7DiDhMCBzprI/1K7UXzMISuGq0b7T06LVJXE=",
             "sparseCheckout": [],
             "type": "github"
         },
-        "version": "71d7fa9a61ef56d2afa1fd5523089b96c1c5fc0f"
+        "version": "74d2b18603366b98ec9045ecf4a632422f472365"
     },
     "rofi-themes": {
         "cargoLock": null,
@@ -121,7 +142,7 @@
     },
     "yazi-plugins": {
         "cargoLock": null,
-        "date": "2026-04-15",
+        "date": "2026-04-23",
         "extract": null,
         "name": "yazi-plugins",
         "passthru": null,
@@ -133,12 +154,12 @@
             "name": null,
             "owner": "yazi-rs",
             "repo": "plugins",
-            "rev": "06b192110efe5c3338cacd490490906b639d73ea",
-            "sha256": "sha256-fFVTxl9fgRJ0p0b55CfKfj0buKeWpbl8RBmXPawQNWE=",
+            "rev": "ac82af3e10f9a32cecd9f87ac64b3f9de7c7aea7",
+            "sha256": "sha256-svc7I2E+tVMEUWUvIS6i3oTGfLq13eaI61T0c1MQ8qQ=",
             "sparseCheckout": [],
             "type": "github"
         },
-        "version": "06b192110efe5c3338cacd490490906b639d73ea"
+        "version": "ac82af3e10f9a32cecd9f87ac64b3f9de7c7aea7"
     },
     "yazi-time-travel": {
         "cargoLock": null,

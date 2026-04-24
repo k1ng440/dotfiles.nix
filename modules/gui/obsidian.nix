@@ -1,19 +1,16 @@
 {
   flake.modules.nixos.programs_obsidian =
     { pkgs, lib, ... }:
-    let
-      obsidian = pkgs.obsidian.override { inherit (pkgs) electron; };
-    in
     {
       environment.systemPackages = [
-        obsidian
+        pkgs.obsidian
       ];
 
       custom = {
         programs.which-key.menus = {
           o = {
             desc = "Obsidian";
-            cmd = lib.getExe obsidian;
+            cmd = lib.getExe pkgs.obsidian;
           };
         };
         persist = {

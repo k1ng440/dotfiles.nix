@@ -1,7 +1,6 @@
 _: {
   flake.modules.nixos.programs_steam =
     {
-      config,
       lib,
       pkgs,
       ...
@@ -11,7 +10,7 @@ _: {
         enable = true;
         remotePlay.openFirewall = true;
         dedicatedServer.openFirewall = true;
-        gamescopeSession.enable = false;
+        gamescopeSession.enable = true;
         extraCompatPackages = [ pkgs.proton-ge-bin ];
         extraPackages = with pkgs; [
           gamemode
@@ -20,8 +19,6 @@ _: {
         protontricks = {
           enable = true;
         };
-        # Get rid of ~/.steam directory:
-        # https://github.com/ValveSoftware/steam-for-linux/issues/1890#issuecomment-2367103614
         package = pkgs.steam.override {
           extraPkgs =
             pkgs: with pkgs; [
@@ -43,15 +40,15 @@ _: {
             __GL_THREADED_OPTIMIZATIONS = "1";
             DXVK_STATE_CACHE = "1";
           };
-          extraBwrapArgs = [
-            "--bind /persist/${config.hj.directory} $HOME"
-            "--bind /run/user /run/user" # <-- add this
-            "--bind /run/wrappers /run/wrappers"
-            "--unsetenv XDG_CACHE_HOME"
-            "--unsetenv XDG_CONFIG_HOME"
-            "--unsetenv XDG_DATA_HOME"
-            "--unsetenv XDG_STATE_HOME"
-          ];
+          # extraBwrapArgs = [
+          #   "--bind /persist/${config.hj.directory} $HOME"
+          #   "--bind /run/user /run/user"
+          #   "--bind /run/wrappers /run/wrappers"
+          #   "--unsetenv XDG_CACHE_HOME"
+          #   "--unsetenv XDG_CONFIG_HOME"
+          #   "--unsetenv XDG_DATA_HOME"
+          #   "--unsetenv XDG_STATE_HOME"
+          # ];
         };
       };
 

@@ -50,7 +50,11 @@
       services.dbus.implementation = "broker";
 
       # enable opengl
-      hardware.graphics.enable = true;
+
+      hardware.graphics = {
+        enable = true;
+        enable32Bit = true;
+      };
 
       # zram
       zramSwap.enable = true;

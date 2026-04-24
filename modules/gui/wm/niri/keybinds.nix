@@ -1,7 +1,7 @@
 { lib, self, ... }:
 {
   flake.modules.nixos.wm =
-    { config, ... }:
+    { pkgs, config, ... }:
     let
       # inherit (config.custom.constants) dots projects;
       inherit (config.custom.hardware) monitors;
@@ -21,23 +21,50 @@
             "Mod+Shift+Slash".show-hotkey-overlay = null;
             "Alt+F4".quit = null;
             "Ctrl+Alt+Delete".spawn = [
-              "noctalia-ipc"
-              "sessionMenu"
+              "dms"
+              "ipc"
+              "call"
+              "powermenu"
               "toggle"
             ];
             "Mod+A".spawn = [
-              "noctalia-ipc"
+              "dms"
+              "ipc"
+              "call"
               "bar"
               "toggle"
             ];
             "Mod+Shift+A".spawn = [ "noctalia-reload" ];
             "Mod+Escape".toggle-keyboard-shortcuts-inhibit = null;
+            "Mod+Ctrl+V".spawn = [
+              "dms"
+              "ipc"
+              "call"
+              "clipboard"
+              "toggle"
+            ];
+            "Mod+N".spawn = [
+              "dms"
+              "ipc"
+              "call"
+              "notifications"
+              "toggle"
+            ];
+            "Mod+Apostrophe".spawn = [
+              "dms"
+              "ipc"
+              "call"
+              "wallpaperCarousel"
+              "toggle"
+            ];
 
             # --- Launcher & Files ---
             "Mod+Return".spawn = [ "ghostty" ];
             "Mod+Shift+Return".spawn = [
-              "noctalia-ipc"
-              "launcher"
+              "dms"
+              "ipc"
+              "call"
+              "spotlight"
               "toggle"
             ];
             "Mod+E".spawn = [
@@ -48,23 +75,8 @@
               "yazi"
               "${config.hj.directory}/Downloads"
             ];
-            "Mod+Ctrl+V".spawn = [
-              "noctalia-ipc"
-              "launcher"
-              "clipboard"
-            ];
-            "Mod+N".spawn = [
-              "noctalia-ipc"
-              "notifications"
-              "toggleHistory"
-            ];
 
             # --- Layout & Utility ---
-            "Mod+V".spawn = [
-              "noctalia-ipc"
-              "launcher"
-              "clipboard"
-            ];
             "Mod+G".toggle-window-floating = null;
             "Mod+Shift+G".switch-focus-between-floating-and-tiling = null;
 
@@ -200,29 +212,14 @@
             "Mod+T".toggle-column-tabbed-display = null;
 
             # --- Screenshot ---
-            "Print".spawn = [ "screenshot-tool" ];
+            "Print".spawn = [
+              "dms"
+              "screenshot"
+            ];
             "Shift+Print".spawn = [
-              "screenshot-tool"
-              "--mode"
-              "clipboard"
-            ];
-            "Ctrl+Print".spawn = [
-              "screenshot-tool"
-              "--mode"
-              "save"
-            ];
-            "Alt+Print".spawn = [
-              "screenshot-tool"
-              "--mode"
-              "edit"
-            ];
-            "Mod+Apostrophe".spawn = [
-              "wallpaper"
-              "select"
-            ];
-            "Mod+alt+Apostrophe".spawn = [
-              "wallpaper"
-              "wallhaven"
+              "sh"
+              "-c"
+              "dms screenshot --stdout | ${lib.getExe pkgs.satty} -f -"
             ];
           }
           // lib.mergeAttrsList (

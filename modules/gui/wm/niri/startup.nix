@@ -42,7 +42,8 @@
         ++ [
           {
             spawn-at-startup = lib.mkBefore [
-              "${lib.getExe' pkgs.dbus "dbus-update-activation-environment"} --systemd DISPLAY WAYLAND_DISPLAY XDG_CURRENT_DESKTOP GTK_THEME && systemctl --user niri-session.target"
+              "${lib.getExe' pkgs.dbus "dbus-update-activation-environment"} --systemd DISPLAY WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
+              "systemctl --user start niri-session.target"
             ];
           }
         ]

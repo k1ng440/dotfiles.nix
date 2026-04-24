@@ -230,7 +230,7 @@
         };
 
       custom = {
-        startup = lib.mkBefore [ { spawn = [ (lib.getExe noctalia-start) ]; } ];
+        # startup = lib.mkBefore [ { spawn = [ (lib.getExe noctalia-start) ]; } ];
 
         programs = {
           # Setup blur for hyprland

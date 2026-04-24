@@ -12,6 +12,7 @@
         niri.settings = {
           layout = {
             gaps = gap;
+            background-color = "transparent";
 
             struts = {
               left = strut;
@@ -73,13 +74,22 @@
             center-focused-column = "never";
             always-center-single-column = null;
           };
-
           window-rules = [
+            # General window appearance
             {
               draw-border-with-background = false;
               geometry-corner-radius = 4;
               clip-to-geometry = true;
               open-maximized-to-edges = false;
+            }
+            # DMS windows - float by default
+            {
+              matches = [
+                {
+                  app-id = "org.quickshell";
+                }
+              ];
+              open-floating = true;
             }
           ];
 
@@ -87,6 +97,14 @@
           layer-rules = [
             {
               matches = [ { namespace = "^noctalia-overview*"; } ];
+              place-within-backdrop = true;
+            }
+            {
+              matches = [ { namespace = "^quickshell$"; } ];
+              place-within-backdrop = true;
+            }
+            {
+              matches = [ { namespace = "dms:blurwallpaper"; } ];
               place-within-backdrop = true;
             }
           ];
@@ -244,10 +262,12 @@
               )
               |> lib.concatLines
             )
-            # Always source original config.kdl at the end
             (lib.mkAfter ''
               include optional=true "${config.hj.xdg.config.directory}/niri/config.kdl";
-              include optional=true "${config.hj.xdg.config.directory}/niri/noctalia.kdl";
+              include optional=true "${config.hj.xdg.config.directory}/niri/dms/colors.kdl";
+              include optional=true "${config.hj.xdg.config.directory}/niri/dms/layout.kdl";
+              include optional=true "${config.hj.xdg.config.directory}/niri/dms/alttab.kdl";
+              include optional=true "${config.hj.xdg.config.directory}/niri/dms/binds.kdl";
             '')
           ];
         };

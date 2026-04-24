@@ -30,6 +30,7 @@
     { config, pkgs, ... }:
     let
       source = (self.libCustom.nvFetcherSources pkgs).niri;
+      niriConfigPath = niriWrapped.env."NIRI_CONFIG";
       niriWrapped = inputs.wrappers.wrapperModules.niri.apply {
         inherit pkgs;
         package = lib.mkForce (
@@ -59,7 +60,10 @@
           )
         );
 
-        inherit (config.custom.programs.niri) settings;
+        settings = (config.custom.programs.niri.settings) // {
+          binds = (config.custom.programs.niri.settings.binds or { }) // {
+          };
+        };
       };
     in
     {
@@ -69,7 +73,6 @@
         };
       };
 
-      # NOTE: named workspaces are used, because dynamic workspaces are just... urgh
       programs.niri = {
         enable = true;
         package = niriWrapped.wrapper;
@@ -88,7 +91,7 @@
               ];
               text = ''
                 if pgrep -x "niri" > /dev/null; then
-                  niri msg action load-config-file --path "${niriWrapped.env."NIRI_CONFIG"}"
+                  niri msg action load-config-file --path niriConfigPath
                 fi
               '';
             }
@@ -117,7 +120,7 @@
 
         print-config = {
           # Use cat as kdlfmt tries to write the file in the nix store
-          niri = /* sh */ ''cat "${niriWrapped.env."NIRI_CONFIG"}" | ${lib.getExe pkgs.kdlfmt} format - | moor --lang kdl'';
+          niri = /* sh */ ''cat "${niriConfigPath}" | ${lib.getExe pkgs.kdlfmt} format - | moor --lang kdl'';
         };
       };
     };

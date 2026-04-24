@@ -97,8 +97,6 @@
 
       programs.dconf = {
         enable = true;
-
-        # custom option, the default nesting is horrendous
         profiles.user.databases = [
           {
             settings = lib.mkMerge [

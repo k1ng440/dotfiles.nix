@@ -109,5 +109,15 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     stub-flake.url = "github:k1ng440/stub-flake";
+
+    dms = {
+      url = "github:AvengeMedia/DankMaterialShell/stable";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    quickshell = {
+      url = "git+https://git.outfoxxed.me/outfoxxed/quickshell";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 }

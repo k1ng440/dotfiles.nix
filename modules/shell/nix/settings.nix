@@ -36,12 +36,21 @@
         nh = {
           enable = true;
           flake = dots;
+          clean = {
+            enable = true;
+            extraArgs = "--keep-since 4d --keep 3";
+          };
         };
 
         nix-index.enable = true;
 
         # Run unpatched binaries on nixos
         nix-ld.enable = true;
+        nix-ld.libraries = with pkgs; [
+          vulkan-loader
+          libGL
+          libGLU
+        ];
       };
 
       nix =
@@ -53,13 +62,6 @@
           channel.enable = false;
           # required for nix-shell -p to work
           inherit nixPath;
-          gc = {
-            # Automatic garbage collection
-            automatic = true;
-            dates = "daily";
-            options = "--delete-older-than 7d";
-          };
-          # package = pkgs.lixPackageSets.latest.lix;
           package = pkgs.nixVersions.latest;
           registry = registry // {
             n = registry.nixpkgs;

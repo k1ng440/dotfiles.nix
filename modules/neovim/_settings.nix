@@ -82,7 +82,6 @@
       otter-nvim.enable = true;
       nvim-docs-view.enable = true;
       lspSignature.enable = false;
-      harper-ls.enable = true;
     };
 
     formatter = {
@@ -122,7 +121,7 @@
         treesitter.enable = true;
         format.enable = true;
       };
-      ts = {
+      typescript = {
         enable = true;
         lsp.enable = true;
         treesitter.enable = true;
