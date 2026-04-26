@@ -9,11 +9,11 @@
           home.directories = [ ".local/share/Anki2" ];
         };
 
-        niri.settings.window-rules = [
+        programs.niri.settings.window-rules = [
           {
             matches = [
               {
-                app-id = "^net\\.ankiweb\\.Anki$";
+                app-id = "^net.ankiweb.Anki$";
                 title = "^Add$|^Browse|^Edit";
               }
             ];

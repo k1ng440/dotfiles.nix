@@ -1,0 +1,5 @@
+--- a/tests/test_mpv.py
++++ b/tests/test_mpv.py
+@@ -921,6 +921,7 @@ class RegressionTests(MpvTestCase):
++    @unittest.skip("Flaky test - see https://github.com/jaseg/python-mpv/issues/286")
+     def test_wait_for_property_concurrency(self):

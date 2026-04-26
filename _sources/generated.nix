@@ -8,10 +8,10 @@
 {
   helium = {
     pname = "helium";
-    version = "0.11.3.2";
+    version = "0.11.5.1";
     src = fetchurl {
-      url = "https://github.com/imputnet/helium-linux/releases/download/0.11.3.2/helium-0.11.3.2-x86_64.AppImage";
-      sha256 = "sha256-5gdyKg12ZV2hpf0RL+eoJnawuW/J8NobiG+zEA0IOHA=";
+      url = "https://github.com/imputnet/helium-linux/releases/download/0.11.5.1/helium-0.11.5.1-x86_64.AppImage";
+      sha256 = "sha256-Ni7IZ9UBafr+ss0BcQaRKqmlmJI4IV1jRAJ8jhcodlg=";
     };
   };
   karere = {
@@ -27,13 +27,13 @@
   };
   mango = {
     pname = "mango";
-    version = "0.12.8";
+    version = "0.12.9";
     src = fetchFromGitHub {
       owner = "mangowm";
       repo = "mango";
-      rev = "0.12.8";
+      rev = "0.12.9";
       fetchSubmodules = false;
-      sha256 = "sha256-k9qFn9I+eeAq1kBfw6QRLRMDb6sIV+pgd5zpKNoc1ck=";
+      sha256 = "sha256-RP7eVqbnQ/uNCXh0HH8SXRIerMlkyHco+wpI9oxon0U=";
     };
   };
   mpv-deletefile = {
@@ -62,15 +62,15 @@
   };
   niri = {
     pname = "niri";
-    version = "74d2b18603366b98ec9045ecf4a632422f472365";
+    version = "83e839762fa208b3631163e85d760e0e89fe8fe3";
     src = fetchFromGitHub {
       owner = "niri-wm";
       repo = "niri";
-      rev = "74d2b18603366b98ec9045ecf4a632422f472365";
+      rev = "83e839762fa208b3631163e85d760e0e89fe8fe3";
       fetchSubmodules = false;
-      sha256 = "sha256-mSxfoEs7DiDhMCBzprI/1K7UXzMISuGq0b7T06LVJXE=";
+      sha256 = "sha256-PHwfKjDSe1TtW7ndaZbsGbx/nv2ZN+mkst1dquS8vqo=";
     };
-    date = "2026-04-22";
+    date = "2026-04-26";
   };
   rofi-themes = {
     pname = "rofi-themes";

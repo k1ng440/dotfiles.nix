@@ -13,7 +13,7 @@
             delay = 3;
           }
         ];
-        niri.settings.window-rules = [
+        programs.niri.settings.window-rules = [
           {
             matches = [
               {

@@ -2,12 +2,6 @@ _: {
   flake.modules.nixos.hardware_Brother_DCP-T510W =
     { pkgs, ... }:
     {
-
-      environment.systemPackages = [
-        pkgs.brscan4
-        (pkgs.xsane.override { gimpSupport = true; })
-      ];
-
       services = {
         avahi = {
           enable = true;

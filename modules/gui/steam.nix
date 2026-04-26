@@ -1,11 +1,23 @@
 _: {
   flake.modules.nixos.programs_steam =
     {
+      config,
       lib,
       pkgs,
       ...
     }:
     {
+      nixpkgs.overlays = [
+        (_: prev: {
+          steam-unwrapped = prev.steam-unwrapped.overrideAttrs (old: {
+            postInstall = (old.postInstall or "") + ''
+              sed -i 's/^Name=Steam$/Name=Steam (native)/' \
+                $out/share/applications/steam.desktop
+            '';
+          });
+        })
+      ];
+
       programs.steam = {
         enable = true;
         remotePlay.openFirewall = true;
@@ -20,35 +32,21 @@ _: {
           enable = true;
         };
         package = pkgs.steam.override {
-          extraPkgs =
-            pkgs: with pkgs; [
-              libXcursor
-              libXi
-              libXinerama
-              libXScrnSaver
-              libpng
-              libpulseaudio
-              libvorbis
-              stdenv.cc.cc.lib
-              libkrb5
-              keyutils
-            ];
           extraEnv = {
-            OBS_VKCAPTURE = "1";
-            RADV_TEX_ANISO = "16";
-            __GL_SHADER_DISK_CACHE_SKIP_CLEANUP = "1";
-            __GL_THREADED_OPTIMIZATIONS = "1";
-            DXVK_STATE_CACHE = "1";
+            MANGOHUD = true;
+            OBS_VKCAPTURE = true;
+            RADV_TEX_ANISO = 16;
           };
-          # extraBwrapArgs = [
-          #   "--bind /persist/${config.hj.directory} $HOME"
-          #   "--bind /run/user /run/user"
-          #   "--bind /run/wrappers /run/wrappers"
-          #   "--unsetenv XDG_CACHE_HOME"
-          #   "--unsetenv XDG_CONFIG_HOME"
-          #   "--unsetenv XDG_DATA_HOME"
-          #   "--unsetenv XDG_STATE_HOME"
-          # ];
+          extraLibraries = p: with p; [ atk ];
+          extraBwrapArgs = [
+            "--bind /persist/${config.hj.directory} $HOME"
+            "--bind /run/user /run/user"
+            "--bind /run/wrappers /run/wrappers"
+            "--unsetenv XDG_CACHE_HOME"
+            "--unsetenv XDG_CONFIG_HOME"
+            "--unsetenv XDG_DATA_HOME"
+            "--unsetenv XDG_STATE_HOME"
+          ];
         };
       };
 

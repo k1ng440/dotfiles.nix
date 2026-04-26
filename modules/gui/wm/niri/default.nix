@@ -29,6 +29,7 @@
   flake.modules.nixos.wm =
     { config, pkgs, ... }:
     let
+      niriVersion = "26.04";
       source = (self.libCustom.nvFetcherSources pkgs).niri;
       niriConfigPath = niriWrapped.env."NIRI_CONFIG";
       niriWrapped = inputs.wrappers.wrapperModules.niri.apply {
@@ -39,7 +40,8 @@
             (
               source
               // {
-                inherit (o) version patches; # needed for annoying version check
+                inherit (o) patches; # needed for annoying version check
+                version = niriVersion;
 
                 postPatch = ''
                   patchShebangs resources/niri-session

@@ -145,7 +145,7 @@
             input-ipc-server = "/tmp/mpvsocket";
             # no-border = true;
             save-position-on-quit = true;
-            force-seekable = true;
+            force-seekable = false;
             demuxer-max-bytes = "150M";
             cursor-autohide = 100;
 
@@ -181,6 +181,7 @@
             alang = "jp,jpn,japanese,en,eng,english";
 
             write-filename-in-watch-later-config = true;
+
           };
 
           scripts = with pkgs; [
@@ -388,7 +389,7 @@
         environment.systemPackages = with pkgs; [
           ffmpeg
           mpv # overlay-ed above
-          plex-mpv-shim
+          # plex-mpv-shim
         ];
 
         custom.programs.print-config =
@@ -410,25 +411,25 @@
       }
       {
         # start plex-mpv-shim as user service
-        systemd.user.services.plex-mpv-shim = {
-          wantedBy = [ "graphical-session.target" ];
-          unitConfig = {
-            Description = "Plex MPV Shim";
-            PartOf = [ "graphical-session.target" ];
-            After = [
-              "niri.service"
-              "graphical-session.target"
-              "network-online.target"
-            ];
-            Wants = [ "network-online.target" ];
-          };
-          serviceConfig = {
-            Type = "simple";
-            ExecStartPre = "${pkgs.coreutils}/bin/sleep 10";
-            ExecStart = "${lib.getExe pkgs.plex-mpv-shim}";
-            Restart = "on-failure";
-          };
-        };
+        # systemd.user.services.plex-mpv-shim = {
+        #   wantedBy = [ "graphical-session.target" ];
+        #   unitConfig = {
+        #     Description = "Plex MPV Shim";
+        #     PartOf = [ "graphical-session.target" ];
+        #     After = [
+        #       "niri.service"
+        #       "graphical-session.target"
+        #       "network-online.target"
+        #     ];
+        #     Wants = [ "network-online.target" ];
+        #   };
+        #   serviceConfig = {
+        #     Type = "simple";
+        #     ExecStartPre = "${pkgs.coreutils}/bin/sleep 10";
+        #     ExecStart = "${lib.getExe pkgs.plex-mpv-shim}";
+        #     Restart = "on-failure";
+        #   };
+        # };
       }
     ];
 }
