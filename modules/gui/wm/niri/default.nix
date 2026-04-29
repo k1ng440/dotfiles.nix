@@ -40,13 +40,15 @@
             (
               source
               // {
-                inherit (o) patches; # needed for annoying version check
+                patches = (o.patches or [ ]) ++ [
+                  ./transparent-fullscreen.patch
+                ];
                 version = niriVersion;
 
                 postPatch = ''
                   patchShebangs resources/niri-session
                   substituteInPlace resources/niri.service \
-                    --replace-fail 'ExecStart=niri' "ExecStart=$out/bin/niri"
+                  --replace-fail 'ExecStart=niri' "ExecStart=$out/bin/niri"
                 '';
 
                 # Creating an overlay for buildRustPackage overlay (NOTE: this is an IFD)
@@ -56,7 +58,7 @@
                   allowBuiltinFetchGit = true;
                 };
 
-                doCheck = false; # faster builds
+                doCheck = false;
               }
             )
           )
@@ -79,6 +81,12 @@
         enable = true;
         package = niriWrapped.wrapper;
         useNautilus = false;
+      };
+
+      systemd.user.services.niri = {
+        overrideStrategy = "asDropin";
+        stopIfChanged = false;
+        restartIfChanged = false;
       };
 
       # Reload niri

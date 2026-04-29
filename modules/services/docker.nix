@@ -14,10 +14,6 @@
             daemon.settings = {
               storage-driver = "btrfs";
               features.cdi = true;
-              pruning = {
-                enabled = true;
-                interval = "7d";
-              };
               default-address-pools = [
                 {
                   base = "172.27.0.0/16";
