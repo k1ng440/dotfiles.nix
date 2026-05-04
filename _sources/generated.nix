@@ -8,10 +8,10 @@
 {
   helium = {
     pname = "helium";
-    version = "0.11.5.1";
+    version = "0.12.0.2";
     src = fetchurl {
-      url = "https://github.com/imputnet/helium-linux/releases/download/0.11.5.1/helium-0.11.5.1-x86_64.AppImage";
-      sha256 = "sha256-Ni7IZ9UBafr+ss0BcQaRKqmlmJI4IV1jRAJ8jhcodlg=";
+      url = "https://github.com/imputnet/helium-linux/releases/download/0.12.0.2/helium-0.12.0.2-x86_64.AppImage";
+      sha256 = "sha256-1iU+hhisAPF2hAgfFob6Oe54JXjwb6uftiERa4t+OoE=";
     };
   };
   karere = {
@@ -62,27 +62,27 @@
   };
   niri = {
     pname = "niri";
-    version = "83e839762fa208b3631163e85d760e0e89fe8fe3";
+    version = "1f07cffa9f355298a31d7efe1b400ede93a97728";
     src = fetchFromGitHub {
       owner = "niri-wm";
       repo = "niri";
-      rev = "83e839762fa208b3631163e85d760e0e89fe8fe3";
+      rev = "1f07cffa9f355298a31d7efe1b400ede93a97728";
       fetchSubmodules = false;
-      sha256 = "sha256-PHwfKjDSe1TtW7ndaZbsGbx/nv2ZN+mkst1dquS8vqo=";
+      sha256 = "sha256-1TlpdT0WYyBGtUS3PH4oXHUmdno2EUh2TfHadK2BmJo=";
     };
-    date = "2026-04-26";
+    date = "2026-05-02";
   };
   rofi-themes = {
     pname = "rofi-themes";
-    version = "093c1a79f58daab358199c4246de50357e5bf462";
+    version = "b0bfe927531e365f009d01810c26878c003f7cb8";
     src = fetchFromGitHub {
       owner = "adi1090x";
       repo = "rofi";
-      rev = "093c1a79f58daab358199c4246de50357e5bf462";
+      rev = "b0bfe927531e365f009d01810c26878c003f7cb8";
       fetchSubmodules = false;
-      sha256 = "sha256-iUX0Quae06tGd7gDgXZo1B3KYgPHU+ADPBrowHlv02A=";
+      sha256 = "sha256-pM183MHOMuKJyLgthozM1MRsmhBM25VQgWc7CmLL2HI=";
     };
-    date = "2025-07-26";
+    date = "2026-04-30";
   };
   yazi-plugins = {
     pname = "yazi-plugins";

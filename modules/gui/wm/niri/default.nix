@@ -29,7 +29,6 @@
   flake.modules.nixos.wm =
     { config, pkgs, ... }:
     let
-      niriVersion = "26.04";
       source = (self.libCustom.nvFetcherSources pkgs).niri;
       niriConfigPath = niriWrapped.env."NIRI_CONFIG";
       niriWrapped = inputs.wrappers.wrapperModules.niri.apply {
@@ -43,7 +42,7 @@
                 patches = (o.patches or [ ]) ++ [
                   ./transparent-fullscreen.patch
                 ];
-                version = niriVersion;
+                inherit (o) version;
 
                 postPatch = ''
                   patchShebangs resources/niri-session
@@ -58,7 +57,7 @@
                   allowBuiltinFetchGit = true;
                 };
 
-                doCheck = false;
+                doCheck = true;
               }
             )
           )
@@ -85,8 +84,11 @@
 
       systemd.user.services.niri = {
         overrideStrategy = "asDropin";
-        stopIfChanged = false;
-        restartIfChanged = false;
+        stopIfChanged = lib.mkForce false;
+        restartIfChanged = lib.mkForce false;
+        serviceConfig = {
+          SetLoginEnvironment = lib.mkForce true;
+        };
       };
 
       # Reload niri

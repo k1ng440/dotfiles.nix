@@ -21,11 +21,12 @@
         services_virtualisation
         programs_kdeconnect
         services_clamav
+        service_tailscale
         hardware_yubikey
         programs_kitty
         programs_steam
         programs_vesktop
-        programs_spicetify
+        # programs_spicetify
         programs_anki
         programs_thunderbird
         programs_localsend
@@ -125,10 +126,11 @@
         {
           "/mnt/sn550" = {
             device = "/dev/disk/by-uuid/02DCA7E7DCA7D2E9";
-            fsType = "ntfs-3g";
+            fsType = "ntfs";
             options = [
               "rw"
               "uid=${toString uid}"
+              "nofail"
             ];
           };
 

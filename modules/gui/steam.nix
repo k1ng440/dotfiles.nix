@@ -82,6 +82,25 @@ _: {
 
       custom = {
         programs = {
+          niri = {
+            settings = {
+              window-rules = [
+                {
+                  matches = [
+                    {
+                      app-id = "^steam$";
+                      title = "^notificationtoasts_\\\\d+_desktop$";
+                    }
+                  ];
+                  open-focused = false;
+                  open-floating = true;
+                  "default-floating-position x=10 y=10 relative-to=\"bottom-right\"" = null;
+                  draw-border-with-background = false;
+                  focus-ring.off = null;
+                }
+              ];
+            };
+          };
           which-key = {
             menus = {
               s = {

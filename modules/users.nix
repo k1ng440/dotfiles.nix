@@ -18,7 +18,9 @@
         {
           users = {
             mutableUsers = false;
-            groups.${user} = { };
+            groups.${user} = {
+              gid = 1000;
+            };
 
             users = {
               root = {
@@ -29,6 +31,7 @@
                 home = "/home/${user}";
                 isNormalUser = true;
                 group = user;
+                uid = 1000;
                 initialPassword = "password";
                 # hashedPasswordFile = "/persist/etc/shadow/${user}";
                 extraGroups = lib.flatten [

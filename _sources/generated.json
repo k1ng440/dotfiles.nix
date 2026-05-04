@@ -8,11 +8,11 @@
         "pinned": false,
         "src": {
             "name": null,
-            "sha256": "sha256-Ni7IZ9UBafr+ss0BcQaRKqmlmJI4IV1jRAJ8jhcodlg=",
+            "sha256": "sha256-1iU+hhisAPF2hAgfFob6Oe54JXjwb6uftiERa4t+OoE=",
             "type": "url",
-            "url": "https://github.com/imputnet/helium-linux/releases/download/0.11.5.1/helium-0.11.5.1-x86_64.AppImage"
+            "url": "https://github.com/imputnet/helium-linux/releases/download/0.12.0.2/helium-0.12.0.2-x86_64.AppImage"
         },
-        "version": "0.11.5.1"
+        "version": "0.12.0.2"
     },
     "karere": {
         "cargoLock": null,
@@ -100,7 +100,7 @@
     },
     "niri": {
         "cargoLock": null,
-        "date": "2026-04-26",
+        "date": "2026-05-02",
         "extract": null,
         "name": "niri",
         "passthru": null,
@@ -112,16 +112,16 @@
             "name": null,
             "owner": "niri-wm",
             "repo": "niri",
-            "rev": "83e839762fa208b3631163e85d760e0e89fe8fe3",
-            "sha256": "sha256-PHwfKjDSe1TtW7ndaZbsGbx/nv2ZN+mkst1dquS8vqo=",
+            "rev": "1f07cffa9f355298a31d7efe1b400ede93a97728",
+            "sha256": "sha256-1TlpdT0WYyBGtUS3PH4oXHUmdno2EUh2TfHadK2BmJo=",
             "sparseCheckout": [],
             "type": "github"
         },
-        "version": "83e839762fa208b3631163e85d760e0e89fe8fe3"
+        "version": "1f07cffa9f355298a31d7efe1b400ede93a97728"
     },
     "rofi-themes": {
         "cargoLock": null,
-        "date": "2025-07-26",
+        "date": "2026-04-30",
         "extract": null,
         "name": "rofi-themes",
         "passthru": null,
@@ -133,12 +133,12 @@
             "name": null,
             "owner": "adi1090x",
             "repo": "rofi",
-            "rev": "093c1a79f58daab358199c4246de50357e5bf462",
-            "sha256": "sha256-iUX0Quae06tGd7gDgXZo1B3KYgPHU+ADPBrowHlv02A=",
+            "rev": "b0bfe927531e365f009d01810c26878c003f7cb8",
+            "sha256": "sha256-pM183MHOMuKJyLgthozM1MRsmhBM25VQgWc7CmLL2HI=",
             "sparseCheckout": [],
             "type": "github"
         },
-        "version": "093c1a79f58daab358199c4246de50357e5bf462"
+        "version": "b0bfe927531e365f009d01810c26878c003f7cb8"
     },
     "yazi-plugins": {
         "cargoLock": null,
