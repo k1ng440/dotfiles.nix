@@ -18,8 +18,8 @@
         programs.niri.settings = {
           binds = {
             # --- Core System & UI ---
-            "Mod+Shift+Slash".show-hotkey-overlay = null;
-            "Alt+F4".quit = null;
+            "Mod+Shift+Slash".show-hotkey-overlay = _: { };
+            "Alt+F4".quit = _: { };
             "Ctrl+Alt+Delete".spawn = [
               "dms"
               "ipc"
@@ -35,7 +35,7 @@
               "toggle"
             ];
             "Mod+Shift+A".spawn = [ "noctalia-reload" ];
-            "Mod+Escape".toggle-keyboard-shortcuts-inhibit = null;
+            "Mod+Escape".toggle-keyboard-shortcuts-inhibit = _: { };
             "Mod+Ctrl+V".spawn = [
               "dms"
               "ipc"
@@ -224,20 +224,25 @@
                 cooldown-ms = 150;
               };
             };
-            "Mod+Shift+WheelScrollUp" = {
-              focus-workspace-up = null;
-              _attrs.cooldown-ms = 150;
-            };
-            "Mod+WheelScrollRight".focus-column-right = null;
-            "Mod+WheelScrollLeft".focus-column-left = null;
+            "Mod+Shift+WheelScrollUp" = _: {
+              props = {
+                cooldown-ms = 150;
+              };
+              content = {
+                focus-workspace-up = _: { };
 
-            "Mod+BracketLeft".consume-or-expel-window-left = null;
-            "Mod+BracketRight".consume-or-expel-window-right = null;
+              };
+            };
+            "Mod+WheelScrollRight".focus-column-right = _: { };
+            "Mod+WheelScrollLeft".focus-column-left = _: { };
+
+            "Mod+BracketLeft".consume-or-expel-window-left = _: { };
+            "Mod+BracketRight".consume-or-expel-window-right = _: { };
 
             # Center all fully visible columns on screen.
-            "Mod+Ctrl+C".center-visible-columns = null;
+            "Mod+Ctrl+C".center-visible-columns = _: { };
 
-            "Mod+T".toggle-column-tabbed-display = null;
+            "Mod+T".toggle-column-tabbed-display = _: { };
 
             # --- Screenshot ---
             "Print".spawn = [
