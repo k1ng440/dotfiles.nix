@@ -38,7 +38,7 @@
     };
     nix-flatpak.url = "github:gmodena/nix-flatpak/?ref=latest";
     wrappers = {
-      url = "github:Lassulus/wrappers";
+      url = "github:BirdeeHub/nix-wrapper-modules";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     niri-unstable.url = "github:YaLTeR/niri";

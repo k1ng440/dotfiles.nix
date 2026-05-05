@@ -23,20 +23,22 @@
             focus-ring = {
               width = 2;
               # Overwritten by wallpaper script later
-              active-gradient._attrs = {
-                angle = 45;
-                from = "#89B4FA";
-                relative-to = "workspace-view";
-                to = "#94E2D5";
+              active-gradient = _: {
+                props = {
+                  angle = 45;
+                  from = "#89B4FA";
+                  relative-to = "workspace-view";
+                  to = "#94E2D5";
+                };
               };
               inactive-color = "#1e1e2e";
             };
             border = {
-              off = null;
+              off = _: { };
             };
             shadow = {
-              on = null;
-              offset._attrs = {
+              on = _: { };
+              offset = _: {
                 x = 0.0;
                 y = 5.0;
               };
@@ -46,10 +48,10 @@
               color = "#1a1a1aee";
             };
             tab-indicator = {
-              hide-when-single-tab = null;
+              hide-when-single-tab = _: { };
               gap = 0;
               width = 12;
-              length._attrs = {
+              length = _: {
                 total-proportion = 1.0;
               };
               position = "top";
@@ -72,7 +74,7 @@
               { proportion = 1.0; }
             ];
             center-focused-column = "never";
-            always-center-single-column = null;
+            always-center-single-column = _: { };
           };
           window-rules = [
             # General window appearance
@@ -135,13 +137,18 @@
                   inherit (d) scale;
                   mode = "${toString d.width}x${toString d.height}";
                   transform = transformName;
-                  position._attrs = { inherit (d) x y; };
+                  position = _: {
+                    props = { inherit (d) x y; };
+                  };
                 }
-                // lib.optionalAttrs (i == 1) {
-                  focus-at-startup = null;
-                }
-                // lib.optionalAttrs (d.vrr or false) {
-                  variable-refresh-rate = null;
+                // lib.optionalAttrs (i == 1) { focus-at-startup = _: { }; }
+                // lib.optionalAttrs d.vrr { variable-refresh-rate = _: { }; }
+                // lib.optionalAttrs isVertical {
+                  layout = {
+                    default-column-width = {
+                      proportion = 1.0;
+                    };
+                  };
                 }
                 // lib.optionalAttrs isVertical {
                   layout = {
@@ -165,33 +172,33 @@
               repeat-delay = 200;
               repeat-rate = 50;
               track-layout = "global";
-              numlock = null;
+              numlock = _: { };
             };
             mouse.accel-profile = "flat";
             touchpad = {
-              tap = null;
-              dwt = null;
+              tap = _: { };
+              dwt = _: { };
             };
-            focus-follows-mouse._attrs = {
+            focus-follows-mouse = _: {
               max-scroll-amount = "85%";
             };
-            # workspace-auto-back-and-forth = null;
-            disable-power-key-handling = null;
+            # workspace-auto-back-and-forth = _: {};
+            disable-power-key-handling = _: { };
           };
 
           blur = {
-            on = null;
+            on = _: { };
             passes = 2;
             offset = 1;
             noise = 0.02;
             saturation = 1.5;
           };
 
-          prefer-no-csd = null;
+          prefer-no-csd = _: { };
 
           gestures = {
             hot-corners = {
-              off = null;
+              off = _: { };
             };
           };
 
@@ -202,25 +209,33 @@
 
           recent-windows.binds = {
             "Alt+Tab" = {
-              next-window._attrs = {
-                scope = "output";
+              next-window = _: {
+                props = {
+                  scope = "all";
+                };
               };
             };
             "Alt+Shift+Tab" = {
-              previous-window._attrs = {
-                scope = "output";
+              previous-window = _: {
+                props = {
+                  scope = "output";
+                };
               };
             };
             "Ctrl+Alt+Tab" = {
-              next-window._attrs = {
-                scope = "all";
-                filter = "app-id";
+              next-window = _: {
+                props = {
+                  scope = "all";
+                  filter = "app-id";
+                };
               };
             };
             "Ctrl+Alt+Shift+Tab" = {
-              previous-window._attrs = {
-                scope = "all";
-                filter = "app-id";
+              previous-window = _: {
+                props = {
+                  scope = "all";
+                  filter = "app-id";
+                };
               };
             };
           };
@@ -228,15 +243,15 @@
           screenshot-path = "${config.hj.directory}/Pictures/Screenshots/%Y-%m-%dT%H:%M:%S%z.png";
 
           debug = {
-            honor-xdg-activation-with-invalid-serial = null;
+            honor-xdg-activation-with-invalid-serial = _: { };
           };
 
           hotkey-overlay = {
-            skip-at-startup = null;
+            skip-at-startup = _: { };
           };
 
           clipboard = {
-            disable-primary = null;
+            disable-primary = _: { };
           };
 
           overview = {

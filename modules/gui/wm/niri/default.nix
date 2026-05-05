@@ -1,72 +1,83 @@
 {
   inputs,
   lib,
-  self,
   ...
 }:
 {
-  flake.modules.nixos.core =
-    { pkgs, ... }:
-    {
-      options.custom = {
-        programs.niri = {
-          settings = lib.mkOption {
-            type = lib.types.submodule {
-              freeformType = (pkgs.formats.json { }).type;
-              # strings don't merge by default
-              options.extraConfig = lib.mkOption {
-                type = lib.types.lines;
+  flake.modules.nixos.core = {
+    options.custom = {
+      programs.niri = {
+        # copied from nix-wrapper-modules
+        settings = lib.mkOption {
+          default = { };
+          type = lib.types.submodule {
+            freeformType = lib.types.attrs;
+            options = {
+              binds = lib.mkOption {
+                default = { };
+                type = lib.types.attrs;
+              };
+              layout = lib.mkOption {
+                default = { };
+                type = lib.types.attrs;
+              };
+              spawn-at-startup = lib.mkOption {
+                default = [ ];
+                type = lib.types.listOf (lib.types.either lib.types.str (lib.types.listOf lib.types.str));
+              };
+              spawn-sh-at-startup = lib.mkOption {
+                default = [ ];
+                type = lib.types.listOf lib.types.str;
+              };
+              window-rules = lib.mkOption {
+                default = [ ];
+                type = lib.types.listOf lib.types.attrs;
+              };
+              layer-rules = lib.mkOption {
+                default = [ ];
+                type = lib.types.listOf lib.types.attrs;
+              };
+              workspaces = lib.mkOption {
+                default = { };
+                type = lib.types.attrsOf (lib.types.nullOr lib.types.anything);
+              };
+              outputs = lib.mkOption {
+                default = { };
+                type = lib.types.attrs;
+              };
+              extraConfig = lib.mkOption {
                 default = "";
-                description = "Additional configuration lines.";
+                type = lib.types.lines;
               };
             };
-            description = "Niri settings, see https://github.com/Lassulus/wrappers/blob/main/modules/niri/module.nix for available options";
           };
         };
       };
     };
+  };
 
   flake.modules.nixos.wm =
     { config, pkgs, ... }:
     let
-      source = (self.libCustom.nvFetcherSources pkgs).niri;
-      niriConfigPath = niriWrapped.env."NIRI_CONFIG";
-      niriWrapped = inputs.wrappers.wrapperModules.niri.apply {
+      niri' = inputs.wrappers.wrappers.niri.wrap {
         inherit pkgs;
         package = lib.mkForce (
-          pkgs.niri.overrideAttrs (
-            o:
-            (
-              source
-              // {
-                patches = (o.patches or [ ]) ++ [
-                  ./transparent-fullscreen.patch
-                ];
-                inherit (o) version;
+          pkgs.niri.overrideAttrs (o: {
+            doInstallCheck = false; # disable annoying version check
 
-                postPatch = ''
-                  patchShebangs resources/niri-session
-                  substituteInPlace resources/niri.service \
-                  --replace-fail 'ExecStart=niri' "ExecStart=$out/bin/niri"
-                '';
+            patches = (o.patches or [ ]) ++ [
+              # unmerged PR to fix this
+              # https://github.com/YaLTeR/niri/pull/3004
+              ./transparent-fullscreen.patch
+            ];
 
-                # Creating an overlay for buildRustPackage overlay (NOTE: this is an IFD)
-                # https://discourse.nixos.org/t/is-it-possible-to-override-cargosha256-in-buildrustpackage/4393/3
-                cargoDeps = pkgs.rustPlatform.importCargoLock {
-                  lockFile = "${source.src}/Cargo.lock";
-                  allowBuiltinFetchGit = true;
-                };
-
-                doCheck = true;
-              }
-            )
-          )
+            doCheck = false; # faster builds
+          })
         );
 
-        settings = (config.custom.programs.niri.settings) // {
-          binds = (config.custom.programs.niri.settings.binds or { }) // {
-          };
-        };
+        v2-settings = true;
+
+        inherit (config.custom.programs.niri) settings;
       };
     in
     {
@@ -76,53 +87,19 @@
         };
       };
 
+      # NOTE: named workspaces are used, because dynamic workspaces are just... urgh
       programs.niri = {
         enable = true;
-        package = niriWrapped.wrapper;
+        package = niri';
         useNautilus = false;
       };
 
-      systemd.user.services.niri = {
-        overrideStrategy = "asDropin";
-        stopIfChanged = lib.mkForce false;
-        restartIfChanged = lib.mkForce false;
-        serviceConfig = {
-          SetLoginEnvironment = lib.mkForce true;
-        };
-      };
-
-      # Reload niri
-      system.userActivationScripts = {
-        niri-reload-config = {
-          text = lib.getExe (
-            pkgs.writeShellApplication {
-              name = "niri-reload-config";
-              runtimeInputs = [
-                config.programs.niri.package
-                pkgs.procps
-              ];
-              text = ''
-                if pgrep -x "niri" > /dev/null; then
-                  niri msg action load-config-file --path niriConfigPath
-                fi
-              '';
-            }
-          );
-        };
-      };
-
-      hj.xdg.config.files."niri/config.kdl".source = ./config.kdl;
-
-      xdg = {
-        autostart.enable = lib.mkDefault true;
-        menus.enable = lib.mkDefault true;
-        mime.enable = lib.mkDefault true;
-        icons.enable = lib.mkDefault true;
-      };
-
       xdg.portal = {
-        extraPortals = [ pkgs.xdg-desktop-portal-gnome ];
-        configPackages = [ niriWrapped.wrapper ];
+        config = {
+          niri = {
+            "org.freedesktop.impl.portal.FileChooser" = "gtk";
+          };
+        };
       };
 
       custom.programs = {
@@ -131,8 +108,8 @@
         };
 
         print-config = {
-          # Use cat as kdlfmt tries to write the file in the nix store
-          niri = /* sh */ ''cat "${niriConfigPath}" | ${lib.getExe pkgs.kdlfmt} format - | moor --lang kdl'';
+          # use cat as kdlfmt tries to write the file in the nix store
+          niri = /* sh */ ''cat "${niri'.configuration.constructFiles.generatedConfig.outPath}" "${config.hj.xdg.config.directory}/niri/config.kdl" "${config.hj.xdg.config.directory}/niri/noctalia.kdl" | ${lib.getExe pkgs.kdlfmt} format - | moor --lang kdl'';
         };
       };
     };

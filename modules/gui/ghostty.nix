@@ -38,12 +38,15 @@ let
 in
 {
   flake.wrapperModules.ghostty = inputs.wrappers.lib.wrapModule (
-    { config, wlib, ... }:
+    {
+      config,
+      wlib,
+      pkgs,
+      ...
+    }:
     let
-      # Adapted from home-manager:
-      # https://github.com/nix-community/home-manager/blob/master/modules/programs/ghostty.nix
       toGhosttyConf =
-        (config.pkgs.formats.keyValue {
+        (pkgs.formats.keyValue {
           listsAsDuplicateKeys = true;
           mkKeyValue = lib.generators.mkKeyValueDefault { } " = ";
         }).generate
@@ -63,17 +66,18 @@ in
       };
     in
     {
-      options = (mkGhosttyOptions config.pkgs) // {
+      imports = [ wlib.modules.default ];
+
+      options = (mkGhosttyOptions pkgs) // {
         "ghostty.conf" = lib.mkOption {
-          type = wlib.types.file config.pkgs;
+          type = wlib.types.file pkgs;
           default.path = toGhosttyConf (baseGhosttyConf // config.extraSettings);
           visible = false;
         };
       };
 
-      config.package = lib.mkDefault config.pkgs.ghostty;
+      config.package = lib.mkDefault pkgs.ghostty;
       config.flags = {
-        # NOTE: ghostty "helpfully" creates an empty config in the default location
         "--config-file" = toString config."ghostty.conf".path;
       };
       config.flagSeparator = "=";
@@ -84,7 +88,6 @@ in
     { config, pkgs, ... }:
     {
       options.custom = {
-        # terminal options
         programs.terminal = {
           package = lib.mkOption {
             type = lib.types.package;
@@ -138,7 +141,7 @@ in
       ];
 
       environment.systemPackages = [
-        pkgs.ghostty # overlay-ed above
+        pkgs.ghostty
       ];
 
       hj.xdg.config.files."ghostty/config" = {
@@ -147,25 +150,29 @@ in
         type = "copy";
       };
 
-      custom.programs = {
-        terminal = {
-          app-id = "com.mitchellh.ghostty";
-          desktop = "com.mitchellh.ghostty.desktop";
+      custom.programs =
+        let
+          ghosttyConfigPath = pkgs.ghostty.passthru.configuration."ghostty.conf".path;
+        in
+        {
+          terminal = {
+            app-id = "com.mitchellh.ghostty";
+            desktop = "com.mitchellh.ghostty.desktop";
+          };
+
+          print-config = {
+            ghostty = /* sh */ ''moor --lang ini "${ghosttyConfigPath}"'';
+          };
+
+          niri.settings.window-rules = [
+            {
+              matches = [ { app-id = "^com.mitchellh.ghostty"; } ];
+
+              background-effect = {
+                blur = true;
+              };
+            }
+          ];
         };
-
-        print-config = {
-          ghostty = /* sh */ ''moor --lang ini "${pkgs.ghostty.flags."--config-file"}"'';
-        };
-
-        niri.settings.window-rules = [
-          {
-            matches = [ { app-id = "^com.mitchellh.ghostty"; } ];
-
-            background-effect = {
-              blur = true;
-            };
-          }
-        ];
-      };
     };
 }

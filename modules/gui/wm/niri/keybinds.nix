@@ -77,41 +77,53 @@
             ];
 
             # --- Layout & Utility ---
-            "Mod+G".toggle-window-floating = null;
-            "Mod+Shift+G".switch-focus-between-floating-and-tiling = null;
+            "Mod+G".toggle-window-floating = _: { };
+            "Mod+Shift+G".switch-focus-between-floating-and-tiling = _: { };
 
             # --- Window Management (HJKL) ---
-            "Mod+H".focus-column-or-monitor-left = null;
-            "Mod+L".focus-column-or-monitor-right = null;
-            "Mod+J".focus-window-or-workspace-down = null;
-            "Mod+K".focus-window-or-workspace-up = null;
+            "Mod+H".focus-column-or-monitor-left = _: { };
+            "Mod+L".focus-column-or-monitor-right = _: { };
+            "Mod+J".focus-window-or-workspace-down = _: { };
+            "Mod+K".focus-window-or-workspace-up = _: { };
 
-            "Mod+Shift+H".move-column-left-or-to-monitor-left = null;
-            "Mod+Shift+L".move-column-right-or-to-monitor-right = null;
-            "Mod+Shift+J".move-window-down-or-to-workspace-down = null;
-            "Mod+Shift+K".move-window-up-or-to-workspace-up = null;
+            "Mod+Shift+H".move-column-left-or-to-monitor-left = _: { };
+            "Mod+Shift+L".move-column-right-or-to-monitor-right = _: { };
+            "Mod+Shift+J".move-window-down-or-to-workspace-down = _: { };
+            "Mod+Shift+K".move-window-up-or-to-workspace-up = _: { };
 
-            "Mod+C".center-column = null;
+            "Mod+C".center-column = _: { };
 
             # --- Navigation & Layout ---
-            "Mod+Home".focus-column-first = null;
-            "Mod+End".focus-column-last = null;
-            "Mod+grave".focus-window-previous = null;
-            "Mod+Tab".focus-workspace-previous = null;
-            "Mod+O" = {
-              toggle-overview = null;
-              _attrs.repeat = false;
+            "Mod+Home".focus-column-first = _: { };
+            "Mod+End".focus-column-last = _: { };
+            "Mod+grave".focus-window-previous = _: { };
+            "Mod+Tab".focus-workspace-previous = _: { };
+            "Mod+O" = _: {
+              props = {
+                repeat = false;
+              };
+              content = {
+                toggle-overview = _: { };
+              };
             };
-            "Mod+Q" = {
-              close-window = null;
-              _attrs.repeat = false;
+            "Mod+Q" = _: {
+              props = {
+                repeat = false;
+              };
+              content = {
+                close-window = _: { };
+              };
             };
-            "Mod+BackSpace" = {
-              close-window = null;
-              _attrs.repeat = false;
+            "Mod+BackSpace" = _: {
+              props = {
+                repeat = false;
+              };
+              content = {
+                close-window = _: { };
+              };
             };
-            "Mod+Shift+Home".move-column-to-first = null;
-            "Mod+Shift+End".move-column-to-last = null;
+            "Mod+Shift+Home".move-column-to-first = _: { };
+            "Mod+Shift+End".move-column-to-last = _: { };
             "Mod+Shift+Tab".spawn = [
               "sh"
               "-c"
@@ -131,28 +143,28 @@
             ];
 
             # --- Monitor Navigation (Alt + hjkl) ---
-            "Mod+Alt+H".focus-monitor-left = null;
-            "Mod+Alt+J".focus-monitor-down = null;
-            "Mod+Alt+K".focus-monitor-up = null;
-            "Mod+Alt+L".focus-monitor-right = null;
+            "Mod+Alt+H".focus-monitor-left = _: { };
+            "Mod+Alt+J".focus-monitor-down = _: { };
+            "Mod+Alt+K".focus-monitor-up = _: { };
+            "Mod+Alt+L".focus-monitor-right = _: { };
 
             # --- Monitor Movement (Alt + Shift + hjkl) ---
-            "Mod+Alt+Shift+H".move-column-to-monitor-left = null;
-            "Mod+Alt+Shift+J".move-column-to-monitor-down = null;
-            "Mod+Alt+Shift+K".move-column-to-monitor-up = null;
-            "Mod+Alt+Shift+L".move-column-to-monitor-right = null;
+            "Mod+Alt+Shift+H".move-column-to-monitor-left = _: { };
+            "Mod+Alt+Shift+J".move-column-to-monitor-down = _: { };
+            "Mod+Alt+Shift+K".move-column-to-monitor-up = _: { };
+            "Mod+Alt+Shift+L".move-column-to-monitor-right = _: { };
 
             # --- Monitor Navigation (Alt + Arrows) ---
-            "Mod+Alt+Left".focus-monitor-left = null;
-            "Mod+Alt+Down".focus-monitor-down = null;
-            "Mod+Alt+Up".focus-monitor-up = null;
-            "Mod+Alt+Right".focus-monitor-right = null;
+            "Mod+Alt+Left".focus-monitor-left = _: { };
+            "Mod+Alt+Down".focus-monitor-down = _: { };
+            "Mod+Alt+Up".focus-monitor-up = _: { };
+            "Mod+Alt+Right".focus-monitor-right = _: { };
 
             # --- Monitor Movement (Alt + Shift + Arrows) ---
-            "Mod+Alt+Shift+Left".move-column-to-monitor-left = null;
-            "Mod+Alt+Shift+Down".move-column-to-monitor-down = null;
-            "Mod+Alt+Shift+Up".move-column-to-monitor-up = null;
-            "Mod+Alt+Shift+Right".move-column-to-monitor-right = null;
+            "Mod+Alt+Shift+Left".move-column-to-monitor-left = _: { };
+            "Mod+Alt+Shift+Down".move-column-to-monitor-down = _: { };
+            "Mod+Alt+Shift+Up".move-column-to-monitor-up = _: { };
+            "Mod+Alt+Shift+Right".move-column-to-monitor-right = _: { };
 
             # --- Shaping & Resizing (Arrows) ---
             "Mod+Left".set-column-width = "-10%";
@@ -160,41 +172,57 @@
             "Mod+Up".set-window-height = "-10%";
             "Mod+Down".set-window-height = "+10%";
 
-            "Mod+R".switch-preset-column-width = null;
-            "Mod+Shift+R".switch-preset-window-height = null;
-            "Mod+F".fullscreen-window = null;
-            "Mod+Z".maximize-column = null;
-            "Mod+Shift+F".expand-column-to-available-width = null;
+            "Mod+R".switch-preset-column-width = _: { };
+            "Mod+Shift+R".switch-preset-window-height = _: { };
+            "Mod+F".fullscreen-window = _: { };
+            "Mod+Z".maximize-column = _: { };
+            "Mod+Shift+F".expand-column-to-available-width = _: { };
 
             # --- Multimedia ---
-            "XF86AudioLowerVolume" = {
-              spawn = [
-                "pamixer"
-                "-d"
-                "5"
-              ];
-              _attrs.allow-when-locked = true;
+            "XF86AudioLowerVolume" = _: {
+              props = {
+                allow-when-locked = true;
+              };
+              content = {
+                spawn = [
+                  "pamixer"
+                  "-d"
+                  "5"
+                ];
+              };
             };
-            "XF86AudioRaiseVolume" = {
-              spawn = [
-                "pamixer"
-                "-i"
-                "5"
-              ];
-              _attrs.allow-when-locked = true;
+            "XF86AudioRaiseVolume" = _: {
+              props = {
+                allow-when-locked = true;
+              };
+              content = {
+                spawn = [
+                  "pamixer"
+                  "-i"
+                  "5"
+                ];
+              };
             };
-            "XF86AudioMute" = {
-              spawn = [
-                "pamixer"
-                "-t"
-              ];
-              _attrs.allow-when-locked = true;
+            "XF86AudioMute" = _: {
+              props = {
+                allow-when-locked = true;
+              };
+              content = {
+                spawn = [
+                  "pamixer"
+                  "-t"
+                ];
+              };
             };
 
             # --- Mouse / Trackball Optimization ---
-            "Mod+Shift+WheelScrollDown" = {
-              focus-workspace-down = null;
-              _attrs.cooldown-ms = 150;
+            "Mod+Shift+WheelScrollDown" = _: {
+              content = {
+                focus-workspace-down = _: { };
+              };
+              props = {
+                cooldown-ms = 150;
+              };
             };
             "Mod+Shift+WheelScrollUp" = {
               focus-workspace-up = null;

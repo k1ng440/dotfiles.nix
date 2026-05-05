@@ -394,7 +394,7 @@
 
         custom.programs.print-config =
           let
-            mpvDir = pkgs.mpv.flags."--config-dir";
+            mpvDir = pkgs.mpv.passthru.configuration.flags."--config-dir".data;
           in
           {
             mpv = /* sh */ ''moor "${mpvDir}/mpv.conf"'';

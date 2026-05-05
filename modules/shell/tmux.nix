@@ -46,10 +46,9 @@
 
         # Prefix Settings
         unbind C-b
-        set -g prefix C-Space
-        set -g prefix2 C-@
-        bind C-Space send-prefix
-        bind C-@ send-prefix
+        unbind C-Space
+        set -g prefix C-a
+        bind C-a send-prefix
         bind -N "Reload tmux config" R run-shell 'tmux source-file $(tmux display-message -p "#{config_files}" | cut -d"," -f1)' \; display-message "Config reloaded!"
 
         # Vi mode for copy
@@ -169,7 +168,7 @@
       ];
 
       custom.programs.print-config = {
-        tmux = /* sh */ ''moor "${pkgs.custom.tmux.flags."-f"}"'';
+        tmux = /* sh */ ''moor "${pkgs.custom.tmux.passthru.configuration.flags."-f".data}"'';
       };
     };
 }

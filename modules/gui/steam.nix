@@ -96,7 +96,7 @@ _: {
                   open-floating = true;
                   "default-floating-position x=10 y=10 relative-to=\"bottom-right\"" = null;
                   draw-border-with-background = false;
-                  focus-ring.off = null;
+                  focus-ring.off = true;
                 }
               ];
             };

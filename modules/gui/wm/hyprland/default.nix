@@ -53,7 +53,7 @@
       };
 
       custom.programs.print-config = {
-        hyprland = /* sh */ ''moor "${hyprlandWrapped.flags."--config"}"'';
+        hyprland = /* sh */ ''moor "${hyprlandWrapped.wrapper.passthru.configuration."hyprland.conf".path}"'';
       };
 
       custom.persist = {

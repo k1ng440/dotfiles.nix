@@ -35,61 +35,65 @@ let
       '';
     };
   };
+  toBtopConf = lib.generators.toKeyValue {
+    mkKeyValue = lib.generators.mkKeyValueDefault {
+      mkValueString =
+        v:
+        if lib.isBool v then
+          (if v then "True" else "False")
+        else if lib.isString v then
+          ''"${v}"''
+        else
+          toString v;
+    } " = ";
+  };
+  baseBtopConf = {
+    color_theme = "TTY";
+    theme_background = false;
+    cpu_single_graph = true;
+    show_gpu_info = "Off";
+    show_disks = true;
+    show_swap = true;
+    swap_disk = false;
+    use_fstab = false;
+    only_physical = false;
+    zfs_arc_cached = true;
+    shown_boxes = "cpu mem net proc gpu0";
+    gpu_mirror_graph = false;
+  };
 in
 {
   flake.wrapperModules.btop = inputs.wrappers.lib.wrapModule (
-    { config, wlib, ... }:
-    let
-      toBtopConf = lib.generators.toKeyValue {
-        mkKeyValue = lib.generators.mkKeyValueDefault {
-          mkValueString =
-            v:
-            if lib.isBool v then
-              (if v then "True" else "False")
-            else if lib.isString v then
-              ''"${v}"''
-            else
-              toString v;
-        } " = ";
-      };
-      baseBtopConf = {
-        color_theme = "TTY";
-        theme_background = false;
-        cpu_single_graph = true;
-        # base_10_sizes = true;
-        show_gpu_info = "Off"; # don't show gpu info in cpu box
-        show_disks = true;
-        show_swap = true;
-        swap_disk = false;
-        use_fstab = false;
-        only_physical = false;
-        zfs_arc_cached = true;
-        shown_boxes = "cpu mem net proc gpu0";
-        gpu_mirror_graph = false;
-      };
-    in
     {
-      options = btopOptions // {
-        "btop.conf" = lib.mkOption {
-          type = wlib.types.file config.pkgs;
-          default.content = toBtopConf (baseBtopConf // config.extraSettings);
-          visible = false;
-        };
-      };
+      config,
+      wlib,
+      pkgs,
+      ...
+    }:
+    {
+      imports = [ wlib.modules.default ];
+
+      options = btopOptions;
 
       config.package = lib.mkDefault (
-        config.pkgs.btop.override {
+        pkgs.btop.override {
           inherit (config) cudaSupport;
           inherit (config) rocmSupport;
         }
       );
+
       config.flags = {
-        "--config" = toString config."btop.conf".path;
+        "--config" = config.constructFiles.generatedConfig.path;
       };
+
+      config.constructFiles.generatedConfig = {
+        content = toBtopConf (baseBtopConf // config.extraSettings);
+        relPath = "btop.conf";
+      };
+      config.passthru.configPath = config.constructFiles.generatedConfig.outPath;
     }
   );
 
-  # expose generic btop package without disks set
   perSystem =
     { pkgs, ... }:
     {
@@ -104,7 +108,6 @@ in
     {
       options.custom = {
         programs.btop = btopOptions // {
-          # convenience option to add disks to btop
           disks = lib.mkOption {
             type = lib.types.listOf lib.types.str;
             default = [ ];
@@ -116,7 +119,6 @@ in
       config = {
         nixpkgs.overlays = [
           (_: prev: {
-            # overlay so that security wrappers for xps can pick it up
             btop =
               (self.wrapperModules.btop.apply {
                 pkgs = prev;
@@ -138,11 +140,11 @@ in
         ];
 
         environment.systemPackages = [
-          pkgs.btop # overlay-ed above
+          pkgs.btop
         ];
 
         custom.programs.print-config = {
-          btop = /* sh */ ''moor --lang ini "${pkgs.btop.flags."--config"}"'';
+          btop = /* sh */ ''moor --lang ini "${pkgs.btop.passthru.configuration.constructFiles.generatedConfig}"'';
         };
       };
     };

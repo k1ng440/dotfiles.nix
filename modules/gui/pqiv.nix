@@ -33,7 +33,12 @@ let
 in
 {
   flake.wrapperModules.pqiv = inputs.wrappers.lib.wrapModule (
-    { config, wlib, ... }:
+    {
+      config,
+      wlib,
+      pkgs,
+      ...
+    }:
     let
       pqivConf = ''
         [options]
@@ -70,20 +75,21 @@ in
       '';
     in
     {
+      imports = [ wlib.modules.default ];
+
       options = pqivOptions // {
         pqivrc = lib.mkOption {
-          type = wlib.types.file config.pkgs;
+          type = wlib.types.file pkgs;
           default.content = pqivConf;
           visible = false;
         };
       };
 
-      config.package = lib.mkDefault config.pkgs.pqiv;
-      config.env.PQIVRC_PATH = toString config.pqivrc.path;
+      config.package = lib.mkDefault pkgs.pqiv;
+      config.env.PQIVRC_PATH = config.pqivrc.path;
     }
   );
 
-  # Expose generic pqiv package without local paths
   perSystem =
     { pkgs, ... }:
     {
@@ -109,7 +115,7 @@ in
       ];
 
       environment.systemPackages = with pkgs; [
-        pqiv # overlay-ed above
+        pqiv
         nomacs
       ];
 
@@ -128,7 +134,7 @@ in
       };
 
       custom.programs.print-config = {
-        pqiv = /* sh */ ''moor "${pkgs.pqiv.env.PQIVRC_PATH}"'';
+        pqiv = /* sh */ ''moor "${pkgs.pqiv.passthru.configuration.env.PQIVRC_PATH.data}"'';
       };
 
       custom.persist = {
