@@ -15,6 +15,7 @@
         hardware_ledger
         hardware_linux-firmware
         hardware_qmk
+        hardware_bluetooth
         hardware_Brother_DCP-T510W
         services_docker
         services_flatpak
@@ -117,6 +118,7 @@
       };
 
       services.samba.enable = true;
+      networking.firewall.allowedTCPPorts = [ 3456 ];
       fileSystems =
         let
           inherit (config.users.users.${user}) uid;

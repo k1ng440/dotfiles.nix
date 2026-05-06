@@ -149,13 +149,6 @@
                       proportion = 1.0;
                     };
                   };
-                }
-                // lib.optionalAttrs isVertical {
-                  layout = {
-                    default-column-width = {
-                      proportion = 1.0;
-                    };
-                  };
                 };
               }
             )
@@ -277,8 +270,89 @@
               )
               |> lib.concatLines
             )
+            ''
+              window-rule {
+                  match app-id=r"^org\.gnome\.Calculator$"
+                  match app-id="^localsend$"
+                  match app-id="^nm-connection-editor$"
+                  match app-id="^blueman-manager$"
+                  match app-id="^nwg-look$"
+                  match app-id="^qt5ct$"
+                  match app-id="^qt6ct$"
+                  match app-id=r"^org\.gnome\.FileRoller$"
+                  match app-id="^gnome-disks$"
+                  match app-id="^seahorse$"
+                  match app-id="^swayimg$"
+                  match app-id=r"^com\.gabm\.satty$"
+
+                  open-floating true
+              }
+
+              window-rule {
+                  match app-id="^mpv$"
+                  match app-id="^vlc$"
+                  match app-id="^imv$"
+                  match app-id="^zoom$"
+                  match app-id="^feh$"
+                  match app-id=r"^com\.obsproject\.Studio$"
+                  match title=".*YouTube.*"
+                  match title=".*Twitch.*"
+
+                  opacity 1.0
+                  open-floating true
+              }
+
+              window-rule {
+                  match app-id="^steam$"
+
+                  opacity 1.0
+              }
+
+              window-rule {
+                  match app-id="^steam$" title="^Friends List$"
+                  match app-id="^steam$" title="^Steam - News$"
+                  match app-id="^steam$" title=".* - Chat$"
+
+                  open-floating true
+              }
+
+              window-rule {
+                  match title="^Picture-in-Picture$"
+                  match title="^Picture in picture$"
+
+                  open-floating true
+                  default-column-width { fixed 480; }
+                  default-window-height { fixed 270; }
+                  default-floating-position x=32 y=32 relative-to="bottom-right"
+              }
+
+              window-rule {
+                  match app-id="^xdg-desktop-portal-gtk$"
+                  match title="^Open File$"
+                  match title="^Save File$"
+                  match title="^Open Folder$"
+
+                  open-floating true
+                  default-column-width { fixed 900; }
+                  default-window-height { fixed 600; }
+              }
+
+              window-rule {
+                  match app-id="^pavucontrol$"
+
+                  open-floating true
+                  default-column-width { fixed 800; }
+                  default-window-height { fixed 600; }
+              }
+
+              window-rule {
+                  match app-id="^org.quickshell$"
+                  background-effect {
+                      blur true
+                  }
+              }
+            ''
             (lib.mkAfter ''
-              include optional=true "${config.hj.xdg.config.directory}/niri/config.kdl";
               include optional=true "${config.hj.xdg.config.directory}/niri/dms/colors.kdl";
               include optional=true "${config.hj.xdg.config.directory}/niri/dms/layout.kdl";
               include optional=true "${config.hj.xdg.config.directory}/niri/dms/alttab.kdl";

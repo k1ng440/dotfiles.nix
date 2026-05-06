@@ -82,6 +82,11 @@
       otter-nvim.enable = true;
       nvim-docs-view.enable = true;
       lspSignature.enable = false;
+      presets = {
+        bash-language-server = {
+          enable = true;
+        };
+      };
     };
 
     formatter = {

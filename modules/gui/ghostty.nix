@@ -167,7 +167,6 @@ in
           niri.settings.window-rules = [
             {
               matches = [ { app-id = "^com.mitchellh.ghostty"; } ];
-
               background-effect = {
                 blur = true;
               };
