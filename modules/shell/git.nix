@@ -221,9 +221,15 @@
           diff = {
             tool = "difftastic";
           };
+          safe = {
+            directory = [
+              "/home/k1ng/.hermes"
+              "/home/k1ng/video"
+            ];
+          };
           difftool = {
             difftastic = {
-              cmd = "difft $LOCAL $REMOTE";
+              cmd = "difft $local $remote";
             };
           };
         };

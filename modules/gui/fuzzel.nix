@@ -11,7 +11,7 @@
           width=2
 
           [colors]
-          background=232136E6
+          background=232136A0
           border=c4a7e7ff
           counter=e0def4ff
           input=e0def4ff
@@ -36,5 +36,14 @@
           width=60
         '';
       };
+
+      custom.programs.niri.settings.layer-rules = [
+        {
+          matches = [ { namespace = "^fuzzel$"; } ];
+          background-effect = {
+            blur = true;
+          };
+        }
+      ];
     };
 }

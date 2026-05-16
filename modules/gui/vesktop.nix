@@ -11,6 +11,11 @@
             spawn = [ (lib.getExe pkgs.vesktop) ];
             workspace = 2;
             delay = 3;
+            niriArgs = {
+              background-effect = {
+                blur = true;
+              };
+            };
           }
         ];
         persist = {
@@ -27,7 +32,7 @@
         enabledThemes = [ ];
         enableReactDevtools = false;
         frameless = false;
-        transparent = false;
+        transparent = true;
         winCtrlQ = false;
         disableMinSize = false;
         winNativeTitleBar = false;
@@ -193,7 +198,7 @@
             theme = "https://cdn.jsdelivr.net/gh/shikijs/textmate-grammars-themes@bc5436518111d87ea58eb56d97b3f9bec30e6b83/packages/tm-themes/themes/dark-plus.json";
             tryHljs = "SECONDARY";
             useDevIcon = "GREYSCALE";
-            bgOpacity = 100;
+            bgOpacity = 70;
           };
           ShowAllMessageButtons.enabled = false;
           ShowConnections.enabled = false;

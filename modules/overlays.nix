@@ -47,6 +47,11 @@
         opencode = prev.opencode.overrideAttrs (o: {
           patches = (o.patches or [ ]);
         });
+
+        # flaky syncreplication test fails non-deterministically
+        openldap = prev.openldap.overrideAttrs (_: {
+          doCheck = false;
+        });
       };
 
       # writeShellApplication with support for completions

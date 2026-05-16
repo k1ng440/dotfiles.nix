@@ -39,9 +39,12 @@
         programs_authenticators
         programs_whichkey
         programs_tor-browser
+        shell_playwright
+        shell_claude-code
         programs_whatsapp
         programs_telegram
         programs_google-chrome
+        programs_wine
       ];
 
       custom = {
@@ -118,7 +121,7 @@
       };
 
       services.samba.enable = true;
-      networking.firewall.allowedTCPPorts = [ 3456 ];
+      networking.firewall.allowedTCPPorts = [ 3457 ];
       fileSystems =
         let
           inherit (config.users.users.${user}) uid;

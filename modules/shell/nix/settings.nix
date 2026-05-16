@@ -50,6 +50,9 @@
           vulkan-loader
           libGL
           libGLU
+          glib
+          zlib
+          stdenv.cc.cc.lib
         ];
       };
 

@@ -83,6 +83,12 @@
               geometry-corner-radius = 4;
               clip-to-geometry = true;
               open-maximized-to-edges = false;
+              popups = {
+                opacity = 0.9;
+                background-effect = {
+                  blur = true;
+                };
+              };
             }
             # DMS windows - float by default
             {

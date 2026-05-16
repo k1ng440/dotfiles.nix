@@ -74,7 +74,7 @@
           type = lib.types.attrs;
           default = {
             font = "Berkeley Mono 15";
-            background = "#24283bd0";
+            background = "#24283b90";
             color = "#c0caf5";
             border = "#7aa2f7";
             separator = " ➜ ";
@@ -91,9 +91,19 @@
       };
       config = lib.mkIf (cfg.menus != { }) {
         environment.systemPackages = [ menuPkg ];
-        custom.programs.niri.settings.binds."Mod+D".spawn = [
-          (lib.getExe menuPkg)
-        ];
+        custom.programs.niri.settings = {
+          binds."Mod+D".spawn = [
+            (lib.getExe menuPkg)
+          ];
+          layer-rules = [
+            {
+              matches = [ { namespace = "^wlr-which-key$"; } ];
+              background-effect = {
+                blur = true;
+              };
+            }
+          ];
+        };
       };
     };
 }

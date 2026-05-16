@@ -4,6 +4,12 @@
     {
       environment.systemPackages = [ pkgs.anki-bin ];
 
+      xdg.mime.defaultApplications = {
+        "application/x-apkg" = "anki.desktop";
+        "application/x-anki" = "anki.desktop";
+        "application/x-ankiaddon" = "anki.desktop";
+      };
+
       custom = {
         persist = {
           home.directories = [ ".local/share/Anki2" ];
