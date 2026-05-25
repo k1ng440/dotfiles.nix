@@ -14,6 +14,12 @@
       logFile = "/tmp/nvf.log";
     };
 
+    undoFile.enable = true;
+    searchCase = "smart";
+    preventJunkFiles = true;
+    bell = "none";
+    enableLuaLoader = true;
+
     options = {
       tabstop = 2;
       shiftwidth = 2;
@@ -23,9 +29,7 @@
       foldlevel = 99;
       foldlevelstart = 99;
       foldenable = true;
-      ignorecase = true;
-      smartcase = true;
-      undofile = true;
+      shada = "'100,<50,s10,h";
     };
 
     clipboard = {
@@ -108,7 +112,14 @@
       enableDAP = true;
       enableTreesitter = true;
       enableExtraDiagnostics = true;
-      markdown.enable = true;
+      markdown = {
+        enable = true;
+        extraDiagnostics.enable = false;
+        extensions = {
+          markview-nvim.enable = false;
+          render-markdown-nvim.enable = true;
+        };
+      };
       bash.enable = true;
       python.enable = true;
       lua.enable = true;
@@ -161,9 +172,13 @@
       fidget-nvim.enable = true;
       nvim-cursorline.enable = true;
       nvim-web-devicons.enable = true;
+      highlight-undo.enable = true;
     };
 
-    statusline.lualine.enable = true;
+    statusline.lualine = {
+      enable = true;
+      theme = "auto";
+    };
     telescope.enable = false;
 
     autocomplete.blink-cmp = {
@@ -225,6 +240,10 @@
 
     utility = {
       sleuth.enable = true;
+      direnv.enable = true;
+      diffview-nvim.enable = true;
+      yanky-nvim.enable = true;
+      mkdir.enable = true;
       oil-nvim = {
         enable = true;
         setupOpts = {
@@ -243,8 +262,12 @@
       sessions.enable = true;
     };
 
+    notes.todo-comments.enable = true;
+
     git = {
       enable = true;
+      gitsigns.codeActions.enable = true;
+      neogit.enable = true;
     };
 
     extraPlugins = with pkgs.vimPlugins; {

@@ -5,6 +5,9 @@
       services.tailscale = {
         enable = true;
         useRoutingFeatures = "client";
+        extraUpFlags = [
+          "--accept-dns=false"
+        ];
       };
 
       networking.firewall = {
@@ -29,7 +32,10 @@
         ];
         serviceConfig = {
           Type = "oneshot";
-          ExecStart = "${pkgs.systemd}/bin/systemctl restart tailscaled";
+          ExecStart = [
+            "${pkgs.systemd}/bin/systemctl restart tailscaled"
+            "${pkgs.systemd}/bin/systemctl restart NetworkManager"
+          ];
         };
       };
 

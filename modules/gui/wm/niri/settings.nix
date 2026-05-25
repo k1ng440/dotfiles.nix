@@ -290,6 +290,7 @@
                   match app-id="^seahorse$"
                   match app-id="^swayimg$"
                   match app-id=r"^com\.gabm\.satty$"
+                  match app-id=r"^vedetector\.exe$"
 
                   open-floating true
               }
@@ -349,6 +350,12 @@
                   open-floating true
                   default-column-width { fixed 800; }
                   default-window-height { fixed 600; }
+              }
+
+              window-rule {
+                  match app-id=r"^capcut\.exe$"
+
+                  open-floating true
               }
 
               window-rule {

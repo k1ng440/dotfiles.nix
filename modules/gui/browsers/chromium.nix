@@ -17,7 +17,6 @@
           "gebbhagfogifgggkldgodflihgfeippi" # Return YouTube Dislike
           "mnjggcdmjocbbbhaepdhchncahnbgone" # SponsorBlock
           "pgbjifpikialeahbdendkjioeafbmfkn" # Tokyo Night Storm
-          "nffaoalbilbmmfgbnbgppjihopabppdk" # Video Speed Controller
           "fcphghnknhkimeagdglkljinmpbagone" # YouTube Auto HD
           "jiaopdjbehhjgokpphdfgmapkobbnmjp" # Youtube-shorts block
           "fadndhdgpmmaapbmfcknlfgcflmmmieb" # FrankerFaceZ - twitch

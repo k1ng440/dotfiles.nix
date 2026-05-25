@@ -48,10 +48,21 @@
           patches = (o.patches or [ ]);
         });
 
-        # flaky syncreplication test fails non-deterministically
-        openldap = prev.openldap.overrideAttrs (_: {
-          doCheck = false;
-        });
+        # i686 packages (wine/bottles/lutris FHS envs) pull openldap but i686 is never cached
+        # disable tests only for i686 — x86_64 stays unmodified and cache-compatible
+        cyrus_sasl =
+          if prev.stdenv.hostPlatform.is32bit then
+            prev.cyrus_sasl.override { enableLdap = false; }
+          else
+            prev.cyrus_sasl;
+
+        openldap =
+          if prev.stdenv.hostPlatform.is32bit then
+            prev.openldap.overrideAttrs (_: {
+              doCheck = false;
+            })
+          else
+            prev.openldap;
       };
 
       # writeShellApplication with support for completions

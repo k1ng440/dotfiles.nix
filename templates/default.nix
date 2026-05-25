@@ -13,12 +13,18 @@ let
     path = ./typescript;
     description = "TypeScript/Node.js application template with perSystem packages pattern";
   };
+
+  bun = {
+    path = ./bun;
+    description = "Bun + Playwright dev shell template";
+  };
 in
 {
   inherit
     go
     python
     typescript
+    bun
     ;
   py = python;
   ts = typescript;

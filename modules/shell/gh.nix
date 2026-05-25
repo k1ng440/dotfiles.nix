@@ -12,7 +12,9 @@
           gh = inputs.wrappers.lib.wrapPackage {
             pkgs = prev;
             package = prev.gh;
-            env.GH_CONFIG_DIR = pkgs.writeTextDir "/config.yml" (lib.strings.toJSON { version = 1; });
+            # GH_CONFIG_DIR intentionally unset so gh uses $XDG_CONFIG_HOME/gh
+            # (writable). Setting it to a nix-store path breaks `gh auth login`
+            # because gh writes hosts.yml next to config.yml.
             /*
               TODO: Fix token
               preHook = ''

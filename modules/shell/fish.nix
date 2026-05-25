@@ -53,6 +53,7 @@
             lsn = "ls -lv";
           };
           shellInit = /* fish */ ''
+            fish_add_path $HOME/.local/bin
             set fish_greeting
             function fish_user_key_bindings
                 fish_default_key_bindings -M insert

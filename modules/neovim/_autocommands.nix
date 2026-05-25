@@ -1,4 +1,5 @@
-_: {
+{ lib, ... }:
+{
   vim.luaConfigRC.autocommands = /* lua */ ''
     local function augroup(name)
       return vim.api.nvim_create_augroup('nvimtrap_' .. name, { clear = true })
@@ -112,6 +113,30 @@ _: {
       group = augroup("auto_read"),
       callback = function()
         vim.notify("File changed on disk. Buffer reloaded!", vim.log.levels.WARN, { title = "nvim-config" })
+      end,
+    })
+  '';
+
+  vim.luaConfigRC."env-shellcheck-sc2034" = lib.mkAfter ''
+    local sc = require("lint").linters.shellcheck
+    local default_args = vim.deepcopy(sc.args)
+    local with_exclude = vim.list_extend(vim.deepcopy(sc.args), { "--exclude=SC2034" })
+
+    local group = vim.api.nvim_create_augroup("EnvShellcheckSC2034", { clear = true })
+
+    vim.api.nvim_create_autocmd({ "BufEnter", "BufRead", "BufNewFile" }, {
+      group = group,
+      pattern = { ".env", ".env.*", "*.env" },
+      callback = function()
+        require("lint").linters.shellcheck.args = with_exclude
+      end,
+    })
+
+    vim.api.nvim_create_autocmd("BufLeave", {
+      group = group,
+      pattern = { ".env", ".env.*", "*.env" },
+      callback = function()
+        require("lint").linters.shellcheck.args = default_args
       end,
     })
   '';

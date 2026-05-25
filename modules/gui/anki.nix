@@ -22,8 +22,15 @@
                 app-id = "^net.ankiweb.Anki$";
                 title = "^Add$|^Browse|^Edit";
               }
+              {
+                app-id = "^Anki$";
+                title = "^Import File$|^Preferences$|^Statistics$|^Deck Options$|^Card Layout$|^Cards$|^Export$|^Check Database$|^Empty Cards$|^Find Duplicates$|^Manage Note Types$|^Change Notetype$|^About$|^Profile$";
+              }
             ];
             open-floating = true;
+            background-effect = {
+              blur = true;
+            };
           }
         ];
         programs.which-key.menus = {
