@@ -1,4 +1,27 @@
 _: {
+  # Override vim.diagnostic.set — single intercept for ALL sources (nvim-lint + LSP).
+  # nvim-lint calls vim.diagnostic.set directly; so does the LSP pipeline.
+  # bash-ls sends code as integer 2034; nvim-lint shellcheck sends string "SC2034".
+  vim.luaConfigRC.env-diag-filter = /* lua */ ''
+    local _orig_diag_set = vim.diagnostic.set
+    vim.diagnostic.set = function(ns, bufnr, diagnostics, opts)
+      local resolved = (bufnr == 0) and vim.api.nvim_get_current_buf() or bufnr
+      local name = vim.api.nvim_buf_get_name(resolved)
+      local is_env = name ~= "" and (
+        name:match("[/\\]?%.env$") or
+        name:match("%.env%.[^/\\]+$") or
+        name:match("[^/\\]+%.env$")
+      )
+      if is_env and diagnostics then
+        diagnostics = vim.tbl_filter(function(d)
+          local code = tostring(d.code or "")
+          return code ~= "SC2034" and code ~= "2034"
+        end, diagnostics)
+      end
+      _orig_diag_set(ns, bufnr, diagnostics, opts)
+    end
+  '';
+
   vim.luaConfigRC.diagnostics = /* lua */ ''
     vim.schedule(function()
       local diagnostic_signs = {
