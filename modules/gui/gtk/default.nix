@@ -53,7 +53,7 @@
     };
 
   flake.modules.nixos.gui =
-    { config, ... }:
+    { config, pkgs, ... }:
     let
       gtkCfg = config.custom.gtk;
       toIni = lib.generators.toINI {
@@ -99,26 +99,23 @@
         enable = true;
         profiles.user.databases = [
           {
-            settings = lib.mkMerge [
-              {
-                # disable dconf first use warning
-                "ca/desrt/dconf-editor" = {
-                  show-warning = false;
-                };
-                # gtk related settings
-                "org/gnome/desktop/interface" = {
-                  color-scheme = "prefer-dark"; # set dark theme for gtk 4
-                  cursor-theme = gtkCfg.cursor.name;
-                  cursor-size = lib.gvariant.mkUint32 gtkCfg.cursor.size;
-                  font-name = "${gtkCfg.font.name} 10";
-                  gtk-theme = gtkCfg.theme.name;
-                  icon-theme = gtkCfg.iconTheme.name;
-                  # disable middle click paste
-                  gtk-enable-primary-paste = false;
-                };
-              }
-              config.custom.dconf.settings
-            ];
+            settings = lib.recursiveUpdate config.custom.dconf.settings {
+              # disable dconf first use warning
+              "ca/desrt/dconf-editor" = {
+                show-warning = false;
+              };
+              # gtk related settings
+              "org/gnome/desktop/interface" = {
+                color-scheme = "prefer-dark"; # set dark theme for gtk 4
+                cursor-theme = gtkCfg.cursor.name;
+                cursor-size = lib.gvariant.mkUint32 gtkCfg.cursor.size;
+                font-name = "${gtkCfg.font.name} 10";
+                gtk-theme = gtkCfg.theme.name;
+                icon-theme = gtkCfg.iconTheme.name;
+                # disable middle click paste
+                gtk-enable-primary-paste = false;
+              };
+            };
           }
         ];
       };
@@ -128,6 +125,28 @@
         config.files."gtk-3.0/bookmarks".text = lib.concatMapStringsSep "\n" (
           b: "file://${b}"
         ) gtkCfg.bookmarks;
+      };
+
+      # The NixOS `programs.dconf` module only writes read-only database
+      # files into /nix/store. The mutable `~/.config/dconf/user` database
+      # has higher precedence, so stale keys there (e.g. gtk-theme pointing
+      # at a removed theme) silently override the declarative settings and
+      # make GTK apps fall back to a light theme.
+      #
+      # hjem has no activation hooks, so reset these keys once per graphical
+      # session to make the declarative values win again.
+      systemd.user.services.gtk-dconf-reset = {
+        description = "Reset stale GTK theme dconf overrides";
+        wantedBy = [ "graphical-session.target" ];
+        before = [ "graphical-session.target" ];
+        serviceConfig = {
+          Type = "oneshot";
+          RemainAfterExit = true;
+        };
+        script = ''
+          ${pkgs.glib.bin}/bin/gsettings reset org.gnome.desktop.interface gtk-theme
+          ${pkgs.glib.bin}/bin/gsettings reset org.gnome.desktop.interface color-scheme
+        '';
       };
     };
 }

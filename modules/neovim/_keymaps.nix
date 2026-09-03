@@ -1,4 +1,4 @@
-{ lib, ... }:
+_:
 let
   helpers = import ./_helpers.nix null;
   inherit (helpers) mkKeymap mkKeymapWithOpts fzf;
@@ -12,6 +12,7 @@ in
       (mkKeymap "n" "<right>" "<nop>")
       (mkKeymap "n" "<esc><esc>" ":nohlsearch<CR>")
       (mkKeymap "n" "-" ":Oil<CR>")
+      (mkKeymap "n" "<leader>e" ":Neotree toggle<CR>")
       (mkKeymapWithOpts "n" "<Tab>" "%" { desc = "Remap % to Tab"; })
 
       (mkKeymap "n" "<leader>ub" "<cmd>bdelete<cr>")

@@ -79,7 +79,16 @@
     lsp = {
       enable = true;
       formatOnSave = false;
-      lightbulb.enable = true;
+      lightbulb = {
+        enable = true;
+        setupOpts = {
+          sign.enabled = true;
+          virtual_text.enabled = false;
+          float.enabled = false;
+          status_text.enabled = false;
+          number.enabled = false;
+        };
+      };
       lspkind.enable = true;
       lspsaga.enable = false;
       trouble.enable = true;
@@ -180,6 +189,18 @@
       theme = "auto";
     };
     telescope.enable = false;
+
+    filetree.neo-tree = {
+      enable = true;
+      setupOpts = {
+        window.width = 35;
+        filesystem.filtered_items = {
+          visible = true;
+          hide_dotfiles = false;
+          hide_gitignored = false;
+        };
+      };
+    };
 
     autocomplete.blink-cmp = {
       enable = true;

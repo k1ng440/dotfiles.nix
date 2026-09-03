@@ -92,6 +92,18 @@
         "match:initial_class helium, match:initial_title (.*)(wants to save)$, float on, size <50% <50%"
       ];
 
+      custom.programs.niri.settings.window-rules = [
+        {
+          matches = [
+            {
+              app-id = "^helium$";
+              title = ".* - Helium$";
+            }
+          ];
+          open-floating = false;
+        }
+      ];
+
       # custom.startup = [
       #   {
       #     app-id = "helium";

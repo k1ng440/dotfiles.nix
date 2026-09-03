@@ -130,6 +130,7 @@ in
                 font-family = [
                   config.custom.fonts.monospace
                   "Symbols Nerd Font Mono"
+                  "Noto Sans Bengali"
                 ];
                 font-feature = "zero";
                 font-style = "Medium";

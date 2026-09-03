@@ -5,6 +5,7 @@ _: {
       environment.systemPackages = [
         pkgs.python3
         pkgs.uv
+        pkgs.python3Packages.markitdown
       ];
     };
 }

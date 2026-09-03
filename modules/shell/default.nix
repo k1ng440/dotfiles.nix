@@ -133,6 +133,7 @@
 
         systemPackages =
           (with pkgs; [
+            (lib.hiPrio coreutils) # keep GNU utils ahead of toybox
             bonk # mkdir and touch in one
             curl
             # dysk # better disk info

@@ -32,13 +32,13 @@
           theme = {
             package = lib.mkOption {
               type = lib.types.package;
-              default = pkgs.custom.tokyonight-gtk-theme;
+              default = pkgs.juno-theme;
               description = "Package providing the theme.";
             };
 
             name = lib.mkOption {
               type = lib.types.str;
-              default = "Tokyonight-Dark-Compact";
+              default = "Juno";
               description = "The name of the theme within the package.";
             };
           };

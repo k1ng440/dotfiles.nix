@@ -35,6 +35,9 @@
         {
           services.gnome.gnome-keyring.enable = true;
           security.pam.services.login.enableGnomeKeyring = true;
+          # ly runs its own PAM service; unlock gnome-keyring here with the
+          # password typed at the login screen
+          security.pam.services.ly.enableGnomeKeyring = true;
           services.gnome.gcr-ssh-agent.enable = true;
         }
 
@@ -73,9 +76,6 @@
 
         {
           services.displayManager = {
-            autoLogin.user = user;
-
-            # scrolling is nicer for laptop with a smaller screen
             defaultSession = lib.mkDefault "niri";
 
             ly = {

@@ -44,10 +44,6 @@
           patches = (o.patches or [ ]) ++ [ ./patches/nitch-nix-pkgs-count.patch ];
         });
 
-        opencode = prev.opencode.overrideAttrs (o: {
-          patches = (o.patches or [ ]);
-        });
-
         # i686 packages (wine/bottles/lutris FHS envs) pull openldap but i686 is never cached
         # disable tests only for i686 — x86_64 stays unmodified and cache-compatible
         cyrus_sasl =

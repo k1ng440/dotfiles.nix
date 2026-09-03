@@ -40,11 +40,14 @@
         programs_whichkey
         programs_tor-browser
         shell_playwright
-        shell_claude-code
-        programs_whatsapp
+        # shell_claude-code
+        # programs_claude-desktop
+        # programs_whatsapp
         programs_telegram
         programs_google-chrome
         programs_wine
+        programs_davinci-resolve
+        # services_llama-cpp
       ];
 
       custom = {
@@ -58,9 +61,10 @@
               # niri / mango wants this to be exact down to the decimals
               refreshRate = "120.000";
               vrr = false;
-              x = 1440;
+              x = 3440;
+              y = 0;
               # y = 1080;
-              y = 3440 - (1440 + 200);
+              # y = 3440 - (1440 + 200);
               workspaces = [
                 1
                 2
@@ -79,8 +83,8 @@
               x = 0;
               y = 0;
               # y = 1080;
-              transform = 3;
-              isVertical = true;
+              # transform = 3;
+              # isVertical = true;
               workspaces = [
                 6
                 7

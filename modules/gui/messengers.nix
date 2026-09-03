@@ -48,6 +48,8 @@ _: {
       };
     };
 
+  # TODO: fix this error:
+  # HINT: you may need to install a package such as epoxy, epoxy-dev or epoxy-devel.
   flake.modules.nixos.programs_whatsapp =
     {
       pkgs,
@@ -70,7 +72,7 @@ _: {
                 inherit (sources.karere) src;
                 pname = "karere";
                 version = sources.karere.version;
-                hash = "sha256-SfujfVp8Xy39AWzL3QHqbMqfLHrCPKgJAqh950nLaBY=";
+                hash = "sha256-gN0/tMxnnWwoCd/6FflhtPvO32gxirxUR/aoqTnVftI=";
               };
               buildInputs = old.buildInputs ++ [
                 prev.gsettings-desktop-schemas

@@ -359,6 +359,15 @@
               }
 
               window-rule {
+                  match app-id="^helium$" title=".*Zoom Meeting$"
+
+                  open-floating true
+                  default-column-width { fixed 800; }
+                  default-window-height { fixed 600; }
+                  default-floating-position x=32 y=32 relative-to="top-right"
+              }
+
+              window-rule {
                   match app-id="^org.quickshell$"
                   background-effect {
                       blur true
