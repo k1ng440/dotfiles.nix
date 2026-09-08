@@ -3,41 +3,24 @@
   perSystem =
     { pkgs, ... }:
     {
-      packages.neovim-nvf =
-        let
-          statix-fix = pkgs.statix.overrideAttrs (_: rec {
-            src = pkgs.fetchFromGitHub {
-              owner = "oppiliappan";
-              repo = "statix";
-              rev = "43681f0da4bf1cc6ecd487ef0a5c6ad72e3397c7";
-              hash = "sha256-LXvbkO/H+xscQsyHIo/QbNPw2EKqheuNjphdLfIZUv4=";
-            };
-            cargoDeps = pkgs.rustPlatform.importCargoLock {
-              lockFile = src + "/Cargo.lock";
-              allowBuiltinFetchGit = true;
-            };
-          });
-
-          customPkgs = pkgs.extend (_: _: { statix = statix-fix; });
-        in
-        pkgs.callPackage (
-          {
-            dots ? null,
-            host ? "xenomorph",
-          }:
-          (inputs.nvf.lib.neovimConfiguration {
-            pkgs = customPkgs;
-            modules = lib.pipe ./. [
-              builtins.readDir
-              (lib.filterAttrs (
-                name: type:
-                type == "regular" && lib.hasPrefix "_" name && lib.hasSuffix ".nix" name && name != "_helpers.nix"
-              ))
-              (lib.mapAttrsToList (name: _: ./. + "/${name}"))
-            ];
-            extraSpecialArgs = { inherit dots host; };
-          }).neovim
-        ) { };
+      packages.neovim-nvf = pkgs.callPackage (
+        {
+          dots ? null,
+          host ? "xenomorph",
+        }:
+        (inputs.nvf.lib.neovimConfiguration {
+          inherit pkgs;
+          modules = lib.pipe ./. [
+            builtins.readDir
+            (lib.filterAttrs (
+              name: type:
+              type == "regular" && lib.hasPrefix "_" name && lib.hasSuffix ".nix" name && name != "_helpers.nix"
+            ))
+            (lib.mapAttrsToList (name: _: ./. + "/${name}"))
+          ];
+          extraSpecialArgs = { inherit dots host; };
+        }).neovim
+      ) { };
     };
 
   flake.modules.nixos.programs_neovim =

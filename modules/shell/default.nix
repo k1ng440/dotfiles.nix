@@ -136,20 +136,29 @@
             (lib.hiPrio coreutils) # keep GNU utils ahead of toybox
             bonk # mkdir and touch in one
             curl
+            dnsutils # dig, nslookup, host
             # dysk # better disk info
             ets # add timestamp to beginning of each line
             fd # better find
             fx # terminal json viewer and processor
             gzip
             htop
+            inotify-tools
+            iperf # iperf3
             jq
             killall
             lsof
+            mtr
+            net-tools # ifconfig, netstat, route
+            netcat-gnu
+            nmap
             procs # better ps
             (lib.hiPrio procps) # for uptime
             sd # better sed
+            speedtest-cli
             trash-cli
             ugrep # grep, with boolean query patterns, e.g. ug --files -e "A" --and "B"
+            whois
             xdg-utils
             nh
           ])

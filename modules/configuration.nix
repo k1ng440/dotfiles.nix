@@ -6,7 +6,7 @@
       inherit (config.custom.constants) host;
     in
     {
-      networking.hostName = builtins.trace host host;
+      networking.hostName = lib.mkDefault host;
       networking.networkmanager.enable = true;
       time.timeZone = "Asia/Dhaka";
       console = {

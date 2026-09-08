@@ -67,12 +67,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # Development tools
-    treefmt-nix = {
-      url = "github:numtide/treefmt-nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     # Hyprland window manager
     hyprland = {
       url = "github:hyprwm/Hyprland";
@@ -81,10 +75,6 @@
     hyprland-plugins = {
       url = "github:hyprwm/hyprland-plugins";
       inputs.hyprland.follows = "hyprland";
-    };
-    snappy-switcher = {
-      url = "github:OpalAayan/snappy-switcher";
-      inputs.nixpkgs.follows = "nixpkgs";
     };
     noctalia = {
       url = "github:noctalia-dev/noctalia-shell";
@@ -106,7 +96,6 @@
       url = "git+ssh://git@gitlab.com/k1ng4401/nix-secrets.git?ref=main&shallow=1";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    stub-flake.url = "github:k1ng440/stub-flake";
 
     dms = {
       url = "github:AvengeMedia/DankMaterialShell/stable";
