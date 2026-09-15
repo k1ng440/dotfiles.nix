@@ -1,34 +1,52 @@
-{ lib, ... }:
+{
+  lib,
+  ...
+}:
 {
   flake.modules.nixos.wm =
-    { config, ... }:
+    { config, pkgs, ... }:
     {
       custom.programs.hyprland.settings = {
         exec-once = [
           # stop fucking with my cursors
           "hyprctl setcursor ${config.custom.gtk.cursor.name} ${toString config.custom.gtk.cursor.size}"
-          "hyprctl dispatch workspace 1"
+        ]
+        # propagate the session env into systemd, then start the session target
+        ++ [
+          "${lib.getExe' pkgs.dbus "dbus-update-activation-environment"} --systemd DISPLAY WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
+          "systemctl --user start hyprland-session.target"
         ]
         # generate from startup options
-        ++ map (
-          {
-            enable,
-            spawn,
-            workspace,
-            ...
-          }:
-          let
-            rules = lib.optionalString (workspace != null) "[workspace ${toString workspace} silent]";
-            exec = lib.concatStringsSep " " spawn;
-          in
-          lib.optionalString enable "${rules} ${exec}"
-        ) config.custom.startup;
+        ++ builtins.filter (s: s != "") (
+          map (
+            {
+              enable,
+              spawn,
+              workspace,
+              ...
+            }:
+            let
+              rules = lib.optionalString (workspace != null) "[workspace ${toString workspace} silent]";
+              exec = lib.concatStringsSep " " spawn;
+            in
+            lib.optionalString enable "${rules} ${exec}"
+          ) config.custom.startup
+        )
+        # focus default workspace for each monitor
+        ++ (
+          lib.reverseList config.custom.hardware.monitors
+          |> lib.concatMap (mon: [
+            "hyprctl dispatch focusmonitor ${mon.name}"
+            "hyprctl dispatch workspace ${toString mon.defaultWorkspace}"
+          ])
+        );
       };
 
       systemd.user = {
-        # ly -> hyprland-start -> exec-once hyprland-session.service -> startupServices
-        # so the environment will be properly set
+        # ly -> hyprland.service -> hyprland-session.target -> startupServices
         targets.hyprland-session = {
+          wantedBy = [ "graphical-session.target" ];
+
           unitConfig = {
             Description = "Hyprland compositor session";
             BindsTo = [ "graphical-session.target" ];
