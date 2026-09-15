@@ -40,14 +40,10 @@
         programs_whichkey
         programs_tor-browser
         shell_playwright
-        # shell_claude-code
-        # programs_claude-desktop
-        # programs_whatsapp
         programs_telegram
         programs_google-chrome
         programs_wine
         programs_davinci-resolve
-        # services_llama-cpp
       ];
 
       custom = {

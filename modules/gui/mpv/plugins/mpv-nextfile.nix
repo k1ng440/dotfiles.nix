@@ -9,7 +9,7 @@
           mpvScripts,
         }:
         mpvScripts.buildLua {
-          pname = "mpv-cut";
+          pname = "mpv-nextfile";
           src = fetchFromGitHub {
             owner = "jonniek";
             repo = "mpv-nextfile";

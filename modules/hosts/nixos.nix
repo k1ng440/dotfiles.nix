@@ -54,6 +54,5 @@ in
   flake.nixosConfigurations = {
     xenomorph = mkNixos "xenomorph" { };
     xenomorph-vm = mkVm "xenomorph" { };
-    vm = mkVm "vm" { };
   };
 }

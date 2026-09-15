@@ -6,7 +6,7 @@
 > likely to almost fully **wipe your computer**.
 
 This is my personal NixOS configuration for my machines. You can find them under
-the [hosts](hosts) directory.
+the [hosts](modules/hosts) directory.
 
 You should really not be trying to install them, but you are free to take
 inspiration from them. Some small parts are not included and are in a separate

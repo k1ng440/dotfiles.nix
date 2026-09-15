@@ -8,14 +8,6 @@
 {
   flake = {
     overlays = {
-      # access to nixpkgs-stable
-      nixpkgsStable = _: prev: {
-        stable = import inputs.nixpkgs-stable {
-          inherit (prev.pkgs.stdenv.hostPlatform) system;
-          config.allowUnfree = true;
-        };
-      };
-
       # add flake.packages as pkgs.custom
       pkgsCustom = _: prev: {
         custom =
@@ -116,7 +108,6 @@
     modules.nixos.core = _: {
       nixpkgs.overlays = [
         self.overlays.pkgsCustom
-        self.overlays.nixpkgsStable
         self.overlays.pkgsPatches
         self.overlays.writeShellApplicationCompletions
         inputs.niri.overlays.niri

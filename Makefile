@@ -17,15 +17,9 @@ update:
 rebuild:
 	sudo nixos-rebuild switch --show-trace --flake .#$(host)
 
-hms:
-	home-manager switch -b backup --extra-experimental-features "nix-command flakes repl-flake" --show-trace --flake .#$(host)
-
 run-vm:
 	nix build .#nixosConfigurations.${host}.config.system.build.vm
 	./result/bin/run-${host}-vm
-
-build-iso:
-	nix build .#nixosConfigurations.isoimage.config.system.build.isoImage
 
 clean-cows:
 	p=$(readlink result)

@@ -1,29 +1,5 @@
 { lib, ... }:
 {
-  perSystem =
-    { pkgs, ... }:
-    {
-      packages = {
-        tokyonight-gtk-theme =
-          (pkgs.tokyonight-gtk-theme.override {
-            colorVariants = [ "dark" ];
-            sizeVariants = [ "compact" ];
-            themeVariants = [ "all" ];
-          }).overrideAttrs
-            (o: {
-              patches = (o.patches or [ ]) ++ [ ./tokyonight-style.patch ];
-
-              postInstall = (o.postInstall or "") + ''
-                rm -rf $out/share/themes/*Light*
-
-                for theme in "$out"/share/themes/*Dark*; do
-                  ln -s "$theme" "''${theme/Dark/Light}";
-                done
-              '';
-            });
-      };
-    };
-
   flake.modules.nixos.core =
     { pkgs, ... }:
     {

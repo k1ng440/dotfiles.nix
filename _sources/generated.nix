@@ -6,20 +6,12 @@
   dockerTools,
 }:
 {
-  claude-code = {
-    pname = "claude-code";
-    version = "2.1.251";
-    src = fetchurl {
-      url = "https://storage.googleapis.com/claude-code-dist-86c565f3-f756-42ad-8dfa-d59b1c096819/claude-code-releases/2.1.251/linux-x64/claude";
-      sha256 = "sha256-/V8Q/w61ja7ASQBGaxQ+qYqrUKvyCKQivACOrsE/Yfc=";
-    };
-  };
   helium = {
     pname = "helium";
-    version = "0.16.2.1";
+    version = "0.17.0.1";
     src = fetchurl {
-      url = "https://github.com/imputnet/helium-linux/releases/download/0.16.2.1/helium-0.16.2.1-x86_64.AppImage";
-      sha256 = "sha256-LS3sjyzR1ySfD0L9RulF5Zgys9FDLm8APYR/AJcKDQI=";
+      url = "https://github.com/imputnet/helium-linux/releases/download/0.17.0.1/helium-0.17.0.1-x86_64.AppImage";
+      sha256 = "sha256-JmqdEwoXP/2GGAMS2gjAq7G2oWFuyUTr5ouMDhSOcHY=";
     };
   };
   karere = {
@@ -31,29 +23,6 @@
       rev = "cef-150.0.10-proprietary-codecs";
       fetchSubmodules = false;
       sha256 = "sha256-In7sBZF3LxTa0+dY9MM4PlJ2tos7IiTOD33TxlM3YUo=";
-    };
-  };
-  llama-cpp = {
-    pname = "llama-cpp";
-    version = "bebc9350ecc42a31ad119da1513998386671cf5b";
-    src = fetchFromGitHub {
-      owner = "ggml-org";
-      repo = "llama.cpp";
-      rev = "bebc9350ecc42a31ad119da1513998386671cf5b";
-      fetchSubmodules = false;
-      sha256 = "sha256-YT0j8xDvFElBhAeF1po9/l2w0/bPGgpuFgAs+OIQZ1E=";
-    };
-    date = "2026-08-30";
-  };
-  mango = {
-    pname = "mango";
-    version = "0.16.2";
-    src = fetchFromGitHub {
-      owner = "mangowm";
-      repo = "mango";
-      rev = "0.16.2";
-      fetchSubmodules = false;
-      sha256 = "sha256-od6lK1KOquakP/GD17fGEm1ck5EMZa/s+jhmvGrRFzk=";
     };
   };
   mpv-deletefile = {
@@ -80,29 +49,6 @@
     };
     date = "2025-04-04";
   };
-  niri = {
-    pname = "niri";
-    version = "dd75865f547f0eac0e9b6c4d86d2cd00c0744252";
-    src = fetchFromGitHub {
-      owner = "niri-wm";
-      repo = "niri";
-      rev = "dd75865f547f0eac0e9b6c4d86d2cd00c0744252";
-      fetchSubmodules = false;
-      sha256 = "sha256-BNZUEVR2H96hCKENNKoLSSTFT8W4smp7v94hJc4Ehfc=";
-    };
-    date = "2026-08-21";
-  };
-  opencode = {
-    pname = "opencode";
-    version = "v1.18.25";
-    src = fetchFromGitHub {
-      owner = "sst";
-      repo = "opencode";
-      rev = "v1.18.25";
-      fetchSubmodules = false;
-      sha256 = "sha256-uVW11r2tyGUTzMn1Y+HweD68H7u05UN6EQcXFJbNyS4=";
-    };
-  };
   rofi-themes = {
     pname = "rofi-themes";
     version = "512a585fff6da5b2a90e5948059b062516ddb2e7";
@@ -117,39 +63,27 @@
   };
   sidekick-nvim = {
     pname = "sidekick-nvim";
-    version = "208e1c5b8170c01fd1d07df0139322a76479b235";
+    version = "3d80a47e6375f6d647c9695d3afea6fa1b3275df";
     src = fetchFromGitHub {
       owner = "folke";
       repo = "sidekick.nvim";
-      rev = "208e1c5b8170c01fd1d07df0139322a76479b235";
+      rev = "3d80a47e6375f6d647c9695d3afea6fa1b3275df";
       fetchSubmodules = false;
-      sha256 = "sha256-I1YuIXJHP7JfETwOer6B7QDLMZGG/X59zXopb4nPel4=";
+      sha256 = "sha256-YV4QMU2I+6PwTVdjsh/1Z+WTeLW9spgpugccmsqpxRY=";
     };
-    date = "2026-04-22";
+    date = "2026-09-08";
   };
   yazi-plugins = {
     pname = "yazi-plugins";
-    version = "c591a36e7263e95497715d525e9c46c2f0a880ac";
+    version = "58c4f4e2f4835cc9bf6751f39e3f7c574fc7f55a";
     src = fetchFromGitHub {
       owner = "yazi-rs";
       repo = "plugins";
-      rev = "c591a36e7263e95497715d525e9c46c2f0a880ac";
+      rev = "58c4f4e2f4835cc9bf6751f39e3f7c574fc7f55a";
       fetchSubmodules = false;
-      sha256 = "sha256-mWT0yF2iG9+gYEuNiffpM93POlBqY+QKdFh5jSAxYls=";
+      sha256 = "sha256-kwf9+KXOL5JXGDoEGdtwq+JujP8GVoOwDgz76FBM3xk=";
     };
-    date = "2026-08-25";
-  };
-  yazi-time-travel = {
-    pname = "yazi-time-travel";
-    version = "aaec6e26e525bd146354a5137ec40f1f23257a4e";
-    src = fetchFromGitHub {
-      owner = "iynaix";
-      repo = "time-travel.yazi";
-      rev = "aaec6e26e525bd146354a5137ec40f1f23257a4e";
-      fetchSubmodules = false;
-      sha256 = "sha256-/+KiuGUox763dMQvHl1l3+Ci3vL8NwRuKNu9pi3gjyE=";
-    };
-    date = "2026-01-16";
+    date = "2026-09-09";
   };
   yt-dlp = {
     pname = "yt-dlp";

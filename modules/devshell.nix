@@ -37,12 +37,6 @@
           clippy
           pkg-config
         ];
-
-        buildInputs = with pkgs; [
-          pre-commit
-          glib
-          gexiv2 # for reading metadata
-        ];
       };
     };
 }
