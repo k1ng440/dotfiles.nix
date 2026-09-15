@@ -69,6 +69,6 @@
       systemd.services.NetworkManager-wait-online.wantedBy = lib.mkForce [ ];
 
       # reduce journald logs
-      services.journald.extraConfig = "SystemMaxUse=50M";
+      services.journald.settings.Journal.SystemMaxUse = "50M";
     };
 }
