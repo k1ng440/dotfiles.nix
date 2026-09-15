@@ -23,4 +23,17 @@
         };
       };
     };
+
+  flake.modules.nixos.specialisations_hyprland =
+    { config, ... }:
+    {
+      config = lib.mkIf config.custom.specialisation.hyprland.enable {
+        specialisation.hyprland = {
+          configuration = {
+            custom.specialisation.current = "hyprland";
+            services.displayManager.defaultSession = lib.mkForce "hyprland";
+          };
+        };
+      };
+    };
 }

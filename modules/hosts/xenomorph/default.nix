@@ -9,6 +9,7 @@
       imports = with top.config.flake.modules.nixos; [
         gui
         wm
+        specialisations_hyprland
 
         inputs.nixos-hardware.nixosModules.common-cpu-amd-zenpower
         hardware_nvidiagpu
@@ -108,6 +109,7 @@
           ];
         };
         lock.enable = false;
+        specialisation.hyprland.enable = true;
 
         programs = {
           btop.extraSettings = {
