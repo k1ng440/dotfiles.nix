@@ -44,7 +44,7 @@
         programs_telegram
         programs_google-chrome
         programs_wine
-        programs_davinci-resolve
+        # programs_davinci-resolve
       ];
 
       custom = {
