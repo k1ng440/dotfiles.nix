@@ -176,11 +176,14 @@
 
         programs = {
           # Setup blur for hyprland
-          hyprland.settings = {
-            layerrule = [
-              "match:namespace noctalia-background-.*$, ignore_alpha 0.5, blur on"
-            ];
-          };
+          hyprland.layerRules = [
+            {
+              name = "noctalia-background";
+              match.namespace = "noctalia-background-.*$";
+              ignore_alpha = 0.5;
+              blur = true;
+            }
+          ];
 
           niri.settings = {
             # bar blur

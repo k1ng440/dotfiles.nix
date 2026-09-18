@@ -16,10 +16,14 @@
       inherit (config.custom.constants) isLaptop;
       lock = pkgs.writeShellApplication {
         name = "lock";
-        runtimeInputs = [ pkgs.custom.noctalia-ipc ];
+        runtimeInputs = [
+          config.programs.dms-shell.package
+          pkgs.systemd
+        ];
         text = /* sh */ ''
-          ${lib.optionalString config.custom.lock.enable "noctalia-ipc sessionMenu lockAndSuspend"}
-          noctalia-ipc monitors off
+          ${lib.optionalString config.custom.lock.enable "loginctl lock-session"}
+          ${lib.optionalString config.custom.lock.enable "systemctl suspend"}
+          ${lib.optionalString (!config.custom.lock.enable) "dms dpms off"}
         '';
       };
     in
@@ -28,27 +32,22 @@
         lock
       ];
 
-      # lock on idle
+      # manual lock key and laptop lid
       custom.programs = {
-        # Disable suspend and lockscreen if host doesn't lock
-        noctalia.settingsReducers = lib.mkIf (!config.custom.lock.enable) [
-          (
-            prev:
-            lib.recursiveUpdate prev {
-              idle = {
-                lockTimeout = 0;
-                suspendTimeout = 0;
-              };
-            }
-          )
+        hyprland.binds = [
+          {
+            keys = "SUPER + SHIFT + CTRL + x";
+            dsp = ''hl.dsp.exec_cmd("${lib.getExe lock}")'';
+          }
+        ]
+        # handle laptop lid
+        ++ lib.optionals isLaptop [
+          {
+            keys = "switch:Lid Switch";
+            dsp = ''hl.dsp.exec_cmd("${lib.getExe lock}")'';
+            flags.locked = true;
+          }
         ];
-
-        hyprland.settings = {
-          bind = [ "$mod_SHIFT_CTRL, x, exec, ${lib.getExe lock}" ];
-
-          # handle laptop lid
-          bindl = lib.mkIf isLaptop [ ",switch:Lid Switch, exec, ${lib.getExe lock}" ];
-        };
 
         niri.settings = {
           binds = {

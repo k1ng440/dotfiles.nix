@@ -51,6 +51,23 @@ in
         };
       };
 
+      # DMS overlays this partial file onto its built-in defaults. A store-backed
+      # settings.json is read-only, which DMS treats as declarative: timers run
+      # from here and changes made in the UI are not written back.
+      hj.xdg.config.files."DankMaterialShell/settings.json" = {
+        generator = lib.strings.toJSON;
+        value = {
+          acMonitorTimeout = 300;
+          acLockTimeout = if config.custom.lock.enable then 300 else 0;
+          acSuspendTimeout = if config.custom.lock.enable then 600 else 0;
+          acPostLockMonitorTimeout = 0;
+          batteryMonitorTimeout = 300;
+          batteryLockTimeout = if config.custom.lock.enable then 300 else 0;
+          batterySuspendTimeout = if config.custom.lock.enable then 600 else 0;
+          batteryPostLockMonitorTimeout = 0;
+        };
+      };
+
       services.power-profiles-daemon.enable = true;
 
       environment = lib.mkIf config.programs.dms-shell.enable {

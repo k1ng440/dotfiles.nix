@@ -37,6 +37,7 @@
         programs_neovim
         programs_obsidian
         shell_opencode
+        shell_pi
         programs_authenticators
         programs_whichkey
         programs_tor-browser
@@ -44,7 +45,6 @@
         programs_telegram
         programs_google-chrome
         programs_wine
-        # programs_davinci-resolve
       ];
 
       custom = {
@@ -85,6 +85,8 @@
               workspaces = [
                 6
                 7
+                8
+                9
               ];
               defaultWorkspace = 6;
               hdr = false;

@@ -127,16 +127,27 @@
 
       # add blur for rofi shutdown
       custom.programs = {
-        hyprland.settings = {
-          layerrule = [
-            "match:namespace rofi, blur on, dim_around on, ignore_alpha 0"
-          ];
+        hyprland.layerRules = [
+          {
+            name = "rofi";
+            match.namespace = "rofi";
+            blur = true;
+            dim_around = true;
+            ignore_alpha = 0;
+          }
+        ];
 
-          # force center rofi on monitor
-          windowrule = [
-            "match:class Rofi, float on, center on, rounding 12, dim_around on"
-          ];
-        };
+        # force center rofi on monitor
+        hyprland.windowRules = [
+          {
+            name = "rofi";
+            match.class = "Rofi";
+            float = true;
+            center = true;
+            rounding = 12;
+            dim_around = true;
+          }
+        ];
 
         # fake dimaround, see:
         # https://github.com/YaLTeR/niri/discussions/1806

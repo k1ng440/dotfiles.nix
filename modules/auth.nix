@@ -1,7 +1,7 @@
 { lib, ... }:
 {
   flake.modules.nixos.core =
-    { config, ... }:
+    { config, pkgs, ... }:
     let
       inherit (config.custom.constants) user;
     in
@@ -34,10 +34,9 @@
         # keyring settings
         {
           services.gnome.gnome-keyring.enable = true;
+          # greetd's PAM service substacks/includes `login`, so unlocking the
+          # keyring here with the typed password also covers the login screen
           security.pam.services.login.enableGnomeKeyring = true;
-          # ly runs its own PAM service; unlock gnome-keyring here with the
-          # password typed at the login screen
-          security.pam.services.ly.enableGnomeKeyring = true;
           services.gnome.gcr-ssh-agent.enable = true;
         }
 
@@ -101,19 +100,31 @@
         {
           services.displayManager = {
             defaultSession = lib.mkDefault "niri";
-
-            ly = {
-              enable = true;
-              settings = {
-                bigclock = "en";
-                save = false; # don't use previous successful session
-                session_log = "${config.hj.xdg.data.directory}/ly-session.log";
-              };
-            };
           };
 
+          services.greetd = {
+            enable = true;
+            useTextGreeter = true;
+            settings.default_session.command = lib.concatStringsSep " " [
+              (lib.getExe pkgs.tuigreet)
+              "--time"
+              "--remember"
+              "--remember-session"
+              "--user-menu"
+              "--greeting ${config.networking.hostName}"
+              "--sessions ${config.services.displayManager.sessionData.desktops}/share/wayland-sessions"
+              "--xsessions ${config.services.displayManager.sessionData.desktops}/share/xsessions"
+            ];
+          };
+
+          # greetd feeds its config to the daemon from the store, so mirror it at
+          # a stable path for the `greetd-config` helper.
+          environment.etc."greetd/config.toml".source =
+            (pkgs.formats.toml { }).generate "greetd.toml"
+              config.services.greetd.settings;
+
           custom.programs.print-config = {
-            ly = /* sh */ ''moor "/etc/ly/config.ini"'';
+            greetd = /* sh */ ''moor "/etc/greetd/config.toml"'';
           };
 
           # block other ttys from autologin when bypassed from lockscreen

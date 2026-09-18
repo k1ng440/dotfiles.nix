@@ -119,9 +119,13 @@
             ];
 
             # various flake caches
-            extra-substituters = [ "https://noctalia.cachix.org" ];
+            extra-substituters = [
+              "https://noctalia.cachix.org"
+              "https://pi.cachix.org"
+            ];
             extra-trusted-public-keys = [
               "noctalia.cachix.org-1:pCOR47nnMEo5thcxNDtzWpOxNFQsBRglJzxWPp3dkU4="
+              "pi.cachix.org-1:lGeoGJaZ5ZDabuRzkcD5EBTNnDM4HJ1vqeOxlWk1Flk="
             ];
 
             # allow building and pushing of laptop config from desktop

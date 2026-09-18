@@ -95,5 +95,8 @@
       url = "git+https://git.outfoxxed.me/outfoxxed/quickshell";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    # pi coding agent
+    pi.url = "github:lukasl-dev/pi.nix";
   };
 }

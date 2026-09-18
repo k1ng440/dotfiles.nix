@@ -374,9 +374,17 @@
     lib.mkMerge [
       {
         custom.programs = {
-          hyprland.settings.windowrule = [
-            "match:class mpv, idle_inhibit focus"
-            "match:class mpv, suppress_event maximize"
+          hyprland.windowRules = [
+            {
+              name = "mpv-idle";
+              match.class = "mpv";
+              idle_inhibit = "focus";
+            }
+            {
+              name = "mpv-maximize";
+              match.class = "mpv";
+              suppress_event = "maximize";
+            }
           ];
         };
 

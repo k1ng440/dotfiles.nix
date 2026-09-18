@@ -6,41 +6,40 @@
   flake.modules.nixos.wm =
     { config, pkgs, ... }:
     {
-      custom.programs.hyprland.settings = {
-        exec-once = [
-          # stop fucking with my cursors
-          "hyprctl setcursor ${config.custom.gtk.cursor.name} ${toString config.custom.gtk.cursor.size}"
-        ]
-        # propagate the session env into systemd, then start the session target
-        ++ [
-          "${lib.getExe' pkgs.dbus "dbus-update-activation-environment"} --systemd DISPLAY WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
-          "systemctl --user start hyprland-session.target"
-        ]
-        # generate from startup options
-        ++ builtins.filter (s: s != "") (
-          map (
+      custom.programs.hyprland.execOnce = [
+        # stop fucking with my cursors
+        "hyprctl setcursor ${config.custom.gtk.cursor.name} ${toString config.custom.gtk.cursor.size}"
+      ]
+      # propagate the session env into systemd, then start the session target
+      ++ [
+        "${lib.getExe' pkgs.dbus "dbus-update-activation-environment"} --systemd DISPLAY WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
+        "systemctl --user start hyprland-session.target"
+      ]
+      # generate from startup options.
+      # the default workspace of each monitor is handled by the `default` workspace
+      # rules in settings.nix, so no `hyprctl dispatch focusmonitor/workspace` needed.
+      ++ builtins.filter (s: s != "") (
+        map (
+          {
+            enable,
+            spawn,
+            workspace,
+            ...
+          }:
+          let
+            command = lib.concatStringsSep " " spawn;
+          in
+          if !enable then
+            ""
+          else if workspace == null then
+            command
+          else
             {
-              enable,
-              spawn,
-              workspace,
-              ...
-            }:
-            let
-              rules = lib.optionalString (workspace != null) "[workspace ${toString workspace} silent]";
-              exec = lib.concatStringsSep " " spawn;
-            in
-            lib.optionalString enable "${rules} ${exec}"
-          ) config.custom.startup
-        )
-        # focus default workspace for each monitor
-        ++ (
-          lib.reverseList config.custom.hardware.monitors
-          |> lib.concatMap (mon: [
-            "hyprctl dispatch focusmonitor ${mon.name}"
-            "hyprctl dispatch workspace ${toString mon.defaultWorkspace}"
-          ])
-        );
-      };
+              inherit command;
+              rules.workspace = "${toString workspace} silent";
+            }
+        ) config.custom.startup
+      );
 
       systemd.user = {
         # ly -> hyprland.service -> hyprland-session.target -> startupServices

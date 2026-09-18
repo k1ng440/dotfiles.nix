@@ -81,15 +81,48 @@
         "x-scheme-handler/unknown" = "helium.desktop";
       };
 
-      custom.programs.hyprland.settings.windowrule = [
+      custom.programs.hyprland.windowRules = [
         # Do not idle while watching videos
-        "match:class helium, idle_inhibit fullscreen"
-        "match:class helium, match:title (.*)(YouTube)(.*), idle_inhibit focus"
+        {
+          name = "helium-idle-fullscreen";
+          match.class = "helium";
+          idle_inhibit = "fullscreen";
+        }
+        {
+          name = "helium-idle-youtube";
+          match = {
+            class = "helium";
+            title = "(.*)(YouTube)(.*)";
+          };
+          idle_inhibit = "focus";
+        }
         # float save dialogs
-        # save as
-        "match:initial_class helium, match:initial_title ^(Save File)$, float on, size <50% <50%"
-        # save image
-        "match:initial_class helium, match:initial_title (.*)(wants to save)$, float on, size <50% <50%"
+        {
+          # save as
+          name = "helium-save-file";
+          match = {
+            initial_class = "helium";
+            initial_title = "^(Save File)$";
+          };
+          float = true;
+          size = [
+            "monitor_w*0.5"
+            "monitor_h*0.5"
+          ];
+        }
+        {
+          # save image
+          name = "helium-save-image";
+          match = {
+            initial_class = "helium";
+            initial_title = "(.*)(wants to save)$";
+          };
+          float = true;
+          size = [
+            "monitor_w*0.5"
+            "monitor_h*0.5"
+          ];
+        }
       ];
 
       custom.programs.niri.settings.window-rules = [
