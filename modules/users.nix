@@ -47,6 +47,7 @@
                     "adbusers"
                     "kvm"
                     "libvirtd"
+                    "input"
                     "seat"
                     "pcscd"
                   ])

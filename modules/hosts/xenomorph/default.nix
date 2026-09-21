@@ -16,6 +16,7 @@
         hardware_ledger
         hardware_linux-firmware
         hardware_qmk
+        hardware_usb
         hardware_bluetooth
         hardware_Brother_DCP-T510W
         services_docker
