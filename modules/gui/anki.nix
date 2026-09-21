@@ -1,8 +1,10 @@
+# ABOUTME: Installs Anki (system-Qt build, fcitx5-safe) into the NixOS system.
+# ABOUTME: Wires MIME, which-key, floating window rules, and home persistence.
 {
   flake.modules.nixos.programs_anki =
     { lib, pkgs, ... }:
     {
-      environment.systemPackages = [ pkgs.anki-bin ];
+      environment.systemPackages = [ pkgs.anki ];
 
       xdg.mime.defaultApplications = {
         "application/x-apkg" = "anki.desktop";
@@ -36,7 +38,7 @@
         programs.which-key.menus = {
           a = {
             desc = "Anki";
-            cmd = lib.getExe pkgs.anki-bin;
+            cmd = lib.getExe pkgs.anki;
           };
         };
       };

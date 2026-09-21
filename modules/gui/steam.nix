@@ -27,6 +27,10 @@ _: {
         extraPackages = with pkgs; [
           gamemode
           pkgsi686Linux.gamemode
+          # cursor theme must live inside the steam FHS sandbox, otherwise
+          # hjem's ~/.local/share/icons symlinks (pointing into /nix/store)
+          # resolve to nothing and steam falls back to the default cursor
+          config.custom.gtk.cursor.package
         ];
         protontricks = {
           enable = true;
