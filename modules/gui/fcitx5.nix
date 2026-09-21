@@ -30,12 +30,27 @@ _: {
         };
       };
 
+      # GTK_IM_MODULE is intentionally unset: native-wayland GTK apps use the
+      # built-in text-input-v3 frontend, while XWayland GTK apps pick up the
+      # fcitx im module from gtk settings.ini (see gui/gtk). Setting it globally
+      # makes fcitx fire its "wayland diagnose" notification.
+      # QT_IM_MODULE stays set because wlroots compositors lack text-input-v2.
       environment.sessionVariables = {
-        GTK_IM_MODULE = "fcitx";
         QT_IM_MODULE = "fcitx";
         XMODIFIERS = "@im=fcitx";
         SDL_IM_MODULE = "fcitx";
         GLFW_IM_MODULE = "ibus";
       };
+
+      # hyprland/niri have no session manager to process XDG autostart, so the
+      # org.fcitx.Fcitx5.desktop entry never runs; launch the daemon directly.
+      custom.startup = [
+        {
+          spawn = [
+            "fcitx5"
+            "-d"
+          ];
+        }
+      ];
     };
 }

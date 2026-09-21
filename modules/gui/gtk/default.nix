@@ -71,6 +71,8 @@
           gtk-font-name = "${gtkCfg.font.name} 10";
           gtk-application-prefer-dark-theme = 1;
           gtk-error-bell = 0;
+          # fcitx im module for X11/XWayland GTK apps; ignored on native wayland
+          gtk-im-module = "fcitx";
         };
       };
     in
@@ -83,6 +85,7 @@
             gtk-font-name = "${gtkCfg.font.name} 10";
             gtk-icon-theme-name = "${config.custom.gtk.iconTheme.name}";
             gtk-theme-name = "${gtkCfg.theme.name}";
+            gtk-im-module = "fcitx";
           '';
         };
 
