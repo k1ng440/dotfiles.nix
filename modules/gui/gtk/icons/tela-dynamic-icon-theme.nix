@@ -14,7 +14,18 @@
 
             # copy everything that is not "@2x", can be generated later
             src="${pkgs.tela-icon-theme}/share/icons/Tela-blue-dark/"
-            find "$src" -maxdepth 1 -mindepth 1 ! -name '*@2x' -print0 | xargs -0 -I{} cp -rL {} "$out/"
+            # Copy to a temp dir first so we can drop the upstream
+            # @2x dirs and dangling symlinks before dereferencing (cp -rL
+            # would otherwise fail on broken links like xsi-addon-symbolic.svg).
+            tmp="$(mktemp -d)"
+            cp -r "$src/." "$tmp/"
+            # cp preserves the store's read-only dir modes; make the copy
+            # writable so the dirs below can be pruned/removed.
+            chmod -R +w "$tmp"
+            find "$tmp" -maxdepth 1 -type d -name '*@2x' -exec rm -rf {} +
+            find "$tmp" -xtype l -delete
+            find "$tmp" -maxdepth 1 -mindepth 1 -print0 | xargs -0 -I{} cp -rL {} "$out/"
+            rm -rf "$tmp"
 
             # replace video icon color so it can be dynamic
             chmod -R +w "$out"

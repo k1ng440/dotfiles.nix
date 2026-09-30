@@ -12,7 +12,7 @@
       inherit (config.custom.constants) host;
       inherit (config.custom.hardware) monitors;
 
-      gap = if host == "xenomorph" then 8 else 4;
+      gap = if host == "xenomorph" then 4 else 2;
       outer = gap * 2;
 
       # niri app-id float list -> hyprland window rules

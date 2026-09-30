@@ -16,6 +16,23 @@ in
       pkgs,
       ...
     }:
+    let
+      # Start DMS as part of the WM session, not the generic
+      # graphical-session.target: the latter activates at login before the
+      # compositor's Wayland socket exists, so dms crashes (qt.qpa.wayland
+      # "Could not create EGL surface" / connection refused), hits the restart
+      # limit, and never comes back once the compositor is actually up.
+      #
+      # Bind to both WM session targets instead of deciding which WM runs at
+      # build time: config.custom.specialisation.current only reflects boots
+      # via a specialisation, not sessions picked at the ly login screen. Only
+      # the session target of the currently running compositor is ever started,
+      # so whichever of these is inactive is a no-op.
+      dmsTargets = [
+        "niri-session.target"
+        "hyprland-session.target"
+      ];
+    in
     {
       programs.dms-shell = {
         enable = true;
@@ -24,6 +41,9 @@ in
         systemd = {
           enable = true;
           restartIfChanged = true;
+          # Single target here; both WM session targets are wired up explicitly
+          # in systemd.user.services.dms below (wantedBy/partOf/after union).
+          target = lib.head dmsTargets;
         };
 
         enableVPN = true; # VPN management widget
@@ -51,23 +71,10 @@ in
         };
       };
 
-      # DMS overlays this partial file onto its built-in defaults. A store-backed
-      # settings.json is read-only, which DMS treats as declarative: timers run
-      # from here and changes made in the UI are not written back.
-      hj.xdg.config.files."DankMaterialShell/settings.json" = {
-        generator = lib.strings.toJSON;
-        value = {
-          acMonitorTimeout = 300;
-          acLockTimeout = if config.custom.lock.enable then 300 else 0;
-          acSuspendTimeout = if config.custom.lock.enable then 600 else 0;
-          acPostLockMonitorTimeout = 0;
-          batteryMonitorTimeout = 300;
-          batteryLockTimeout = if config.custom.lock.enable then 300 else 0;
-          batterySuspendTimeout = if config.custom.lock.enable then 600 else 0;
-          batteryPostLockMonitorTimeout = 0;
-        };
-      };
-
+      # NOTE: settings.json is deliberately NOT managed here. DMS's writability probe
+      # is `[ ! -f PATH ] || [ -w PATH ]`, so a store-backed file (mode 444, root-owned,
+      # symlinked in by smfh) always reads as read-only: DMS then refuses to persist any
+      # edit made in its settings UI. Let DMS own the file and change it from the UI.
       services.power-profiles-daemon.enable = true;
 
       environment = lib.mkIf config.programs.dms-shell.enable {
@@ -76,6 +83,13 @@ in
 
       systemd.user.services.dms = lib.mkIf config.programs.dms-shell.enable {
         environment = sessionVariables;
+        # The packaged dms.service hardcodes graphical-session.target; rebind
+        # its lifecycle to both WM session targets. wantedBy/partOf/after are
+        # list options, so this unions with the WantedBy generated from
+        # programs.dms-shell.systemd.target instead of replacing it.
+        partOf = dmsTargets;
+        after = dmsTargets;
+        wantedBy = dmsTargets;
       };
 
       custom = {

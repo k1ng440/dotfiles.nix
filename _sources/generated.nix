@@ -8,10 +8,10 @@
 {
   helium = {
     pname = "helium";
-    version = "0.17.0.1";
+    version = "0.17.2.1";
     src = fetchurl {
-      url = "https://github.com/imputnet/helium-linux/releases/download/0.17.0.1/helium-0.17.0.1-x86_64.AppImage";
-      sha256 = "sha256-JmqdEwoXP/2GGAMS2gjAq7G2oWFuyUTr5ouMDhSOcHY=";
+      url = "https://github.com/imputnet/helium-linux/releases/download/0.17.2.1/helium-0.17.2.1-x86_64.AppImage";
+      sha256 = "sha256-DFyqK6nrjZhsc1OoduquJETeByVneWg6B18ybIYWk7Q=";
     };
   };
   karere = {
@@ -75,15 +75,15 @@
   };
   yazi-plugins = {
     pname = "yazi-plugins";
-    version = "58c4f4e2f4835cc9bf6751f39e3f7c574fc7f55a";
+    version = "f703392df78b5fba5e8f9f1ad0b1cb6d3def9736";
     src = fetchFromGitHub {
       owner = "yazi-rs";
       repo = "plugins";
-      rev = "58c4f4e2f4835cc9bf6751f39e3f7c574fc7f55a";
+      rev = "f703392df78b5fba5e8f9f1ad0b1cb6d3def9736";
       fetchSubmodules = false;
-      sha256 = "sha256-kwf9+KXOL5JXGDoEGdtwq+JujP8GVoOwDgz76FBM3xk=";
+      sha256 = "sha256-O1yYAhsf7xMqUrTTSLac06WSxCvUQqedH3DWqGwn/Ok=";
     };
-    date = "2026-09-09";
+    date = "2026-09-18";
   };
   yt-dlp = {
     pname = "yt-dlp";

@@ -98,5 +98,10 @@
 
     # pi coding agent
     pi.url = "github:lukasl-dev/pi.nix";
+
+    # opencode 2.x, nix package lives in the opencode repo itself.
+    # Deliberately does not follow our nixpkgs: it builds with a pinned bun,
+    # and the node_modules fixed-output hash only matches with that bun.
+    opencode.url = "github:anomalyco/opencode/v2.0.18";
   };
 }
