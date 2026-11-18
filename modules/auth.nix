@@ -1,9 +1,17 @@
 { lib, ... }:
 {
   flake.modules.nixos.core =
-    { config, ... }:
+    { config, pkgs, ... }:
     let
       inherit (config.custom.constants) user;
+      askpass = pkgs.symlinkJoin {
+        name = "ssh-askpass";
+        paths = [ pkgs.openssh-askpass ];
+        postBuild = ''
+          mkdir -p $out/bin
+          ln -s $out/libexec/gtk-ssh-askpass $out/bin/ssh-askpass
+        '';
+      };
     in
     {
       config = lib.mkMerge [
@@ -38,10 +46,33 @@
           # unlocking the keyring here with the typed password also covers the
           # login screen
           security.pam.services.login.enableGnomeKeyring = true;
-          services.gnome.gcr-ssh-agent.enable = true;
+          # Do not use gcr-ssh-agent here. It preloads every ~/.ssh/*.pub and,
+          # on each sign request for an encrypted key, runs a *synchronous*
+          # `ssh-add <key>` via its own askpass. Under niri/Hyprland that
+          # prompt never appears, so ssh-add blocks forever and every ssh
+          # client hangs at authentication. A plain OpenSSH agent lets ssh
+          # decrypt the key through the askpass below and cache it normally.
+          services.gnome.gcr-ssh-agent.enable = false;
           environment.sessionVariables.SSH_AUTH_SOCK = "/run/user/${
             toString config.users.users.${user}.uid
-          }/gcr/ssh";
+          }/ssh-agent";
+
+          # password/passphrase prompts for ssh live in a dialog, so they still
+          # show under compositors where the terminal has no tty of its own.
+          # `force` ignores DISPLAY/tty heuristics and always uses the helper.
+          #
+          # SSH_ASKPASS itself comes from programs.ssh: it hard-sets the var to ""
+          # unless enableAskPassword is set, and environment.variables outranks
+          # environment.sessionVariables, so setting it here would just collide.
+          programs.ssh = {
+            startAgent = true;
+            enableAskPassword = true;
+            askPassword = "${askpass}/libexec/gtk-ssh-askpass";
+          };
+          environment.sessionVariables.SSH_ASKPASS_REQUIRE = "force";
+          # openssh-askpass only ships libexec/gtk-ssh-askpass; expose it under
+          # the name ssh(1) and scripts expect
+          environment.systemPackages = [ askpass ];
         }
 
         {
@@ -120,8 +151,9 @@
             ly = /* sh */ ''moor "/etc/ly/config.ini"'';
           };
 
-          # block other ttys from autologin when bypassed from lockscreen
-          services.getty.autologinUser = lib.mkIf (!config.custom.lock.enable) user;
+          # No getty autologin anywhere: the session locks itself after idle
+          # (modules/gui/wm/idle-lock.nix), and a passwordless tty would be a
+          # straight bypass of that lock. Login happens through ly.
         }
       ];
     };

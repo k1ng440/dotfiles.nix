@@ -23,7 +23,7 @@
             input_path = pkgs.writeText filename (
               lib.generators.toINI { } {
                 Appearance = {
-                  color_scheme_path = "%HOME%/.config/qt6ct/colors/matugen.conf";
+                  color_scheme_path = "%HOME%/.config/qt6ct/colors/noctalia.conf";
                   custom_palette = true;
                   icon_theme = "Tela-{{ colors.primary.default.hex_stripped }}";
                   standard_dialogs = "xdgdesktopportal";
@@ -42,6 +42,18 @@
           "qt5ct.conf" = createQtctConf "qt5ct.conf" ''"${defaultFont},-1,5,50,0,0,0,0,0"'';
           "qt6ct.conf" =
             createQtctConf "qt6ct.conf" ''"${defaultFont},-1,5,400,0,0,0,0,0,0,0,0,0,0,1,Regular"'';
+
+          # qt5ct/qt6ct load the palette from a plain INI file; noctalia renders it
+          # and the generated qtct.conf above points at it.
+          "qt5-color" = {
+            input_path = "${pkgs.noctalia}/share/noctalia/assets/templates/qt/qtct.conf";
+            output_path = "${config.hj.xdg.config.directory}/qt5ct/colors/noctalia.conf";
+          };
+
+          "qt6-color" = {
+            input_path = "${pkgs.noctalia}/share/noctalia/assets/templates/qt/qtct.conf";
+            output_path = "${config.hj.xdg.config.directory}/qt6ct/colors/noctalia.conf";
+          };
         };
     };
 }

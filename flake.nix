@@ -69,10 +69,21 @@
       url = "github:hyprwm/Hyprland";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    noctalia = {
-      url = "github:noctalia-dev/noctalia-shell";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    # Noctalia v5 desktop shell (https://docs.noctalia.dev).
+    #
+    # Upstream renamed `noctalia-shell` -> `noctalia` when v5 landed, so the old
+    # URL still resolved -- but only to whatever commit flake.lock pinned, which
+    # was still v4. Any `nix flake update` would have silently pulled v5 under a
+    # v4-shaped config and broken it.
+    #
+    # Tracked on the `cachix` branch, which always points at the newest commit
+    # that CI has already built, so updates can't land on an uncached commit.
+    #
+    # Deliberately does NOT set inputs.nixpkgs.follows: Noctalia builds its
+    # package against its own nixpkgs input, and overriding that input changes
+    # the derivation hash and forces a local build. noctalia.cachix.org is
+    # already wired up in modules/shell/nix/settings.nix.
+    noctalia.url = "github:noctalia-dev/noctalia/cachix";
 
     systems.url = "github:nix-systems/default";
     nix-index-database = {
@@ -99,9 +110,44 @@
     # pi coding agent
     pi.url = "github:lukasl-dev/pi.nix";
 
-    # opencode 2.x, nix package lives in the opencode repo itself.
+    # opencode 1.x, nix package lives in the opencode repo itself.
+    #
+    # Pinned to 1.x on purpose: 2.x changed the plugin contract. A plugin's
+    # default export must now be `{ id, setup }`, whereas the ponytail plugin
+    # (and every 1.x-era plugin) exports a bare async setup function, so 2.x
+    # rejects it with PluginModule.LoadError. 2.x also dropped the
+    # `experimental.chat.system.transform` hook ponytail uses to inject its
+    # ruleset every turn, so the plugin has no equivalent on 2.x. On top of
+    # that, 2.x's Host.resolve probes `<pkg>/server` before the bare specifier;
+    # ponytail's exports map has no "./server" key and the failure is rethrown
+    # rather than falling back. Bump this only once ponytail ships 2.x support.
+    #
     # Deliberately does not follow our nixpkgs: it builds with a pinned bun,
     # and the node_modules fixed-output hash only matches with that bun.
-    opencode.url = "github:anomalyco/opencode/v2.0.18";
+    opencode.url = "github:anomalyco/opencode/v1.18.34";
+
+    # hermes agent (Nous Research), CLI + Electron desktop app.
+    #
+    # Upstream ships the Nix packaging itself: a flake with a Home Manager
+    # module, plus nix/desktop.nix, which patches the Electron binary and
+    # compiles node-pty against Electron's headers. Nothing is in nixpkgs.
+    #
+    # No binary cache has the package (their hermes-agent.cachix.org holds no
+    # narinfo for it), so the first build compiles the whole uv2nix venv
+    # locally. Slow once, then incremental.
+    hermes = {
+      url = "github:NousResearch/hermes-agent";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    # Hex voice dictation (https://anoma.ly/hex/).
+    #
+    # Builds from source; no binary cache, so the first switch compiles it.
+    # Its nixpkgs must follow ours so the Vulkan drivers the system provides
+    # match the glibc Hex was built against.
+    hex = {
+      url = "github:anomalyco/hex";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 }

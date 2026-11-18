@@ -7,7 +7,6 @@
   flake.modules.nixos.wm =
     {
       config,
-      pkgs,
       ...
     }:
     let
@@ -53,19 +52,174 @@
         fullscreen = mode: ''hl.dsp.window.fullscreen({ mode = "${mode}", action = "toggle" })'';
       };
 
-      bind = keys: dispatcher: {
-        inherit keys;
+      bind = keys: description: dispatcher: {
+        inherit keys description;
         dsp = dispatcher;
       };
 
-      dms = call: dsp.exec "dms ipc call ${call}";
+      noctalia = call: dsp.exec "noctalia msg ${call}";
 
       workspaceBinds = lib.flatten (
         self.libCustom.mapWorkspaces (args: [
-          (bind "${mod} + ${args.key}" (dsp.workspace args.workspace))
-          (bind "${mod} + SHIFT + ${args.key}" (dsp.moveToWorkspace args.workspace))
+          (bind "${mod} + ${args.key}" "Focus workspace ${args.workspace}" (dsp.workspace args.workspace))
+          (bind "${mod} + SHIFT + ${args.key}" "Move window to workspace ${args.workspace}" (
+            dsp.moveToWorkspace args.workspace
+          ))
         ]) monitors
       );
+
+      baseBinds = [
+        # --- Core System & UI ---
+        (bind "ALT + F4" "Close window" dsp.close)
+        (bind "${mod} + Q" "Close window" dsp.close)
+        (bind "${mod} + BackSpace" "Close window" dsp.close)
+        (bind "CTRL + ALT + Delete" "Session menu (logout, lock, ...)" (noctalia "panel-toggle session"))
+        (bind "${mod} + A" "Toggle bar" (noctalia "bar-toggle"))
+        (bind "${mod} + SHIFT + A" "Reload noctalia" (dsp.exec "noctalia-reload"))
+        (bind "${mod} + CTRL + V" "Clipboard history" (noctalia "panel-toggle clipboard"))
+        (bind "${mod} + N" "Notification center" (noctalia "panel-toggle control-center notifications"))
+        (bind "${mod} + apostrophe" "Wallpaper picker" (noctalia "panel-toggle wallpaper"))
+
+        # --- Launcher & Files ---
+        (bind "${mod} + Return" "Terminal (ghostty)" (dsp.exec "ghostty"))
+        (bind "${mod} + SHIFT + Return" "Application launcher" (noctalia "panel-toggle launcher"))
+        (bind "${mod} + E" "File manager (Downloads)" (dsp.exec "nemo ${config.hj.directory}/Downloads"))
+        (bind "${mod} + SHIFT + E" "Yazi in terminal (Downloads)" (
+          dsp.exec "ghostty -e yazi ${config.hj.directory}/Downloads"
+        ))
+
+        # --- Hex dictation (command binds, no portal key needed) ---
+        (bind "End" "Dictation toggle" (dsp.exec "hex dictation toggle"))
+        (bind "ALT + SPACE" "Dictation toggle" (dsp.exec "hex dictation toggle"))
+        (bind "F10" "Paste last dictation" (dsp.exec "hex paste-last"))
+
+        # --- Layout & Utility ---
+        (bind "${mod} + G" "Toggle floating" dsp.float)
+        (bind "${mod} + SHIFT + G" "Focus floating/tiled window" dsp.focusFloatingOrTiled)
+        (bind "${mod} + C" "Center window" dsp.center)
+        (bind "${mod} + T" "Toggle window group" dsp.groupToggle)
+        (bind "${mod} + V" "Toggle layout split" (dsp.layout "togglesplit"))
+
+        # --- Window Management (HJKL) ---
+        (bind "${mod} + H" "Focus left" (dsp.moveFocus "l"))
+        (bind "${mod} + L" "Focus right" (dsp.moveFocus "r"))
+        (bind "${mod} + J" "Focus down" (dsp.moveFocus "d"))
+        (bind "${mod} + K" "Focus up" (dsp.moveFocus "u"))
+        (bind "${mod} + SHIFT + H" "Move window left" (dsp.moveWindow "l"))
+        (bind "${mod} + SHIFT + L" "Move window right" (dsp.moveWindow "r"))
+        (bind "${mod} + SHIFT + J" "Move window down" (dsp.moveWindow "d"))
+        (bind "${mod} + SHIFT + K" "Move window up" (dsp.moveWindow "u"))
+
+        # --- Navigation ---
+        (bind "${mod} + grave" "Focus last window" dsp.focusLast)
+        (bind "${mod} + Tab" "Previous workspace" (dsp.workspaceNamed "previous"))
+        (bind "${mod} + SHIFT + Tab" "Focus last window" dsp.focusLast)
+
+        # --- Browser (Helium) ---
+        (bind "${mod} + W" "Browser (helium)" (dsp.exec "helium"))
+        (bind "${mod} + SHIFT + W" "Browser incognito" (dsp.exec "helium --incognito"))
+
+        # --- Monitor Navigation (Alt + hjkl) ---
+        (bind "${mod} + ALT + H" "Focus monitor left" (dsp.focusMonitor "l"))
+        (bind "${mod} + ALT + J" "Focus monitor down" (dsp.focusMonitor "d"))
+        (bind "${mod} + ALT + K" "Focus monitor up" (dsp.focusMonitor "u"))
+        (bind "${mod} + ALT + L" "Focus monitor right" (dsp.focusMonitor "r"))
+
+        # --- Monitor Movement (Alt + Shift + hjkl) ---
+        (bind "${mod} + ALT + SHIFT + H" "Move workspace to monitor left" (dsp.moveWorkspaceToMonitor "l"))
+        (bind "${mod} + ALT + SHIFT + J" "Move workspace to monitor down" (dsp.moveWorkspaceToMonitor "d"))
+        (bind "${mod} + ALT + SHIFT + K" "Move workspace to monitor up" (dsp.moveWorkspaceToMonitor "u"))
+        (bind "${mod} + ALT + SHIFT + L" "Move workspace to monitor right" (dsp.moveWorkspaceToMonitor "r"))
+
+        # --- Monitor Navigation (Alt + Arrows) ---
+        (bind "${mod} + ALT + Left" "Focus monitor left" (dsp.focusMonitor "l"))
+        (bind "${mod} + ALT + Down" "Focus monitor down" (dsp.focusMonitor "d"))
+        (bind "${mod} + ALT + Up" "Focus monitor up" (dsp.focusMonitor "u"))
+        (bind "${mod} + ALT + Right" "Focus monitor right" (dsp.focusMonitor "r"))
+
+        # --- Monitor Movement (Alt + Shift + Arrows) ---
+        (bind "${mod} + ALT + SHIFT + Left" "Move workspace to monitor left" (
+          dsp.moveWorkspaceToMonitor "l"
+        ))
+        (bind "${mod} + ALT + SHIFT + Down" "Move workspace to monitor down" (
+          dsp.moveWorkspaceToMonitor "d"
+        ))
+        (bind "${mod} + ALT + SHIFT + Up" "Move workspace to monitor up" (dsp.moveWorkspaceToMonitor "u"))
+        (bind "${mod} + ALT + SHIFT + Right" "Move workspace to monitor right" (
+          dsp.moveWorkspaceToMonitor "r"
+        ))
+
+        # --- Shaping & Resizing (Arrows) ---
+        (bind "${mod} + Left" "Resize left" (dsp.resize (-50) 0))
+        (bind "${mod} + Right" "Resize right" (dsp.resize 50 0))
+        (bind "${mod} + Up" "Resize up" (dsp.resize 0 (-50)))
+        (bind "${mod} + Down" "Resize down" (dsp.resize 0 50))
+        (bind "${mod} + R" "Cycle width preset" dsp.presetWidth)
+        (bind "${mod} + SHIFT + R" "Cycle height preset" dsp.presetHeight)
+        (bind "${mod} + F" "Fullscreen" (dsp.fullscreen "fullscreen"))
+        (bind "${mod} + Z" "Maximize" (dsp.fullscreen "maximized"))
+
+        # --- Workspaces ---
+        (bind "${mod} + mouse_down" "Next workspace" (dsp.workspaceNamed "e+1"))
+        (bind "${mod} + mouse_up" "Previous workspace" (dsp.workspaceNamed "e-1"))
+
+        # --- Screenshot ---
+        # noctalia owns the whole flow: `[shell.screenshot]` decides
+        # save/copy and the directory, and its built-in editor replaces the
+        # old `dms screenshot | satty` pipe.
+        (bind "Print" "Screenshot region" (noctalia "screenshot-region"))
+        (bind "SHIFT + Print" "Screenshot fullscreen (pick)" (noctalia "screenshot-fullscreen pick"))
+        (bind "CTRL + SHIFT + Print" "Screenshot annotate" (noctalia "screenshot-annotate"))
+        (bind "${mod} + SHIFT + S" "Screenshot fullscreen (all outputs)" (
+          noctalia "screenshot-fullscreen all"
+        ))
+
+        # --- Audio (works while locked, old bindl) ---
+        {
+          keys = "XF86AudioLowerVolume";
+          description = "Volume down";
+          dsp = dsp.exec "pamixer -d 5";
+          flags.locked = true;
+        }
+        {
+          keys = "XF86AudioRaiseVolume";
+          description = "Volume up";
+          dsp = dsp.exec "pamixer -i 5";
+          flags.locked = true;
+        }
+        {
+          keys = "XF86AudioMute";
+          description = "Mute";
+          dsp = dsp.exec "pamixer -t";
+          flags.locked = true;
+        }
+      ]
+      ++ workspaceBinds;
+
+      # Built from the merged bind list, so hyprland-only extras (backlight,
+      # idle-lock, ...) show up without being restated here.
+      cheatsheet =
+        let
+          allBinds = config.custom.programs.hyprland.binds ++ [
+            {
+              keys = "${mod} + SHIFT + slash";
+              description = "Show this keybind cheatsheet";
+            }
+          ];
+          desc = b: if b.description == null then "" else b.description;
+          width = (lib.foldl' (n: b: lib.max n (lib.stringLength b.keys)) 0 allBinds) + 4;
+          line =
+            b:
+            "${b.keys}${lib.concatStrings (lib.genList (_: " ") (width - lib.stringLength b.keys))}${desc b}";
+        in
+        pkgs.writeText "hyprland-keybinds.txt" ''
+          Hyprland keybinds (Mod = Super)
+          ${lib.concatLines (map line allBinds)}
+        '';
+
+      cheatsheetBind = ''
+        hl.bind(${q "${mod} + SHIFT + slash"}, hl.dsp.exec_cmd(${q "ghostty -e less ${cheatsheet}"}), { description = ${q "Show keybind cheatsheet"} })
+      '';
     in
     {
       custom.programs.hyprland = {
@@ -120,112 +274,10 @@
               end
             end
           ''
-        ];
-
-        binds = [
-          # --- Core System & UI ---
-          (bind "ALT + F4" dsp.close)
-          (bind "${mod} + Q" dsp.close)
-          (bind "${mod} + BackSpace" dsp.close)
-          (bind "CTRL + ALT + Delete" (dms "powermenu toggle"))
-          (bind "${mod} + A" (dms "bar toggle"))
-          (bind "${mod} + SHIFT + A" (dsp.exec "noctalia-reload"))
-          (bind "${mod} + CTRL + V" (dms "clipboard toggle"))
-          (bind "${mod} + N" (dms "notifications toggle"))
-          (bind "${mod} + apostrophe" (dms "wallpaperCarousel toggle"))
-
-          # --- Launcher & Files ---
-          (bind "${mod} + Return" (dsp.exec "ghostty"))
-          (bind "${mod} + SHIFT + Return" (dms "spotlight toggle"))
-          (bind "${mod} + E" (dsp.exec "nemo ${config.hj.directory}/Downloads"))
-          (bind "${mod} + SHIFT + E" (dsp.exec "ghostty -e yazi ${config.hj.directory}/Downloads"))
-
-          # --- Layout & Utility ---
-          (bind "${mod} + G" dsp.float)
-          (bind "${mod} + SHIFT + G" dsp.focusFloatingOrTiled)
-          (bind "${mod} + C" dsp.center)
-          (bind "${mod} + T" dsp.groupToggle)
-          (bind "${mod} + V" (dsp.layout "togglesplit"))
-
-          # --- Window Management (HJKL) ---
-          (bind "${mod} + H" (dsp.moveFocus "l"))
-          (bind "${mod} + L" (dsp.moveFocus "r"))
-          (bind "${mod} + J" (dsp.moveFocus "d"))
-          (bind "${mod} + K" (dsp.moveFocus "u"))
-          (bind "${mod} + SHIFT + H" (dsp.moveWindow "l"))
-          (bind "${mod} + SHIFT + L" (dsp.moveWindow "r"))
-          (bind "${mod} + SHIFT + J" (dsp.moveWindow "d"))
-          (bind "${mod} + SHIFT + K" (dsp.moveWindow "u"))
-
-          # --- Navigation ---
-          (bind "${mod} + grave" dsp.focusLast)
-          (bind "${mod} + Tab" (dsp.workspaceNamed "previous"))
-          (bind "${mod} + SHIFT + Tab" dsp.focusLast)
-
-          # --- Browser (Helium) ---
-          (bind "${mod} + W" (dsp.exec "helium"))
-          (bind "${mod} + SHIFT + W" (dsp.exec "helium --incognito"))
-
-          # --- Monitor Navigation (Alt + hjkl) ---
-          (bind "${mod} + ALT + H" (dsp.focusMonitor "l"))
-          (bind "${mod} + ALT + J" (dsp.focusMonitor "d"))
-          (bind "${mod} + ALT + K" (dsp.focusMonitor "u"))
-          (bind "${mod} + ALT + L" (dsp.focusMonitor "r"))
-
-          # --- Monitor Movement (Alt + Shift + hjkl) ---
-          (bind "${mod} + ALT + SHIFT + H" (dsp.moveWorkspaceToMonitor "l"))
-          (bind "${mod} + ALT + SHIFT + J" (dsp.moveWorkspaceToMonitor "d"))
-          (bind "${mod} + ALT + SHIFT + K" (dsp.moveWorkspaceToMonitor "u"))
-          (bind "${mod} + ALT + SHIFT + L" (dsp.moveWorkspaceToMonitor "r"))
-
-          # --- Monitor Navigation (Alt + Arrows) ---
-          (bind "${mod} + ALT + Left" (dsp.focusMonitor "l"))
-          (bind "${mod} + ALT + Down" (dsp.focusMonitor "d"))
-          (bind "${mod} + ALT + Up" (dsp.focusMonitor "u"))
-          (bind "${mod} + ALT + Right" (dsp.focusMonitor "r"))
-
-          # --- Monitor Movement (Alt + Shift + Arrows) ---
-          (bind "${mod} + ALT + SHIFT + Left" (dsp.moveWorkspaceToMonitor "l"))
-          (bind "${mod} + ALT + SHIFT + Down" (dsp.moveWorkspaceToMonitor "d"))
-          (bind "${mod} + ALT + SHIFT + Up" (dsp.moveWorkspaceToMonitor "u"))
-          (bind "${mod} + ALT + SHIFT + Right" (dsp.moveWorkspaceToMonitor "r"))
-
-          # --- Shaping & Resizing (Arrows) ---
-          (bind "${mod} + Left" (dsp.resize (-50) 0))
-          (bind "${mod} + Right" (dsp.resize 50 0))
-          (bind "${mod} + Up" (dsp.resize 0 (-50)))
-          (bind "${mod} + Down" (dsp.resize 0 50))
-          (bind "${mod} + R" dsp.presetWidth)
-          (bind "${mod} + SHIFT + R" dsp.presetHeight)
-          (bind "${mod} + F" (dsp.fullscreen "fullscreen"))
-          (bind "${mod} + Z" (dsp.fullscreen "maximized"))
-
-          # --- Workspaces ---
-          (bind "${mod} + mouse_down" (dsp.workspaceNamed "e+1"))
-          (bind "${mod} + mouse_up" (dsp.workspaceNamed "e-1"))
-
-          # --- Screenshot ---
-          (bind "Print" (dsp.exec "dms screenshot"))
-          (bind "SHIFT + Print" (dsp.exec "dms screenshot --stdout | ${lib.getExe pkgs.satty} -f -"))
-
-          # --- Audio (works while locked, old bindl) ---
-          {
-            keys = "XF86AudioLowerVolume";
-            dsp = dsp.exec "pamixer -d 5";
-            flags.locked = true;
-          }
-          {
-            keys = "XF86AudioRaiseVolume";
-            dsp = dsp.exec "pamixer -i 5";
-            flags.locked = true;
-          }
-          {
-            keys = "XF86AudioMute";
-            dsp = dsp.exec "pamixer -t";
-            flags.locked = true;
-          }
         ]
-        ++ workspaceBinds;
+        ++ [ cheatsheetBind ];
+
+        binds = baseBinds;
       };
     };
 }

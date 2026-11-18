@@ -244,6 +244,14 @@ let
                 or a lua function. See https://wiki.hypr.land/configuring/core/dispatchers/
               '';
             };
+            description = lib.mkOption {
+              type = lib.types.nullOr lib.types.str;
+              default = null;
+              description = ''
+                Human-readable description, shown by `hyprctl binds` and the
+                generated keybind cheatsheet.
+              '';
+            };
             flags = lib.mkOption {
               type = lib.types.attrsOf luaValueType;
               default = { };
@@ -315,6 +323,9 @@ let
         title: lines:
         if lines == [ ] then "" else "\n---- ${title} ----\n" + lib.concatStringsSep "\n" lines;
 
+      # bind opts: description plus the usual flags
+      opts = b: lib.optionalAttrs (b.description != null) { inherit (b) description; } // b.flags;
+
       execOnce = lib.concatMap (
         entry:
         let
@@ -379,7 +390,7 @@ let
                 b.keys
                 (lua.raw b.dsp)
               ]
-              ++ lib.optional (b.flags != { }) b.flags
+              ++ lib.optional (opts b != { }) (opts b)
             )
           ) cfg.binds
         ))
@@ -445,6 +456,8 @@ in
       };
 
       config.package = lib.mkDefault pkgs.hyprland;
+      # NixOS rejects shell wrappers as security.wrappers sources; compile it.
+      config.wrapperImplementation = "binary";
       config.passthru.providedSessions = config.package.passthru.providedSessions or [ ];
       config.filesToPatch = [
         "share/wayland-sessions/*.desktop"

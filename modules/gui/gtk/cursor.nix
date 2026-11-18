@@ -70,14 +70,14 @@
         };
         script = ''
           for _ in $(seq 1 50); do
-            if ${pkgs.xorg.xrdb}/bin/xrdb -query >/dev/null 2>&1; then
+            if ${pkgs.xrdb}/bin/xrdb -query >/dev/null 2>&1; then
               break
             fi
             sleep 0.2
           done
           printf 'Xcursor.theme: %s\nXcursor.size: %s\n' \
             '${gtkCursor.name}' '${toString gtkCursor.size}' \
-            | ${pkgs.xorg.xrdb}/bin/xrdb -merge
+            | ${pkgs.xrdb}/bin/xrdb -merge
         '';
       };
     };

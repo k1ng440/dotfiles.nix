@@ -30,6 +30,7 @@
         "^swayimg$"
         "^com\\.gabm\\.satty$"
         "^vedetector\\.exe$"
+        "^(net\\.ankiweb\\.)?Anki$"
       ];
 
       # media players forced opaque + floating
@@ -69,6 +70,20 @@
     {
       custom.programs.hyprland = {
         monitors = map toMonitor monitors;
+
+        # noctalia's lua template defines apply_theme(); loadfile keeps the lookup
+        # independent of lua's package.path and pcall keeps `hyprland
+        # --verify-config` happy before the file exists.
+        extraLua = lib.mkBefore [
+          ''
+            pcall(function()
+              local home = os.getenv("HOME")
+              if home then
+                assert(loadfile(home .. "/.config/hypr/noctalia.lua"))().apply_theme()
+              end
+            end)
+          ''
+        ];
 
         workspaceRules = lib.flatten (map toWorkspaceRule monitors);
 
@@ -319,11 +334,13 @@
         binds = [
           {
             keys = "SUPER + mouse:272";
+            description = "Drag window (mouse)";
             dsp = "hl.dsp.window.drag()";
             flags.mouse = true;
           }
           {
             keys = "SUPER + mouse:273";
+            description = "Resize window (mouse)";
             dsp = "hl.dsp.window.resize()";
             flags.mouse = true;
           }
@@ -448,8 +465,8 @@
 
         layerRules = [
           {
-            name = "noctalia-overview";
-            match.namespace = "^noctalia-overview.*$";
+            name = "noctalia-backdrop";
+            match.namespace = "^noctalia-backdrop";
             ignore_alpha = 0;
             blur = true;
           }
@@ -459,13 +476,20 @@
             ignore_alpha = 0;
             blur = true;
           }
-          {
-            name = "dms-blurwallpaper";
-            match.namespace = "dms:blurwallpaper";
-            ignore_alpha = 0;
-            blur = true;
-          }
         ];
+      };
+    };
+
+  flake.modules.nixos.gui =
+    {
+      config,
+      pkgs,
+      ...
+    }:
+    {
+      custom.programs.noctalia.colors.templates.hyprland = {
+        input_path = "${pkgs.noctalia}/share/noctalia/assets/templates/hyprland/hyprland.lua";
+        output_path = "${config.hj.xdg.config.directory}/hypr/noctalia.lua";
       };
     };
 }

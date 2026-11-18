@@ -3,6 +3,26 @@
 {
   flake.modules.nixos.programs_anki =
     { lib, pkgs, ... }:
+    let
+      # Login-time reminder, at most once per day. Delayed so the notification
+      # daemon is up; the stamp is only written if notify-send succeeds.
+      ankiReminder = pkgs.writeShellApplication {
+        name = "anki-reminder";
+        runtimeInputs = [
+          pkgs.coreutils
+          pkgs.libnotify
+        ];
+        text = ''
+          state="''${XDG_STATE_HOME:-$HOME/.local/state}/anki-reminder"
+          today="$(date +%F)"
+          [ "$(cat "$state" 2>/dev/null)" = "$today" ] && exit 0
+          sleep 20
+          notify-send -a Anki -i anki -t 0 'Anki' 'Time to review your cards' || exit 0
+          mkdir -p "$(dirname "$state")"
+          printf '%s\n' "$today" > "$state"
+        '';
+      };
+    in
     {
       environment.systemPackages = [ pkgs.anki ];
 
@@ -17,17 +37,17 @@
           home.directories = [ ".local/share/Anki2" ];
         };
 
+        startup = [
+          {
+            spawn = [ (lib.getExe ankiReminder) ];
+          }
+        ];
+
         programs.niri.settings.window-rules = [
           {
             matches = [
-              {
-                app-id = "^net.ankiweb.Anki$";
-                title = "^Add$|^Browse|^Edit";
-              }
-              {
-                app-id = "^Anki$";
-                title = "^Import File$|^Preferences$|^Statistics$|^Deck Options$|^Card Layout$|^Cards$|^Export$|^Check Database$|^Empty Cards$|^Find Duplicates$|^Manage Note Types$|^Change Notetype$|^About$|^Profile$";
-              }
+              { app-id = "^net\\.ankiweb\\.Anki$"; }
+              { app-id = "^Anki$"; }
             ];
             open-floating = true;
             background-effect = {

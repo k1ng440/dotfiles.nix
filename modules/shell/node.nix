@@ -4,7 +4,7 @@ _: {
     {
       environment = {
         systemPackages = [
-          pkgs.nodejs_24
+          pkgs.nodejs_26
           pkgs.node-gyp
         ];
       };

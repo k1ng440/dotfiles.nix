@@ -1,71 +1,51 @@
-{ lib, ... }:
-{
-  flake.modules.nixos.core =
-    { config, ... }:
-    {
-      options.custom = {
-        lock.enable = lib.mkEnableOption "screen locking of host" // {
-          default = config.custom.constants.isLaptop;
-        };
-      };
-    };
-
+_: {
+  # Noctalia v5 owns both halves of this: `[idle.behavior.*]` covers the idle
+  # timeouts and `noctalia msg session lock` is the same path
+  # `loginctl lock-session` takes. Lid close and suspend are covered by
+  # `[lockscreen].lock_before_suspend` (default on). Locking is unconditional
+  # -- getty autologin stays off everywhere so no tty can bypass it
+  # (modules/auth.nix).
   flake.modules.nixos.wm =
-    { config, pkgs, ... }:
-    let
-      inherit (config.custom.constants) isLaptop;
-      lock = pkgs.writeShellApplication {
-        name = "lock";
-        runtimeInputs = [
-          config.programs.dms-shell.package
-          pkgs.systemd
-        ];
-        text = /* sh */ ''
-          ${lib.optionalString config.custom.lock.enable "loginctl lock-session"}
-          ${lib.optionalString config.custom.lock.enable "systemctl suspend"}
-          ${lib.optionalString (!config.custom.lock.enable) "dms dpms off"}
-        '';
-      };
-    in
+    { lib, ... }:
     {
-      environment.systemPackages = [
-        lock
-      ];
-
-      # manual lock key and laptop lid
       custom.programs = {
+        noctalia.settingsReducers = [
+          (
+            prev:
+            lib.recursiveUpdate prev {
+              idle.behavior = {
+                screen-off = {
+                  timeout = 600;
+                  action = "screen_off";
+                  enabled = true;
+                };
+                lock = {
+                  timeout = 660;
+                  action = "lock";
+                  enabled = true;
+                };
+                # The session is already locked by the time this fires, so
+                # `lock_before_suspend` has nothing left to do.
+                suspend = {
+                  timeout = 1800;
+                  action = "suspend";
+                  enabled = true;
+                };
+              };
+            }
+          )
+        ];
+
+        # manual lock
         hyprland.binds = [
           {
             keys = "SUPER + SHIFT + CTRL + x";
-            dsp = ''hl.dsp.exec_cmd("${lib.getExe lock}")'';
-          }
-        ]
-        # handle laptop lid
-        ++ lib.optionals isLaptop [
-          {
-            keys = "switch:Lid Switch";
-            dsp = ''hl.dsp.exec_cmd("${lib.getExe lock}")'';
-            flags.locked = true;
+            description = "Lock session";
+            dsp = ''hl.dsp.exec_cmd("noctalia msg session lock")'';
           }
         ];
 
-        niri.settings = {
-          binds = {
-            "Mod+Shift+Ctrl+x".spawn = [
-              (lib.getExe lock)
-            ];
-          };
-
-          switch-events = {
-            lid-open = {
-              spawn = lib.getExe lock;
-            };
-          };
-        };
-
-        # mango.settings = {
-        #   bind = [ "$mod+SHIFT+CTRL, x, spawn, ${lib.getExe lock}" ];
-        # };
+        niri.settings.binds."Mod+Shift+Ctrl+x".spawn = [ "noctalia msg session lock" ];
       };
     };
 }

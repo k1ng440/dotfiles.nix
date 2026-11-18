@@ -34,7 +34,6 @@ let
           config.custom.constants = rec {
             inherit host isVm user;
             home = "/home/${user}";
-            isLaptop = false;
             dots = "${home}/nix/nix-config";
             projects = "${home}/Projects";
           };

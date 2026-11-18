@@ -4,7 +4,6 @@
     {
       pkgs,
       inputs,
-      config,
       ...
     }:
     let
@@ -17,6 +16,7 @@
 
       programs.spicetify = {
         enable = true;
+        wayland = true;
         theme = spicePkgs.themes.catppuccin;
         colorScheme = "mocha";
 
@@ -30,14 +30,6 @@
           newReleases
           lyricsPlus
         ];
-      };
-
-      # Noctalia template for dynamic spicetify colors
-      custom.programs.noctalia.colors.templates = {
-        "spicetify" = {
-          input_path = "${config.hj.xdg.config.directory}/spicetalia/colors.ini";
-          output_path = "${config.hj.xdg.config.directory}/spicetalia/colors.ini";
-        };
       };
 
       custom.persist = {

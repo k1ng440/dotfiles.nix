@@ -8,12 +8,13 @@
 
       nodeModules = opencodePkgs.callPackage "${inputs.opencode}/nix/node_modules.nix" {
         rev = inputs.opencode.shortRev;
-        # nix/hashes.json is stale for this tag: the 2.0.18 release commit
-        # changed bun.lock after the last "chore: update nix node_modules
-        # hashes" commit. Recompute with
+        # nix/hashes.json is per-commit and goes stale: it is only refreshed by
+        # upstream's "chore: update nix node_modules hashes" commits, so a
+        # release tag can ship a bun.lock newer than its recorded hash. The
+        # value below is hashes.json's at v1.18.34; recompute with
         #   nix build .#node_modules_updater
         # after bumping the opencode input.
-        hash = "sha256-9gJjhes2ueYckAgdeGlPwZcaIDdwB3ZnqK/XHHXhWNs=";
+        hash = "sha256-RIzpvDBR6GOfU2vjrtgP3LJ/j+gLxkMnJ9VE5Y65Pfo=";
       };
 
       opencode =
@@ -25,12 +26,6 @@
               # nixpkgs manages the binary, never let it replace itself
               wrapProgram $out/bin/opencode \
                 --set-default OPENCODE_DISABLE_AUTOUPDATE true
-
-              # upstream still calls the removed `opencode completion` subcommand
-              installShellCompletion --cmd opencode \
-                --bash <($out/bin/opencode --completions bash) \
-                --zsh <($out/bin/opencode --completions zsh) \
-                --fish <($out/bin/opencode --completions fish)
             '';
           });
     in

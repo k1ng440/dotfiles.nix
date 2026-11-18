@@ -1,5 +1,4 @@
-{ lib, ... }:
-{
+_: {
   flake.modules.nixos.hardware_backlight =
     { pkgs, ... }:
     {
@@ -11,10 +10,12 @@
         hyprland.binds = [
           {
             keys = "XF86MonBrightnessDown";
+            description = "Brightness down";
             dsp = ''hl.dsp.exec_cmd("brightnessctl set 5%-")'';
           }
           {
             keys = "XF86MonBrightnessUp";
+            description = "Brightness up";
             dsp = ''hl.dsp.exec_cmd("brightnessctl set +5%")'';
           }
         ];
@@ -47,17 +48,10 @@
           "NONE,XF86MonBrightnessUp, spawn, brightnessctl set +5%"
         ];
 
-        noctalia.settingsReducers = [
-          # enable control center brightness card
-          (
-            prev:
-            lib.recursiveUpdate prev {
-              controlCenter.cards = map (
-                card: if card.id == "brightness-card" then card // { enabled = true; } else card
-              ) prev.controlCenter.cards;
-            }
-          )
-        ];
+        # v4 needed its control-center brightness card switched on explicitly by
+        # id. v5 has no per-card `enabled` flag -- brightness lives in the
+        # control center's own tab and follows [brightness] instead, so there is
+        # nothing left to enable here.
       };
     };
 }

@@ -31,6 +31,18 @@
           '';
         });
 
+        # timing-sensitive tests flake under nix build load
+        python3Packages = prev.python3Packages.overrideScope (
+          _: pprev: {
+            pyrate-limiter = pprev.pyrate-limiter.overrideAttrs (o: {
+              disabledTests = (o.disabledTests or [ ]) ++ [
+                "test_factory_leak"
+                "test_mp_bucket_async"
+              ];
+            });
+          }
+        );
+
         # fix nix package count for nitch
         nitch = prev.nitch.overrideAttrs (o: {
           patches = (o.patches or [ ]) ++ [ ./patches/nitch-nix-pkgs-count.patch ];
@@ -51,6 +63,19 @@
             })
           else
             prev.openldap;
+
+        # aggregator.nix unconditionally cats every external module's .ko.cer.
+        # Modules built without the moduleBuild helpers (e.g. zenpower) have
+        # no cert, so skip missing files instead of failing the build.
+        aggregateModules =
+          modules:
+          (prev.aggregateModules modules).overrideAttrs (o: {
+            postBuild =
+              lib.replaceStrings
+                [ ''| xargs -d'\n' cat >> modules.cer'' ]
+                [ ''| while IFS= read -r c; do [ -e "$c" ] && cat -- "$c"; done >> modules.cer'' ]
+                o.postBuild;
+          });
 
         # FIXME: remove on new release of statix
         statix = prev.statix.overrideAttrs (_o: rec {

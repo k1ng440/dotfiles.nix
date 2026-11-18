@@ -14,7 +14,6 @@
           alsa.enable = true;
           alsa.support32Bit = true;
           pulse.enable = true;
-          jack.enable = true;
           extraConfig.pipewire."92-low-latency" = {
             "context.properties" = {
               "default.clock.rate" = 44100;
@@ -90,6 +89,9 @@
       environment.systemPackages = with pkgs; [
         pwvucontrol
         pamixer
+        # Run JACK clients as `pw-jack <client>` instead of setting a global
+        # LD_LIBRARY_PATH.
+        pipewire.jack
       ];
     };
 }

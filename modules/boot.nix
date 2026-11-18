@@ -26,12 +26,19 @@
       boot = {
         # kernelPackages = pkgs.linuxPackages_zen;
         kernelModules = [ "v4l2loopback" ];
-        extraModulePackages = [ config.boot.kernelPackages.v4l2loopback ];
+        extraModulePackages = [
+          # Kernel 6.18 make modules_install runs depmod, which leaves
+          # modules.alias/modules.dep in the package and collides with the
+          # kernel's own modules tree in aggregateModules.
+          (config.boot.kernelPackages.v4l2loopback.overrideAttrs (old: {
+            postInstall = (old.postInstall or "") + ''
+              rm -f $out/lib/modules/*/modules.*
+            '';
+          }))
+        ];
         supportedFilesystems.ntfs = true;
 
         initrd = {
-          # enable stage-1 bootloader
-          systemd.enable = true;
           # always allow booting from usb
           availableKernelModules = [ "uas" ];
         };

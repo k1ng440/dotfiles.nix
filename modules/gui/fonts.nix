@@ -18,6 +18,36 @@ in
       hasBerkeleyMono = berkeleyMonoPackage != null;
       primaryMono = if hasBerkeleyMono then "Berkeley Mono" else "JetBrainsMono Nerd Font";
 
+      kleeOneRegular = pkgs.fetchurl {
+        url = "https://raw.githubusercontent.com/google/fonts/130fcfb0ff422fec96b335616b2ca99f91914792/ofl/kleeone/KleeOne-Regular.ttf";
+        hash = "sha256-v0Bj8DDMKuat8KEUJKGIjlwOtEOPH20C9SKUr4aOmzo=";
+      };
+      kleeOneSemiBold = pkgs.fetchurl {
+        url = "https://raw.githubusercontent.com/google/fonts/130fcfb0ff422fec96b335616b2ca99f91914792/ofl/kleeone/KleeOne-SemiBold.ttf";
+        hash = "sha256-sDHsQmwjyhFD7x99WL7np57+EZ7WVBUvEhySIgKzA/0=";
+      };
+      kleeOneLicense = pkgs.fetchurl {
+        url = "https://raw.githubusercontent.com/google/fonts/130fcfb0ff422fec96b335616b2ca99f91914792/ofl/kleeone/OFL.txt";
+        hash = "sha256-43aw346KI0WpUz228KUzOhEHl1VprZ0Zc6fuVXFhyjg=";
+      };
+
+      kleeOne = pkgs.stdenvNoCC.mkDerivation {
+        pname = "klee-one";
+        version = "unstable-2026-03-03";
+        src = kleeOneRegular;
+        dontUnpack = true;
+        installPhase = ''
+          install -Dm644 $src $out/share/fonts/truetype/KleeOne-Regular.ttf
+          install -Dm644 ${kleeOneSemiBold} $out/share/fonts/truetype/KleeOne-SemiBold.ttf
+          install -Dm644 ${kleeOneLicense} $out/share/doc/klee-one/OFL.txt
+        '';
+        meta = {
+          description = "Klee One handwriting font (Fontworks)";
+          license = lib.licenses.ofl;
+          platforms = lib.platforms.all;
+        };
+      };
+
       kalpurush = pkgs.stdenvNoCC.mkDerivation {
         pname = "kalpurush";
         version = "0.258";
@@ -68,6 +98,7 @@ in
             noto-fonts-cjk-serif
             noto-fonts-color-emoji
             kalpurush
+            kleeOne
           ]
           ++ lib.optional hasBerkeleyMono berkeleyMonoPackage;
 

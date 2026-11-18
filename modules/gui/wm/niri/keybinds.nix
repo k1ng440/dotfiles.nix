@@ -1,7 +1,7 @@
 { lib, self, ... }:
 {
   flake.modules.nixos.wm =
-    { pkgs, config, ... }:
+    { config, ... }:
     let
       # inherit (config.custom.constants) dots projects;
       inherit (config.custom.hardware) monitors;
@@ -21,51 +21,45 @@
             "Mod+Shift+Slash".show-hotkey-overlay = _: { };
             "Alt+F4".quit = _: { };
             "Ctrl+Alt+Delete".spawn = [
-              "dms"
-              "ipc"
-              "call"
-              "powermenu"
-              "toggle"
+              "noctalia"
+              "msg"
+              "panel-toggle"
+              "session"
             ];
             "Mod+A".spawn = [
-              "dms"
-              "ipc"
-              "call"
-              "bar"
-              "toggle"
+              "noctalia"
+              "msg"
+              "bar-toggle"
             ];
             "Mod+Shift+A".spawn = [ "noctalia-reload" ];
             "Mod+Escape".toggle-keyboard-shortcuts-inhibit = _: { };
             "Mod+Ctrl+V".spawn = [
-              "dms"
-              "ipc"
-              "call"
+              "noctalia"
+              "msg"
+              "panel-toggle"
               "clipboard"
-              "toggle"
             ];
             "Mod+N".spawn = [
-              "dms"
-              "ipc"
-              "call"
+              "noctalia"
+              "msg"
+              "panel-toggle"
+              "control-center"
               "notifications"
-              "toggle"
             ];
             "Mod+Apostrophe".spawn = [
-              "dms"
-              "ipc"
-              "call"
-              "wallpaperCarousel"
-              "toggle"
+              "noctalia"
+              "msg"
+              "panel-toggle"
+              "wallpaper"
             ];
 
             # --- Launcher & Files ---
             "Mod+Return".spawn = [ "ghostty" ];
             "Mod+Shift+Return".spawn = [
-              "dms"
-              "ipc"
-              "call"
-              "spotlight"
-              "toggle"
+              "noctalia"
+              "msg"
+              "panel-toggle"
+              "launcher"
             ];
             "Mod+E".spawn = [
               "nemo"
@@ -74,6 +68,22 @@
             "Mod+Shift+E".spawn = termExec [
               "yazi"
               "${config.hj.directory}/Downloads"
+            ];
+
+            # --- Hex dictation (no GlobalShortcuts portal on niri) ---
+            "End".spawn = [
+              "hex"
+              "dictation"
+              "toggle"
+            ];
+            "Alt+Space".spawn = [
+              "hex"
+              "dictation"
+              "toggle"
+            ];
+            "F10".spawn = [
+              "hex"
+              "paste-last"
             ];
 
             # --- Layout & Utility ---
@@ -245,14 +255,31 @@
             "Mod+T".toggle-column-tabbed-display = _: { };
 
             # --- Screenshot ---
+            # noctalia owns the whole flow: `[shell.screenshot]` decides
+            # save/copy and the directory, and its built-in editor replaces the
+            # old `dms screenshot --stdout | satty` pipe. Mirrors the hyprland
+            # binds so switching compositors keeps the same muscle memory.
             "Print".spawn = [
-              "dms"
-              "screenshot"
+              "noctalia"
+              "msg"
+              "screenshot-region"
             ];
             "Shift+Print".spawn = [
-              "sh"
-              "-c"
-              "dms screenshot --stdout | ${lib.getExe pkgs.satty} -f -"
+              "noctalia"
+              "msg"
+              "screenshot-fullscreen"
+              "pick"
+            ];
+            "Ctrl+Shift+Print".spawn = [
+              "noctalia"
+              "msg"
+              "screenshot-annotate"
+            ];
+            "Mod+Shift+S".spawn = [
+              "noctalia"
+              "msg"
+              "screenshot-fullscreen"
+              "all"
             ];
           }
           // lib.mergeAttrsList (

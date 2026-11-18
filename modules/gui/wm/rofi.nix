@@ -1,4 +1,4 @@
-{ self, ... }:
+{ self, lib, ... }:
 {
   perSystem =
     { pkgs, ... }:
@@ -161,25 +161,20 @@
         ];
 
         noctalia = {
+          # v4 enabled bundled templates one by one through
+          # `templates.activeTemplates`. v5 lists the same builtins as ids under
+          # `[theme.templates].builtin_ids`, and
+          # `enable_builtin_templates` turns the group on.
           settingsReducers = [
             (
               prev:
-              prev
-              // {
-                templates = prev.templates // {
-                  activeTemplates = prev.templates.activeTemplates ++ [
-                    {
-                      enabled = true;
-                      id = "rofi.rasi";
-                    }
-                    {
-                      enabled = true;
-                      id = "rofi-menu.rasi";
-                    }
-                    {
-                      enabled = true;
-                      id = "rofi-menu-noinput.rasi";
-                    }
+              lib.recursiveUpdate prev {
+                theme.templates = {
+                  enable_builtin_templates = true;
+                  builtin_ids = [
+                    "rofi.rasi"
+                    "rofi-menu.rasi"
+                    "rofi-menu-noinput.rasi"
                   ];
                 };
               }

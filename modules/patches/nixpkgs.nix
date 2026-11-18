@@ -3,6 +3,14 @@
     nixpkgs-patcher = {
       enable = true;
       settings.patches = with pkgs; [
+        # stremio-linux-shell 1.2.1 sets LC_NUMERIC in code; 1.2.0 crashes on
+        # startup because GTK resets the locale after the wrapper sets it.
+        # Remove once in the locked nixpkgs.
+        # (fetchpatch {
+        #   name = "stremio-linux-shell-1.2.1.patch";
+        #   url = "https://patch-diff.githubusercontent.com/raw/NixOS/nixpkgs/pull/568957.patch";
+        #   hash = "sha256-6LYOARNYqUEvMKp+t4zxBdWS99Ev/Rl7XsygnBJ/IEI=";
+        # })
         # (fetchpatch {
         #   name = "opencode-1.18.30.patch";
         #   url = "https://patch-diff.githubusercontent.com/raw/NixOS/nixpkgs/pull/564101.patch";

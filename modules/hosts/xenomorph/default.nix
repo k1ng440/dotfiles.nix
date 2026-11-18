@@ -13,6 +13,7 @@
 
         inputs.nixos-hardware.nixosModules.common-cpu-amd-zenpower
         hardware_nvidiagpu
+        hardware_gpu-unlock
         hardware_ledger
         hardware_linux-firmware
         hardware_qmk
@@ -23,12 +24,13 @@
         services_virtualisation
         programs_kdeconnect
         services_clamav
+        services_syncthing
         service_tailscale
         hardware_yubikey
         programs_kitty
         programs_steam
         programs_vesktop
-        # programs_spicetify
+        programs_spicetify
         programs_anki
         programs_thunderbird
         programs_localsend
@@ -36,6 +38,8 @@
         shell_doppler
         programs_neovim
         programs_obsidian
+        programs_stremio
+        programs_plex
         shell_opencode
         shell_pi
         programs_authenticators
@@ -45,6 +49,7 @@
         programs_telegram
         programs_google-chrome
         programs_wine
+        programs_hermes
       ];
 
       custom = {
@@ -110,7 +115,6 @@
             # }
           ];
         };
-        lock.enable = false;
         specialisation.hyprland.enable = true;
 
         programs = {

@@ -125,7 +125,8 @@ in
             (self.wrapperModules.ghostty.apply {
               pkgs = prev;
               extraSettings = {
-                theme = "dankcolors";
+                # absolute path: ghostty loads it as a theme file, noctalia renders it
+                theme = "${config.hj.xdg.config.directory}/ghostty/themes/noctalia";
                 command = "SHELL=${lib.getExe pkgs.fish} fish";
                 font-family = [
                   config.custom.fonts.monospace
@@ -159,6 +160,14 @@ in
           terminal = {
             app-id = "com.mitchellh.ghostty";
             desktop = "com.mitchellh.ghostty.desktop";
+          };
+
+          # ghostty reads its theme from the store config above, so the template
+          # only needs to write the file; noctalia's post_hook would rewrite a
+          # config ghostty never loads.
+          noctalia.colors.templates.ghostty = {
+            input_path = "${pkgs.noctalia}/share/noctalia/assets/templates/ghostty/ghostty";
+            output_path = "${config.hj.xdg.config.directory}/ghostty/themes/noctalia";
           };
 
           print-config = {

@@ -101,18 +101,17 @@
             }
           ];
 
-          # use blurred overview from noctalia
+          # Noctalia v5 layer surfaces: `noctalia-backdrop` is the blurred/tinted
+          # wallpaper copy, `noctalia-wallpaper` the plain one. Placing the
+          # backdrop within niri's overview backdrop is what gives the blurred
+          # overview wallpaper.
           layer-rules = [
             {
-              matches = [ { namespace = "^noctalia-overview*"; } ];
+              matches = [ { namespace = "^noctalia-backdrop"; } ];
               place-within-backdrop = true;
             }
             {
               matches = [ { namespace = "^quickshell$"; } ];
-              place-within-backdrop = true;
-            }
-            {
-              matches = [ { namespace = "dms:blurwallpaper"; } ];
               place-within-backdrop = true;
             }
           ];
@@ -379,8 +378,16 @@
               include optional=true "${config.hj.xdg.config.directory}/niri/dms/layout.kdl";
               include optional=true "${config.hj.xdg.config.directory}/niri/dms/alttab.kdl";
               include optional=true "${config.hj.xdg.config.directory}/niri/dms/binds.kdl";
+              include optional=true "${config.hj.xdg.config.directory}/niri/noctalia.kdl";
             '')
           ];
+        };
+
+        # niri has no import for a live palette beyond include, so noctalia renders
+        # a standalone kdl fragment the include above pulls in.
+        noctalia.colors.templates.niri = {
+          input_path = "${pkgs.noctalia}/share/noctalia/assets/templates/niri/niri.kdl";
+          output_path = "${config.hj.xdg.config.directory}/niri/noctalia.kdl";
         };
       };
     };
